@@ -1,0 +1,83 @@
+[
+  {
+    "itemName": "ui_confirm",
+    "imageName": "ui_ui_confirm.png",
+    "roiFront": "667,398,179,66",
+    "roiBack": "667,398,179,66",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "长一点的确认"
+  },
+  {
+    "itemName": "ui_cancel",
+    "imageName": "ui_ui_cancel.png",
+    "roiFront": "432,403,177,62",
+    "roiBack": "432,403,177,62",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "长一点的取消"
+  },
+  {
+    "itemName": "ui_reward",
+    "imageName": "ui_ui_reward.png",
+    "roiFront": "475,233,317,42",
+    "roiBack": "475,233,317,42",
+    "method": "Template matching",
+    "threshold": 0.73,
+    "description": "'获得奖励' 四个大字"
+  },
+  {
+    "itemName": "ui_back_red",
+    "imageName": "ui_ui_back_red.png",
+    "roiFront": "1041,111,34,38",
+    "roiBack": "1041,111,34,38",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "ui_back_yellow",
+    "imageName": "ui_ui_back_yellow.png",
+    "roiFront": "26,17,47,46",
+    "roiBack": "26,17,47,46",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "ui_back_blue",
+    "imageName": "ui_ui_back_blue.png",
+    "roiFront": "24,26,51,45",
+    "roiBack": "24,26,51,45",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "ui_award",
+    "imageName": "ui_ui_award.png",
+    "roiFront": "577,499,100,100",
+    "roiBack": "577,499,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "ui_confirm_samll",
+    "imageName": "ui_ui_confirm_samll.png",
+    "roiFront": "677,390,130,62",
+    "roiBack": "677,390,130,62",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "短一点的确认"
+  },
+  {
+    "itemName": "ui_cancel_samll",
+    "imageName": "ui_ui_cancel_samll.png",
+    "roiFront": "472,389,128,62",
+    "roiBack": "472,389,128,62",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "短一点的取消"
+  }
+]

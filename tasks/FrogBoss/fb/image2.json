@@ -1,0 +1,20 @@
+[
+  {
+    "itemName": "frog_boss_enter",
+    "imageName": "fb_frog_boss_enter.png",
+    "roiFront": "1181.6666666666665,153.33333333333331,59.333333333333485,54.666666666666686",
+    "roiBack": "1181.6666666666665,153.33333333333331,59.333333333333485,54.666666666666686",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "description"
+  },
+  {
+    "itemName": "frog_boss_rest",
+    "imageName": "fb_frog_boss_rest.png",
+    "roiFront": "508,266,169,64",
+    "roiBack": "508,266,169,64",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  }
+]
