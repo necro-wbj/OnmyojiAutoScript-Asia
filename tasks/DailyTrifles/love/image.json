@@ -2,8 +2,8 @@
   {
     "itemName": "l_friends",
     "imageName": "love_l_friends.png",
-    "roiFront": "67,625,70,72",
-    "roiBack": "67,625,70,72",
+    "roiFront": "136.66666666666663,628.6666666666666,70,72",
+    "roiBack": "136.66666666666663,628.6666666666666,70,72",
     "method": "Template matching",
     "threshold": 0.9,
     "description": "description"

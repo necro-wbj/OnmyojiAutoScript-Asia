@@ -56,8 +56,8 @@
   {
     "itemName": "boss_fire",
     "imageName": "boss_boss_fire.png",
-    "roiFront": "1062,549,100,100",
-    "roiBack": "1062,549,100,100",
+    "roiFront": "1062,549,95,95",
+    "roiBack": "1062,523.6666666666666,139.33333333333326,131.66666666666663",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "集结挑战"

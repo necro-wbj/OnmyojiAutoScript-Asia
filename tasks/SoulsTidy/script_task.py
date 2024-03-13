@@ -76,6 +76,7 @@ class ScriptTask(GameUi, SoulsTidyAssets):
                 feed_count += 1
                 continue
         logger.info('Feed greed ghost done')
+        self.click(self.C_ST_DETAIL)
         # 关闭贪吃鬼, 进入奉纳
         while 1:
             self.screenshot()

@@ -2,8 +2,8 @@
   {
     "itemName": "shi",
     "imageName": "as_shi.png",
-    "roiFront": "443,307,28,39",
-    "roiBack": "64,265,1029,277",
+    "roiFront": "451,200,28,39",
+    "roiBack": "451,200,28,39",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "进入活动"
@@ -20,8 +20,8 @@
   {
     "itemName": "battle",
     "imageName": "as_battle.png",
-    "roiFront": "207,264,47,172",
-    "roiBack": "187,239,105,220",
+    "roiFront": "650,153,47,172",
+    "roiBack": "650,153,47,172",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入爬塔"
@@ -38,8 +38,8 @@
   {
     "itemName": "lock",
     "imageName": "as_lock.png",
-    "roiFront": "795,654,25,32",
-    "roiBack": "795,654,25,32",
+    "roiFront": "851,648,25,32",
+    "roiBack": "851,648,25,32",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "上锁图标"
@@ -47,8 +47,8 @@
   {
     "itemName": "unlock",
     "imageName": "as_unlock.png",
-    "roiFront": "795,656,28,28",
-    "roiBack": "795,656,28,28",
+    "roiFront": "849,650,28,28",
+    "roiBack": "849,650,28,28",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "还未上锁图片"
@@ -56,8 +56,8 @@
   {
     "itemName": "fire",
     "imageName": "as_fire.png",
-    "roiFront": "1132,592,70,79",
-    "roiBack": "1132,592,70,79",
+    "roiFront": "1134,559,70,79",
+    "roiBack": "1134,559,70,79",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击战斗"
@@ -65,8 +65,8 @@
   {
     "itemName": "ap",
     "imageName": "as_ap.png",
-    "roiFront": "1118,510,32,26",
-    "roiBack": "1118,510,32,26",
+    "roiFront": "1118.3333333333333,644.3333333333333,32,26",
+    "roiBack": "1118.3333333333333,644.3333333333333,32,26",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "体力按钮"
@@ -92,8 +92,8 @@
   {
     "itemName": "buy_jade",
     "imageName": "as_buy_jade.png",
-    "roiFront": "1004,192,38,42",
-    "roiBack": "836,619,38,42",
+    "roiFront": "837,617,38,42",
+    "roiBack": "837,617,38,42",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "购买活动的体力"
@@ -101,7 +101,7 @@
   {
     "itemName": "add_max",
     "imageName": "as_add_max.png",
-    "roiFront": "17,24,33,37",
+    "roiFront": "974,524,57,54",
     "roiBack": "974,524,57,54",
     "method": "Template matching",
     "threshold": 0.8,
@@ -110,8 +110,8 @@
   {
     "itemName": "new",
     "imageName": "as_new.png",
-    "roiFront": "1004,192,65,52",
-    "roiBack": "0,0,100,100",
+    "roiFront": "11,20,65,52",
+    "roiBack": "11,20,65,52",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

@@ -69,7 +69,7 @@ class LoginHandler(BaseTask, RestartAssets):
             if self.appear_then_click(self.I_LOGIN_RED_CLOSE, interval=0.6):
                 logger.info('Close red close')
                 continue
-            # 左上角的黄色关闭
+            # 右上角的黄色关闭
             if self.appear_then_click(self.I_LOGIN_YELLOW_CLOSE, interval=0.6):
                 logger.info('Close yellow close')
                 continue

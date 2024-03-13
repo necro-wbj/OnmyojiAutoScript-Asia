@@ -29,8 +29,8 @@
   {
     "itemName": "login_yellow_close",
     "imageName": "login_login_yellow_close.png",
-    "roiFront": "29,17,46,44",
-    "roiBack": "0,0,94,86",
+    "roiFront": "1177,28.333333333333314,46,44",
+    "roiBack": "1152.6666666666665,6.333333333333314,94,86",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

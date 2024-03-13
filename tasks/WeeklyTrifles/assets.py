@@ -23,9 +23,9 @@ class WeeklyTriflesAssets:
 	# 地鬼分享 
 	I_WT_SHARE_AB = RuleImage(roi_front=(1183,308,45,39), roi_back=(1136,292,105,79), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_share_ab.png")
 	# 分享勾玉 
-	I_WT_AB_JADE = RuleImage(roi_front=(922,554,44,47), roi_back=(922,554,44,47), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_ab_jade.png")
+	I_WT_AB_JADE = RuleImage(roi_front=(976,551.6666666666666,44,47), roi_back=(976,551.6666666666666,44,47), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_ab_jade.png")
 	# 微信分享 
-	I_WT_AB_WECHAT = RuleImage(roi_front=(1032,643,50,56), roi_back=(1032,643,50,56), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_ab_wechat.png")
+	I_WT_AB_WECHAT = RuleImage(roi_front=(1178.6666666666665,644,50,56), roi_back=(1178.6666666666665,644,50,56), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_ab_wechat.png")
 
 
 	# Image Rule Assets
@@ -60,8 +60,8 @@ class WeeklyTriflesAssets:
 	I_WT_SCROLL_1 = RuleImage(roi_front=(1180,27,28,121), roi_back=(1159,12,65,152), threshold=0.7, method="Template matching", file="./tasks/WeeklyTrifles/collect/collect_wt_scroll_1.png")
 	# 百妖风物鉴 
 	I_WT_SCROLL_2 = RuleImage(roi_front=(1182,24,24,122), roi_back=(1163,12,63,155), threshold=0.7, method="Template matching", file="./tasks/WeeklyTrifles/collect/collect_wt_scroll_2.png")
-	# 微信分享 
-	I_WT_COLLECT_WECHAT = RuleImage(roi_front=(640,617,70,63), roi_back=(640,617,70,63), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/collect/collect_wt_collect_wechat.png")
+	# Twitter 
+	I_WT_COLLECT_TWITTER = RuleImage(roi_front=(1062,618,70,63), roi_back=(1062,618,70,63), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/collect/collect_wt_collect_twitter.png")
 	# 二维码 
 	I_WT_QR_CODE = RuleImage(roi_front=(473,161,336,96), roi_back=(404,112,483,168), threshold=0.65, method="Template matching", file="./tasks/WeeklyTrifles/collect/collect_wt_qr_code.png")
 

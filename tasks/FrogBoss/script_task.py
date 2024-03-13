@@ -20,18 +20,21 @@ class ScriptTask(RightActivity, FrogBossAssets):
     def run(self):
         self.enter(self.I_FROG_BOSS_ENTER)
         # 进入主界面
+        status = ""
         while 1:
             self.screenshot()
-
-            # 已经下注
+            if(status != ""):
+                logger.info(status)
+            status = "判斷是否已經下注"
+            self.appear_then_click(self.I_FROG_BOSS_ENTER)
             if self.appear(self.I_BETTED):
                 logger.info('You have betted')
                 break
-            # 休息中
+            status = "判斷是否休息中"
             if self.appear(self.I_FROG_BOSS_REST):
                 logger.info('Frog Boss Rest')
                 break
-            # 竞猜成功
+            status = "判斷是否競猜成功"
             if self.appear(self.I_BET_SUCCESS):
                 logger.info('You bet win')
                 self.detect()
@@ -44,13 +47,13 @@ class ScriptTask(RightActivity, FrogBossAssets):
                     if self.appear_then_click(self.I_NEXT_COMPETITION, interval=4):
                         continue
                 continue
-            # 竞猜失败
+            status = "判斷是否競猜失敗"
             if self.appear(self.I_BET_FAILURE):
                 logger.info('You bet lose')
                 self.ui_click_until_disappear(self.I_NEXT_COMPETITION)
                 self.detect()
                 continue
-            # 正式竞猜
+            status = "判斷是否可下注"
             if self.appear(self.I_BET_LEFT) and self.appear(self.I_BET_RIGHT):
                 self.do_bet()
                 continue
@@ -75,7 +78,7 @@ class ScriptTask(RightActivity, FrogBossAssets):
         elif 18 <= time_now.hour < 20:
             time_set = time_set.replace(hour=22)
         elif 20 <= time_now.hour < 22:
-            time_set = time_set.replace(hour=24)
+            time_set = time_set.replace(hour=23) # hour must be in 0..23
         elif 22 <= time_now.hour < 24:
             day = time_now.day + 1
             time_set = time_set.replace(day=day, hour=12)
@@ -89,6 +92,7 @@ class ScriptTask(RightActivity, FrogBossAssets):
         self.screenshot()
         count_left = self.O_LEFT_COUNT.ocr(self.device.image)
         count_right = self.O_RIGHT_COUNT.ocr(self.device.image)
+        logger.info(f'左側數量: {count_left}, 右側數量: {count_right}')
         match self.config.model.frog_boss.frog_boss_config.strategy_frog:
             case Strategy.Majority:
                 click_image = self.I_BET_LEFT if count_left > count_right else self.I_BET_RIGHT

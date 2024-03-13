@@ -14,7 +14,7 @@ class GeneralInviteAssets:
 	# 中间的邀请图片 
 	I_ADD_1 = RuleImage(roi_front=(592,288,114,51), roi_back=(592,288,114,51), threshold=0.9, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_add_1.png")
 	# 最右边的邀请 
-	I_ADD_2 = RuleImage(roi_front=(1039,205,100,100), roi_back=(1039,205,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_add_2.png")
+	I_ADD_2 = RuleImage(roi_front=(1017.3333333333333,205,100,100), roi_back=(1017.3333333333333,205,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_add_2.png")
 	# description 
 	I_FIRE_FAIL = RuleImage(roi_front=(1177,604,81,74), roi_back=(1177,604,81,74), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_fire_fail.png")
 	# description 
@@ -40,7 +40,7 @@ class GeneralInviteAssets:
 	# description 
 	I_ADD_5_3 = RuleImage(roi_front=(862,243,100,100), roi_back=(862,243,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_add_5_3.png")
 	# description 
-	I_ADD_5_4 = RuleImage(roi_front=(1118,228,100,100), roi_back=(1118,228,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_add_5_4.png")
+	I_ADD_5_4 = RuleImage(roi_front=(591,206.33333333333331,100,100), roi_back=(591,206.33333333333331,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_add_5_4.png")
 	# 游戏服务器获取在线好友时等待的图片 
 	I_LOAD_FRIEND = RuleImage(roi_front=(709,546,134,60), roi_back=(709,546,134,60), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_load_friend.png")
 	# 左上角退出 

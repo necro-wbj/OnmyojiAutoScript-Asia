@@ -442,6 +442,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         回到寮的界面
         :return:
         """
+        logger.info("回到寮的界面")
         while 1:
             self.screenshot()
 

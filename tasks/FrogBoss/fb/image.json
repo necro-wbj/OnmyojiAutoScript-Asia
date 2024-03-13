@@ -11,8 +11,8 @@
   {
     "itemName": "bet_right",
     "imageName": "fb_bet_right.png",
-    "roiFront": "1044,344,146,100",
-    "roiBack": "1044,344,146,100",
+    "roiFront": "1051.3333333333333,348.3333333333333,146,100",
+    "roiBack": "1051.3333333333333,348.3333333333333,146,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "右边竞猜"

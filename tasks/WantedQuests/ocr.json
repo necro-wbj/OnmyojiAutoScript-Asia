@@ -6,7 +6,7 @@
     "mode": "Digit",
     "method": "Default",
     "keyword": "",
-    "description": "挑战券的数量"
+    "description": "挑戰券的數量"
   },
   {
     "itemName": "wq_wanted",
@@ -15,7 +15,7 @@
     "mode": "Full",
     "method": "Default",
     "keyword": "",
-    "description": "悬赏封印"
+    "description": "懸賞封印"
   },
   {
     "itemName": "wq_text_1",

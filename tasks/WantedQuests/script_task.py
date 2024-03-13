@@ -160,9 +160,9 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
             battle = False
             self.screenshot()
             type_wq = wq_type.ocr(self.device.image)
-            if cha and type_wq == '挑战':
+            if cha and type_wq == '挑毂' or type_wq == '挑戰':
                 battle = 'CHALLENGE'
-            if type_wq == '秘闻':
+            if type_wq == '秘開' or type_wq == '秘聞':
                 battle = 'SECRET'
             if not battle:
                 return None, None

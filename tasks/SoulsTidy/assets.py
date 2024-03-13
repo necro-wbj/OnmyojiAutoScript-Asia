@@ -33,7 +33,7 @@ class SoulsTidyAssets:
 	# 立即进食 
 	I_ST_FEED_NOW = RuleImage(roi_front=(929,593,73,65), roi_back=(929,593,73,65), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_feed_now.png")
 	# 未选中 
-	I_ST_UNSELECTED = RuleImage(roi_front=(542,342,38,37), roi_back=(542,342,38,37), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_unselected.png")
+	I_ST_UNSELECTED = RuleImage(roi_front=(508.33333333333326,341.3333333333333,38,37), roi_back=(508.33333333333326,341.3333333333333,38,37), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_unselected.png")
 	# 关闭贪吃鬼 
 	I_ST_GREED_CLOSE = RuleImage(roi_front=(933,211,35,37), roi_back=(933,211,35,37), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_greed_close.png")
 	# 招财猫 

@@ -15,7 +15,7 @@
     "roiBack": "992,614,51,60",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "陰陽術"
   },
   {
     "itemName": "main_goto_friends",
@@ -24,7 +24,7 @@
     "roiBack": "867,606,79,77",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "好友"
   },
   {
     "itemName": "main_goto_daily",

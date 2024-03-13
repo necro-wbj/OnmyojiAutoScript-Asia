@@ -45,13 +45,13 @@
     "description": "百妖风物鉴"
   },
   {
-    "itemName": "wt_collect_wechat",
-    "imageName": "collect_wt_collect_wechat.png",
-    "roiFront": "640,617,70,63",
-    "roiBack": "640,617,70,63",
+    "itemName": "wt_collect_twitter",
+    "imageName": "collect_wt_collect_twitter.png",
+    "roiFront": "1062,618,70,63",
+    "roiBack": "1062,618,70,63",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "微信分享"
+    "description": "Twitter"
   },
   {
     "itemName": "wt_qr_code",
