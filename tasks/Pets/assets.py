@@ -12,7 +12,7 @@ class PetsAssets:
 
 	# Image Rule Assets
 	# 宠物小屋 
-	I_PET_HOUSE = RuleImage(roi_front=(1055,434,27,31), roi_back=(952,412,144,60), threshold=0.7, method="Template matching", file="./tasks/Pets/pet/pet_pet_house.png")
+	I_PET_HOUSE = RuleImage(roi_front=(1020,431,27,31), roi_back=(952,412,138,60), threshold=0.7, method="Template matching", file="./tasks/Pets/pet/pet_pet_house.png")
 	# 爪印 
 	I_PET_CLAW = RuleImage(roi_front=(1171,625,55,56), roi_back=(1171,625,55,56), threshold=0.8, method="Template matching", file="./tasks/Pets/pet/pet_pet_claw.png")
 	# 其乐融融 
@@ -24,7 +24,7 @@ class PetsAssets:
 	# 投喂 
 	I_PET_FEED = RuleImage(roi_front=(798,497,77,81), roi_back=(798,497,77,81), threshold=0.8, method="Template matching", file="./tasks/Pets/pet/pet_pet_feed.png")
 	# 跳过 
-	I_PET_SKIP = RuleImage(roi_front=(1089,119,72,41), roi_back=(999,42,242,147), threshold=0.65, method="Template matching", file="./tasks/Pets/pet/pet_pet_skip.png")
+	I_PET_SKIP = RuleImage(roi_front=(1110.3333333333333,92.66666666666666,72,41), roi_back=(999,42,242,147), threshold=0.65, method="Template matching", file="./tasks/Pets/pet/pet_pet_skip.png")
 	# 退出 
 	I_PET_EXIT = RuleImage(roi_front=(30,25,39,33), roi_back=(30,25,39,33), threshold=0.8, method="Template matching", file="./tasks/Pets/pet/pet_pet_exit.png")
 

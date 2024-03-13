@@ -2,8 +2,8 @@
   {
     "itemName": "pet_house",
     "imageName": "pet_pet_house.png",
-    "roiFront": "1055,434,27,31",
-    "roiBack": "952,412,144,60",
+    "roiFront": "1020,431,27,31",
+    "roiBack": "952,412,138,60",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "宠物小屋"
@@ -56,7 +56,7 @@
   {
     "itemName": "pet_skip",
     "imageName": "pet_pet_skip.png",
-    "roiFront": "1089,119,72,41",
+    "roiFront": "1110.3333333333333,92.66666666666666,72,41",
     "roiBack": "999,42,242,147",
     "method": "Template matching",
     "threshold": 0.65,
