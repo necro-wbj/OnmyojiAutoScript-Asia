@@ -37,8 +37,8 @@ class GlobalGameAssets:
 	I_UI_CONFIRM = RuleImage(roi_front=(667,398,179,66), roi_back=(667,398,179,66), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_confirm.png")
 	# 长一点的取消 
 	I_UI_CANCEL = RuleImage(roi_front=(432,403,177,62), roi_back=(432,403,177,62), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_cancel.png")
-	# '获得奖励' 四个大字 
-	I_UI_REWARD = RuleImage(roi_front=(475,233,317,42), roi_back=(475,233,317,42), threshold=0.73, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_reward.png")
+	# '取得獎勵' 四个大字 
+	I_UI_REWARD = RuleImage(roi_front=(482,198,317,42), roi_back=(464,142,350,145), threshold=0.73, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_reward.png")
 	# description 
 	I_UI_BACK_RED = RuleImage(roi_front=(1164.3333333333333,97.66666666666666,34,38), roi_back=(834,15,427,200), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_back_red.png")
 	# description 
