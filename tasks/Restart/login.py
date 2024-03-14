@@ -24,6 +24,7 @@ class LoginHandler(BaseTask, RestartAssets):
         orientation_timer = Timer(10)
         login_success = False
 
+
         while 1:
             # Watch device rotation
             if not login_success and orientation_timer.reached():
@@ -78,9 +79,11 @@ class LoginHandler(BaseTask, RestartAssets):
                 logger.info('login specific user')
                 continue
             # 点击’进入游戏‘
-            if not self.appear(self.I_LOGIN_8):
-                continue
-            if self.ocr_appear_click(self.O_LOGIN_ENTER_GAME, interval=2.5):
+            # if not self.appear(self.I_LOGIN_8):
+            #     continue
+            # if self.ocr_appear_click(self.O_LOGIN_ENTER_GAME, interval=2.5):
+            #     continue
+            if self.ocr_appear_click(self.O_LOGIN_ENTER_GAME_TW, interval=2.5):
                 continue
 
         return login_success
