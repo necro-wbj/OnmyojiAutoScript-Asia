@@ -37,13 +37,13 @@ def detect_ocr(file: str, target: RuleOcr):
 
 
 # 图片文件路径 可以是相对路径
-IMAGE_FILE = 'test.png'
+IMAGE_FILE = r'test.png'
 if __name__ == '__main__':
-    from tasks.Component.GeneralInvite.assets import GeneralInviteAssets
-    targe = GeneralInviteAssets.I_ADD_2
-    print(detect_image(IMAGE_FILE, targe))
-    # from tasks.KekkaiActivation.assets import KekkaiActivationAssets
-    # target = KekkaiActivationAssets.O_CARD_ALL_TIME
-    # print(detect_ocr(IMAGE_FILE, target))
+    # from tasks.Component.GeneralInvite.assets import GeneralInviteAssets
+    # targe = GeneralInviteAssets.I_ADD_2
+    # print(detect_image(IMAGE_FILE, targe))
+    from tasks.Restart.assets import RestartAssets
+    target = RestartAssets.O_LOGIN_ENTER_GAME
+    print(detect_ocr(IMAGE_FILE, target))
 
 

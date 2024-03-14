@@ -77,8 +77,8 @@ class LoginHandler(BaseTask, RestartAssets):
             if self.appear(self.I_LOGIN_SPECIFIC_SERVE, interval=0.6) and self.ocr_appear_click(self.O_LOGIN_SPECIFIC_SERVE, interval=0.6):
                 logger.info('login specific user')
                 continue
-            # 点击’进入游戏‘
-            if not self.appear(self.I_LOGIN_8):
+            # 點擊"進入遊戲"
+            if not self.appear(self.I_LOGIN_FIX):
                 continue
             if self.ocr_appear_click(self.O_LOGIN_ENTER_GAME, interval=2.5):
                 continue

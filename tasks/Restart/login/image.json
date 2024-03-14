@@ -29,8 +29,8 @@
   {
     "itemName": "login_yellow_close",
     "imageName": "login_login_yellow_close.png",
-    "roiFront": "1177,28.333333333333314,46,44",
-    "roiBack": "1152.6666666666665,6.333333333333314,94,86",
+    "roiFront": "1177,28,46,44",
+    "roiBack": "1152,6,94,86",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -70,5 +70,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "下载插画"
+  },
+  {
+    "itemName": "login_fix",
+    "imageName": "login_login_fix.png",
+    "roiFront": "1196.6666666666665,514.3333333333333,60,54.66666666666674",
+    "roiBack": "1196.6666666666665,514.3333333333333,60,54.66666666666674",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]
