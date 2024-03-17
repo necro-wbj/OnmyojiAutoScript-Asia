@@ -228,6 +228,7 @@ class ScriptTask(KU, KekkaiActivationAssets):
         card_class = None
         target_class = None
         top_card = self.order_cards[0]
+        logger.info(f'top_card: {top_card}')
         if top_card.startswith(CardClass.TAIKO):  # 太鼓
             card_class = CardClass.TAIKO
             target_class = self.I_A_CARD_KAIKO
