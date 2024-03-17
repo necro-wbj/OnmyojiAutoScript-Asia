@@ -23,6 +23,8 @@ class LoginHandler(BaseTask, RestartAssets):
         confirm_timer = Timer(1.5, count=2).start()
         orientation_timer = Timer(10)
         login_success = False
+        login_find_post = False
+
 
         while 1:
             # Watch device rotation
@@ -72,13 +74,18 @@ class LoginHandler(BaseTask, RestartAssets):
             # 右上角的黄色关闭
             if self.appear_then_click(self.I_LOGIN_YELLOW_CLOSE, interval=0.6):
                 logger.info('Close yellow close')
+                login_find_post = True
                 continue
             # 点击屏幕进入游戏
             if self.appear(self.I_LOGIN_SPECIFIC_SERVE, interval=0.6) and self.ocr_appear_click(self.O_LOGIN_SPECIFIC_SERVE, interval=0.6):
                 logger.info('login specific user')
                 continue
-            # 點擊"進入遊戲"
-            if not self.appear(self.I_LOGIN_FIX):
+            # 点击’进入游戏‘
+            # if not self.appear(self.I_LOGIN_8):
+            #     continue
+            # if self.ocr_appear_click(self.O_LOGIN_ENTER_GAME, interval=2.5):
+            #     continue
+            if not login_find_post:
                 continue
             if self.ocr_appear_click(self.O_LOGIN_ENTER_GAME, interval=2.5):
                 continue
