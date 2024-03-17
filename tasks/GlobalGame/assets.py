@@ -44,7 +44,7 @@ class GlobalGameAssets:
 	# description 
 	I_UI_BACK_YELLOW = RuleImage(roi_front=(26,17,47,46), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_back_yellow.png")
 	# description 
-	I_UI_BACK_BLUE = RuleImage(roi_front=(24,26,51,45), roi_back=(2,1,133,119), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_back_blue.png")
+	I_UI_BACK_BLUE = RuleImage(roi_front=(24,26,51,45), roi_back=(24,26,51,45), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_back_blue.png")
 	# description 
 	I_UI_AWARD = RuleImage(roi_front=(577,499,100,100), roi_back=(577,499,100,100), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_award.png")
 	# 短一点的确认 

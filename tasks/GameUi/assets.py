@@ -131,7 +131,7 @@ class GameUiAssets:
 	# description 
 	I_MAIN_GOTO_MALL = RuleImage(roi_front=(663,661,41,22), roi_back=(644,613,81,78), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_mall.png")
 	# description 
-	I_MAIN_GOTO_GUILD = RuleImage(roi_front=(540,611,50,54), roi_back=(540,611,50,54), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_guild.png")
+	I_MAIN_GOTO_GUILD = RuleImage(roi_front=(539.3333333333333,661.6666666666666,58.33333333333337,22.66666666666663), roi_back=(529,615,77.33333333333326,77), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_guild.png")
 	# description 
 	I_MAIN_GOTO_TEAM = RuleImage(roi_front=(429,622,53,51), roi_back=(429,622,53,51), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_team.png")
 	# description 
