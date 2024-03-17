@@ -1,6 +1,5 @@
 import sys
-sys.path.append('D:\onmyoji\OnmyojiAutoScript-easy-install')
-# print(sys.path)
+sys.path.append('D:/onmyoji/OnmyojiAutoScript-easy-install')
 import cv2
 import numpy as np
 
@@ -39,11 +38,11 @@ def detect_ocr(file: str, target: RuleOcr):
 # 图片文件路径 可以是相对路径
 IMAGE_FILE = r'test.png'
 if __name__ == '__main__':
-    # from tasks.Component.GeneralInvite.assets import GeneralInviteAssets
-    # targe = GeneralInviteAssets.I_ADD_2
-    # print(detect_image(IMAGE_FILE, targe))
-    from tasks.Restart.assets import RestartAssets
-    target = RestartAssets.O_LOGIN_ENTER_GAME
-    print(detect_ocr(IMAGE_FILE, target))
+    from tasks.KekkaiActivation.assets import KekkaiActivationAssets
+    targe = KekkaiActivationAssets.I_A_HARVEST_FISH_6
+    print(detect_image(IMAGE_FILE, targe))
+    # from tasks.Restart.assets import RestartAssets
+    # target = RestartAssets.O_LOGIN_ENTER_GAME
+    # print(detect_ocr(IMAGE_FILE, target))
 
 
