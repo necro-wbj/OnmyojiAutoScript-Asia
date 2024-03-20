@@ -60,6 +60,6 @@ class DuelAssets:
 	# 手动 
 	O_D_HAND = RuleOcr(roi=(31,639,63,45), area=(31,639,63,45), mode="Single", method="Default", keyword="手勤", name="d_hand")
 	# 自动 
-	O_D_AUTO = RuleOcr(roi=(30,640,65,44), area=(30,640,65,44), mode="Single", method="Default", keyword="自动", name="d_auto")
+	O_D_AUTO = RuleOcr(roi=(30,640,65,44), area=(30,640,65,44), mode="Single", method="Default", keyword="自勤", name="d_auto")
 
 

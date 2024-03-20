@@ -24,7 +24,7 @@
     "mode": "Single",
     "method": "Default",
     "keyword": "手勤",
-    "description": "手动"
+    "description": "手動"
   },
   {
     "itemName": "d_auto",
@@ -32,7 +32,7 @@
     "roiBack": "30,640,65,44",
     "mode": "Single",
     "method": "Default",
-    "keyword": "自动",
-    "description": "自动"
+    "keyword": "自勤",
+    "description": "自動"
   }
 ]
