@@ -10,8 +10,8 @@
   },
   {
     "itemName": "d_score",
-    "roiFront": "701,516,56,26",
-    "roiBack": "701,516,56,26",
+    "roiFront": "703,516,54,26",
+    "roiBack": "703,516,54,26",
     "mode": "Digit",
     "method": "Default",
     "keyword": "",
@@ -23,7 +23,7 @@
     "roiBack": "31,639,63,45",
     "mode": "Single",
     "method": "Default",
-    "keyword": "手动",
+    "keyword": "手勤",
     "description": "手动"
   },
   {

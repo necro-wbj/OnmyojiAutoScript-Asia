@@ -29,7 +29,7 @@ class DuelAssets:
 	# 预选点击确认 
 	I_D_CONFIRM = RuleImage(roi_front=(1097,517,139,156), roi_back=(1097,517,139,156), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_confirm.png")
 	# 自动上阵 
-	I_D_AUTO_ENTRY = RuleImage(roi_front=(42,133,66,62), roi_back=(20,119,115,111), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_auto_entry.png")
+	I_D_AUTO_ENTRY = RuleImage(roi_front=(30,127,66,62), roi_back=(20,119,115,111), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_auto_entry.png")
 	# 手动，弃用 
 	I_D_HAND = RuleImage(roi_front=(34,635,55,55), roi_back=(34,635,55,55), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_hand.png")
 	# 主界面的感叹号 
@@ -41,7 +41,7 @@ class DuelAssets:
 	# 战斗数据 
 	I_D_BATTLE_DATA = RuleImage(roi_front=(1068,610,38,60), roi_back=(1068,610,38,60), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_battle_data.png")
 	# 胜利 
-	I_D_VICTORY = RuleImage(roi_front=(433,76,100,100), roi_back=(433,76,100,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_victory.png")
+	I_D_VICTORY = RuleImage(roi_front=(466,88.33333333333331,95,95), roi_back=(433,55.333333333333314,160,165), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_victory.png")
 	# 失败 
 	I_D_FAIL = RuleImage(roi_front=(422,66,100,100), roi_back=(422,66,100,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_fail.png")
 	# 战 
@@ -56,9 +56,9 @@ class DuelAssets:
 	# 荣誉 
 	O_D_HONOR = RuleOcr(roi=(699,562,131,31), area=(699,562,131,31), mode="DigitCounter", method="Default", keyword="", name="d_honor")
 	# 分数 
-	O_D_SCORE = RuleOcr(roi=(701,516,56,26), area=(701,516,56,26), mode="Digit", method="Default", keyword="", name="d_score")
+	O_D_SCORE = RuleOcr(roi=(703,516,54,26), area=(703,516,54,26), mode="Digit", method="Default", keyword="", name="d_score")
 	# 手动 
-	O_D_HAND = RuleOcr(roi=(31,639,63,45), area=(31,639,63,45), mode="Single", method="Default", keyword="手动", name="d_hand")
+	O_D_HAND = RuleOcr(roi=(31,639,63,45), area=(31,639,63,45), mode="Single", method="Default", keyword="手勤", name="d_hand")
 	# 自动 
 	O_D_AUTO = RuleOcr(roi=(30,640,65,44), area=(30,640,65,44), mode="Single", method="Default", keyword="自动", name="d_auto")
 
