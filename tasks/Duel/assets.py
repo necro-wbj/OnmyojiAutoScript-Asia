@@ -57,9 +57,9 @@ class DuelAssets:
 	O_D_HONOR = RuleOcr(roi=(699,562,131,31), area=(699,562,131,31), mode="DigitCounter", method="Default", keyword="", name="d_honor")
 	# 分数 
 	O_D_SCORE = RuleOcr(roi=(703,516,54,26), area=(703,516,54,26), mode="Digit", method="Default", keyword="", name="d_score")
-	# 手动 
+	# 手動 
 	O_D_HAND = RuleOcr(roi=(31,639,63,45), area=(31,639,63,45), mode="Single", method="Default", keyword="手勤", name="d_hand")
-	# 自动 
+	# 自動 
 	O_D_AUTO = RuleOcr(roi=(30,640,65,44), area=(30,640,65,44), mode="Single", method="Default", keyword="自勤", name="d_auto")
 
 
