@@ -86,18 +86,19 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
         time_delta = timedelta(hours=-before_end.hour, minutes=-before_end.minute, seconds=-before_end.second)
         now_datetime = datetime.now()
         now_time = now_datetime.time()
-        if time(hour=6) <= now_time < time(hour=18):
-            # 如果是在6点到18点之间，那就设定下一次运行的时间为第二天的6点 + before_end
-            next_run_datetime = datetime.combine(now_datetime.date() + timedelta(days=1), time(hour=6))
-            next_run_datetime = next_run_datetime + time_delta
-        elif time(hour=18) <= now_time < time(hour=23, minute=59, second=59):
-            # 如果是在18点到23点59分59秒之间，那就设定下一次运行的时间为第二天的18点 + before_end
-            next_run_datetime = datetime.combine(now_datetime.date() + timedelta(days=1), time(hour=18))
-            next_run_datetime = next_run_datetime + time_delta
-        else:
-            # 如果是在0点到6点之间，那就设定下一次运行的时间为今天的18点 + before_end
+        if time(hour=5) < now_time < time(hour=18):
+            # 如果是在5點到18點之間，那就設定下一次運行的時間為今天的18点 + before_end
             next_run_datetime = datetime.combine(now_datetime.date(), time(hour=18))
             next_run_datetime = next_run_datetime + time_delta
+        elif time(hour=18) <= now_time < time(hour=23, minute=59, second=59):
+            # 如果是在18點到23點59分59秒之間，那就設定下次運行的時間為第二天的5點 + before_end
+            next_run_datetime = datetime.combine(now_datetime.date() + timedelta(days=1), time(hour=5))
+            next_run_datetime = next_run_datetime + time_delta
+        else:
+            # 如果是在0點到5點之間，那就設定下次運行的時間為今天的5點 + before_end
+            next_run_datetime = datetime.combine(now_datetime.date(), time(hour=5))
+            next_run_datetime = next_run_datetime + time_delta
+        
         self.set_next_run(task='WantedQuests', target=next_run_datetime)
 
     def pre_work(self):
