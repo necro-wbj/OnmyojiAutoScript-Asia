@@ -5,8 +5,8 @@
     "roiBack": "210,492,100,100",
     "mode": "Single",
     "method": "Default",
-    "keyword": "正在连接服务器",
-    "description": "正在连接服务器"
+    "keyword": "正在連線伺服器",
+    "description": "正在連線伺服器"
   },
   {
     "itemName": "login_enter_game",
@@ -14,8 +14,8 @@
     "roiBack": "545,560,191,73",
     "mode": "Single",
     "method": "Default",
-    "keyword": "進入游彪",
-    "description": "Ocr-description"
+    "keyword": "進入游戲",
+    "description": "TODO: 重新訓練'進入遊戲'"
   },
   {
     "itemName": "login_skip_1",

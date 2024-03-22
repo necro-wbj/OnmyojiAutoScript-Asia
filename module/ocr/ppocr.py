@@ -1,5 +1,6 @@
-import ppocronnx.predict_system
+import module.ppocronnx as ppocronnx
 
+# import ppocronnx.predict_system
 
 class TextSystem(ppocronnx.predict_system.TextSystem):
     def __init__(

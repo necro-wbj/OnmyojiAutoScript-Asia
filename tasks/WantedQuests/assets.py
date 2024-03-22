@@ -22,13 +22,13 @@ class WantedQuestsAssets:
 	O_WQ_NUMBER = RuleOcr(roi=(569,13,50,32), area=(569,13,50,32), mode="Digit", method="Default", keyword="", name="wq_number")
 	# 懸賞封印 
 	O_WQ_WANTED = RuleOcr(roi=(9,145,123,381), area=(9,145,123,381), mode="Full", method="Default", keyword="", name="wq_wanted")
-	# Ocr-description 
+	# TODO: 需要重新訓練'封印' 
 	O_WQ_TEXT_1 = RuleOcr(roi=(67,233,52,32), area=(67,233,52,32), mode="Single", method="Default", keyword="封印", name="wq_text_1")
-	# Ocr-description 
-	O_WQ_TEXT_2 = RuleOcr(roi=(66,377,52,32), area=(66,377,52,32), mode="Single", method="Default", keyword="封印", name="wq_text_2")
-	# Ocr-description 
+	# TODO: 需要重新訓練'封印' 
+	O_WQ_TEXT_2 = RuleOcr(roi=(66,377,52,32), area=(66,377,52,32), mode="Single", method="Default", keyword="對印", name="wq_text_2")
+	# TODO: 需要重新訓練 
 	O_WQ_NUM_1 = RuleOcr(roi=(32,260,72,27), area=(32,260,72,27), mode="DigitCounter", method="Default", keyword="", name="wq_num_1")
-	# Ocr-description 
+	# TODO: 需要重新訓練 
 	O_WQ_NUM_2 = RuleOcr(roi=(34,406,65,24), area=(34,406,65,24), mode="DigitCounter", method="Default", keyword="", name="wq_num_2")
 	# Ocr-description 
 	O_WQ_TYPE_1 = RuleOcr(roi=(544,238,55,36), area=(544,238,55,36), mode="Single", method="Default", keyword="", name="wq_type_1")
@@ -38,7 +38,7 @@ class WantedQuestsAssets:
 	O_WQ_TYPE_3 = RuleOcr(roi=(544,382,54,30), area=(544,382,54,30), mode="Single", method="Default", keyword="", name="wq_type_3")
 	# Ocr-description 
 	O_WQ_TYPE_4 = RuleOcr(roi=(545,452,52,32), area=(545,452,52,32), mode="Single", method="Default", keyword="", name="wq_type_4")
-	# Ocr-description 
+	# TODO: 需要重新訓練'祕聞副本章節' 
 	O_WQ_INFO_1 = RuleOcr(roi=(609,236,309,45), area=(609,236,309,45), mode="Single", method="Default", keyword="", name="wq_info_1")
 	# Ocr-description 
 	O_WQ_INFO_2 = RuleOcr(roi=(612,308,298,41), area=(612,308,298,41), mode="Single", method="Default", keyword="", name="wq_info_2")

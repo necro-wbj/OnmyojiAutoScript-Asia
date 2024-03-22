@@ -161,9 +161,10 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
             battle = False
             self.screenshot()
             type_wq = wq_type.ocr(self.device.image)
-            if cha and type_wq == '挑毂' or type_wq == '挑戰':
+            if cha and type_wq == '挑戰':
                 battle = 'CHALLENGE'
-            if type_wq == '秘開' or type_wq == '秘聞':
+            # TODO: 需要重新訓練'秘聞'
+            if type_wq == '秘聞' or type_wq == '秘':
                 battle = 'SECRET'
             if not battle:
                 return None, None
@@ -179,6 +180,9 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
             if one_number > num_want:
                 return battle, 1
             else:
+                # TODO: 先判斷讓他不除以0，之後重新訓練
+                if(one_number <=0 ): 
+                    one_number = 1
                 return battle, num_want // one_number + 1
 
         battle, num, goto = None, None, None

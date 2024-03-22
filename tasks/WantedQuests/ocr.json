@@ -24,7 +24,7 @@
     "mode": "Single",
     "method": "Default",
     "keyword": "封印",
-    "description": "Ocr-description"
+    "description": "TODO: 需要重新訓練'封印'"
   },
   {
     "itemName": "wq_text_2",
@@ -32,8 +32,8 @@
     "roiBack": "66,377,52,32",
     "mode": "Single",
     "method": "Default",
-    "keyword": "封印",
-    "description": "Ocr-description"
+    "keyword": "對印",
+    "description": "TODO: 需要重新訓練'封印'"
   },
   {
     "itemName": "wq_num_1",
@@ -42,7 +42,7 @@
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
-    "description": "Ocr-description"
+    "description": "TODO: 需要重新訓練"
   },
   {
     "itemName": "wq_num_2",
@@ -51,7 +51,7 @@
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
-    "description": "Ocr-description"
+    "description": "TODO: 需要重新訓練"
   },
   {
     "itemName": "wq_type_1",
@@ -96,7 +96,7 @@
     "mode": "Single",
     "method": "Default",
     "keyword": "",
-    "description": "Ocr-description"
+    "description": "TODO: 需要重新訓練'祕聞副本章節'"
   },
   {
     "itemName": "wq_info_2",

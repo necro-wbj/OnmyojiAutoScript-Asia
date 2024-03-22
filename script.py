@@ -482,5 +482,6 @@ class Script:
 
 if __name__ == "__main__":
     script = Script("oas1")
+    script.loop()
     print(script.gui_task_list())
     print(script.config.gui_menu)
