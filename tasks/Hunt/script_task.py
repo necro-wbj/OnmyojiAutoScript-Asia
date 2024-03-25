@@ -84,7 +84,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
                 logger.warning('Your guild have already challenged the Kirin')
                 self.set_next_run(task='Hunt', success=True, finish=True)
                 raise TaskEnd('Hunt')
-            if self.appear_then_click(self.I_KIRIN_CHALLAGE, interval=0.9):
+            if self.appear_then_click(self.I_KIRIN_GATHER, interval=0.9):
                 break
             if self.click(self.C_HUNT_ENTER, interval=2.9):
                 continue
