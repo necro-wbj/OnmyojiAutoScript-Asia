@@ -70,5 +70,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "击破后的寮奖励"
+  },
+  {
+    "itemName": "wait_start_ryou_toppa",
+    "imageName": "res_wait_start_ryou_toppa.png",
+    "roiFront": "460,583,357,40.33333333333326",
+    "roiBack": "460,583,357,40.33333333333326",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]
