@@ -24,6 +24,7 @@ class LoginHandler(BaseTask, RestartAssets):
         orientation_timer = Timer(10)
         login_success = False
         login_find_post = False
+        login_find_enter_game_ocr = 0
 
 
         while 1:
@@ -87,8 +88,17 @@ class LoginHandler(BaseTask, RestartAssets):
             #     continue
             if not login_find_post:
                 continue
+
             if self.ocr_appear_click(self.O_LOGIN_ENTER_GAME, interval=2.5):
+                login_find_enter_game_ocr = login_find_enter_game_ocr + 1
                 continue
+            else: # no find enter game ocr
+                if login_find_enter_game_ocr: # have ever find enter game ocr before
+                    login_find_enter_game_ocr = login_find_enter_game_ocr + 1
+                    if login_find_enter_game_ocr > 5: # after find OCR then count over 5 times, stop find
+                        logger.info('already find OCR over 5 times, stop find')
+                        login_find_post = False
+                    continue
 
         return login_success
 
