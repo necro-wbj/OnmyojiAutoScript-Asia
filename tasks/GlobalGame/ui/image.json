@@ -48,7 +48,7 @@
     "itemName": "ui_back_blue",
     "imageName": "ui_ui_back_blue.png",
     "roiFront": "24,26,51,45",
-    "roiBack": "24,26,51,45",
+    "roiBack": "2,1,133,119",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
