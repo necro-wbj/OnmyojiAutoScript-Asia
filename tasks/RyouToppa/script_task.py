@@ -116,8 +116,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
                 break
             # 出现等待會長開啟寮突 或 出现選擇寮突 说明寮突未開
             elif self.appear(self.I_WAIT_START_RYOU_TOPPA, threshold=0.8) or self.appear(self.I_SELECT_RYOU_BUTTON, threshold=0.8):
-                ryou_toppa_start_flag = False
-                break
+                self.set_next_run(task='RyouToppa', finish=True, server=True, success=False)
+                raise TaskEnd
             # 出现寮獎勵，說明寮突已開
             elif self.appear(self.I_RYOU_REWARD, threshold=0.8) or self.appear(self.I_RYOU_REWARD_90, threshold=0.8):
                 ryou_toppa_start_flag = True
