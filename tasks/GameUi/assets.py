@@ -12,7 +12,9 @@ class GameUiAssets:
 
 	# Ocr Rule Assets
 	# 点击空白处关闭此界面 
-	O_CLICK_CLOSE_1 = RuleOcr(roi=(521,659,232,32), area=(521,659,232,32), mode="Single", method="Default", keyword="点击空白处关闭此界面", name="click_close_1")
+	# O_CLICK_CLOSE_1 = RuleOcr(roi=(521,659,232,32), area=(521,659,232,32), mode="Single", method="Default", keyword="点击空白处关闭此界面", name="click_close_1")
+	# 保留舊的，用繁中被簡中OCR的錯字替代
+	O_CLICK_CLOSE_1 = RuleOcr(roi=(521,659,232,32), area=(521,659,232,32), mode="Single", method="Default", keyword="點攀空白魔周阳此介面", name="click_close_1")
 	# 点击空白处关闭弹窗 
 	O_CLICK_CLOSE_2 = RuleOcr(roi=(508,584,214,40), area=(508,584,214,40), mode="Single", method="Default", keyword="点击空白处关闭弹窗", name="click_close_2")
 
