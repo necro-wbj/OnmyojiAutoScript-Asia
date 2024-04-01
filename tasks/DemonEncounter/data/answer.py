@@ -43,6 +43,7 @@ def answer_one(question: str, options: list[str]) -> int:
             if score > max_score:
                 max_score = score
                 max_score_index = row[1]
+                logger.info(f"CSV question: {question} ans: {row[0]} score: {score}")
         # here match the answer
         Ans_lcut = set(list(str(row[1])))
         Ans_score = 0

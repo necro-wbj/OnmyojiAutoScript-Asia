@@ -152,7 +152,8 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
         self.screenshot()
         if not self.appear(self.I_DE_AWARD):
             self.ui_get_reward(self.I_DE_RED_DHARMA)
-            self.wait_until_appear_then_click(self.I_UI_REWARD)
+            # ui_get_reward就已經把 領取獎勵處理掉了
+            # self.wait_until_appear_then_click(self.I_UI_REWARD)
             logger.info('紅色達摩領取完畢')
         self.wait_until_appear(self.I_DE_AWARD)
         # 然后到四个灯笼
@@ -275,8 +276,13 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
             # 还未测试题库无法识别的情况
             logger.hr(f'Answer {i}', 3)
             answer_click = answer()
-            # self.ui_get_reward(answer())
-            while 1:
+            # wait 10s
+            time.sleep(10)
+            self.ui_get_reward(answer())
+            while_count = 10
+            while while_count:
+                while_count = while_count - 1
+                logger.info(f'Answer {i} while count {while_count}')
                 self.screenshot()
                 if self.ui_reward_appear_click():
                     time.sleep(0.5)
@@ -292,6 +298,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
                     break
                 # 如果没有出现红色关闭按钮，说明答题结束
                 if not self.appear(self.I_LETTER_CLOSE):
+                    logger.info('no red close button exit Question answering')
                     time.sleep(0.5)
                     self.screenshot()
                     if self.appear(self.I_LETTER_CLOSE):
@@ -299,9 +306,10 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
                     else:
                         logger.warning('Answer finish')
                         return
-
+                # every wwhile loop sleep 0.5s
+                time.sleep(0.5)
                 # 一直点击
-                self.click(answer_click, interval=1)
+                # self.click(answer_click, interval=1)
             time.sleep(0.5)
 
     def _battle(self, target_click):
