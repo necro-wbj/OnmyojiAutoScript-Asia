@@ -74,8 +74,8 @@
   {
     "itemName": "mall_sundry_check",
     "imageName": "navbar_mall_sundry_check.png",
-    "roiFront": "454,7,31,44",
-    "roiBack": "454,7,31,44",
+    "roiFront": "1091,7,31,44",
+    "roiBack": "1091,7,31,44",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "雜貨舖確認"

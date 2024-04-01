@@ -166,7 +166,7 @@ class RichManAssets:
 	# 雜貨鋪 
 	I_MALL_SUNDRY = RuleImage(roi_front=(856,639,74,61), roi_back=(856,639,74,61), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sundry.png")
 	# 雜貨舖確認 
-	I_MALL_SUNDRY_CHECK = RuleImage(roi_front=(454,7,31,44), roi_back=(454,7,31,44), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sundry_check.png")
+	I_MALL_SUNDRY_CHECK = RuleImage(roi_front=(1091,7,31,44), roi_back=(1091,7,31,44), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sundry_check.png")
 
 
 	# Image Rule Assets
