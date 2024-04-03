@@ -29,10 +29,10 @@ def detect_image(file: str, targe: RuleImage) -> bool:
     logger.info(f'[{targe.name}]: {result}')
     return result
 
+
 def detect_ocr(file: str, target: RuleOcr):
     img = load_image(file)
     return target.ocr(img)
-
 
 
 # 图片文件路径 可以是相对路径
@@ -44,5 +44,3 @@ if __name__ == '__main__':
     # from tasks.Restart.assets import RestartAssets
     # target = RestartAssets.O_LOGIN_ENTER_GAME
     # print(detect_ocr(IMAGE_FILE, target))
-
-
