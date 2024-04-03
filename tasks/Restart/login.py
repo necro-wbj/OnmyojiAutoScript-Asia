@@ -65,9 +65,10 @@ class LoginHandler(BaseTask, RestartAssets):
                 logger.info('Download inbetweening')
                 continue
             # 不观看视频
-            if self.appear_then_click(self.I_WATCH_VIDEO_CANCEL, interval=0.6):
-                logger.info('Close video')
-                continue
+            # this will skip I_LOGIN_LOAD_DOWN
+            # if self.appear_then_click(self.I_WATCH_VIDEO_CANCEL, interval=0.6):
+            #     logger.info('Close video')
+            #     continue
             # 右上角的红色的关闭
             if self.appear_then_click(self.I_LOGIN_RED_CLOSE, interval=0.6):
                 logger.info('Close red close')
