@@ -16,5 +16,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "狩猎战"
+  },
+  {
+    "itemName": "hunt_close",
+    "imageName": "hunt_hunt_close.png",
+    "roiFront": "1149,43,68,67",
+    "roiBack": "1149,43,68,67",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "紅色關閉"
   }
 ]

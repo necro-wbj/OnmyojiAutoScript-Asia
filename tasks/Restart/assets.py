@@ -59,7 +59,7 @@ class RestartAssets:
 	# 下载插画 
 	I_LOGIN_LOAD_DOWN = RuleImage(roi_front=(725,408,69,32), roi_back=(653,350,232,131), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_load_down.png")
 	# description 
-	I_LOGIN_FIX = RuleImage(roi_front=(1196.6666666666665,514.3333333333333,60,54.66666666666674), roi_back=(1196.6666666666665,514.3333333333333,60,54.66666666666674), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_fix.png")
+	I_LOGIN_FIX = RuleImage(roi_front=(1196,514,60,54), roi_back=(1196,514,60,54), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_fix.png")
 
 
 	# Ocr Rule Assets
