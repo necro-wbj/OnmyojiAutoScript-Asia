@@ -18,9 +18,9 @@ class WantedQuestsAssets:
 
 
 	# Ocr Rule Assets
-	# 挑战券的数量 
+	# 挑戰券的數量 
 	O_WQ_NUMBER = RuleOcr(roi=(569,13,50,32), area=(569,13,50,32), mode="Digit", method="Default", keyword="", name="wq_number")
-	# 悬赏封印 
+	# 懸賞封印 
 	O_WQ_WANTED = RuleOcr(roi=(9,145,123,381), area=(9,145,123,381), mode="Full", method="Default", keyword="", name="wq_wanted")
 	# Ocr-description 
 	O_WQ_TEXT_1 = RuleOcr(roi=(67,233,52,32), area=(67,233,52,32), mode="Single", method="Default", keyword="封印", name="wq_text_1")

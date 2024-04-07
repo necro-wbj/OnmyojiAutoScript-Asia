@@ -20,16 +20,16 @@
   {
     "itemName": "ui_reward",
     "imageName": "ui_ui_reward.png",
-    "roiFront": "481,185,317,42",
+    "roiFront": "482,198,317,42",
     "roiBack": "464,142,350,145",
     "method": "Template matching",
     "threshold": 0.73,
-    "description": "'获得奖励' 四个大字"
+    "description": "'取得獎勵' 四个大字"
   },
   {
     "itemName": "ui_back_red",
     "imageName": "ui_ui_back_red.png",
-    "roiFront": "1041,111,34,38",
+    "roiFront": "1164.3333333333333,97.66666666666666,34,38",
     "roiBack": "834,15,427,200",
     "method": "Template matching",
     "threshold": 0.8,
@@ -47,7 +47,7 @@
   {
     "itemName": "ui_back_blue",
     "imageName": "ui_ui_back_blue.png",
-    "roiFront": "32,37,51,45",
+    "roiFront": "24,26,51,45",
     "roiBack": "2,1,133,119",
     "method": "Template matching",
     "threshold": 0.8,
@@ -57,7 +57,7 @@
     "itemName": "ui_award",
     "imageName": "ui_ui_award.png",
     "roiFront": "577,499,100,100",
-    "roiBack": "530,408,199,220",
+    "roiBack": "577,499,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

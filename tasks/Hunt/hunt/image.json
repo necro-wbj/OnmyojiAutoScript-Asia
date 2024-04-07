@@ -2,8 +2,8 @@
   {
     "itemName": "hunt_shrine",
     "imageName": "hunt_hunt_shrine.png",
-    "roiFront": "870,624,65,61",
-    "roiBack": "870,624,65,61",
+    "roiFront": "472.66666666666663,141,51.66666666666663,61",
+    "roiBack": "472.66666666666663,141,51.66666666666663,61",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "神社"
@@ -16,5 +16,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "狩猎战"
+  },
+  {
+    "itemName": "hunt_close",
+    "imageName": "hunt_hunt_close.png",
+    "roiFront": "1149,43,68,67",
+    "roiBack": "1149,43,68,67",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "紅色關閉"
   }
 ]

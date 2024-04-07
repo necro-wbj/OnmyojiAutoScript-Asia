@@ -56,7 +56,7 @@
   {
     "itemName": "d_auto_entry",
     "imageName": "duel_d_auto_entry.png",
-    "roiFront": "42,133,66,62",
+    "roiFront": "30,127,66,62",
     "roiBack": "20,119,115,111",
     "method": "Template matching",
     "threshold": 0.8,
@@ -110,8 +110,8 @@
   {
     "itemName": "d_victory",
     "imageName": "duel_d_victory.png",
-    "roiFront": "433,76,100,100",
-    "roiBack": "433,76,100,100",
+    "roiFront": "466,88.33333333333331,95,95",
+    "roiBack": "433,55.333333333333314,160,165",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "胜利"

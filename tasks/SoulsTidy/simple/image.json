@@ -65,8 +65,8 @@
   {
     "itemName": "st_unselected",
     "imageName": "simple_st_unselected.png",
-    "roiFront": "542,342,38,37",
-    "roiBack": "542,342,38,37",
+    "roiFront": "508.33333333333326,341.3333333333333,38,37",
+    "roiBack": "508.33333333333326,341.3333333333333,38,37",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "未选中"

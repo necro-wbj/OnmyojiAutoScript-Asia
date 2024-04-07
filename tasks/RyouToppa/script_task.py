@@ -109,16 +109,16 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
             if self.appear(self.I_REAL_RAID_REFRESH, threshold=0.8):
                 if self.appear_then_click(self.I_RYOU_TOPPA, interval=1):
                     continue
-            # 攻破阴阳寮，说明寮突已开，则退出
+            # 攻破陰陽寮，說明寮突已開，则退出
             elif self.appear(self.I_SUCCESS_PENETRATION, threshold=0.8):
                 ryou_toppa_start_flag = True
                 ryou_toppa_success_penetration = True
                 break
-            # 出现选择寮突说明寮突未开
-            elif self.appear(self.I_SELECT_RYOU_BUTTON, threshold=0.8):
-                ryou_toppa_start_flag = False
-                break
-            # 出现寮奖励， 说明寮突已开
+            # 出现等待會長開啟寮突 或 出现選擇寮突 说明寮突未開
+            elif self.appear(self.I_WAIT_START_RYOU_TOPPA, threshold=0.8) or self.appear(self.I_SELECT_RYOU_BUTTON, threshold=0.8):
+                self.set_next_run(task='RyouToppa', finish=True, server=True, success=False)
+                raise TaskEnd
+            # 出现寮獎勵，說明寮突已開
             elif self.appear(self.I_RYOU_REWARD, threshold=0.8) or self.appear(self.I_RYOU_REWARD_90, threshold=0.8):
                 ryou_toppa_start_flag = True
                 break

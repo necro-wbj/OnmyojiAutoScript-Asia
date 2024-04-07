@@ -46,7 +46,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, SwitchSoul, 
             self.close_buff()
         self.ui_get_current_page()
         self.ui_goto(page_team)
-        self.check_zones('金币妖怪')
+        self.check_zones('金常妖怪')
         # 开始
         if not self.create_room():
             self.gold_exit(con)

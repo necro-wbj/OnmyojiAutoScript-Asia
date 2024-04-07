@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
+import re
 import numpy as np
 
 from time import sleep
@@ -356,7 +357,9 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             case OcrMode.FULL:  # 全匹配
                 appear = result != (0, 0, 0, 0)
             case OcrMode.SINGLE:
-                appear = result == target.keyword
+                # 測試使用regex 保留原始邏輯
+                # appear = result == target.keyword
+                appear = re.match(result,target.keyword)
             case OcrMode.DIGIT:
                 appear = result == int(target.keyword)
             case OcrMode.DIGITCOUNTER:

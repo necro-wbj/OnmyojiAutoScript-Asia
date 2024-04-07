@@ -1,6 +1,8 @@
 <div align="center">
 
-# OnmyojiAutoScript
+# OnmyojiAutoScript-Asia
+
+## 搬移過來的庫，歡迎加入一同建立，以下還需完善
 
 <br>
 
@@ -25,7 +27,7 @@
 
 ### [文档](https://runhey.github.io/OnmyojiAutoScript-website/)
 
-#### 主仓库: [https://github.com/runhey/OnmyojiAutoScript](https://github.com/runhey/OnmyojiAutoScript)
+#### 主仓库: [https://github.com/necro-wbj/OnmyojiAutoScript-Asia](https://github.com/necro-wbj/OnmyojiAutoScript-Asia)
 
 </div>
 
@@ -65,6 +67,7 @@ OAS 在其基础上进行了如下优化：
 
 ## 相关项目 Relative Repositories
 
+- [OAS](https://github.com/runhey/OnmyojiAutoScript/tree/dev)陰陽師陸服版本自動化腳本
 - [Alas](https://github.com/LmeSzinc/AzurLaneAutoScript): 碧蓝航线的自动化脚本
 - [SRC](https://github.com/LmeSzinc/StarRailCopilot): 星铁速溶茶，崩坏：星穹铁道脚本，基于下一代Alas框架。
 - [OASX](https://github.com/runhey/OASX): 同 OAS 对接的全平台 GUI
@@ -76,22 +79,9 @@ OAS 在其基础上进行了如下优化：
 - [ppocr-onnx](https://github.com/triwinds/ppocr-onnx): OCR 库，基于 onnxruntime 和 PaddleOCR
 - [gurs](https://github.com/2833844911/gurs): 基于赛贝尔曲线模拟滑动轨迹, 引入其轨迹模拟人手滑动
 
-## 联系/加入我们 Contact/Join Us
-
-#### QQ交流群: 465946275
 
 相对于其他的游戏，阴阳师玩家总体而言对脚本这类工具具有极高的排斥性。树大招风，无论你是否喜欢 OAS ，我们都希望你不在互联网上进行宣传，这保护 OAS , 也保护开发者们。
 
-为此保持较高的入群门槛:  
-- 你的QQ等级必须大于32级(🌞🌞)，注册时间超过一年，低等级账号成分复杂，还请见谅。
-- 你必须拥有一个 Github 账户来点一个 **Star** (这并不影响你入群后取消Star)，同样的要求注册时间过半年。
-- 入群验证填入你的 Github id，无需在意问题是什么，由QQ机器人审核(机器永远的对的)。
-
-#### QQ开发群: 207613181 (有意开发本项目请加此群, 请不要胡乱加群)
-
-- 发展规划：[#54](https://github.com/runhey/OnmyojiAutoScript/issues/54)
-- OAS 继承了 Alas 的设计思路，极大简便了开发，欢迎提交 PR，挑选你感兴趣的部分进行开发即可。
-- OAS 仍在活跃中， 我们会不定期发布未来的工作在 Issues 上并标记为 `help wanted`，欢迎向 OAS 提交 PR，我们会认真阅读你的每一行代码的。
 
 ## 安装 Installation 
 
@@ -99,26 +89,3 @@ OAS 在其基础上进行了如下优化：
 - [用户手册](https://runhey.github.io/OnmyojiAutoScript-website/docs/user-manual/getting-started): 在线手册，不定期更新，包含所有使用说明
 - [安装教程](https://runhey.github.io/OnmyojiAutoScript-website/docs/user-manual/installation): 保姆式安装手册,多翻翻有惊喜
 - [开发文档](https://runhey.github.io/OnmyojiAutoScript-website/docs/development/preamble): 虽然迭代很多、年久失修，但入门开发必读，具体以源码为准
-
-## 鸣谢 Acknowledgements
-
-感谢所有参与到开发/测试中的朋友们
-
-[![Contributors](https://contributors-img.web.app/image?repo=runhey/OnmyojiAutoScript)](https://github.com/runhey/OnmyojiAutoScript/graphs/contributors)
-
-感谢所有完善文档的朋友们
-
-[![Contributors](https://contributors-img.web.app/image?repo=runhey/OnmyojiAutoScript-website)](https://github.com/runhey/OnmyojiAutoScript-website/graphs/contributors)
-
-<div align="center">
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=runhey/OnmyojiAutoScript&type=Date)](https://star-history.com/#runhey/OnmyojiAutoScript&Date)
-
-
-## ⚡ Visitor count
-
-![](https://profile-counter.glitch.me/runhey-OnmyojiAutoScript/count.svg)
-
-</div>

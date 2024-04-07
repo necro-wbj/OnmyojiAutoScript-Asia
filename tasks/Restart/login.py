@@ -23,6 +23,9 @@ class LoginHandler(BaseTask, RestartAssets):
         confirm_timer = Timer(1.5, count=2).start()
         orientation_timer = Timer(10)
         login_success = False
+        login_find_post = False
+        login_find_enter_game_ocr = 0
+
 
         while 1:
             # Watch device rotation
@@ -62,26 +65,41 @@ class LoginHandler(BaseTask, RestartAssets):
                 logger.info('Download inbetweening')
                 continue
             # 不观看视频
-            if self.appear_then_click(self.I_WATCH_VIDEO_CANCEL, interval=0.6):
-                logger.info('Close video')
-                continue
+            # this will skip I_LOGIN_LOAD_DOWN
+            # if self.appear_then_click(self.I_WATCH_VIDEO_CANCEL, interval=0.6):
+            #     logger.info('Close video')
+            #     continue
             # 右上角的红色的关闭
             if self.appear_then_click(self.I_LOGIN_RED_CLOSE, interval=0.6):
                 logger.info('Close red close')
                 continue
-            # 左上角的黄色关闭
+            # 右上角的黄色关闭
             if self.appear_then_click(self.I_LOGIN_YELLOW_CLOSE, interval=0.6):
                 logger.info('Close yellow close')
+                login_find_post = True
                 continue
             # 点击屏幕进入游戏
             if self.appear(self.I_LOGIN_SPECIFIC_SERVE, interval=0.6) and self.ocr_appear_click(self.O_LOGIN_SPECIFIC_SERVE, interval=0.6):
                 logger.info('login specific user')
                 continue
             # 点击’进入游戏‘
-            if not self.appear(self.I_LOGIN_8):
+            # if not self.appear(self.I_LOGIN_8):
+            #     continue
+            # if self.ocr_appear_click(self.O_LOGIN_ENTER_GAME, interval=2.5):
+            #     continue
+            if not login_find_post:
                 continue
+
             if self.ocr_appear_click(self.O_LOGIN_ENTER_GAME, interval=2.5):
+                login_find_enter_game_ocr = login_find_enter_game_ocr + 1
                 continue
+            else: # no find enter game ocr
+                if login_find_enter_game_ocr: # have ever find enter game ocr before
+                    login_find_enter_game_ocr = login_find_enter_game_ocr + 1
+                    if login_find_enter_game_ocr > 5: # after find OCR then count over 5 times, stop find
+                        logger.info('already find OCR over 5 times, stop find')
+                        login_find_post = False
+                    continue
 
         return login_success
 

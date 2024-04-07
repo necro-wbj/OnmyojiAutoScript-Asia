@@ -25,15 +25,20 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
         self.ui_goto(page_duel)
         if con.switch_all_soul:
             self.switch_all_soul()
-
+        # 設定時間範圍
+        start_time_1 = datetime.strptime("11:00", "%H:%M")
+        end_time_1 = datetime.strptime("14:00", "%H:%M")
+        start_time_2 = datetime.strptime("17:00", "%H:%M")
+        end_time_2 = datetime.strptime("22:00", "%H:%M")
+        # 取得現在時間
+        now = datetime.strptime("2024-03-25 23:00", "%Y-%m-%d %H:%M")
         # 循环
-        while 1:
+        while self.is_time_in_range():
             self.screenshot()
             if self.appear_then_click(self.I_REWARD, interval=0.6):
                 continue
             if not self.duel_main():
                 continue
-
             if datetime.now() - self.start_time >= self.limit_time:
                 # 任务执行时间超过限制时间，退出
                 logger.info('Duel task is over time')
@@ -48,12 +53,38 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
                 logger.info('Duel task is over score')
                 break
             self.duel_one(current_score, con.green_enable, con.green_mark)
-
+            # 取得現在時間
+            now = datetime.strptime("2024-03-25 23:00", "%Y-%m-%d %H:%M")
         # 记得退回去到町中
         self.ui_click(self.I_UI_BACK_YELLOW, self.I_CHECK_TOWN)
-        self.set_next_run(task='Duel', success=True, finish=False)
+        self.set_next_schedule()
         raise TaskEnd('Duel')
 
+    def is_time_in_range(self):
+        now = datetime.now()
+        morning_start = now.replace(hour=11, minute=0, second=0, microsecond=0)
+        morning_end = now.replace(hour=14, minute=0, second=0, microsecond=0)
+        evening_start = now.replace(hour=17, minute=0, second=0, microsecond=0)
+        evening_end = now.replace(hour=22, minute=0, second=0, microsecond=0)
+
+        if morning_start <= now <= morning_end or evening_start <= now <= evening_end:
+            return True
+        return False
+
+    def set_next_schedule(self):
+        now = datetime.now()
+        next_schedule = None
+        if now.hour < 11:
+            next_schedule = now.replace(hour=11, minute=0, second=0, microsecond=0)
+        elif 14 <= now.hour < 17:
+            next_schedule = now.replace(hour=17, minute=0, second=0, microsecond=0)
+        elif now.hour >= 22:
+            next_schedule = (now + timedelta(days=1)).replace(hour=11, minute=0, second=0, microsecond=0)
+        else:
+            # 當前時間在指定範圍內，不需要重新計劃
+            next_schedule = None
+        self.set_next_run(task='Duel', success=True, finish=False,target=next_schedule)
+        
     def duel_main(self, screenshot=False) -> bool:
         """
         判断是否斗技主界面

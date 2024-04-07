@@ -14,15 +14,15 @@ class RichManAssets:
 	# 神社 
 	I_GUILD_SHRINE = RuleImage(roi_front=(869,623,64,62), roi_back=(869,623,64,62), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_shrine.png")
 	# 功勋商店 
-	I_GUILD_STORE = RuleImage(roi_front=(651,420,212,161), roi_back=(651,420,212,161), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_store.png")
+	I_GUILD_STORE = RuleImage(roi_front=(403,418,212,161), roi_back=(403,418,212,161), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_store.png")
 	# description 
 	I_GUILD_CLOSE_RED = RuleImage(roi_front=(1029,120,53,57), roi_back=(1029,120,53,57), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_close_red.png")
 	# 蓝票 
-	I_GUILD_BLUE = RuleImage(roi_front=(344,186,74,73), roi_back=(315,164,584,370), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_blue.png")
+	I_GUILD_BLUE = RuleImage(roi_front=(796,186,70,72), roi_back=(315,164,584,370), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_blue.png")
 	# 黑蛋碎片 
-	I_GUILD_SCRAP = RuleImage(roi_front=(795,187,71,68), roi_back=(331,160,559,372), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_scrap.png")
+	I_GUILD_SCRAP = RuleImage(roi_front=(568,440,71,68), roi_back=(331,160,559,372), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_scrap.png")
 	# 皮肤券 
-	I_GUILD_SKIN = RuleImage(roi_front=(345,438,71,72), roi_back=(320,162,573,371), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_skin.png")
+	I_GUILD_SKIN = RuleImage(roi_front=(795,437,71,72), roi_back=(320,162,573,371), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_skin.png")
 	# 购买检查 
 	I_GUILD_CHECK_SCRAP = RuleImage(roi_front=(590,246,90,88), roi_back=(590,246,90,88), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_check_scrap.png")
 
@@ -163,10 +163,10 @@ class RichManAssets:
 	I_MALL_BONDLINGS_SURE = RuleImage(roi_front=(1194,421,69,74), roi_back=(1194,421,69,74), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_bondlings_sure.png")
 	# 契灵商店 
 	I_MALL_BONDLINGS_CHECK = RuleImage(roi_front=(355,186,34,104), roi_back=(355,186,34,104), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_bondlings_check.png")
-	# 杂货铺 
-	I_MALL_SUNDRY = RuleImage(roi_front=(856,639,74,61), roi_back=(834,621,116,90), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sundry.png")
-	# 杂货铺 
-	I_MALL_SUNDRY_CHECK = RuleImage(roi_front=(1093,10,31,44), roi_back=(1093,10,31,44), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sundry_check.png")
+	# 雜貨鋪 
+	I_MALL_SUNDRY = RuleImage(roi_front=(856,639,74,61), roi_back=(856,639,74,61), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sundry.png")
+	# 雜貨舖確認 
+	I_MALL_SUNDRY_CHECK = RuleImage(roi_front=(1091,7,31,44), roi_back=(1091,7,31,44), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sundry_check.png")
 
 
 	# Image Rule Assets
@@ -268,12 +268,12 @@ class RichManAssets:
 	O_SCA_NUMBER_SEA = RuleOcr(roi=(926,321,30,23), area=(926,321,30,23), mode="Digit", method="Default", keyword="", name="sca_number_sea")
 	# 多少号位 
 	O_SCA_DEMON_POSTION = RuleOcr(roi=(960,244,88,41), area=(960,244,88,41), mode="Single", method="Default", keyword="", name="sca_demon_postion")
-	# 朴素的御魂 
-	O_SCA_RES_OROCHI = RuleOcr(roi=(531,9,127,37), area=(531,9,127,37), mode="DigitCounter", method="Default", keyword="", name="sca_res_orochi")
-	# 首领御魂数量 
-	O_SCA_RES_DEMON = RuleOcr(roi=(949,10,86,35), area=(949,10,86,35), mode="Digit", method="Default", keyword="", name="sca_res_demon")
+	# 樸素的御魂 
+	O_SCA_RES_OROCHI = RuleOcr(roi=(483,9,127,37), area=(483,9,127,37), mode="DigitCounter", method="Default", keyword="", name="sca_res_orochi")
+	# 首领御魂數量 
+	O_SCA_RES_DEMON = RuleOcr(roi=(909,10,86,35), area=(909,10,86,35), mode="Digit", method="Default", keyword="", name="sca_res_demon")
 	# 永生之海 
-	O_SCA_RES_SEA = RuleOcr(roi=(1152,11,80,38), area=(1152,11,80,38), mode="Digit", method="Default", keyword="", name="sca_res_sea")
+	O_SCA_RES_SEA = RuleOcr(roi=(1104,9,80,38), area=(1104,9,80,38), mode="Digit", method="Default", keyword="", name="sca_res_sea")
 
 
 	# Image Rule Assets

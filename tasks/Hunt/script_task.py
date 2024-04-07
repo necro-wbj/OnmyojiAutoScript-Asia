@@ -28,19 +28,23 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
         if con.kirin_group_team != '-1,-1' or con.netherworld_group_team != '-1,-1':
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
-            if con.kirin_group_team != '-1,-1':
+            if self.kirin_day and con.kirin_group_team != '-1,-1':
                 self.run_switch_soul(con.kirin_group_team)
-            if con.netherworld_group_team != '-1,-1':
+            if not self.kirin_day and con.netherworld_group_team != '-1,-1':
                 self.run_switch_soul(con.netherworld_group_team)
         self.ui_get_current_page()
         self.ui_goto(page_hunt)
 
         if self.kirin_day:
             self.kirin()
+            while True:
+                if self.appear_then_click(self.I_UI_BACK_BLUE,0.9):
+                    break
+                if self.appear_then_click(self.I_HUNT_CLOSE,0.9):
+                    continue
         else:
             self.netherworld()
         sleep(1)
-
         self.set_next_run(task='Hunt', success=True, finish=True)
         raise TaskEnd('Hunt')
 
@@ -82,8 +86,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
             if self.appear(self.I_KIRIN_END):
                 # 你的阴阳寮已经打过的麒麟了
                 logger.warning('Your guild have already challenged the Kirin')
-                self.set_next_run(task='Hunt', success=True, finish=True)
-                raise TaskEnd('Hunt')
+                return
             if self.appear_then_click(self.I_KIRIN_CHALLAGE, interval=0.9):
                 break
             if self.click(self.C_HUNT_ENTER, interval=2.9):

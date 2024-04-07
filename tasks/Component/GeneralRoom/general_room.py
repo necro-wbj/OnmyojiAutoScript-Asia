@@ -123,8 +123,8 @@ class GeneralRoom(BaseTask, GeneralRoomAssets):
         pos = self.list_find(self.L_TEAM_LIST, name)
         if not pos:
             return False
-        if name == '愤怒的石距' or name == '喷怒的石距':
-            name = '价悠的石距'
+        if name == '憤怒的石距' or name == '噴怒的石距':
+            name = '價悠的石距'
         self.O_GR_ZONES_NAME.keyword = name
         click_timer = Timer(1.1)
         click_timer.start()

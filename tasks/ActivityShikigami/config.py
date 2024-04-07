@@ -8,6 +8,7 @@ from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleCon
 from tasks.Component.config_scheduler import Scheduler
 from tasks.Component.config_base import ConfigBase, TimeDelta
 from tasks.Component.BaseActivity.config_activity import GeneralClimb
+from tasks.Component.SwitchSoul.switch_soul_config import SwitchSoulConfig
 
 class ShikigamiConfig(BaseModel):
     limit_time: TimeDelta = Field(default=TimeDelta(hours=0, minutes=30, seconds=0), description='limit_time_help')
@@ -19,6 +20,7 @@ class ActivityShikigami(ConfigBase):
     # shikigami: ShikigamiConfig = Field(default_factory=ShikigamiConfig)
     general_climb: GeneralClimb = Field(default_factory=GeneralClimb)
     general_battle: GeneralBattleConfig = Field(default_factory=GeneralBattleConfig)
+    switch_soul_config: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
 
 
 

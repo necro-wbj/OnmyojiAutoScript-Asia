@@ -2,8 +2,8 @@
   {
     "itemName": "shi_grown",
     "imageName": "realm_shi_grown.png",
-    "roiFront": "595,291,35,38",
-    "roiBack": "530,254,181,198",
+    "roiFront": "596.3333333333333,291.3333333333333,35,38",
+    "roiBack": "526.6666666666666,251.33333333333331,181,198",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "育成"
@@ -11,8 +11,8 @@
   {
     "itemName": "shi_card",
     "imageName": "realm_shi_card.png",
-    "roiFront": "886,290,44,56",
-    "roiBack": "801,259,215,175",
+    "roiFront": "885.3333333333333,291.66666666666663,43,56",
+    "roiBack": "801.3333333333333,241.33333333333331,215,175",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "结界卡"
@@ -20,7 +20,7 @@
   {
     "itemName": "shi_defense",
     "imageName": "realm_shi_defense.png",
-    "roiFront": "294,298,49,56",
+    "roiFront": "290.66666666666663,294,49,56",
     "roiBack": "215,207,208,221",
     "method": "Template matching",
     "threshold": 0.8,
@@ -29,8 +29,8 @@
   {
     "itemName": "card_exp",
     "imageName": "realm_card_exp.png",
-    "roiFront": "889,151,57,54",
-    "roiBack": "829,107,199,185",
+    "roiFront": "903,148.66666666666663,57,54",
+    "roiBack": "833.6666666666665,101.66666666666663,199,185",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "收取经验（没有满的图）"
@@ -47,8 +47,8 @@
   {
     "itemName": "box_exp",
     "imageName": "realm_box_exp.png",
-    "roiFront": "893,440,42,45",
-    "roiBack": "862,396,147,127",
+    "roiFront": "842,384,42,45",
+    "roiBack": "784,343,147,127",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "收取盒子的经验（没有满）"
@@ -56,7 +56,7 @@
   {
     "itemName": "realm_shin",
     "imageName": "realm_realm_shin.png",
-    "roiFront": "175,460,54,58",
+    "roiFront": "168,466,54,58",
     "roiBack": "22,380,393,308",
     "method": "Template matching",
     "threshold": 0.9,

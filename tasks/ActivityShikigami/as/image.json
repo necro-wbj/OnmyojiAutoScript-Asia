@@ -92,8 +92,8 @@
   {
     "itemName": "buy_jade",
     "imageName": "as_buy_jade.png",
-    "roiFront": "1004,192,38,42",
-    "roiBack": "836,619,38,42",
+    "roiFront": "837,617,38,42",
+    "roiBack": "837,617,38,42",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "购买活动的体力"
@@ -101,7 +101,7 @@
   {
     "itemName": "add_max",
     "imageName": "as_add_max.png",
-    "roiFront": "17,24,33,37",
+    "roiFront": "974,524,57,54",
     "roiBack": "974,524,57,54",
     "method": "Template matching",
     "threshold": 0.8,
@@ -110,8 +110,8 @@
   {
     "itemName": "new",
     "imageName": "as_new.png",
-    "roiFront": "1004,192,65,52",
-    "roiBack": "0,0,100,100",
+    "roiFront": "11,20,65,52",
+    "roiBack": "11,20,65,52",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

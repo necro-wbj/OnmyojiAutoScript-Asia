@@ -54,11 +54,11 @@ class ActivityShikigamiAssets:
 	# 切换按键 
 	I_SWITCH = RuleImage(roi_front=(1075,480,23,23), roi_back=(1075,480,23,23), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_switch.png")
 	# 购买活动的体力 
-	I_BUY_JADE = RuleImage(roi_front=(1004,192,38,42), roi_back=(836,619,38,42), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_buy_jade.png")
+	I_BUY_JADE = RuleImage(roi_front=(837,617,38,42), roi_back=(837,617,38,42), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_buy_jade.png")
 	# 增加到最大 
-	I_ADD_MAX = RuleImage(roi_front=(17,24,33,37), roi_back=(974,524,57,54), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_add_max.png")
+	I_ADD_MAX = RuleImage(roi_front=(974,524,57,54), roi_back=(974,524,57,54), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_add_max.png")
 	# description 
-	I_NEW = RuleImage(roi_front=(1004,192,65,52), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_new.png")
+	I_NEW = RuleImage(roi_front=(11,20,65,52), roi_back=(11,20,65,52), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_new.png")
 
 
 	# Ocr Rule Assets
