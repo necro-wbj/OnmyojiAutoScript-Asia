@@ -2,8 +2,8 @@
   {
     "itemName": "reward",
     "imageName": "gb_reward.png",
-    "roiFront": "547,518,172,96",
-    "roiBack": "547,518,172,96",
+    "roiFront": "555,606,166,21",
+    "roiBack": "494,364,285,274",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "奖励，就是那个魂"
@@ -191,8 +191,8 @@
   {
     "itemName": "de_win",
     "imageName": "gb_de_win.png",
-    "roiFront": "518.6666666666666,67.66666666666666,65.33333333333337,59.33333333333334",
-    "roiBack": "518.6666666666666,67.66666666666666,65.33333333333337,59.33333333333334",
+    "roiFront": "518,67,65,59",
+    "roiBack": "518,67,65,59",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "针对封魔的特殊"
