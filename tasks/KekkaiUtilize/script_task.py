@@ -271,6 +271,8 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             if self.appear(self.I_U_ENTER_REALM):
                 break
             if self.appear_then_click(self.I_UTILIZE_ADD, interval=2):
+                #wait 5 sec for let it loading or 2nd click will close it
+                time.sleep(5)
                 continue
         logger.info('Enter utilize')
         return True
