@@ -20,6 +20,7 @@ from tasks.Secret.script_task import ScriptTask as SecretScriptTask
 from tasks.WantedQuests.config import WantedQuestsConfig
 from tasks.WantedQuests.assets import WantedQuestsAssets
 from tasks.Component.Costume.config import MainType
+from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 
 class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
 
@@ -168,6 +169,14 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
             if not battle:
                 return None, None
             info = wq_info.ocr(self.device.image)
+            logger.info(f'Wanted quests info: {info}')
+            # here dont fight some SECRET EX:犬神.夢婆.兵勇.跳哥
+            if battle == 'SECRET' :
+                if '安事奇缘·柒' in info: #犬神
+                    logger.info(f'this is fight for 犬神, but 安夢奇缘·柒 hard, go next')
+                    return None, None
+                #TODO 夢婆 兵勇 跳哥
+
             try:
                 # 匹配： 第九章(数量:5)
                 one_number = int(re.findall(r'(\d+)', info)[-1])
