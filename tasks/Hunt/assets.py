@@ -20,6 +20,8 @@ class HuntAssets:
 	I_HUNT_SHRINE = RuleImage(roi_front=(472.66666666666663,141,51.66666666666663,61), roi_back=(472.66666666666663,141,51.66666666666663,61), threshold=0.8, method="Template matching", file="./tasks/Hunt/hunt/hunt_hunt_shrine.png")
 	# 狩猎战 
 	I_HUNT_HUNT = RuleImage(roi_front=(157,414,215,166), roi_back=(157,414,215,166), threshold=0.8, method="Template matching", file="./tasks/Hunt/hunt/hunt_hunt_hunt.png")
+	# description 
+	I_HUNT_CLOSE = RuleImage(roi_front=(1150,43,69,67), roi_back=(1150,43,69,67), threshold=0.8, method="Template matching", file="./tasks/Hunt/hunt/hunt_hunt_close.png")
 
 
 	# Image Rule Assets
