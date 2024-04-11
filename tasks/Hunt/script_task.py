@@ -38,6 +38,8 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
 
         if self.kirin_day:
             self.kirin()
+            #判斷麒麟已挑戰後再回去 避免回去失敗
+            self.wait_until_appear(self.I_KIRIN_END)
             self.ui_get_current_page()
             self.ui_goto(page_main)
         else:
