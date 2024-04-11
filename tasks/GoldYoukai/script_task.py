@@ -46,7 +46,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, SwitchSoul, 
             self.close_buff()
         self.ui_get_current_page()
         self.ui_goto(page_team)
-        self.check_zones('金常妖怪')
+        self.check_zones('金妖怪') 
         # 开始
         if not self.create_room():
             self.gold_exit(con)
@@ -59,10 +59,13 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, SwitchSoul, 
             self.screenshot()
 
             if not self.is_in_room():
+                logger.warning('Not in the room')
                 continue
-            if wait_timer.reached():
+            if wait_timer.reached_and_reset():
                 logger.warning('Wait for too long, exit')
-                self.exit_room()
+                #self.exit_room() #now can solo fight
+                self.click_fire()
+                self.run_general_battle()
                 break
             if not self.appear(self.I_ADD_5_1):
                 # 有人进来了，可以进行挑战
