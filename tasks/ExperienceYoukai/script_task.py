@@ -22,7 +22,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, SwitchSoul, 
         con = self.config.experience_youkai
         self.ui_get_current_page()
         self.ui_goto(page_team)
-        self.check_zones('经验妖怪')
+        self.check_zones('經妖怪') # CHS ORC "經驗妖怪" will regconize as "經妖怪"
 
         self.exp_exit()
 
