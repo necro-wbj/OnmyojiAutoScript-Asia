@@ -29,9 +29,9 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
         if con.kirin_group_team != "-1,-1" or con.netherworld_group_team != "-1,-1":
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
-            if self.kirin_day and con.kirin_group_team != "-1,-1":
+            if self.kirin_day and con.kirin_group_team != '-1,-1':
                 self.run_switch_soul(con.kirin_group_team)
-            if not self.kirin_day and con.netherworld_group_team != "-1,-1":
+            if not self.kirin_day and con.netherworld_group_team != '-1,-1':
                 self.run_switch_soul(con.netherworld_group_team)
         self.ui_get_current_page()
         self.ui_goto(page_hunt)
@@ -83,7 +83,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
 
             if self.appear(self.I_KIRIN_END):
                 # 你的阴阳寮已经打过的麒麟了
-                logger.warning("Your guild have already challenged the Kirin")
+                logger.warning('Your guild have already challenged the Kirin')
                 return
             if self.appear_then_click(self.I_KIRIN_CHALLAGE, interval=0.9):
                 break
