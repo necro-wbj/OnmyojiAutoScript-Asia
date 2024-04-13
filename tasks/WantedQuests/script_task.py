@@ -30,7 +30,7 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
             # 无法完成预处理 很有可能你已经完成了悬赏任务
             logger.warning('Cannot pre-work')
             logger.warning('You may have completed the reward task')
-            self.next_run()
+            self.set_next_run(task='WantedQuests', success=True, finish=True)
             raise TaskEnd('WantedQuests')
 
         self.screenshot()
