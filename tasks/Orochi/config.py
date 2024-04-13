@@ -30,7 +30,7 @@ class Layer(str, Enum):
     NINE = '玖层'
     TEN = '拾层'
     ELEVEN = '悲鸣'
-    TWELVE = '神罚'
+    TWELVE = '神蜀'
 
 class OrochiConfig(ConfigBase):
     # 身份
