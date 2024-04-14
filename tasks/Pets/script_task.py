@@ -9,6 +9,8 @@ from tasks.GameUi.page import page_main
 from tasks.Pets.assets import PetsAssets
 from tasks.Pets.config import PetsConfig
 
+import time
+
 class ScriptTask(GameUi, PetsAssets):
 
     def run(self):
@@ -29,6 +31,14 @@ class ScriptTask(GameUi, PetsAssets):
             self._play()
         if con.pets_feast:
             self._feed()
+        # here check get reward for 5 times
+        while_count = 5
+        while while_count
+            while_count = while_count - 1
+            self.screenshot()
+            if self.ui_reward_appear_click():
+                logger.info('Get reward of pets')
+            time.sleep(1)
         self.ui_click(self.I_PET_EXIT, self.I_CHECK_MAIN)
 
         self.set_next_run(task='Pets', success=True, finish=True)
