@@ -126,6 +126,9 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
 
             # 点击挑战
             if fire:
+                if is_first:
+                    # here wait member join and get is_in_room status
+                    sleep(10)
                 self.click_fire()
                 return True
 
