@@ -20,8 +20,8 @@
   {
     "itemName": "kirin_end",
     "imageName": "kirin_kirin_end.png",
-    "roiFront": "1049,579,143,59",
-    "roiBack": "1049,579,143,59",
+    "roiFront": "1058,587,132,50",
+    "roiBack": "1058,587,132,50",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "已结束"
