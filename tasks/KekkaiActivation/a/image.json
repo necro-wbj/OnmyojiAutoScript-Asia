@@ -83,7 +83,7 @@
   {
     "itemName": "a_invite",
     "imageName": "a_a_invite.png",
-    "roiFront": "356.5,307,100,57",
+    "roiFront": "1049,561,99,101",
     "roiBack": "1014,538,182,162",
     "method": "Template matching",
     "threshold": 0.8,
@@ -92,8 +92,8 @@
   {
     "itemName": "a_auto_invite",
     "imageName": "a_a_auto_invite.png",
-    "roiFront": "1071,590.5,53,51",
-    "roiBack": "1071,456,53,51",
+    "roiFront": "1071,459,44,48",
+    "roiBack": "1071,459,44,48",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "自动邀请"
