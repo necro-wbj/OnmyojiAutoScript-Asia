@@ -2,8 +2,8 @@
   {
     "itemName": "wqse_fire",
     "imageName": "wq_wqse_fire.png",
-    "roiFront": "1125,566,71,36",
-    "roiBack": "1016,520,223,157",
+    "roiFront": "1072,581,61,24",
+    "roiBack": "1016,520,223,173",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "奇怪了之前的不能用"
