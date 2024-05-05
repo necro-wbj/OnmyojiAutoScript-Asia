@@ -203,20 +203,16 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
                 self.click(self.I_BATTLE_REWARD)
             # boss 战
             if self.appear_then_click(self.I_BOSS_BATTLE_BUTTON):
-                if self.wait_until_appear(self.I_BATTLE_START, wait_time=5):
-                    self.run_general_battle(
-                        self.config.exploration.general_battle_config
-                    )
-                else:
-                    continue
+                self.ui_click_until_disappear(self.I_NORMAL_BATTLE_BUTTON)
+                self.run_general_battle(
+                    self.config.exploration.general_battle_config
+                )
             # 小怪 战
-            if self.appear_then_click(self.I_NORMAL_BATTLE_BUTTON):
-                if self.wait_until_appear(self.I_BATTLE_START, wait_time=5):
-                    self.run_general_battle(
-                        self.config.exploration.general_battle_config
-                    )
-                else:
-                    continue
+            if self.appear(self.I_NORMAL_BATTLE_BUTTON):
+                self.ui_click_until_disappear(self.I_NORMAL_BATTLE_BUTTON)
+                self.run_general_battle(
+                    self.config.exploration.general_battle_config
+                )
             # 滑动
             elif self.appear(self.I_E_AUTO_ROTATE_ON) or self.appear(self.I_GET_REWARD):
                 self.swipe(self.S_SWIPE_BACKGROUND_RIGHT)
