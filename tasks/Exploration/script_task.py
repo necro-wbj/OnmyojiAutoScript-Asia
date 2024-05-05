@@ -52,22 +52,22 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
                 self.gold_100()
             self.close_buff()
 
-        self.ui_get_current_page()
-        # 探索页面
-        self.ui_goto(page_exploration)
-
-        # ************************* 跳转至对应指定章节并进入 *******************
-        # 默认全部解锁， 当前处于第二十八章
-        # 查找指定的章节：
-        if not self.open_expect_level():
-            logger.critical(
-                f"Not find {explorationConfig.exploration_config.exploration_level} or"
-                f" Enter {explorationConfig.exploration_config.exploration_level} failed!"
-            )
-            raise RequestHumanTakeover
-
         count = 0
         while count < explorationConfig.exploration_config.attack_number:
+            self.ui_get_current_page()
+            # 探索页面
+            self.ui_goto(page_exploration)
+            while not self.appear_then_click(self.I_BOX):
+                break
+            # ************************* 跳转至对应指定章节并进入 *******************
+            # 默认全部解锁， 当前处于第二十八章
+            # 查找指定的章节：
+            if not self.open_expect_level():
+                logger.critical(
+                    f"Not find {explorationConfig.exploration_config.exploration_level} or"
+                    f" Enter {explorationConfig.exploration_config.exploration_level} failed!"
+                )
+                raise RequestHumanTakeover
             if self.wait_until_appear(self.I_E_EXPLORATION_CLICK, wait_time=1):
                 self.click(self.I_E_EXPLORATION_CLICK)
                 count += 1
@@ -75,9 +75,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
                 self.battle_process()
             if self.appear(self.I_EXPLORATION_TITLE):
                 self.open_expect_level()
-
-        if self.wait_until_appear(self.I_RED_CLOSE, wait_time=2):
-            self.appear_then_click(self.I_RED_CLOSE)
+            if self.wait_until_appear(self.I_RED_CLOSE, wait_time=2):
+                self.appear_then_click(self.I_RED_CLOSE)
+        
         self.ui_goto(page_main)
         self.set_next_run(task="Exploration", success=True, finish=False)
         raise TaskEnd
@@ -242,7 +242,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
             if self.appear(self.I_E_AUTO_ROTATE_ON):
                 break
             # 自动轮换关着 则打开
-            if self.appear_then_click(self.I_E_AUTO_ROTATE_OFF,threshold=0.3):
+            if self.appear_then_click(self.I_E_AUTO_ROTATE_OFF, threshold=0.3):
                 if self.appear(self.I_E_AUTO_ROTATE_ON):
                     break
 
