@@ -363,7 +363,21 @@ class ScriptTask(KU, KekkaiActivationAssets):
             if self.appear_then_click(self.I_UI_BACK_BLUE, interval=2.5):
                 logger.info("點擊藍色返回")
                 continue
-        
+
+    def harvest_card(self):
+        """
+        收卡的经验
+        :return:
+        """
+        self.appear_then_click(self.I_A_HARVEST_EXP)  # 如果到最后没有领的话有下面的一些图片
+        self.appear_then_click(self.I_A_HARVEST_FISH4)  # 斗鱼4/5区别不大 斗鱼的如果一直没有领的话
+        self.appear_then_click(self.I_A_HARVEST_KAIKO_4)  # 太鼓4
+        self.appear_then_click(self.I_A_HARVEST_KAIKO_3)  # 太鼓3
+        self.appear_then_click(self.I_A_HARVEST_KAIKO_6)  # 太鼓6
+        self.appear_then_click(self.I_A_HARVEST_FISH_6)  # 斗鱼6
+        self.appear_then_click(self.I_A_HARVEST_MOON_3)  # 太阴3
+        self.appear_then_click(self.I_A_HARVEST_FISH_3)  # 斗鱼三
+
 
 if __name__ == "__main__":
     from module.config.config import Config
