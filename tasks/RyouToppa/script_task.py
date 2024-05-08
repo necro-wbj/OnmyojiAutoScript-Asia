@@ -282,10 +282,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
             if click_failure_count >= 3:
                 logger.warning("Click failure, check your click position")
                 return False
-            if not self.appear(self.I_TOPPA_RECORD, threshold=0.85):
+            if not self.appear(self.I_TOPPA_RECORD, threshold=0.8):
                 time.sleep(1)
                 self.screenshot()
-                if self.appear(self.I_TOPPA_RECORD, threshold=0.85):
+                if self.appear(self.I_TOPPA_RECORD, threshold=0.8):
                     continue
                 logger.info("Start attach area [%s]" % str(index + 1))
                 return self.run_general_battle(config=self.config.ryou_toppa.general_battle_config)
