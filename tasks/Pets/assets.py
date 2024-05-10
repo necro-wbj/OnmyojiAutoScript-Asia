@@ -24,7 +24,7 @@ class PetsAssets:
 	# 投喂 
 	I_PET_FEED = RuleImage(roi_front=(798,497,77,81), roi_back=(798,497,77,81), threshold=0.8, method="Template matching", file="./tasks/Pets/pet/pet_pet_feed.png")
 	# 跳过 
-	I_PET_SKIP = RuleImage(roi_front=(1117,99,56,29), roi_back=(999,42,242,147), threshold=0.65, method="Template matching", file="./tasks/Pets/pet/pet_pet_skip.png")
+	I_PET_SKIP = RuleImage(roi_front=(1116,100,28,27), roi_back=(999,42,242,147), threshold=0.65, method="Template matching", file="./tasks/Pets/pet/pet_pet_skip.png")
 	# 退出 
 	I_PET_EXIT = RuleImage(roi_front=(30,25,39,33), roi_back=(30,25,39,33), threshold=0.8, method="Template matching", file="./tasks/Pets/pet/pet_pet_exit.png")
 
