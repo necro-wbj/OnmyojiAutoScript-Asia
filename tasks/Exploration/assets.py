@@ -53,9 +53,9 @@ class ExplorationAssets:
 	# 设置按钮 
 	I_E_SETTINGS_BUTTON = RuleImage(roi_front=(37,692,53,26), roi_back=(37,692,53,26), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_settings_button.png")
 	# 普通怪 
-	I_NORMAL_BATTLE_BUTTON = RuleImage(roi_front=(636,263,42,39), roi_back=(0,0,1279,719), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_normal_battle_button.png")
+	I_NORMAL_BATTLE_BUTTON = RuleImage(roi_front=(636,263,42,39), roi_back=(0,0,1279,719), threshold=0.75, method="Template matching", file="./tasks/Exploration/res/res_normal_battle_button.png")
 	# boss 
-	I_BOSS_BATTLE_BUTTON = RuleImage(roi_front=(683,256,38,34), roi_back=(0,0,1276,719), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_boss_battle_button.png")
+	I_BOSS_BATTLE_BUTTON = RuleImage(roi_front=(683,256,38,34), roi_back=(0,0,1276,719), threshold=0.75, method="Template matching", file="./tasks/Exploration/res/res_boss_battle_button.png")
 	# 战后奖励 
 	I_BATTLE_REWARD = RuleImage(roi_front=(647,395,31,21), roi_back=(1,1,1278,718), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_battle_reward.png")
 	# 妖 

@@ -104,7 +104,7 @@
     "roiFront": "636,263,42,39",
     "roiBack": "0,0,1279,719",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.75,
     "description": "普通怪"
   },
   {
@@ -113,7 +113,7 @@
     "roiFront": "683,256,38,34",
     "roiBack": "0,0,1276,719",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.75,
     "description": "boss"
   },
   {
