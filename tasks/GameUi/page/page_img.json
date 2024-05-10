@@ -149,7 +149,7 @@
     "roiFront": "1099,15,34,33",
     "roiBack": "1099,15,34,33",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "description"
   },
   {
