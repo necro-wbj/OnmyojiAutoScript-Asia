@@ -62,7 +62,7 @@ class ScriptTask(GameUi, PetsAssets):
             logger.warning('Already feed')
             return
         self.ui_click(self.I_PET_FEED, self.I_PET_SKIP)
-        self.wait_until_disappear(self.I_PET_SKIP)
+        self.ui_click_until_disappear(self.I_PET_SKIP)
 
     def _play(self):
         """
@@ -89,7 +89,7 @@ class ScriptTask(GameUi, PetsAssets):
                 play_count += 1
                 logger.info(f'Play {play_count}')
                 continue
-        self.wait_until_disappear(self.I_PET_SKIP)
+        self.ui_click_until_disappear(self.I_PET_SKIP)
 
 
 if __name__ == '__main__':
