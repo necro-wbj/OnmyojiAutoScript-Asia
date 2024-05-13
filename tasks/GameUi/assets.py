@@ -187,7 +187,7 @@ class GameUiAssets:
 
 	# Image Rule Assets
 	# 突破紀錄 
-	I_KEKKAI_TOPPA = RuleImage(roi_front=(72,633,49,53), roi_back=(72,633,49,53), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_kekkai_toppa.png")
+	I_KEKKAI_TOPPA = RuleImage(roi_front=(1192,352,78,117), roi_back=(1192,352,78,117), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_kekkai_toppa.png")
 
 
 	# Image Rule Assets
