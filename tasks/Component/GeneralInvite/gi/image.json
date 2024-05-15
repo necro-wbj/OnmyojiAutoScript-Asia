@@ -325,9 +325,9 @@
   },
   {
     "itemName": "gi_in_room",
-    "imageName": "gi_in_room.png",
-    "roiFront": "92,17,213,64",
-    "roiBack": "92,17,213,64",
+    "imageName": "gi_gi_in_room.png",
+    "roiFront": "92,17,162,46",
+    "roiBack": "92,17,162,46",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "三人御魂组队左上角的协站队伍"

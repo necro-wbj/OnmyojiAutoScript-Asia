@@ -2,8 +2,8 @@
   {
     "itemName": "gi_emoji_1",
     "imageName": "gi_gi_emoji_1.png",
-    "roiFront": "29,538,49,54",
-    "roiBack": "17,527,74,75",
+    "roiFront": "30,531,46,45",
+    "roiBack": "12,512,83,94",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
