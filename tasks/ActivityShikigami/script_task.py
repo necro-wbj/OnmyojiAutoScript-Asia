@@ -248,10 +248,6 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 logger.info("Win")
                 while 1:
                     self.screenshot()
-                    if not self.appear(self.I_WIN) and not self.appear(
-                        self.I_GET_REWARD
-                    ):
-                        break
                     if self.appear_then_click(
                         self.I_GET_REWARD, action=self.C_RANDOM_ALL, interval=1.1
                     ):
@@ -259,8 +255,12 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                     if self.appear_then_click(
                         self.I_WIN, action=self.C_RANDOM_ALL, interval=1.1
                     ):
-                        sleep(1)
+                        sleep(2)
                         continue
+                    if not self.appear(self.I_WIN) and not self.appear(
+                        self.I_GET_REWARD
+                    ):
+                        break
                 return True
             # 失败 -> 正常人不会失败
             if self.appear(self.I_FALSE):
