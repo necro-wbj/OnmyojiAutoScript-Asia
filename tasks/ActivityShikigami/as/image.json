@@ -2,8 +2,8 @@
   {
     "itemName": "shi",
     "imageName": "as_shi.png",
-    "roiFront": "427,337,82,120",
-    "roiBack": "64,265,1110,277",
+    "roiFront": "1189,239,40,44",
+    "roiBack": "1177,227,71,69",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "进入活动"
@@ -20,8 +20,8 @@
   {
     "itemName": "battle",
     "imageName": "as_battle.png",
-    "roiFront": "111,176,35,165",
-    "roiBack": "74,148,105,220",
+    "roiFront": "261,334,29,115",
+    "roiBack": "261,334,29,115",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入爬塔"
@@ -38,8 +38,8 @@
   {
     "itemName": "lock",
     "imageName": "as_lock.png",
-    "roiFront": "666,597,25,32",
-    "roiBack": "666,597,25,32",
+    "roiFront": "756,647,25,32",
+    "roiBack": "756,647,25,32",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "上锁图标"
@@ -47,8 +47,8 @@
   {
     "itemName": "unlock",
     "imageName": "as_unlock.png",
-    "roiFront": "665,597,28,28",
-    "roiBack": "665,597,28,28",
+    "roiFront": "756,648,28,28",
+    "roiBack": "756,648,28,28",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "还未上锁图片"
@@ -56,8 +56,8 @@
   {
     "itemName": "fire",
     "imageName": "as_fire.png",
-    "roiFront": "983,547,107,62",
-    "roiBack": "983,547,107,62",
+    "roiFront": "1146,594,83,80",
+    "roiBack": "1146,594,83,80",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击战斗"

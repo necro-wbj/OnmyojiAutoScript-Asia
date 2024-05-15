@@ -214,5 +214,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "封魔的金币"
+  },
+  {
+    "itemName": "get_reward",
+    "imageName": "gb_get_reward.png",
+    "roiFront": "467,231,344,47",
+    "roiBack": "467,231,344,47",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "取得獎勵"
   }
 ]
