@@ -121,7 +121,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                     continue
                 if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
                     continue
-
+            sleep(3)
             if self.run_general_battle(config=config.general_battle):
                 logger.info("General battle success")
 
@@ -255,7 +255,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                     if self.appear_then_click(
                         self.I_WIN, action=self.C_RANDOM_ALL, interval=1.1
                     ):
-                        sleep(2)
+                        sleep(3)
                         continue
                     if not self.appear(self.I_WIN) and not self.appear(
                         self.I_GET_REWARD
