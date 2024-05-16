@@ -246,21 +246,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             # 如果出现了 “鼓”
             if self.appear(self.I_WIN):
                 logger.info("Win")
-                while 1:
-                    self.screenshot()
-                    if self.appear_then_click(
-                        self.I_GET_REWARD, action=self.C_RANDOM_ALL, interval=1.1
-                    ):
-                        continue
-                    if self.appear_then_click(
-                        self.I_WIN, action=self.C_RANDOM_ALL, interval=1.1
-                    ):
-                        sleep(3)
-                        continue
-                    if not self.appear(self.I_WIN) and not self.appear(
-                        self.I_GET_REWARD
-                    ):
-                        break
+                self.ui_click(self.C_RANDOM_TOP, self.I_FIRE, interval=3)
                 return True
             # 失败 -> 正常人不会失败
             if self.appear(self.I_FALSE):

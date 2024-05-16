@@ -114,7 +114,7 @@ class GeneralBattleAssets:
 	# 封魔的金币 
 	I_DE_GOLD = RuleImage(roi_front=(61,52,30,25), roi_back=(45,33,65,64), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_de_gold.png")
 	# 取得獎勵 
-	I_GET_REWARD = RuleImage(roi_front=(467,231,344,47), roi_back=(467,231,344,47), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_get_reward.png")
+	I_GET_REWARD = RuleImage(roi_front=(467,188,344,90), roi_back=(467,188,344,90), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_get_reward.png")
 
 
 	# Image Rule Assets
