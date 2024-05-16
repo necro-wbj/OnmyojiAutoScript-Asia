@@ -25,5 +25,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "已结束"
+  },
+  {
+    "itemName": "kirin_wine",
+    "imageName": "kirin_kirin_wine.png",
+    "roiFront": "398,407,58,50",
+    "roiBack": "124,313,873,238",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "麒麟加成"
   }
 ]

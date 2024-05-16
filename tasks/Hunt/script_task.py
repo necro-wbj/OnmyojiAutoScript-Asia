@@ -29,16 +29,16 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
         if con.kirin_group_team != "-1,-1" or con.netherworld_group_team != "-1,-1":
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
-            if self.kirin_day and con.kirin_group_team != '-1,-1':
+            if self.kirin_day and con.kirin_group_team != "-1,-1":
                 self.run_switch_soul(con.kirin_group_team)
-            if not self.kirin_day and con.netherworld_group_team != '-1,-1':
+            if not self.kirin_day and con.netherworld_group_team != "-1,-1":
                 self.run_switch_soul(con.netherworld_group_team)
         self.ui_get_current_page()
         self.ui_goto(page_hunt)
 
         if self.kirin_day:
             self.kirin()
-            #判斷麒麟已挑戰後再回去 避免回去失敗
+            # 判斷麒麟已挑戰後再回去 避免回去失敗
             self.wait_until_appear(self.I_KIRIN_END)
             self.ui_get_current_page()
             self.ui_goto(page_main)
@@ -78,24 +78,27 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
     def kirin(self):
         logger.hr("kirin", 2)
         # TODO: 没有碰到：（1）麒麟未开 （2）麒麟已经挑战完毕
+        self.screenshot()
+        if self.appear(self.I_KIRIN_END):
+            # 你的阴阳寮已经打过的麒麟了
+            logger.warning("Your guild have already challenged the Kirin")
+            return
+        
         while 1:
             self.screenshot()
-
-            if self.appear(self.I_KIRIN_END):
-                # 你的阴阳寮已经打过的麒麟了
-                logger.warning('Your guild have already challenged the Kirin')
-                return
-            if self.appear_then_click(self.I_KIRIN_CHALLAGE, interval=0.9):
-                break
-            if self.click(self.C_HUNT_ENTER, interval=2.9):
+            if self.appear(self.I_CHECK_HUNT, interval=0.9):
+                self.click(self.C_HUNT_ENTER, interval=2.9)
                 continue
-        logger.info("Arrive the Kirin")
-        self.ui_click(self.I_KIRIN_CHALLAGE, self.I_KIRIN_GATHER)
-        # 等待进入战斗
-        # 等待挑战, 5秒也是等
+            if self.appear_then_click(self.I_KIRIN_CHALLAGE, interval=0.9):
+                    logger.info("Arrive the Kirin")
+                    break
         sleep(5)
+        while not self.is_in_battle(False):
+            self.screenshot()
+            if self.appear_then_click(self.I_KIRIN_WINE):
+                continue
+
         self.device.stuck_record_add("BATTLE_STATUS_S")
-        self.wait_until_disappear(self.I_KIRIN_GATHER)
         self.device.stuck_record_clear()
         self.device.stuck_record_add("BATTLE_STATUS_S")
         self.run_general_battle()

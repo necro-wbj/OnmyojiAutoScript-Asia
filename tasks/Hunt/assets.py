@@ -31,6 +31,8 @@ class HuntAssets:
 	I_KIRIN_GATHER = RuleImage(roi_front=(28,480,75,64), roi_back=(28,480,75,64), threshold=0.8, method="Template matching", file="./tasks/Hunt/kirin/kirin_kirin_gather.png")
 	# 已结束 
 	I_KIRIN_END = RuleImage(roi_front=(1058,587,132,50), roi_back=(1058,587,132,50), threshold=0.8, method="Template matching", file="./tasks/Hunt/kirin/kirin_kirin_end.png")
+	# 麒麟加成 
+	I_KIRIN_WINE = RuleImage(roi_front=(398,407,58,50), roi_back=(124,313,873,238), threshold=0.8, method="Template matching", file="./tasks/Hunt/kirin/kirin_kirin_wine.png")
 
 
 	# Image Rule Assets

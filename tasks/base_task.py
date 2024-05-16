@@ -221,12 +221,13 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         :return:
         """
         self.wait_until_appear(target)
+        x,y = target.coord()
         if action is None:
-            self.device.click(target.coord(), control_name=target.name)
+            self.device.click(x,y, control_name=target.name)
         elif isinstance(action, RuleLongClick):
-            self.device.long_click(target.coord(), duration=action.duration / 1000, control_name=target.name)
+            self.device.long_click(x,y, duration=action.duration / 1000, control_name=target.name)
         elif isinstance(action, RuleClick):
-            self.device.click(target.coord(), control_name=target.name)
+            self.device.click(x,y, control_name=target.name)
 
     def wait_until_disappear(self, target: RuleImage) -> None:
         while 1:
