@@ -152,7 +152,6 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
         self.screenshot()
         if not self.appear(self.I_DE_AWARD):
             self.ui_get_reward(self.I_DE_RED_DHARMA)
-            self.wait_until_appear_then_click(self.I_UI_REWARD)
             logger.info('紅色達摩領取完畢')
         self.wait_until_appear(self.I_DE_AWARD)
         # 然后到四个灯笼
