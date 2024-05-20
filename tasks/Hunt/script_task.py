@@ -83,22 +83,24 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
             # 你的阴阳寮已经打过的麒麟了
             logger.warning("Your guild have already challenged the Kirin")
             return
-        
+
         while 1:
             self.screenshot()
             if self.appear(self.I_CHECK_HUNT, interval=0.9):
                 self.click(self.C_HUNT_ENTER, interval=2.9)
                 continue
             if self.appear_then_click(self.I_KIRIN_CHALLAGE, interval=0.9):
-                    logger.info("Arrive the Kirin")
-                    break
-            
+                logger.info("Arrive the Kirin")
+                break
+
         while 1:
             self.screenshot()
-            if self.appear_then_click(self.I_KIRIN_WINE , interval=0.9):
-                continue
             if not self.appear(self.I_KIRIN_GATHER):
                 break
+            if self.appear_then_click(self.I_KIRIN_CHALLAGE):
+                continue
+            if self.appear(self.I_KIRIN_WINE, interval=0.9):
+                self.ui_get_reward(self.I_KIRIN_WINE)
         # 等待进入战斗
         # 等待挑战, 5秒也是等
         sleep(5)
@@ -108,7 +110,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
                 continue
 
         self.device.stuck_record_add("BATTLE_STATUS_S")
-        
+
         self.device.stuck_record_clear()
         self.device.stuck_record_add("BATTLE_STATUS_S")
         self.run_general_battle()
