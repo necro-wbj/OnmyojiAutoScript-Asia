@@ -92,22 +92,16 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
             if self.appear_then_click(self.I_KIRIN_CHALLAGE, interval=0.9):
                 logger.info("Arrive the Kirin")
                 break
-
-        while 1:
+            
+        # 等待进入战斗
+        # 等待挑战, 5秒也是等
+        sleep(5)
+        while not self.is_in_battle(True):
             self.screenshot()
-            if not self.appear(self.I_KIRIN_GATHER):
-                break
             if self.appear_then_click(self.I_KIRIN_CHALLAGE):
                 continue
             if self.appear(self.I_KIRIN_WINE, interval=0.9):
                 self.ui_get_reward(self.I_KIRIN_WINE)
-        # 等待进入战斗
-        # 等待挑战, 5秒也是等
-        sleep(5)
-        while not self.is_in_battle(False):
-            self.screenshot()
-            if self.appear_then_click(self.I_KIRIN_WINE):
-                continue
 
         self.device.stuck_record_add("BATTLE_STATUS_S")
 
