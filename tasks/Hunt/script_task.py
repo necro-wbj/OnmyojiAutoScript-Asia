@@ -78,14 +78,13 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
     def kirin(self):
         logger.hr("kirin", 2)
         # TODO: 没有碰到：（1）麒麟未开 （2）麒麟已经挑战完毕
-        self.screenshot()
-        if self.appear(self.I_KIRIN_END):
-            # 你的阴阳寮已经打过的麒麟了
-            logger.warning("Your guild have already challenged the Kirin")
-            return
-
+        
         while 1:
             self.screenshot()
+            if self.appear(self.I_KIRIN_END):
+                # 你的阴阳寮已经打过的麒麟了
+                logger.warning("Your guild have already challenged the Kirin")
+                return
             if self.appear(self.I_CHECK_HUNT, interval=0.9):
                 self.click(self.C_HUNT_ENTER, interval=2.9)
                 continue
