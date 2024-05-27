@@ -98,6 +98,8 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
         while not self.is_in_battle(True):
             self.screenshot()
             if self.appear_then_click(self.I_KIRIN_CHALLAGE):
+                # 清除點擊紀錄避免點擊過多次觸發錯誤 此處可以放心點擊 理論上結束後遊戲會把你趕出去
+                self.device.click_record_clear()
                 continue
             if self.appear(self.I_KIRIN_WINE, interval=0.9):
                 self.ui_get_reward(self.I_KIRIN_WINE)
