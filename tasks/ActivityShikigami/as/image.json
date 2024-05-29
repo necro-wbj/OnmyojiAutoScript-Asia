@@ -2,8 +2,8 @@
   {
     "itemName": "shi",
     "imageName": "as_shi.png",
-    "roiFront": "421,299,60,120",
-    "roiBack": "64,216,1110,326",
+    "roiFront": "1187,162,49,41",
+    "roiBack": "1167,132,106,458",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "进入活动"
@@ -20,8 +20,8 @@
   {
     "itemName": "battle",
     "imageName": "as_battle.png",
-    "roiFront": "883,291,35,165",
-    "roiBack": "840,218,138,315",
+    "roiFront": "152,242,33,132",
+    "roiBack": "152,242,33,132",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入爬塔"
@@ -38,8 +38,8 @@
   {
     "itemName": "lock",
     "imageName": "as_lock.png",
-    "roiFront": "816,655,25,32",
-    "roiBack": "816,655,25,32",
+    "roiFront": "776,651,25,32",
+    "roiBack": "776,651,25,32",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "上锁图标"
@@ -47,8 +47,8 @@
   {
     "itemName": "unlock",
     "imageName": "as_unlock.png",
-    "roiFront": "813,656,28,28",
-    "roiBack": "813,656,28,28",
+    "roiFront": "774,652,28,28",
+    "roiBack": "774,652,28,28",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "还未上锁图片"
@@ -56,8 +56,8 @@
   {
     "itemName": "fire",
     "imageName": "as_fire.png",
-    "roiFront": "1117,564,107,108",
-    "roiBack": "1117,564,107,108",
+    "roiFront": "1117,593,105,79",
+    "roiBack": "1117,593,105,79",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击战斗"
@@ -65,8 +65,8 @@
   {
     "itemName": "ap",
     "imageName": "as_ap.png",
-    "roiFront": "984,474,29,26",
-    "roiBack": "984,474,29,26",
+    "roiFront": "1090,509,29,26",
+    "roiBack": "1090,509,29,26",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "体力按钮"
@@ -74,8 +74,8 @@
   {
     "itemName": "ap_activity",
     "imageName": "as_ap_activity.png",
-    "roiFront": "987,476,27,25",
-    "roiBack": "987,476,27,25",
+    "roiFront": "1082,517,45,21",
+    "roiBack": "1082,517,45,21",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "活动体力"

@@ -49,12 +49,9 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         self.ui_goto(page_main)
         self.home_main()
 
-        # 2024-04-04 ---------------------start
-        config.general_climb.ap_mode = ApMode.AP_GAME
-        # 2024-04-04 ---------------------end
         # 选择是游戏的体力还是活动的体力
         current_ap = config.general_climb.ap_mode
-        # self.switch(current_ap)
+        self.switch(current_ap)
 
         # 设定是否锁定阵容
         if config.general_battle.lock_team_enable:
@@ -92,20 +89,20 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 break
             # 2
             self.wait_until_appear(self.I_FIRE)
-            # is_remain = self.check_ap_remain(current_ap)
+            is_remain = self.check_ap_remain(current_ap)
             # 如果没有剩余了且这个时候是体力，就退出活动
-            # if not is_remain and current_ap == ApMode.AP_GAME:
-            #     logger.info("Game ap out")
-            #     break
+            if not is_remain and current_ap == ApMode.AP_GAME:
+                logger.info("Game ap out")
+                break
             # 如果不是那就切换到体力
-            # elif not is_remain and current_ap == ApMode.AP_ACTIVITY:
-            #     if config.general_climb.activity_toggle:
-            #         logger.info("Activity ap out and switch to game ap")
-            #         current_ap = ApMode.AP_GAME
-            #         self.switch(current_ap)
-            #     else:
-            #         logger.info("Activity ap out")
-            #         break
+            elif not is_remain and current_ap == ApMode.AP_ACTIVITY:
+                if config.general_climb.activity_toggle:
+                    logger.info("Activity ap out and switch to game ap")
+                    current_ap = ApMode.AP_GAME
+                    self.switch(current_ap)
+                else:
+                    logger.info("Activity ap out")
+                    break
 
             # 点击战斗
             logger.info("Click battle")
@@ -198,27 +195,26 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         :param current_ap:
         :return:
         """
-        pass
-        # if current_ap == ApMode.AP_ACTIVITY:
-        #     logger.info("Select activity ap")
-        #     while 1:
-        #         self.screenshot()
-        #         if self.appear(self.I_AP_ACTIVITY):
-        #             break
-        #         if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
-        #             continue
-        #         if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
-        #             continue
-        #         if self.appear(self.I_AP, interval=1):
-        #             self.appear_then_click(self.I_SWITCH, interval=2)  # 点击切换
-        # else:
-        #     logger.info("Select game ap")
-        #     while 1:
-        #         self.screenshot()
-        #         if self.appear(self.I_AP):
-        #             break
-        #         if self.appear(self.I_AP_ACTIVITY, interval=1):
-        #             self.appear_then_click(self.I_SWITCH, interval=2)
+        if current_ap == ApMode.AP_ACTIVITY:
+            logger.info("Select activity ap")
+            while 1:
+                self.screenshot()
+                if self.appear(self.I_AP_ACTIVITY):
+                    break
+                if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
+                    continue
+                if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
+                    continue
+                if self.appear(self.I_AP, interval=1):
+                    self.appear_then_click(self.I_SWITCH, interval=2)  # 点击切换
+        else:
+            logger.info("Select game ap")
+            while 1:
+                self.screenshot()
+                if self.appear(self.I_AP):
+                    break
+                if self.appear(self.I_AP_ACTIVITY, interval=1):
+                    self.appear_then_click(self.I_SWITCH, interval=2)
 
     # def battle_wait(self, random_click_swipt_enable: bool) -> bool:
     #     # 重写
