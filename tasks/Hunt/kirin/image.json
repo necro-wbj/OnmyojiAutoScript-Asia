@@ -2,8 +2,8 @@
   {
     "itemName": "kirin_challage",
     "imageName": "kirin_kirin_challage.png",
-    "roiFront": "1074,579,94,45",
-    "roiBack": "1044,538,235,181",
+    "roiFront": "1072,577,93,46",
+    "roiBack": "1072,577,117,83",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "麒麟的挑战"
