@@ -52,7 +52,7 @@ class ActivityShikigamiAssets:
 	# 活动体力 
 	I_AP_ACTIVITY = RuleImage(roi_front=(1082,517,45,21), roi_back=(1082,517,45,21), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_ap_activity.png")
 	# 切换按键 
-	I_SWITCH = RuleImage(roi_front=(1075,480,23,23), roi_back=(1075,480,23,23), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_switch.png")
+	I_SWITCH = RuleImage(roi_front=(1214,514,23,23), roi_back=(1214,514,23,23), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_switch.png")
 	# 购买活动的体力 
 	I_BUY_JADE = RuleImage(roi_front=(837,617,38,42), roi_back=(837,617,38,42), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_buy_jade.png")
 	# 增加到最大 

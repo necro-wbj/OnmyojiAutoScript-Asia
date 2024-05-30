@@ -83,8 +83,8 @@
   {
     "itemName": "switch",
     "imageName": "as_switch.png",
-    "roiFront": "1075,480,23,23",
-    "roiBack": "1075,480,23,23",
+    "roiFront": "1214,514,23,23",
+    "roiBack": "1214,514,23,23",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "切换按键"
