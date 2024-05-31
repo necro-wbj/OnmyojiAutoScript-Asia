@@ -164,6 +164,8 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
         """
         if is_screenshot:
             self.screenshot()
+        if self.appear(self.I_GI_TEAM):
+            return True
         if self.appear(self.I_GI_EMOJI_1):
             return True
         if self.appear(self.I_GI_EMOJI_2):

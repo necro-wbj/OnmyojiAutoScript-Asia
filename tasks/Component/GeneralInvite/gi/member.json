@@ -34,5 +34,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "判断是不是在探索界面"
+  },
+  {
+    "itemName": "gi_team",
+    "imageName": "gi_gi_team.png",
+    "roiFront": "94,25,123,38",
+    "roiBack": "94,25,123,38",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "協戰隊伍"
   }
 ]
