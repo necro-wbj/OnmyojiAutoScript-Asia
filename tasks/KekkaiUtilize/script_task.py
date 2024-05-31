@@ -378,12 +378,9 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
 
         logger.hr('Start utilize')
         self.switch_friend_list(friend)
-        self.swipe(self.S_U_END, interval=3)
         if friend == SelectFriendList.SAME_SERVER:
-            self.switch_friend_list(SelectFriendList.DIFFERENT_SERVER)
             self.switch_friend_list(SelectFriendList.SAME_SERVER)
         else:
-            self.switch_friend_list(SelectFriendList.SAME_SERVER)
             self.switch_friend_list(SelectFriendList.DIFFERENT_SERVER)
         card_best = None
         swipe_count = 0
