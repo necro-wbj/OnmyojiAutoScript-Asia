@@ -498,6 +498,8 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                     # 一直点击
                     if self.ui_reward_appear_click():
                         continue
+                    #連續點擊會直接把獎勵點擊掉
+                    sleep(0.5)
                 break
 
             if isinstance(click_image, RuleImage):

@@ -120,12 +120,15 @@ class ScriptTask(GameUi, SoulsTidyAssets):
                     logger.warning('Gold amount not int, skip')
                     continue
                 if gold_amount > 0:
+                    logger.warning('Gold Get')
                     break
             # 点击奉纳收取奖励
             if not self.appear(self.I_ST_DONATE):
                 logger.warning('Donate button not appear, skip')
                 continue
-            while 1:
+            count_donate = 10
+            while count_donate:
+                count_donate -= 1
                 self.screenshot()
                 if self.appear_then_click(self.I_UI_CONFIRM, interval=0.5):
                     continue
@@ -150,6 +153,7 @@ class ScriptTask(GameUi, SoulsTidyAssets):
                     break
                 if self.appear_then_click(self.I_ST_DONATE, interval=5.5):
                     continue
+                sleep(1)
             logger.info('Donate one')
 
         logger.info('Bongna done')
