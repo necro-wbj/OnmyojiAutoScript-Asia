@@ -5,7 +5,7 @@
     "roiFront": "555,606,166,21",
     "roiBack": "494,364,285,274",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.75,
     "description": "奖励，就是那个魂"
   },
   {

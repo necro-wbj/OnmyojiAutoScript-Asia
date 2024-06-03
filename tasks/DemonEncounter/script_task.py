@@ -389,7 +389,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
                 check_timer = Timer(3)
                 check_timer.start()
                 continue
-            if self.appear(self.I_REWARD):
+            if self.appear_then_click(self.I_REWARD):
                 logger.info('Win battle')
                 self.ui_click_until_disappear(self.I_REWARD)
                 return True

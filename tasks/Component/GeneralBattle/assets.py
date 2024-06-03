@@ -66,7 +66,7 @@ class GeneralBattleAssets:
 
 	# Image Rule Assets
 	# 奖励，就是那个魂 
-	I_REWARD = RuleImage(roi_front=(555,606,166,21), roi_back=(494,364,285,274), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_reward.png")
+	I_REWARD = RuleImage(roi_front=(555,606,166,21), roi_back=(494,364,285,274), threshold=0.75, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_reward.png")
 	# 预设的小图标 
 	I_PRESET = RuleImage(roi_front=(32,650,47,45), roi_back=(32,650,47,45), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_preset.png")
 	# 准备 
