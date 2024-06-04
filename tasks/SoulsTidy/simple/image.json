@@ -65,8 +65,8 @@
   {
     "itemName": "st_unselected",
     "imageName": "simple_st_unselected.png",
-    "roiFront": "508.33333333333326,341.3333333333333,38,37",
-    "roiBack": "508.33333333333326,341.3333333333333,38,37",
+    "roiFront": "508,341,38,37",
+    "roiBack": "508,341,38,37",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "未选中"
@@ -106,5 +106,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "神赐"
+  },
+  {
+    "itemName": "st_abandon",
+    "imageName": "simple_st_abandon.png",
+    "roiFront": "31,116,131,40",
+    "roiBack": "20,107,152,58",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "已棄置"
   }
 ]

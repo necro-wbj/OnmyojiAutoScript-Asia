@@ -88,6 +88,10 @@ class ScriptTask(GameUi, SoulsTidyAssets):
             if self.appear_then_click(self.I_ST_BONGNA, interval=1, threshold=0.6):
                 continue
         logger.hr('Enter bongna')
+        #click abandon, sometime it will show BONGNA-ALL
+        self.screenshot()
+        self.appear_then_click(self.I_ST_ABANDON, interval=1, threshold=0.6)
+        logger.hr('click abandon')
         # 确保是按照等级来排序的
         while 1:
             self.screenshot()
@@ -112,7 +116,10 @@ class ScriptTask(GameUi, SoulsTidyAssets):
                 break
             # !!!!!!  这里没有检查金币是否足够
             # 长按
-            while 1:
+            count_donate = 10
+            while count_donate:
+                count_donate -= 1
+                sleep(1)
                 self.screenshot()
                 self.click(self.L_ONE, interval=2.5)
                 gold_amount = self.O_ST_GOLD.ocr(self.device.image)
