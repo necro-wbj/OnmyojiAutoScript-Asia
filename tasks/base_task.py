@@ -80,6 +80,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                     if self.appear_then_click(self.I_G_ACCEPT, interval=1):
                         continue
                     if not self.appear(self.I_G_ACCEPT):
+                        self.set_next_run(task='WantedQuests',target=datetime.now())
                         break
             # 如果是全部拒绝
             elif invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.REJECT:
@@ -101,6 +102,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                     elif self.appear_then_click(self.I_G_IGNORE, interval=1):
                         continue
                     if not self.appear(self.I_G_ACCEPT):
+                        self.set_next_run(task='WantedQuests',target=datetime.now())
                         break
             # 如果是全部忽略
             elif invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.IGNORE:
