@@ -5,6 +5,7 @@
 import cv2
 import random
 import numpy as np
+import re
 
 from random import randint
 
@@ -179,7 +180,8 @@ class RuleList:
         # logger.info(index_list)
         box = None
         for item in boxed_results:
-            if item.ocr_text == name and item.score > RuleOcr.score:
+            # in item.ocr_text find name
+            if re.match(name, item.ocr_text) and item.score > RuleOcr.score:
                 box = item.box
                 break
         if box is not None:
@@ -207,9 +209,10 @@ class RuleList:
 
             start_index = self.array.index(keyword_list[0])
             end_index = self.array.index(keyword_list[-1])
-            if name in keyword_list:
-                distance_start = 0
-                distance_end = 0
+            for keyworld_item in keyword_list:
+                if re.match(name, keyworld_item):
+                    distance_start = 0
+                    distance_end = 0
 
             current_index = self.array.index(name)
             distance_start = 0

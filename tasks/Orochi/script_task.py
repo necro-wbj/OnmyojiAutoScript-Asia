@@ -128,6 +128,8 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         self.ui_goto(page_soul_zones)
         self.orochi_enter()
         layer = self.config.orochi.orochi_config.layer
+        layer = layer[0]
+        logger.info(f'layer {layer}')
         self.check_layer(layer)
         self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
         # 创建队伍
@@ -271,6 +273,8 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         self.ui_goto(page_soul_zones)
         self.orochi_enter()
         layer = self.config.orochi.orochi_config.layer
+        layer = layer[0]
+        logger.info(f'layer {layer}')
         self.check_layer(layer)
         self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
 
@@ -326,6 +330,8 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             self.ui_goto(page_soul_zones)
             self.orochi_enter()
             layer = self.config.orochi.orochi_config.layer
+            layer = layer[0]
+            logger.info(f'layer {layer}')
             self.check_layer(layer)
             self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
             # 创建队伍
