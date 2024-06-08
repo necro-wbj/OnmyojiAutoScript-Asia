@@ -48,6 +48,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
         :return:
         """
         logger.hr('Start boss battle', 1)
+        fight_find_done_flag = 0
         while 1:
             self.screenshot()
             if self.appear(self.I_BOSS_FIRE):
@@ -61,10 +62,41 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
                     # 退出重新选一个没人慢的boss
                     logger.info('Exit and reselect')
                     continue
-                else:
+                boss_fire_count = 0
+                while total == 300 and current <= 290:
+                    # 点击集结挑战
                     logger.info('Boss battle people is not full')
-                    break
+                    self.screenshot()
+                    current, remain, total = self.O_DE_BOSS_PEOPLE.ocr(self.device.image)
+                    if total == 300 and current == 0:
+                        logger.info('Boss battle people is 0 today already done')
+                        self.ui_click_until_disappear(self.I_UI_BACK_RED)
+                        fight_find_done_flag = 1
+                        return
+                    if self.appear(self.I_BOSS_CONFIRM):
+                        self.ui_click(self.I_BOSS_NO_SELECT, self.I_BOSS_SELECTED)
+                        self.ui_click(self.I_BOSS_CONFIRM, self.I_BOSS_GATHER)
+                        continue
+                    if self.appear(self.I_BOSS_GATHER):
+                        logger.warning('Boss battle ENTER!!!')
+                        fight_find_done_flag = 1
+                        #this need add to outside loop
+                        break
+                    if self.appear_then_click(self.I_BOSS_FIRE, interval=3):
+                        boss_fire_count += 1
+                        logger.info(f'Check enter count {boss_fire_count}')
+                        continue
+                    if boss_fire_count >= 5:
+                        logger.warning('Boss find count over 5')
+                        self.ui_click_until_disappear(self.I_UI_BACK_RED)
 
+                        self.ui_get_reward(self.I_DE_LOCATION)
+                        #after close darg away
+                        break
+                    if fight_find_done_flag == 1:
+                        break
+            if fight_find_done_flag == 1:
+                break
             if self.appear_then_click(self.I_BOSS_NAMAZU, interval=1):
                 continue
             if self.appear_then_click(self.I_BOSS_SHINKIRO, interval=1):
@@ -81,24 +113,11 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
                 continue
             if self.click(self.C_DM_BOSS_CLICK, interval=1.7):
                 continue
-        logger.info('Boss battle start')
-        # 点击集结挑战
-        boss_fire_count = 0  # 五次没点到就意味着今天已经挑战过了
-        while 1:
-            self.screenshot()
-            if self.appear(self.I_BOSS_CONFIRM):
-                self.ui_click(self.I_BOSS_NO_SELECT, self.I_BOSS_SELECTED)
-                self.ui_click(self.I_BOSS_CONFIRM, self.I_BOSS_GATHER)
-                break
             if self.appear(self.I_BOSS_GATHER):
+                logger.warning('Boss battle ENTER!!!')
+                fight_find_done_flag = 1
+                #this need add to outside loop
                 break
-            if boss_fire_count >= 5:
-                logger.warning('Boss battle already done')
-                self.ui_click_until_disappear(self.I_UI_BACK_RED)
-                return
-            if self.appear_then_click(self.I_BOSS_FIRE, interval=3):
-                boss_fire_count += 1
-                continue
         logger.info('Boss battle confirm and enter')
         # 等待挑战, 5秒也是等
         time.sleep(5)
@@ -107,7 +126,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
         self.device.stuck_record_clear()
         self.device.stuck_record_add('BATTLE_STATUS_S')
         # 延长时间并在战斗结束后改回来
-        self.device.stuck_timer_long = Timer(480, count=480).start()
+        self.device.stuck_timer_long = Timer(600, count=600).start()
         config = self.con
         self.run_general_battle(config)
         self.device.stuck_timer_long = Timer(300, count=300).start()
@@ -274,8 +293,13 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
             # 还未测试题库无法识别的情况
             logger.hr(f'Answer {i}', 3)
             answer_click = answer()
-            # self.ui_get_reward(answer())
-            while 1:
+            # wait 10s
+            time.sleep(10)
+            self.click(answer_click, interval=1)
+            while_count = 10
+            while while_count:
+                while_count = while_count - 1
+                logger.info(f'Answer {i} while count {while_count}')
                 self.screenshot()
                 if self.ui_reward_appear_click():
                     time.sleep(0.5)
@@ -291,6 +315,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
                     break
                 # 如果没有出现红色关闭按钮，说明答题结束
                 if not self.appear(self.I_LETTER_CLOSE):
+                    logger.info('no red close button exit Question answering')
                     time.sleep(0.5)
                     self.screenshot()
                     if self.appear(self.I_LETTER_CLOSE):
@@ -298,9 +323,10 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
                     else:
                         logger.warning('Answer finish')
                         return
-
+                # every wwhile loop sleep 0.5s
+                time.sleep(0.5)
                 # 一直点击
-                self.click(answer_click, interval=1)
+                # self.click(answer_click, interval=1)
             time.sleep(0.5)
 
     def _battle(self, target_click):
