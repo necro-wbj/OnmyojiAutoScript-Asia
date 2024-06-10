@@ -269,6 +269,8 @@ class GameUi(BaseTask, GameUiAssets):
             self.screenshot()
             if self.appear(self.I_CHECK_DAILY):
                 break
+            if self.appear_then_click(self.I_BACK_BLUE):
+                continue
             if self.appear_then_click(self.I_MAIN_GOTO_DAILY, interval=1):
                 continue
             # here check there is not in main "I_CHECK_MAIN"
