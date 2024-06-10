@@ -35,7 +35,7 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
         # 循环
         while self.is_time_in_range():
             self.screenshot()
-            if self.appear_then_click(self.I_REWARD, interval=0.6):
+            if self.appear_then_click(self.I_REWARD):
                 continue
             if not self.duel_main():
                 continue
