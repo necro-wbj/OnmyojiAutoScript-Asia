@@ -86,6 +86,14 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
                         boss_fire_count += 1
                         logger.info(f'Check enter count {boss_fire_count}')
                         continue
+                    if boss_fire_count >= 5:
+                        # Click over 5 times 1.close 2.go back to initial location 3.go to "Start boss battle" loop 
+                        # to avoid click too many times ERROR
+                        logger.warning('Boss find count over 5')
+                        self.ui_click_until_disappear(self.I_UI_BACK_RED)
+                        #click I_DE_LOCATION to back to initial location
+                        self.ui_click(self.I_DE_LOCATION)
+                        break
                     if fight_find_done_flag == 1:
                         break
             if fight_find_done_flag == 1:
