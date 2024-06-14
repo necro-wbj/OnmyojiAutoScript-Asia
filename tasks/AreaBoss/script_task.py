@@ -41,6 +41,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         self.ui_get_current_page()
         self.ui_goto(page_area_boss)
 
+        # TODO: add flag to fight "懸賞"
         if con.boss_number == 3:
             self.boss(self.I_BATTLE_1)
             self.boss(self.I_BATTLE_2)

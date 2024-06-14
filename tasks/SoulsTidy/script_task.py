@@ -34,6 +34,7 @@ class ScriptTask(GameUi, SoulsTidyAssets):
         """
         while 1:
             self.screenshot()
+            #TODO: handle too much souls pop up
             if self.appear(self.I_ST_GREED) and self.appear(self.I_ST_TIDY):
                 break
 

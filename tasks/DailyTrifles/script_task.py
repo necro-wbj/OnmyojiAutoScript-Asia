@@ -44,6 +44,8 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
     def run_friend_love(self):
         self.ui_get_current_page()
         self.ui_goto(page_friends)
+        # TODO: handle friend level up need to close it
+        # TODO: ocr find "好友羈絆提升" click "I_UI_BACK_RED"
         while 1:
             self.screenshot()
             if self.appear(self.I_L_LOVE):
