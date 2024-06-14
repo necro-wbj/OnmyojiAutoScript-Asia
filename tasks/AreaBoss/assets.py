@@ -35,12 +35,12 @@ class AreaBossAssets:
 
 	# Ocr Rule Assets
 	# 击杀最多 
-	O_AB_KILL_BEST = RuleOcr(roi=(942,123,157,52), area=(942,123,157,52), mode="Single", method="Default", keyword="击杀最多", name="ab_kill_best")
+	O_AB_KILL_BEST = RuleOcr(roi=(942,123,157,52), area=(942,123,157,52), mode="Single", method="Default", keyword="数最多", name="ab_kill_best")
 	# 我的收藏 
 	O_AB_MY_COLLECT = RuleOcr(roi=(949,124,129,53), area=(949,124,129,53), mode="Single", method="Default", keyword="我的收藏", name="ab_my_collect")
 	# 热门 
-	O_AB_FAMOUS = RuleOcr(roi=(1188,181,78,82), area=(1188,181,78,82), mode="Single", method="Default", keyword="热门", name="ab_famous")
+	O_AB_FAMOUS = RuleOcr(roi=(1190,249,40,82), area=(1190,249,40,82), mode="Single", method="Default", keyword="熱門", name="ab_famous")
 	# 收藏 
-	O_AB_COLLECTING = RuleOcr(roi=(1163,522,88,100), area=(1163,522,88,100), mode="Single", method="Default", keyword="收藏", name="ab_collecting")
+	O_AB_COLLECTING = RuleOcr(roi=(1190,592,40,100), area=(1190,592,40,100), mode="Single", method="Default", keyword="收藏", name="ab_collecting")
 
 
