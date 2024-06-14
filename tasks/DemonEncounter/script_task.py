@@ -92,7 +92,9 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
                         logger.warning('Boss find count over 5')
                         self.ui_click_until_disappear(self.I_UI_BACK_RED)
                         #click I_DE_LOCATION to back to initial location
-                        self.ui_click(self.I_DE_LOCATION)
+                        self.appear_then_click(self.I_DE_BOSS, interval=4)
+                        time.sleep(1)
+
                         break
                     if fight_find_done_flag == 1:
                         break
