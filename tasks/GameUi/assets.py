@@ -112,7 +112,7 @@ class GameUiAssets:
 	# description 
 	I_CHECK_HYAKKISEN = RuleImage(roi_front=(1014,607,53,55), roi_back=(986,587,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_hyakkisen.png")
 	# description 
-	I_CHECK_DRAFT_DUEL = RuleImage(roi_front=(1051,612,56,58), roi_back=(1029,594,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_draft_duel.png")
+	I_CHECK_DRAFT_DUEL = RuleImage(roi_front=(96,10,121,39), roi_back=(96,10,121,39), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_draft_duel.png")
 	# description 
 	I_BACK_YOLLOW = RuleImage(roi_front=(24,16,48,55), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_back_yollow.png")
 	# description 

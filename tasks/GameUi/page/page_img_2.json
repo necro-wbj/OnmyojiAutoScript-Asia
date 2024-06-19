@@ -110,8 +110,8 @@
   {
     "itemName": "check_draft_duel",
     "imageName": "page_check_draft_duel.png",
-    "roiFront": "1051,612,56,58",
-    "roiBack": "1029,594,100,100",
+    "roiFront": "96,10,121,39",
+    "roiBack": "96,10,121,39",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
