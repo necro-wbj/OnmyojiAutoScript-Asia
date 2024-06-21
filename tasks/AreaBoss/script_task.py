@@ -93,10 +93,12 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         logger.info("Script filter")
         while 1:
             self.screenshot()
-            if self.appear(self.I_BATTLE_1) or self.appear(self.I_BATTLE_2) or self.appear(self.I_BATTLE_3):
+            if self.ocr_appear(self.O_AB_FAMOUS) or self.ocr_appear(self.O_AB_COLLECTING):
                 break
             if self.appear_then_click(self.I_FILTER, interval=2):
                 continue
+            #wait 1s
+            time.sleep(1)
 
         if collect:
             switch_collect()
