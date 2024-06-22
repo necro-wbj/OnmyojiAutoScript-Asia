@@ -49,6 +49,9 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         self.ui_goto(page_main)
         self.home_main()
 
+        # # 2024-04-04 ---------------------start
+        # config.general_climb.ap_mode = ApMode.AP_GAME
+        # # 2024-04-04 ---------------------end
         # 选择是游戏的体力还是活动的体力
         current_ap = config.general_climb.ap_mode
         self.switch(current_ap)
