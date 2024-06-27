@@ -2,7 +2,7 @@
   {
     "itemName": "shi",
     "imageName": "as_shi.png",
-    "roiFront": "1187,162,49,41",
+    "roiFront": "1188,241,48,38",
     "roiBack": "1167,132,106,458",
     "method": "Template matching",
     "threshold": 0.7,
@@ -29,8 +29,8 @@
   {
     "itemName": "drum",
     "imageName": "as_drum.png",
-    "roiFront": "885,310,29,145",
-    "roiBack": "860,244,87,232",
+    "roiFront": "520,178,29,145",
+    "roiBack": "495,124,87,232",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "归鹿之途"
@@ -38,8 +38,8 @@
   {
     "itemName": "lock",
     "imageName": "as_lock.png",
-    "roiFront": "827,655,25,32",
-    "roiBack": "749,592,139,116",
+    "roiFront": "1144,511,25,32",
+    "roiBack": "1118,473,139,116",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "上锁图标"
@@ -47,8 +47,8 @@
   {
     "itemName": "unlock",
     "imageName": "as_unlock.png",
-    "roiFront": "823,654,28,28",
-    "roiBack": "802,610,86,87",
+    "roiFront": "1143,511,28,28",
+    "roiBack": "1116,484,86,87",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "还未上锁图片"
@@ -108,12 +108,12 @@
     "description": "增加到最大"
   },
   {
-    "itemName": "new",
-    "imageName": "as_new.png",
-    "roiFront": "11,20,65,52",
-    "roiBack": "11,20,65,52",
+    "itemName": "continue",
+    "imageName": "as_continue.png",
+    "roiFront": "551,675,177,37",
+    "roiBack": "551,675,177,37",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "點擊螢幕繼續"
   }
 ]

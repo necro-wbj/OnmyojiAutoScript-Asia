@@ -54,7 +54,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         # # 2024-04-04 ---------------------end
         # 选择是游戏的体力还是活动的体力
         current_ap = config.general_climb.ap_mode
-        self.switch(current_ap)
+        # self.switch(current_ap)
 
         # 设定是否锁定阵容
         if config.general_battle.lock_team_enable:
@@ -91,21 +91,26 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 logger.info("Count out")
                 break
             # 2
-            self.wait_until_appear(self.I_FIRE)
+            while 1:
+                self.screenshot()
+                if self.appear(self.I_FIRE):
+                    break
+                if self.appear_then_click(self.I_CONTINUE):
+                    continue
             is_remain = self.check_ap_remain(current_ap)
             # 如果没有剩余了且这个时候是体力，就退出活动
             if not is_remain and current_ap == ApMode.AP_GAME:
                 logger.info("Game ap out")
                 break
             # 如果不是那就切换到体力
-            elif not is_remain and current_ap == ApMode.AP_ACTIVITY:
-                if config.general_climb.activity_toggle:
-                    logger.info("Activity ap out and switch to game ap")
-                    current_ap = ApMode.AP_GAME
-                    self.switch(current_ap)
-                else:
-                    logger.info("Activity ap out")
-                    break
+            # elif not is_remain and current_ap == ApMode.AP_ACTIVITY:
+            #     if config.general_climb.activity_toggle:
+            #         logger.info("Activity ap out and switch to game ap")
+            #         current_ap = ApMode.AP_GAME
+            #         self.switch(current_ap)
+            #     else:
+            #         logger.info("Activity ap out")
+            #         break
 
             # 点击战斗
             logger.info("Click battle")
