@@ -12,12 +12,11 @@ from module.exception import TaskEnd
 from module.base.timer import Timer
 
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main, page_demon_encounter, page_shikigami_records
+from tasks.GameUi.page import page_main, page_demon_encounter
 from tasks.DemonEncounter.assets import DemonEncounterAssets
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 from tasks.DemonEncounter.data.answer import answer_one
-from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 
 class LanternClass(Enum):
     BATTLE = 0  # 打怪  --> 无法判断因为怪的图片不一样，用排除法
@@ -28,26 +27,12 @@ class LanternClass(Enum):
     MYSTERY = 5  # 神秘任务
 
 
-class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
+class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
 
     def run(self):
         if not self.check_time():
             logger.warning('Time is not right')
             raise TaskEnd('DemonEncounter')
-        
-        # 御魂切换方式一
-        if self.config.demon_encounter.switch_soul.enable:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
-            self.run_switch_soul(self.config.demon_encounter.switch_soul.switch_group_team)
-
-        # 御魂切换方式二
-        if self.config.demon_encounter.switch_soul.enable_switch_by_name:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
-            self.run_switch_soul_by_name(self.config.demon_encounter.switch_soul.group_name,
-                                         self.config.demon_encounter.switch_soul.team_name)
-            
         self.ui_get_current_page()
         self.ui_goto(page_demon_encounter)
         self.execute_lantern()
@@ -63,80 +48,56 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         :return:
         """
         logger.hr('Start boss battle', 1)
-        self.screenshot()
-        if (self.config.demon_encounter.super_boss_config.find_super_boss == True) and self.appear(self.I_BOSS_SUPER_FIRE):
-            flag_to_fight_super_boss = True
-        else:
-            flag_to_fight_super_boss = False
-        logger.info(f'Find super boss flag: {flag_to_fight_super_boss}')
         fight_find_done_flag = 0
         while 1:
             self.screenshot()
-            if 1:
-                logger.info(f'Find super boss flag_TTT: {flag_to_fight_super_boss}')
-                if self.appear(self.I_BOSS_SUPER_FIRE):
-                    if flag_to_fight_super_boss == True:
-                        current, remain, total = self.O_DE_SBOSS_PEOPLE.ocr(self.device.image)
-                    else:
-                        current, remain, total = self.O_DE_BOSS_PEOPLE.ocr(self.device.image)
-                    
-                    if total == 300 and current >= 290:
-                        logger.info('Boss battle people is full')
-                        if not self.appear(self.I_UI_BACK_RED):
-                            logger.warning('Boss battle people is full but no red back')
-                            continue
-                        self.ui_click_until_disappear(self.I_UI_BACK_RED)
-                        # 退出重新选一个没人慢的boss
-                        logger.info('Exit and reselect')
+            if self.appear(self.I_BOSS_FIRE):
+                current, remain, total = self.O_DE_BOSS_PEOPLE.ocr(self.device.image)
+                if total == 300 and current >= 290:
+                    logger.info('Boss battle people is full')
+                    if not self.appear(self.I_UI_BACK_RED):
+                        logger.warning('Boss battle people is full but no red back')
                         continue
-                    boss_fire_count = 0
-                    while total == 300 and current <= 290:
-                        # 点击集结挑战
-                        logger.info('Boss battle people is not full')
-                        self.screenshot()
-                        if flag_to_fight_super_boss == True:
-                            current, remain, total = self.O_DE_SBOSS_PEOPLE.ocr(self.device.image)
-                        else:
-                            current, remain, total = self.O_DE_BOSS_PEOPLE.ocr(self.device.image)
-                        
-                        if total == 300 and current == 0:
-                            logger.info('Boss battle people is 0 today already done')
-                            self.ui_click_until_disappear(self.I_UI_BACK_RED)
-                            fight_find_done_flag = 1
-                            return
-                        if self.appear(self.I_BOSS_CONFIRM):
-                            self.ui_click(self.I_BOSS_NO_SELECT, self.I_BOSS_SELECTED)
-                            self.ui_click(self.I_BOSS_CONFIRM, self.I_BOSS_GATHER)
-                            continue
-                        if self.appear(self.I_BOSS_GATHER):
-                            logger.warning('Boss battle ENTER!!!')
-                            fight_find_done_flag = 1
-                            #this need add to outside loop
-                            break
-                        if flag_to_fight_super_boss == True:
-                            if self.appear_then_click(self.I_BOSS_SUPER_FIRE, interval=3):
-                                boss_fire_count += 1
-                                logger.info(f'Check enter count {boss_fire_count}')
-                                continue
-                        else:
-                            if self.appear_then_click(self.I_BOSS_FIRE, interval=3):
-                                boss_fire_count += 1
-                                logger.info(f'Check enter count {boss_fire_count}')
-                                continue
-                        if boss_fire_count >= 5:
-                            # Click over 5 times 1.close 2.go back to initial location 3.go to "Start boss battle" loop 
-                            # to avoid click too many times ERROR
-                            logger.warning('Boss find count over 5')
-                            self.ui_click_until_disappear(self.I_UI_BACK_RED)
-                            #click I_DE_LOCATION to back to initial location
-                            if flag_to_fight_super_boss == True:
-                                self.appear_then_click(self.I_DE_BOSS_BEST, interval=4)
-                            else:
-                                self.appear_then_click(self.I_DE_BOSS, interval=4)
-                            time.sleep(1)
-                            break
-                        if fight_find_done_flag == 1:
-                            break
+                    self.ui_click_until_disappear(self.I_UI_BACK_RED)
+                    # 退出重新选一个没人慢的boss
+                    logger.info('Exit and reselect')
+                    continue
+                boss_fire_count = 0
+                while total == 300 and current <= 290:
+                    # 点击集结挑战
+                    logger.info('Boss battle people is not full')
+                    self.screenshot()
+                    current, remain, total = self.O_DE_BOSS_PEOPLE.ocr(self.device.image)
+                    if total == 300 and current == 0:
+                        logger.info('Boss battle people is 0 today already done')
+                        self.ui_click_until_disappear(self.I_UI_BACK_RED)
+                        fight_find_done_flag = 1
+                        return
+                    if self.appear(self.I_BOSS_CONFIRM):
+                        self.ui_click(self.I_BOSS_NO_SELECT, self.I_BOSS_SELECTED)
+                        self.ui_click(self.I_BOSS_CONFIRM, self.I_BOSS_GATHER)
+                        continue
+                    if self.appear(self.I_BOSS_GATHER):
+                        logger.warning('Boss battle ENTER!!!')
+                        fight_find_done_flag = 1
+                        #this need add to outside loop
+                        break
+                    if self.appear_then_click(self.I_BOSS_FIRE, interval=3):
+                        boss_fire_count += 1
+                        logger.info(f'Check enter count {boss_fire_count}')
+                        continue
+                    if boss_fire_count >= 5:
+                        # Click over 5 times 1.close 2.go back to initial location 3.go to "Start boss battle" loop 
+                        # to avoid click too many times ERROR
+                        logger.warning('Boss find count over 5')
+                        self.ui_click_until_disappear(self.I_UI_BACK_RED)
+                        #click I_DE_LOCATION to back to initial location
+                        self.appear_then_click(self.I_DE_BOSS, interval=4)
+                        time.sleep(1)
+
+                        break
+                    if fight_find_done_flag == 1:
+                        break
             if fight_find_done_flag == 1:
                 break
             if self.appear_then_click(self.I_BOSS_NAMAZU, interval=1):
@@ -151,12 +112,8 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                 continue
             if self.appear_then_click(self.I_BOSS_SONGSTRESS, interval=1):
                 continue
-            if flag_to_fight_super_boss == True:
-                if self.appear_then_click(self.I_DE_BOSS_BEST, interval=4):
-                    continue
-            else:
-                if self.appear_then_click(self.I_DE_BOSS, interval=4):
-                    continue
+            if self.appear_then_click(self.I_DE_BOSS, interval=4):
+                continue
             if self.click(self.C_DM_BOSS_CLICK, interval=1.7):
                 continue
             if self.appear(self.I_BOSS_GATHER):
@@ -172,8 +129,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         self.device.stuck_record_clear()
         self.device.stuck_record_add('BATTLE_STATUS_S')
         # 延长时间并在战斗结束后改回来
-        # 少人的極逢魔BOSS 會超過10分鐘
-        self.device.stuck_timer_long = Timer(900, count=900).start()
+        self.device.stuck_timer_long = Timer(600, count=600).start()
         config = self.con
         self.run_general_battle(config)
         self.device.stuck_timer_long = Timer(300, count=300).start()
@@ -340,8 +296,8 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             # 还未测试题库无法识别的情况
             logger.hr(f'Answer {i}', 3)
             answer_click = answer()
-            # wait 1s
-            time.sleep(1)
+            # wait 10s
+            time.sleep(10)
             self.click(answer_click, interval=1)
             while_count = 10
             while while_count:
