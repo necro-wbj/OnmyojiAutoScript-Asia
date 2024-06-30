@@ -39,6 +39,8 @@ if __name__ == '__main__':
     from tasks.RyouToppa.assets import RyouToppaAssets
     targe = RyouToppaAssets.I_RYOU_TOPPA
     print(detect_image(IMAGE_FILE, targe))
-    # from tasks.Restart.assets import RestartAssets
-    # target = RestartAssets.O_LOGIN_ENTER_GAME
+
+    # ocr demo
+    # from tasks.KekkaiActivation.assets import KekkaiActivationAssets
+    # target = KekkaiActivationAssets.O_CARD_ALL_TIME
     # print(detect_ocr(IMAGE_FILE, target))
