@@ -81,6 +81,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
                 self.open_expect_level()
             if self.wait_until_appear(self.I_RED_CLOSE, wait_time=2):
                 self.appear_then_click(self.I_RED_CLOSE)
+                self.wait_until_appear(self.I_EXPLORATION_TITLE)
         
         self.ui_goto(page_main)
         # 关闭 buff
