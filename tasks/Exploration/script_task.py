@@ -215,13 +215,17 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
                 self.click(self.I_BATTLE_REWARD)
             # boss 战
             if self.appear_then_click(self.I_BOSS_BATTLE_BUTTON):
-                self.ui_click_until_disappear(self.I_BOSS_BATTLE_BUTTON)
+                while not self.is_in_battle():
+                    self.screenshot()
+                    self.appear_then_click(self.I_BOSS_BATTLE_BUTTON)
                 self.run_general_battle(
                     self.config.exploration.general_battle_config
                 )
             # 小怪 战
-            if self.appear(self.I_NORMAL_BATTLE_BUTTON):
-                self.ui_click_until_disappear(self.I_NORMAL_BATTLE_BUTTON)
+            if self.appear_then_click(self.I_NORMAL_BATTLE_BUTTON):
+                while not self.is_in_battle():
+                    self.screenshot()
+                    self.appear_then_click(self.I_NORMAL_BATTLE_BUTTON)
                 self.run_general_battle(
                     self.config.exploration.general_battle_config
                 )
