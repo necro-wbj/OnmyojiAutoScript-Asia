@@ -34,10 +34,10 @@ def detect_ocr(file: str, target: RuleOcr):
 
 
 # 图片文件路径 可以是相对路径
-IMAGE_FILE = r'./dev_tools/test.png'
+IMAGE_FILE = r"C:\Users\R0\Nox_share\ImageShare\Screenshots\2024-07-01_21-59-28-029038.png"
 if __name__ == '__main__':
-    from tasks.RyouToppa.assets import RyouToppaAssets
-    targe = RyouToppaAssets.I_RYOU_TOPPA
+    from tasks.WantedQuests.assets import WantedQuestsAssets
+    targe = WantedQuestsAssets.I_WQSE_FIRE
     print(detect_image(IMAGE_FILE, targe))
 
     # ocr demo

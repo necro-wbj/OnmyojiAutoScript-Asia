@@ -91,17 +91,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 logger.info("Count out")
                 break
             # 2
-            while 1:
-                self.screenshot()
-                if self.appear(self.I_FIRE):
-                    break
-                if self.appear_then_click(self.I_CONTINUE):
-                    continue
-            is_remain = self.check_ap_remain(current_ap)
-            # 如果没有剩余了且这个时候是体力，就退出活动
-            if not is_remain and current_ap == ApMode.AP_GAME:
-                logger.info("Game ap out")
-                break
+            self.ui_click(self.I_CONTINUE,self.I_FIRE)
             # 如果不是那就切换到体力
             # elif not is_remain and current_ap == ApMode.AP_ACTIVITY:
             #     if config.general_climb.activity_toggle:
@@ -116,6 +106,11 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             logger.info("Click battle")
             while 1:
                 self.screenshot()
+                # 如果没有剩余了且这个时候是体力，就退出活动
+                if not self.check_ap_remain(current_ap) and current_ap == ApMode.AP_GAME:
+                    self.main_home()
+                    self.set_next_run(task="ActivityShikigami", success=True)
+                    raise TaskEnd
                 if self.appear_then_click(self.I_FIRE, interval=2):
                     continue
                 if not self.appear(self.I_FIRE):
@@ -145,16 +140,20 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             self.screenshot()
             if self.appear(self.I_FIRE):
                 break
-            # 2024-04-04 --------------start
-            if self.appear_then_click(self.I_N_BATTLE, interval=1):
-                continue
-            # 2024-04-04 --------------end
             if self.appear_then_click(self.I_SHI, interval=1):
                 continue
             if self.appear_then_click(self.I_DRUM, interval=1):
                 continue
-            if self.appear_then_click(self.I_BATTLE, interval=1):
+            if not self.appear(self.I_BATTLE, interval=1):
                 continue
+            if not self.appear(self.I_BACK_GREEN):
+                continue
+            if self.appear_then_click(self.I_N_BATTLE, interval=1):
+                continue
+            elif self.appear_then_click(self.I_BACK_GREEN):
+                self.main_home()
+                self.set_next_run(task="ActivityShikigami", success=True)
+                raise TaskEnd
 
     def main_home(self) -> bool:
         """

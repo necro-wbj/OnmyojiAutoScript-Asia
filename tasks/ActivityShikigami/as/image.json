@@ -11,8 +11,8 @@
   {
     "itemName": "back_green",
     "imageName": "as_back_green.png",
-    "roiFront": "23,27,44,44",
-    "roiBack": "23,27,44,44",
+    "roiFront": "31,25,39,38",
+    "roiBack": "19,11,64,61",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "左上角返回"
@@ -20,8 +20,8 @@
   {
     "itemName": "battle",
     "imageName": "as_battle.png",
-    "roiFront": "854,108,35,165",
-    "roiBack": "790,58,138,315",
+    "roiFront": "581,13,158,46",
+    "roiBack": "576,8,163,51",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入爬塔"
