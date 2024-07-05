@@ -64,7 +64,11 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         """
         logger.hr('Start boss battle', 1)
         self.screenshot()
-        if (self.config.demon_encounter.super_boss_config.find_super_boss == True) and self.appear(self.I_BOSS_SUPER_FIRE):
+        # self.appear(self.I_DE_BOSS_BEST)
+        logger.info(f'self.appear(self.I_DE_BOSS_BEST): {self.appear(self.I_DE_BOSS_BEST)}')
+        # self.appear(self.I_DE_BOSS)
+        logger.info(f'self.appear(self.I_DE_BOSS): {self.appear(self.I_DE_BOSS)}')
+        if (self.config.demon_encounter.super_boss_config.find_super_boss == True) and self.appear(self.I_DE_BOSS_BEST):
             flag_to_fight_super_boss = True
         else:
             flag_to_fight_super_boss = False
@@ -74,69 +78,68 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             self.screenshot()
             if 1:
                 logger.info(f'Find super boss flag_TTT: {flag_to_fight_super_boss}')
-                if self.appear(self.I_BOSS_SUPER_FIRE):
+                if flag_to_fight_super_boss == True:
+                    current, remain, total = self.O_DE_SBOSS_PEOPLE.ocr(self.device.image)
+                else:
+                    current, remain, total = self.O_DE_BOSS_PEOPLE.ocr(self.device.image)
+                
+                if total == 300 and current >= 290:
+                    logger.info('Boss battle people is full')
+                    if not self.appear(self.I_UI_BACK_RED):
+                        logger.warning('Boss battle people is full but no red back')
+                        continue
+                    self.ui_click_until_disappear(self.I_UI_BACK_RED)
+                    # 退出重新选一个没人慢的boss
+                    logger.info('Exit and reselect')
+                    continue
+                boss_fire_count = 0
+                while total == 300 and current <= 290:
+                    # 点击集结挑战
+                    logger.info('Boss battle people is not full')
+                    self.screenshot()
                     if flag_to_fight_super_boss == True:
                         current, remain, total = self.O_DE_SBOSS_PEOPLE.ocr(self.device.image)
                     else:
                         current, remain, total = self.O_DE_BOSS_PEOPLE.ocr(self.device.image)
                     
-                    if total == 300 and current >= 290:
-                        logger.info('Boss battle people is full')
-                        if not self.appear(self.I_UI_BACK_RED):
-                            logger.warning('Boss battle people is full but no red back')
-                            continue
+                    if total == 300 and current == 0:
+                        logger.info('Boss battle people is 0 today already done')
                         self.ui_click_until_disappear(self.I_UI_BACK_RED)
-                        # 退出重新选一个没人慢的boss
-                        logger.info('Exit and reselect')
+                        fight_find_done_flag = 1
+                        return
+                    if self.appear(self.I_BOSS_CONFIRM):
+                        self.ui_click(self.I_BOSS_NO_SELECT, self.I_BOSS_SELECTED)
+                        self.ui_click(self.I_BOSS_CONFIRM, self.I_BOSS_GATHER)
                         continue
-                    boss_fire_count = 0
-                    while total == 300 and current <= 290:
-                        # 点击集结挑战
-                        logger.info('Boss battle people is not full')
-                        self.screenshot()
-                        if flag_to_fight_super_boss == True:
-                            current, remain, total = self.O_DE_SBOSS_PEOPLE.ocr(self.device.image)
-                        else:
-                            current, remain, total = self.O_DE_BOSS_PEOPLE.ocr(self.device.image)
-                        
-                        if total == 300 and current == 0:
-                            logger.info('Boss battle people is 0 today already done')
-                            self.ui_click_until_disappear(self.I_UI_BACK_RED)
-                            fight_find_done_flag = 1
-                            return
-                        if self.appear(self.I_BOSS_CONFIRM):
-                            self.ui_click(self.I_BOSS_NO_SELECT, self.I_BOSS_SELECTED)
-                            self.ui_click(self.I_BOSS_CONFIRM, self.I_BOSS_GATHER)
+                    if self.appear(self.I_BOSS_GATHER):
+                        logger.warning('Boss battle ENTER!!!')
+                        fight_find_done_flag = 1
+                        #this need add to outside loop
+                        break
+                    if flag_to_fight_super_boss == True:
+                        if self.appear_then_click(self.I_BOSS_SUPER_FIRE, interval=3):
+                            boss_fire_count += 1
+                            logger.info(f'Check enter count {boss_fire_count}')
                             continue
-                        if self.appear(self.I_BOSS_GATHER):
-                            logger.warning('Boss battle ENTER!!!')
-                            fight_find_done_flag = 1
-                            #this need add to outside loop
-                            break
+                    else:
+                        if self.appear_then_click(self.I_BOSS_FIRE, interval=3):
+                            boss_fire_count += 1
+                            logger.info(f'Check enter count {boss_fire_count}')
+                            continue
+                    if boss_fire_count >= 5:
+                        # Click over 5 times 1.close 2.go back to initial location 3.go to "Start boss battle" loop 
+                        # to avoid click too many times ERROR
+                        logger.warning('Boss find count over 5')
+                        self.ui_click_until_disappear(self.I_UI_BACK_RED)
+                        #click I_DE_LOCATION to back to initial location
                         if flag_to_fight_super_boss == True:
-                            if self.appear_then_click(self.I_BOSS_SUPER_FIRE, interval=3):
-                                boss_fire_count += 1
-                                logger.info(f'Check enter count {boss_fire_count}')
-                                continue
+                            self.appear_then_click(self.I_DE_BOSS_BEST, interval=4)
                         else:
-                            if self.appear_then_click(self.I_BOSS_FIRE, interval=3):
-                                boss_fire_count += 1
-                                logger.info(f'Check enter count {boss_fire_count}')
-                                continue
-                        if boss_fire_count >= 5:
-                            # Click over 5 times 1.close 2.go back to initial location 3.go to "Start boss battle" loop 
-                            # to avoid click too many times ERROR
-                            logger.warning('Boss find count over 5')
-                            self.ui_click_until_disappear(self.I_UI_BACK_RED)
-                            #click I_DE_LOCATION to back to initial location
-                            if flag_to_fight_super_boss == True:
-                                self.appear_then_click(self.I_DE_BOSS_BEST, interval=4)
-                            else:
-                                self.appear_then_click(self.I_DE_BOSS, interval=4)
-                            time.sleep(1)
-                            break
-                        if fight_find_done_flag == 1:
-                            break
+                            self.appear_then_click(self.I_DE_BOSS, interval=4)
+                        time.sleep(1)
+                        break
+                    if fight_find_done_flag == 1:
+                        break
             if fight_find_done_flag == 1:
                 break
             if self.appear_then_click(self.I_BOSS_NAMAZU, interval=1):
