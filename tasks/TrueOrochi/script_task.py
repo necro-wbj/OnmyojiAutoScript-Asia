@@ -49,7 +49,7 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets, SwitchSoul):
         if (not battle) and (self.config.true_orochi.true_orochi_config.find_true_orochi == True):
             logger.warning('Not find true orochi')
             logger.warning('Try to battle orochi for ten times')
-            self.check_layer(Layer.TEN)
+            self.check_layer(Layer.TEN[0])
             self.check_lock(False)
             count_orochi_ten = 0
             while 1:
