@@ -38,8 +38,8 @@
   {
     "itemName": "orochi_fire",
     "imageName": "o_orochi_fire.png",
-    "roiFront": "1145,588.3333333333333,131,124",
-    "roiBack": "1145,588.3333333333333,131,124",
+    "roiFront": "1118,606,73,41",
+    "roiBack": "1067,588,209,124",
     "method": "Template matching",
     "threshold": 0.6,
     "description": "点击挑战"

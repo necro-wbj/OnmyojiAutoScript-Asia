@@ -4,6 +4,7 @@
 import random
 from time import sleep
 from datetime import time, datetime, timedelta
+from module.base.timer import Timer
 
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralInvite.general_invite import GeneralInvite
@@ -79,6 +80,8 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                 return True
             if self.appear_then_click(self.I_OROCHI, interval=1):
                 continue
+            # wait 1S click too fast will go "叢原火"
+            sleep(1)
 
     def check_layer(self, layer: str) -> bool:
         """
@@ -127,6 +130,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         self.ui_get_current_page()
         self.ui_goto(page_soul_zones)
         self.orochi_enter()
+
         layer = self.config.orochi.orochi_config.layer
         layer = layer[0]
         logger.info(f'layer {layer}')
@@ -222,6 +226,24 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         # self.orochi_enter()
         # self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
 
+        # wait for leader to invite
+        # if no invite 60S just return False
+        self.device.stuck_record_clear()
+        self.device.stuck_record_add('BATTLE_STATUS_S')
+        self.timer_invite = Timer(60)
+        self.timer_invite.start()
+        while 1:
+            self.screenshot()
+            
+            if self.appear(self.I_I_ACCEPT):
+                logger.info('find invite')
+                self.device.stuck_record_clear()
+                break
+            if self.timer_invite and self.timer_invite.reached():
+                logger.info('Invite timeout')
+                self.device.stuck_record_clear()
+                return False
+            
         # 进入战斗流程
         self.device.stuck_record_add('BATTLE_STATUS_S')
         while 1:

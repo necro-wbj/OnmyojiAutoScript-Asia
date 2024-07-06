@@ -111,8 +111,9 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets, SwitchSoul):
                 break
             if self.appear_then_click(self.I_ST_AUTO_FALSE, interval=0.8):
                 continue
-            if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.8):
-                continue
+            # TODO:CHECK: only use AUTO 
+            # if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.8):
+            #     continue
         self.device.stuck_record_add('BATTLE_STATUS_S')
         self.device.click_record_clear()
         logger.info("Start battle process")

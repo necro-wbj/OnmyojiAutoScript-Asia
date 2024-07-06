@@ -20,7 +20,7 @@ class OrochiAssets:
 	# description 
 	I_OROCHI_UNLOCK = RuleImage(roi_front=(562.3333333333333,568.3333333333333,21,21), roi_back=(550,544,121,60), threshold=0.8, method="Template matching", file="./tasks/Orochi/o/o_orochi_unlock.png")
 	# 点击挑战 
-	I_OROCHI_FIRE = RuleImage(roi_front=(1145,588.3333333333333,131,124), roi_back=(1145,588.3333333333333,131,124), threshold=0.6, method="Template matching", file="./tasks/Orochi/o/o_orochi_fire.png")
+	I_OROCHI_FIRE = RuleImage(roi_front=(1118,606,73,41), roi_back=(1067,588,209,124), threshold=0.6, method="Template matching", file="./tasks/Orochi/o/o_orochi_fire.png")
 	# 式神录 
 	I_SHI_RECORDS = RuleImage(roi_front=(821,638,48,45), roi_back=(821,638,48,45), threshold=0.8, method="Template matching", file="./tasks/Orochi/o/o_shi_records.png")
 	# 小小宠物，发现宝藏 

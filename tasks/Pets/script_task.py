@@ -5,13 +5,17 @@ from module.logger import logger
 from module.exception import TaskEnd
 
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main
+from tasks.GameUi.page import page_main,page_shikigami_records,page_soul_zones
 from tasks.Pets.assets import PetsAssets
 from tasks.Pets.config import PetsConfig
 
+from tasks.Orochi.script_task import ScriptTask as OrochiScriptTask
+from tasks.Orochi.config import Layer
+from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
+
 import time
 
-class ScriptTask(GameUi, PetsAssets):
+class ScriptTask(OrochiScriptTask, GameUi, PetsAssets, SwitchSoul):
 
     def run(self):
         self.ui_get_current_page()
@@ -45,6 +49,47 @@ class ScriptTask(GameUi, PetsAssets):
                 continue
             time.sleep(1)
         self.ui_click(self.I_PET_EXIT, self.I_CHECK_MAIN)
+        if con.pets_fight_orochi:
+            logger.info('After feed pets, go to fight orochi 10')
+            
+            # 御魂切换方式一
+            if self.config.pets.switch_soul.enable:
+                self.ui_get_current_page()
+                self.ui_goto(page_shikigami_records)
+                self.run_switch_soul(self.config.pets.switch_soul.switch_group_team)
+
+            # 御魂切换方式二
+            if self.config.pets.switch_soul.enable_switch_by_name:
+                self.ui_get_current_page()
+                self.ui_goto(page_shikigami_records)
+                self.run_switch_soul_by_name(self.config.pets.switch_soul.group_name,
+                                            self.config.pets.switch_soul.team_name)
+                
+            logger.info('Start run fighr orochi 10')
+            self.ui_get_current_page()
+            self.ui_goto(page_soul_zones)
+            self.orochi_enter()
+            self.check_layer(Layer.TEN[0])
+            self.check_lock(False)
+            count_orochi_ten = 0
+            while 1:
+                self.screenshot()
+                # 检查猫咪奖励
+                if self.appear_then_click(self.I_PET_PRESENT, action=self.C_WIN_3, interval=1):
+                    continue
+                if not self.appear(self.I_OROCHI_FIRE):
+                    continue
+                if count_orochi_ten >= 1:
+                    logger.warning('fight finish')
+                    break
+                # 否则点击挑战
+                if self.appear(self.I_OROCHI_FIRE):
+                    self.ui_click_until_disappear(self.I_OROCHI_FIRE)
+                    self.run_general_battle()
+                    count_orochi_ten += 1
+                    continue
+
+
 
         self.set_next_run(task='Pets', success=True, finish=True)
         raise TaskEnd('Pets')
