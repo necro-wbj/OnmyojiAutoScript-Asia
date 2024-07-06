@@ -48,11 +48,26 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
         :return:
         """
         logger.hr('Start boss battle', 1)
+        self.screenshot()
+        # self.appear(self.I_DE_BOSS_BEST)
+        logger.info(f'self.appear(self.I_DE_BOSS_BEST): {self.appear(self.I_DE_BOSS_BEST)}')
+        # self.appear(self.I_DE_BOSS)
+        logger.info(f'self.appear(self.I_DE_BOSS): {self.appear(self.I_DE_BOSS)}')
+        if (self.config.demon_encounter.super_boss_config.find_super_boss == True) and self.appear(self.I_DE_BOSS_BEST):
+            flag_to_fight_super_boss = True
+        else:
+            flag_to_fight_super_boss = False
+        logger.info(f'Find super boss flag: {flag_to_fight_super_boss}')
         fight_find_done_flag = 0
         while 1:
             self.screenshot()
-            if self.appear(self.I_BOSS_FIRE):
-                current, remain, total = self.O_DE_BOSS_PEOPLE.ocr(self.device.image)
+            if 1:
+                logger.info(f'Find super boss flag_TTT: {flag_to_fight_super_boss}')
+                if flag_to_fight_super_boss == True:
+                    current, remain, total = self.O_DE_SBOSS_PEOPLE.ocr(self.device.image)
+                else:
+                    current, remain, total = self.O_DE_BOSS_PEOPLE.ocr(self.device.image)
+                
                 if total == 300 and current >= 290:
                     logger.info('Boss battle people is full')
                     if not self.appear(self.I_UI_BACK_RED):
@@ -67,7 +82,11 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
                     # 点击集结挑战
                     logger.info('Boss battle people is not full')
                     self.screenshot()
-                    current, remain, total = self.O_DE_BOSS_PEOPLE.ocr(self.device.image)
+                    if flag_to_fight_super_boss == True:
+                        current, remain, total = self.O_DE_SBOSS_PEOPLE.ocr(self.device.image)
+                    else:
+                        current, remain, total = self.O_DE_BOSS_PEOPLE.ocr(self.device.image)
+                    
                     if total == 300 and current == 0:
                         logger.info('Boss battle people is 0 today already done')
                         self.ui_click_until_disappear(self.I_UI_BACK_RED)
@@ -82,19 +101,27 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
                         fight_find_done_flag = 1
                         #this need add to outside loop
                         break
-                    if self.appear_then_click(self.I_BOSS_FIRE, interval=3):
-                        boss_fire_count += 1
-                        logger.info(f'Check enter count {boss_fire_count}')
-                        continue
+                    if flag_to_fight_super_boss == True:
+                        if self.appear_then_click(self.I_BOSS_SUPER_FIRE, interval=3):
+                            boss_fire_count += 1
+                            logger.info(f'Check enter count {boss_fire_count}')
+                            continue
+                    else:
+                        if self.appear_then_click(self.I_BOSS_FIRE, interval=3):
+                            boss_fire_count += 1
+                            logger.info(f'Check enter count {boss_fire_count}')
+                            continue
                     if boss_fire_count >= 5:
                         # Click over 5 times 1.close 2.go back to initial location 3.go to "Start boss battle" loop 
                         # to avoid click too many times ERROR
                         logger.warning('Boss find count over 5')
                         self.ui_click_until_disappear(self.I_UI_BACK_RED)
                         #click I_DE_LOCATION to back to initial location
-                        self.appear_then_click(self.I_DE_BOSS, interval=4)
+                        if flag_to_fight_super_boss == True:
+                            self.appear_then_click(self.I_DE_BOSS_BEST, interval=4)
+                        else:
+                            self.appear_then_click(self.I_DE_BOSS, interval=4)
                         time.sleep(1)
-
                         break
                     if fight_find_done_flag == 1:
                         break
