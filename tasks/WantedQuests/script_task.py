@@ -175,7 +175,6 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
                 if '安事奇缘·柒' in info: #犬神
                     logger.info(f'this is fight for 犬神, but 安夢奇缘·柒 hard, go next')
                     return None, None
-                #TODO 夢婆 兵勇 跳哥
 
             try:
                 # 匹配： 第九章(数量:5)
@@ -223,8 +222,12 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
         # 我忘记了打完后是否需要关闭 挑战界面
 
     def secret(self, goto, num=1):
-        self.ui_click(goto, self.I_WQSE_FIRE)
+        if self.appear(self.I_WQSE_SP_FIRE):
+            self.ui_click(goto, self.I_WQSE_SP_FIRE)
+        else:
+            self.ui_click(goto, self.I_WQSE_FIRE)
         for i in range(num):
+            # TODO check this
             self.wait_until_appear(self.I_WQSE_FIRE)
             # self.ui_click_until_disappear(self.I_WQSE_FIRE)
             # 又臭又长的对话针的是服了这个网易
@@ -235,7 +238,9 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
                     break
                 if self.appear_then_click(self.I_WQSE_FIRE, interval=1):
                     continue
-                if self.appear(self.I_UI_BACK_RED, threshold=0.7) and not self.appear(self.I_WQSE_FIRE):
+                if self.appear_then_click(self.I_WQSE_SP_FIRE, interval=1):
+                    continue
+                if self.appear(self.I_UI_BACK_RED, threshold=0.7) and not self.appear(self.I_WQSE_FIRE) and not self.appear(self.I_WQSE_SP_FIRE):
                     self.click(self.C_SECRET_CHAT, interval=0.8)
                     click_count += 1
                     if click_count >= 6:

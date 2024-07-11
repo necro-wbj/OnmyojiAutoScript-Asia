@@ -105,6 +105,7 @@ class WantedQuestsAssets:
 
 	# Image Rule Assets
 	# 挑戰，字大小會不一樣… 百戰的粗一點 大一點 
-	I_WQSE_FIRE = RuleImage(roi_front=(1072,581,61,24), roi_back=(1016,520,223,173), threshold=0.65, method="Template matching", file="./tasks/WantedQuests/wq/wq_wqse_fire.png")
-
+	I_WQSE_FIRE = RuleImage(roi_front=(1071,575,64,64), roi_back=(1016,520,223,173), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_wqse_fire.png")
+	# 特殊祕聞挑戰，每周競速,百戰
+	I_WQSE_SP_FIRE = RuleImage(roi_front=(1127,566,67,66), roi_back=(1016,520,223,173), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_wqse_sp_fire.png")
 
