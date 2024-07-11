@@ -222,13 +222,22 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
         # 我忘记了打完后是否需要关闭 挑战界面
 
     def secret(self, goto, num=1):
-        if self.appear(self.I_WQSE_SP_FIRE):
-            self.ui_click(goto, self.I_WQSE_SP_FIRE)
-        else:
-            self.ui_click(goto, self.I_WQSE_FIRE)
         for i in range(num):
-            # TODO check this
-            self.wait_until_appear(self.I_WQSE_FIRE)
+            # TODO check it work
+            wait_count = 30
+            while wait_count:
+                # replace self.ui_click(goto, self.I_WQSE_FIRE)
+                # replace self.wait_until_appear(self.I_WQSE_FIRE)
+                wait_count = wait_count - 1
+                self.appear_then_click(goto) # here click "self.I_GOTO_1" img
+                self.screenshot()
+                if self.appear(self.I_WQSE_FIRE):
+                    logger.info('find I_WQSE_FIRE stop wait 30s')
+                    break
+                if self.appear(self.I_WQSE_SP_FIRE):
+                    logger.info('find I_WQSE_SP_FIRE stop wait 30s')
+                    break
+            
             # self.ui_click_until_disappear(self.I_WQSE_FIRE)
             # 又臭又长的对话针的是服了这个网易
             click_count = 0
