@@ -12,11 +12,12 @@ from module.exception import TaskEnd
 from module.base.timer import Timer
 
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main, page_demon_encounter
+from tasks.GameUi.page import page_main, page_demon_encounter, page_shikigami_records
 from tasks.DemonEncounter.assets import DemonEncounterAssets
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 from tasks.DemonEncounter.data.answer import answer_one
+from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 
 class LanternClass(Enum):
     BATTLE = 0  # 打怪  --> 无法判断因为怪的图片不一样，用排除法
@@ -27,12 +28,26 @@ class LanternClass(Enum):
     MYSTERY = 5  # 神秘任务
 
 
-class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
+class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
 
     def run(self):
         if not self.check_time():
             logger.warning('Time is not right')
             raise TaskEnd('DemonEncounter')
+
+        # 御魂切换方式一
+        if self.config.demon_encounter.switch_soul.enable:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul(self.config.demon_encounter.switch_soul.switch_group_team)
+
+        # 御魂切换方式二
+        if self.config.demon_encounter.switch_soul.enable_switch_by_name:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul_by_name(self.config.demon_encounter.switch_soul.group_name,
+                                         self.config.demon_encounter.switch_soul.team_name)
+
         self.ui_get_current_page()
         self.ui_goto(page_demon_encounter)
         self.execute_lantern()
@@ -62,11 +77,14 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
         while 1:
             self.screenshot()
             if 1:
-                logger.info(f'Find super boss flag_TTT: {flag_to_fight_super_boss}')
-                if flag_to_fight_super_boss == True:
-                    current, remain, total = self.O_DE_SBOSS_PEOPLE.ocr(self.device.image)
-                else:
-                    current, remain, total = self.O_DE_BOSS_PEOPLE.ocr(self.device.image)
+                logger.info(f'Find super boss flag : {flag_to_fight_super_boss}')
+                #init current, remain, total
+                current, remain, total = 0, 0, 0
+                if self.appear(self.I_BOSS_SUPER_FIRE)  or self.appear(self.I_BOSS_FIRE):
+                    if flag_to_fight_super_boss == True:
+                        current, remain, total = self.O_DE_SBOSS_PEOPLE.ocr(self.device.image)
+                    else:
+                        current, remain, total = self.O_DE_BOSS_PEOPLE.ocr(self.device.image)
                 
                 if total == 300 and current >= 290:
                     logger.info('Boss battle people is full')
@@ -82,10 +100,12 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
                     # 点击集结挑战
                     logger.info('Boss battle people is not full')
                     self.screenshot()
-                    if flag_to_fight_super_boss == True:
-                        current, remain, total = self.O_DE_SBOSS_PEOPLE.ocr(self.device.image)
-                    else:
-                        current, remain, total = self.O_DE_BOSS_PEOPLE.ocr(self.device.image)
+                    
+                    if self.appear(self.I_BOSS_SUPER_FIRE)  or self.appear(self.I_BOSS_FIRE):
+                        if flag_to_fight_super_boss == True:
+                            current, remain, total = self.O_DE_SBOSS_PEOPLE.ocr(self.device.image)
+                        else:
+                            current, remain, total = self.O_DE_BOSS_PEOPLE.ocr(self.device.image)
                     
                     if total == 300 and current == 0:
                         logger.info('Boss battle people is 0 today already done')
@@ -104,12 +124,12 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
                     if flag_to_fight_super_boss == True:
                         if self.appear_then_click(self.I_BOSS_SUPER_FIRE, interval=3):
                             boss_fire_count += 1
-                            logger.info(f'Check enter count {boss_fire_count}')
+                            logger.info(f'Check enter super boss count {boss_fire_count}')
                             continue
                     else:
                         if self.appear_then_click(self.I_BOSS_FIRE, interval=3):
                             boss_fire_count += 1
-                            logger.info(f'Check enter count {boss_fire_count}')
+                            logger.info(f'Check enter normal boss count {boss_fire_count}')
                             continue
                     if boss_fire_count >= 5:
                         # Click over 5 times 1.close 2.go back to initial location 3.go to "Start boss battle" loop 
@@ -139,8 +159,12 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
                 continue
             if self.appear_then_click(self.I_BOSS_SONGSTRESS, interval=1):
                 continue
-            if self.appear_then_click(self.I_DE_BOSS, interval=4):
-                continue
+            if flag_to_fight_super_boss == True:
+                if self.appear_then_click(self.I_DE_BOSS_BEST, interval=4):
+                    continue
+            else:
+                if self.appear_then_click(self.I_DE_BOSS, interval=4):
+                    continue
             if self.click(self.C_DM_BOSS_CLICK, interval=1.7):
                 continue
             if self.appear(self.I_BOSS_GATHER):
@@ -156,7 +180,8 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
         self.device.stuck_record_clear()
         self.device.stuck_record_add('BATTLE_STATUS_S')
         # 延长时间并在战斗结束后改回来
-        self.device.stuck_timer_long = Timer(600, count=600).start()
+        # 少人的極逢魔BOSS 會超過10分鐘
+        self.device.stuck_timer_long = Timer(900, count=900).start()
         config = self.con
         self.run_general_battle(config)
         self.device.stuck_timer_long = Timer(300, count=300).start()
@@ -324,7 +349,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
             logger.hr(f'Answer {i}', 3)
             answer_click = answer()
             # wait 10s
-            time.sleep(10)
+            time.sleep(1)
             self.click(answer_click, interval=1)
             while_count = 10
             while while_count:
@@ -361,6 +386,8 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
 
     def _battle(self, target_click):
         config = self.con
+        #if click more than 5 times, then return
+        click_count = 0
         while 1:
             self.screenshot()
             if not self.appear(self.I_DE_LOCATION):
@@ -376,9 +403,12 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
                     if self.appear_then_click(self.I_DE_SMALL_FIRE, interval=1):
                         continue
                 break
-
+            
             if self.click(target_click, interval=1):
+                click_count = click_count + 1
                 continue
+            if click_count >= 5:
+                return
         if self.run_general_battle(config):
             logger.info('Battle End')
 
