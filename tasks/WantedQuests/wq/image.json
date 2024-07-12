@@ -101,7 +101,7 @@
   {
     "itemName": "wq_check_task",
     "imageName": "wq_wq_check_task.png",
-    "roiFront": "110,154,21,125",
+    "roiFront": "110,188,21,77",
     "roiBack": "73,122,69,459",
     "method": "Template matching",
     "threshold": 0.8,

@@ -100,11 +100,12 @@ class WantedQuestsAssets:
 	# description 
 	I_GOTO_4 = RuleImage(roi_front=(979,447,87,42), roi_back=(979,447,87,42), threshold=0.75, method="Template matching", file="./tasks/WantedQuests/wq/wq_goto_4.png")
 	# 判断是否还有任务 
-	I_WQ_CHECK_TASK = RuleImage(roi_front=(110,154,21,125), roi_back=(73,122,69,459), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_wq_check_task.png")
+	I_WQ_CHECK_TASK = RuleImage(roi_front=(110,188,21,77), roi_back=(73,122,69,459), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_wq_check_task.png")
 
 
 	# Image Rule Assets
 	# 挑戰，字大小會不一樣… 百戰的粗一點 大一點 
-	I_WQSE_FIRE = RuleImage(roi_front=(1072,581,61,24), roi_back=(1016,520,223,173), threshold=0.65, method="Template matching", file="./tasks/WantedQuests/wq/wq_wqse_fire.png")
-
+	I_WQSE_FIRE = RuleImage(roi_front=(1071,575,64,64), roi_back=(1016,520,223,173), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_wqse_fire.png")
+	# 特殊祕聞挑戰，每周競速,百戰
+	I_WQSE_SP_FIRE = RuleImage(roi_front=(1127,566,67,66), roi_back=(1016,520,223,173), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_wqse_sp_fire.png")
 

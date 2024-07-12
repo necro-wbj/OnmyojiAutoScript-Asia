@@ -36,6 +36,7 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
         self.screenshot()
         number_challenge = self.O_WQ_NUMBER.ocr(self.device.image)
         ocr_error_count = 0
+        no_fight_count = 0
         while 1:
             self.screenshot()
             if self.appear(self.I_WQ_BOX):
@@ -43,6 +44,9 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
                 continue
             if ocr_error_count > 10:
                 logger.warning('OCR failed too many times, exit')
+                break
+            if no_fight_count > 10:
+                logger.warning('Keep find invite fight and it is done, exit')
                 break
             if self.ocr_appear(self.O_WQ_TEXT_1, interval=1):
                 cu, re, total = self.O_WQ_NUM_1.ocr(self.device.image)
@@ -53,7 +57,11 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
                     logger.warning('Current number of wanted quests is greater than total number')
                     cu = cu % 10
                 if cu < total and re != 0:
+                    no_fight_count = 0
                     self.execute_mission(self.O_WQ_TEXT_1, total, number_challenge)
+                if cu == total:
+                    no_fight_count = no_fight_count + 1
+
 
             if self.ocr_appear(self.O_WQ_TEXT_2, interval=1):
                 cu, re, total = self.O_WQ_NUM_2.ocr(self.device.image)
@@ -64,7 +72,10 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
                     logger.warning('Current number of wanted quests is greater than total number')
                     cu = cu % 10
                 if cu < total and re != 0:
+                    no_fight_count = 0
                     self.execute_mission(self.O_WQ_TEXT_2, total, number_challenge)
+                if cu == total:
+                    no_fight_count = no_fight_count + 1
                 continue
 
             if self.appear(self.I_WQ_CHECK_TASK):
@@ -175,7 +186,6 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
                 if '安事奇缘·柒' in info: #犬神
                     logger.info(f'this is fight for 犬神, but 安夢奇缘·柒 hard, go next')
                     return None, None
-                #TODO 夢婆 兵勇 跳哥
 
             try:
                 # 匹配： 第九章(数量:5)
@@ -223,9 +233,27 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
         # 我忘记了打完后是否需要关闭 挑战界面
 
     def secret(self, goto, num=1):
-        self.ui_click(goto, self.I_WQSE_FIRE)
         for i in range(num):
-            self.wait_until_appear(self.I_WQSE_FIRE)
+            # TODO check it work
+            wait_count = 30
+            while wait_count:
+                # replace self.ui_click(goto, self.I_WQSE_FIRE)
+                # replace self.wait_until_appear(self.I_WQSE_FIRE)
+                wait_count = wait_count - 1
+                self.appear_then_click(goto) # here click "self.I_GOTO_1" img
+                self.screenshot()
+                if self.appear(self.I_WQSE_FIRE):
+                    logger.info('find I_WQSE_FIRE stop wait 30s')
+                    break
+                if self.appear(self.I_WQSE_SP_FIRE):
+                    logger.info('find I_WQSE_SP_FIRE stop wait 30s')
+                    break
+            
+            if self.appear(self.I_WQSE_SP_FIRE):
+                # 當本周還沒打(競速,百戰)，但是封印剛好選擇同一個副本時
+                # 在準備打第2次時，會出現這個(I_WQSE_SP_FIRE)圖示，層數會重設為你打得層數(停在第1層)
+                logger.info('find I_WQSE_SP_FIRE stop fight loop and refind it')
+                break
             # self.ui_click_until_disappear(self.I_WQSE_FIRE)
             # 又臭又长的对话针的是服了这个网易
             click_count = 0
