@@ -238,6 +238,11 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
                     logger.info('find I_WQSE_SP_FIRE stop wait 30s')
                     break
             
+            if self.appear(self.I_WQSE_SP_FIRE):
+                # 當本周還沒打(競速,百戰)，但是封印剛好選擇同一個副本時
+                # 在準備打第2次時，會出現這個(I_WQSE_SP_FIRE)圖示，層數會重設為你打得層數(停在第1層)
+                logger.info('find I_WQSE_SP_FIRE stop fight loop and refind it')
+                break
             # self.ui_click_until_disappear(self.I_WQSE_FIRE)
             # 又臭又长的对话针的是服了这个网易
             click_count = 0
@@ -247,9 +252,7 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
                     break
                 if self.appear_then_click(self.I_WQSE_FIRE, interval=1):
                     continue
-                if self.appear_then_click(self.I_WQSE_SP_FIRE, interval=1):
-                    continue
-                if self.appear(self.I_UI_BACK_RED, threshold=0.7) and not self.appear(self.I_WQSE_FIRE) and not self.appear(self.I_WQSE_SP_FIRE):
+                if self.appear(self.I_UI_BACK_RED, threshold=0.7) and not self.appear(self.I_WQSE_FIRE):
                     self.click(self.C_SECRET_CHAT, interval=0.8)
                     click_count += 1
                     if click_count >= 6:
