@@ -36,6 +36,7 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
         self.screenshot()
         number_challenge = self.O_WQ_NUMBER.ocr(self.device.image)
         ocr_error_count = 0
+        no_fight_count = 0
         while 1:
             self.screenshot()
             if self.appear(self.I_WQ_BOX):
@@ -43,6 +44,9 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
                 continue
             if ocr_error_count > 10:
                 logger.warning('OCR failed too many times, exit')
+                break
+            if no_fight_count > 10:
+                logger.warning('Keep find invite fight and it is done, exit')
                 break
             if self.ocr_appear(self.O_WQ_TEXT_1, interval=1):
                 cu, re, total = self.O_WQ_NUM_1.ocr(self.device.image)
@@ -53,7 +57,11 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
                     logger.warning('Current number of wanted quests is greater than total number')
                     cu = cu % 10
                 if cu < total and re != 0:
+                    no_fight_count = 0
                     self.execute_mission(self.O_WQ_TEXT_1, total, number_challenge)
+                if cu == total:
+                    no_fight_count = no_fight_count + 1
+
 
             if self.ocr_appear(self.O_WQ_TEXT_2, interval=1):
                 cu, re, total = self.O_WQ_NUM_2.ocr(self.device.image)
@@ -64,7 +72,10 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
                     logger.warning('Current number of wanted quests is greater than total number')
                     cu = cu % 10
                 if cu < total and re != 0:
+                    no_fight_count = 0
                     self.execute_mission(self.O_WQ_TEXT_2, total, number_challenge)
+                if cu == total:
+                    no_fight_count = no_fight_count + 1
                 continue
 
             if self.appear(self.I_WQ_CHECK_TASK):
