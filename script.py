@@ -379,7 +379,8 @@ class Script:
             logger.critical('Game page unknown')
             self.save_error_log()
             self.config.notifier.push(title=command, content=f"<{self.config_name}> GamePageUnknownError")
-            exit(1)
+            self.config.task_call('Restart')
+            self.device.sleep(10)
             return False
         except ScriptError as e:
             logger.critical(e)
@@ -389,7 +390,9 @@ class Script:
         except RequestHumanTakeover:
             logger.critical('Request human takeover')
             self.config.notifier.push(title=command, content=f"<{self.config_name}> RequestHumanTakeover")
-            exit(1)
+            self.config.task_call('Restart')
+            self.device.sleep(10)
+            return False
         except Exception as e:
             logger.exception(e)
             self.save_error_log()
