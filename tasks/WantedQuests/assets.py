@@ -100,7 +100,7 @@ class WantedQuestsAssets:
 	# description 
 	I_GOTO_4 = RuleImage(roi_front=(979,447,87,42), roi_back=(979,447,87,42), threshold=0.75, method="Template matching", file="./tasks/WantedQuests/wq/wq_goto_4.png")
 	# 判断是否还有任务 
-	I_WQ_CHECK_TASK = RuleImage(roi_front=(110,188,21,77), roi_back=(73,122,69,459), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_wq_check_task.png")
+	I_WQ_CHECK_TASK = RuleImage(roi_front=(110,188,21,77), roi_back=(110,188,41,459), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_wq_check_task.png")
 
 
 	# Image Rule Assets
