@@ -192,6 +192,9 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
                 continue
             if not self.appear(self.I_GI_SURE) and self.appear_then_click(self.I_BACK_YELLOW, interval=0.5):
                 continue
+            # special eternity_sea exit
+            if not self.appear(self.I_GI_SURE) and self.appear_then_click(self.I_GI_ETERNITY_SEA_EXIT, interval=0.5):
+                continue
         return True
 
     def click_fire(self):
@@ -200,6 +203,8 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
             if not self.is_in_room(False):
                 break
             if self.appear_then_click(self.I_FIRE, interval=1, threshold=0.7):
+                continue
+            if self.appear_then_click(self.I_FIRE_SEA, interval=1, threshold=0.8):
                 continue
 
     @cached_property
@@ -338,6 +343,7 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
         logger.info('Click add to invite friend')
         # 点击＋号
         while 1:
+            sleep(0.5)
             self.screenshot()
             if self.appear(self.I_LOAD_FRIEND):
                 break
@@ -347,6 +353,9 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
                 continue
             if self.appear_then_click(self.I_ADD_5_4, interval=1):
                 continue
+            if self.appear_then_click(self.I_ADD_SEA, interval=1):
+                continue
+
 
         friend_class = []
         class_ocr = [self.O_F_LIST_1, self.O_F_LIST_2, self.O_F_LIST_3, self.O_F_LIST_4]

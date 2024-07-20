@@ -21,7 +21,7 @@ class UserStatus(str, Enum):
 class Layer(str, Enum):
     ONE = '壹层'
     TWO = '贰层'
-    THREE = '叁层'
+    THREE = '参层'
     FOUR = '肆层'
     FIVE = '伍层'
     SIX = '陆层'

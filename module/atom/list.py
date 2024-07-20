@@ -232,7 +232,7 @@ class RuleList:
 if __name__ == '__main__':
     L_N33AME = RuleList(folder="./tasks/Orochi/res", direction="vertical", mode="ocr", roi_back=(160, 130, 317, 500),
                         size=(301, 86),
-                        array=["壹屑", "贰屑", "叁屑", "肆屑", "伍屑", "陆屑", "柒屑", "捌屑", "玖屑", "拾屑", "悲鸣", "神蜀"])
+                        array=["壹屑", "贰屑", "参屑", "肆屑", "伍屑", "陆屑", "柒屑", "捌屑", "玖屑", "拾屑", "悲鸣", "神蜀"])
     image = cv2.imread("D:/watu_list_text204237.png")
     print(L_N33AME.ocr_appear(image, "柒屑"))
     print(L_N33AME.ocr_appear(image, "神蜀"))

@@ -133,6 +133,7 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets, SwitchSoul):
                         break
                     if self.appear_then_click(self.I_GREED_GHOST, interval=1):
                         continue
+                    # TODO RENEWW I_ST_FRAME
                     if self.appear_then_click(self.I_ST_FRAME, interval=1):
                         continue
                 break

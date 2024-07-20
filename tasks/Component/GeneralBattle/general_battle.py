@@ -472,6 +472,7 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
         :return:
         """
         if not buff:
+            logger.info(f"No need buff anything")
             return
         logger.info(f"Open buff {buff}")
         self.ui_click(self.I_BUFF, self.I_CLOUD, interval=2)

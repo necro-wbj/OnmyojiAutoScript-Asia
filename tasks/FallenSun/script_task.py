@@ -108,7 +108,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         self.ui_goto(page_soul_zones)
         self.fallen_sun_enter()
         layer = self.config.fallen_sun.fallen_sun_config.layer
-        self.check_layer(layer)
+        self.check_layer(layer[0])
         self.check_lock(self.config.fallen_sun.general_battle_config.lock_team_enable)
         # 创建队伍
         logger.info('Create team')
@@ -137,16 +137,6 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             # 检查猫咪奖励
             if self.appear_then_click(self.I_PET_PRESENT, action=self.C_WIN_3, interval=1):
                 continue
-
-            if self.current_count >= self.limit_count:
-                if self.is_in_room():
-                    logger.info('FallenSun count limit out')
-                    break
-
-            if datetime.now() - self.start_time >= self.limit_time:
-                if self.is_in_room():
-                    logger.info('FallenSun time limit out')
-                    break
 
 
 
@@ -183,13 +173,25 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                     is_first = False
                     self.run_general_battle(config=self.config.fallen_sun.general_battle_config)
 
+            if self.current_count >= self.limit_count:
+                logger.info('FallenSun count limit out')
+                break
+            if datetime.now() - self.start_time >= self.limit_time:
+                logger.info('FallenSun time limit out')
+                break
+
         # 当结束或者是失败退出循环的时候只有两个UI的可能，在房间或者是在组队界面
         # 如果在房间就退出
-        if self.exit_room():
-            pass
-        # 如果在组队界面就退出
-        if self.exit_team():
-            pass
+        while 1:
+            # 有一种情况是本来要退出的，但是队长邀请了进入的战斗的加载界面
+            if self.appear(self.I_GI_HOME) or self.appear(self.I_GI_EXPLORE):
+                break
+            # 如果可能在房间就退出
+            if self.exit_room():
+                pass
+            # 如果还在战斗中，就退出战斗
+            if self.exit_battle():
+                pass
 
         self.ui_get_current_page()
         self.ui_goto(page_main)
@@ -204,7 +206,20 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         # self.ui_goto(page_soul_zones)
         # self.fallen_sun_enter()
         # self.check_lock(self.config.fallen_sun.general_battle_config.lock_team_enable)
-
+        #invite check
+        while 1:
+            self.screenshot()
+            
+            if self.appear(self.I_I_ACCEPT):
+                logger.info('find invite')
+                self.device.stuck_record_clear()
+                break
+            if self.timer_invite and self.timer_invite.reached():
+                logger.info('Invite timeout')
+                self.device.stuck_record_clear()
+                return False
+        
+        logger.info('Start run member fight')
         # 进入战斗流程
         self.device.stuck_record_add('BATTLE_STATUS_S')
         while 1:
@@ -233,7 +248,8 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             # 队长秒开的时候，检测是否进入到战斗中
             elif self.check_take_over_battle(False, config=self.config.fallen_sun.general_battle_config):
                 continue
-
+        
+        logger.info('End run member fight')
         while 1:
             # 有一种情况是本来要退出的，但是队长邀请了进入的战斗的加载界面
             if self.appear(self.I_GI_HOME) or self.appear(self.I_GI_EXPLORE):
@@ -256,7 +272,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         self.ui_goto(page_soul_zones)
         self.fallen_sun_enter()
         layer = self.config.fallen_sun.fallen_sun_config.layer
-        self.check_layer(layer)
+        self.check_layer(layer[0])
         self.check_lock(self.config.fallen_sun.general_battle_config.lock_team_enable)
 
         def is_in_fallen_sun(screenshot=False) -> bool:
@@ -332,7 +348,7 @@ if __name__ == '__main__':
     def test_memory():
         t.screenshot()
         print(t.ocr_appear(t.O_O_TEST_OCR))
-        print(t.L_LAYER_LIST.image_appear(t.device.image, '叁'))
+        print(t.L_LAYER_LIST.image_appear(t.device.image, '参'))
     for i in range(4):
         test_memory()
         print('=====================')

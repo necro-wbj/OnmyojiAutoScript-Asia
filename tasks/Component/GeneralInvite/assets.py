@@ -66,7 +66,7 @@ class GeneralInviteAssets:
 	# description 
 	I_FLAG_4_OFF = RuleImage(roi_front=(703,128,53,21), roi_back=(703,128,53,21), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_flag_4_off.png")
 	# 永生之海添加好友 
-	I_ADD_SEA = RuleImage(roi_front=(836,231,100,100), roi_back=(836,231,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_add_sea.png")
+	I_ADD_SEA = RuleImage(roi_front=(836,269,100,62), roi_back=(836,269,100,62), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_add_sea.png")
 	# 队员不接受邀请 
 	I_I_REJECT = RuleImage(roi_front=(12,226,64,61), roi_back=(12,226,64,275), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_i_reject.png")
 	# 队员接受邀请 
@@ -85,7 +85,8 @@ class GeneralInviteAssets:
 	I_GI_BUFF = RuleImage(roi_front=(794,38,46,42), roi_back=(794,38,46,42), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_buff.png")
 	# 三人御魂组队左上角的协站队伍 
 	I_GI_IN_ROOM = RuleImage(roi_front=(92,17,162,46), roi_back=(92,17,162,46), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_in_room.png")
-
+	# 永生之海退出隊伍
+	I_GI_ETERNITY_SEA_EXIT = RuleImage(roi_front=(36,17,38,42), roi_back=(36,17,38,42), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_eternity_sea_exit.png")
 
 	# Image Rule Assets
 	# description 

@@ -70,7 +70,7 @@ class ScriptTask(OrochiScriptTask, GameUi, PetsAssets, SwitchSoul):
             self.ui_goto(page_soul_zones)
             self.orochi_enter()
             self.check_layer(Layer.TEN[0])
-            self.check_lock(False)
+            self.check_lock(self.config.orochi.general_battle_config.lock_team_enable,self.I_OROCHI_LOCK,self.I_OROCHI_UNLOCK)
             count_orochi_ten = 0
             while 1:
                 self.screenshot()

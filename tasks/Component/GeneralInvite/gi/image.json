@@ -245,8 +245,8 @@
   {
     "itemName": "add_sea",
     "imageName": "gi_add_sea.png",
-    "roiFront": "836,231,100,100",
-    "roiBack": "836,231,100,100",
+    "roiFront": "836,269,100,62",
+    "roiBack": "836,269,100,62",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "永生之海添加好友"
@@ -331,5 +331,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "三人御魂组队左上角的协站队伍"
+  },
+  {
+    "itemName": "gi_eternity_sea_exit",
+    "imageName": "gi_gi_eternity_sea_exit.png",
+    "roiFront": "36,17,38,42",
+    "roiBack": "36,17,38,42",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "永生之海退出隊伍"
   }
 ]

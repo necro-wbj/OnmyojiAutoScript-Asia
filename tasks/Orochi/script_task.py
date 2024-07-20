@@ -93,49 +93,18 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             self.device.click(x=pos[0], y=pos[1])
             return True
 
-    def check_lock(self, lock: bool = True) -> bool:
-        """
-        检查是否锁定阵容, 要求在八岐大蛇界面
-        :param lock:
-        :return:
-        """
-        logger.info('Check lock: %s', lock)
-        if lock:
-            while 1:
-                self.screenshot()
-                if self.appear(self.I_OROCHI_LOCK):
-                    return True
-                if self.appear_then_click(self.I_OROCHI_UNLOCK, interval=1):
-                    continue
-        else:
-            while 1:
-                self.screenshot()
-                if self.appear(self.I_OROCHI_UNLOCK):
-                    return True
-                if self.appear_then_click(self.I_OROCHI_LOCK, interval=1):
-                    continue
-
-
-
-
-
-
-
-
-
-
-
     def run_leader(self):
         logger.info('Start run leader')
         self.ui_get_current_page()
         self.ui_goto(page_soul_zones)
         self.orochi_enter()
 
+        # go to the layer
         layer = self.config.orochi.orochi_config.layer
         layer = layer[0]
         logger.info(f'layer {layer}')
         self.check_layer(layer)
-        self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
+        self.check_lock(self.config.orochi.general_battle_config.lock_team_enable,self.I_OROCHI_LOCK,self.I_OROCHI_UNLOCK)
         # 创建队伍
         logger.info('Create team')
         while 1:
@@ -164,18 +133,6 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             if self.appear_then_click(self.I_PET_PRESENT, action=self.C_WIN_3, interval=1):
                 continue
 
-            if self.current_count >= self.limit_count:
-                if self.is_in_room():
-                    logger.info('Orochi count limit out')
-                    break
-
-            if datetime.now() - self.start_time >= self.limit_time:
-                if self.is_in_room():
-                    logger.info('Orochi time limit out')
-                    break
-
-
-
             # 如果没有进入房间那就不需要后面的邀请
             if not self.is_in_room():
                 if self.is_room_dead():
@@ -183,6 +140,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                     success = False
                     break
                 continue
+
 
             # 点击挑战
             if not is_first:
@@ -204,13 +162,23 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                     is_first = False
                     self.run_general_battle(config=self.config.orochi.general_battle_config)
 
-        # 当结束或者是失败退出循环的时候只有两个UI的可能，在房间或者是在组队界面
-        # 如果在房间就退出
-        if self.exit_room():
-            pass
-        # 如果在组队界面就退出
-        if self.exit_team():
-            pass
+            if self.current_count >= self.limit_count:
+                logger.info('Orochi count limit out')
+                break
+            if datetime.now() - self.start_time >= self.limit_time:
+                logger.info('Orochi time limit out')
+                break
+
+        while 1:
+            # 有一种情况是本来要退出的，但是队长邀请了进入的战斗的加载界面
+            if self.appear(self.I_GI_HOME) or self.appear(self.I_GI_EXPLORE):
+                break
+            # 如果可能在房间就退出
+            if self.exit_room():
+                pass
+            # 如果还在战斗中，就退出战斗
+            if self.exit_battle():
+                pass
 
         self.ui_get_current_page()
         self.ui_goto(page_main)
@@ -222,9 +190,6 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
     def run_member(self):
         logger.info('Start run member')
         self.ui_get_current_page()
-        # self.ui_goto(page_soul_zones)
-        # self.orochi_enter()
-        # self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
 
         # wait for leader to invite
         # if no invite 60S just return False
@@ -232,6 +197,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         self.device.stuck_record_add('BATTLE_STATUS_S')
         self.timer_invite = Timer(60)
         self.timer_invite.start()
+        #invite check
         while 1:
             self.screenshot()
             
@@ -298,7 +264,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         layer = layer[0]
         logger.info(f'layer {layer}')
         self.check_layer(layer)
-        self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
+        self.check_lock(self.config.orochi.general_battle_config.lock_team_enable,self.I_OROCHI_LOCK,self.I_OROCHI_UNLOCK)
 
         def is_in_orochi(screenshot=False) -> bool:
             if screenshot:
@@ -355,7 +321,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             layer = layer[0]
             logger.info(f'layer {layer}')
             self.check_layer(layer)
-            self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
+            self.check_lock(self.config.orochi.general_battle_config.lock_team_enable,self.I_OROCHI_LOCK,self.I_OROCHI_UNLOCK)
             # 创建队伍
             logger.info('Create team')
             while 1:
