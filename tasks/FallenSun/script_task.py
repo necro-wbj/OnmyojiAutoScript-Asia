@@ -3,6 +3,7 @@
 # github https://github.com/runhey
 from time import sleep
 from datetime import time, datetime, timedelta
+from module.base.timer import Timer
 
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralInvite.general_invite import GeneralInvite
@@ -74,6 +75,10 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         检查挑战的层数, 并选中挑战的层
         :return:
         """
+        
+        if layer == '叁':
+            logger.info('replace layer 3')
+            layer = '参'
         pos = self.list_find(self.L_LAYER_LIST, layer)
         if pos:
             self.device.click(x=pos[0], y=pos[1])
@@ -207,6 +212,10 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         # self.fallen_sun_enter()
         # self.check_lock(self.config.fallen_sun.general_battle_config.lock_team_enable)
         #invite check
+        self.device.stuck_record_clear()
+        self.device.stuck_record_add('BATTLE_STATUS_S')
+        self.timer_invite = Timer(60)
+        self.timer_invite.start()
         while 1:
             self.screenshot()
             
@@ -272,8 +281,6 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         self.ui_goto(page_soul_zones)
         self.fallen_sun_enter()
         layer = self.config.fallen_sun.fallen_sun_config.layer
-        if layer is '叁层':
-            layer = '参层'
         self.check_layer(layer[0])
         self.check_lock(self.config.fallen_sun.general_battle_config.lock_team_enable)
 
