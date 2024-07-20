@@ -100,7 +100,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                     # 点击集结挑战
                     logger.info('Boss battle people is not full')
                     self.screenshot()
-                    
+                    current, remain, total = 0, 0, 0
                     if self.appear(self.I_BOSS_SUPER_FIRE)  or self.appear(self.I_BOSS_FIRE):
                         if flag_to_fight_super_boss == True:
                             current, remain, total = self.O_DE_SBOSS_PEOPLE.ocr(self.device.image)
@@ -165,6 +165,11 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             else:
                 if self.appear_then_click(self.I_DE_BOSS, interval=4):
                     continue
+            # 處理定位小人位置 冒出一個小鬼王
+            if self.appear(self.I_DE_SMALL_FIRE):
+                if self.appear_then_click(self.I_UI_BACK_RED, interval=1):
+                    logger.info('Find small boss close it')
+
             if self.click(self.C_DM_BOSS_CLICK, interval=1.7):
                 continue
             if self.appear(self.I_BOSS_GATHER):
@@ -388,6 +393,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         config = self.con
         #if click more than 5 times, then return
         click_count = 0
+        boss_find_count = 0
         while 1:
             self.screenshot()
             if not self.appear(self.I_DE_LOCATION):
@@ -403,12 +409,55 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                     if self.appear_then_click(self.I_DE_SMALL_FIRE, interval=1):
                         continue
                 break
+            # find super boss
+            if self.appear(self.I_BOSS_SUPER_FIRE) or self.appear(self.I_BOSS_FIRE):
+                logger.info('lantern find super Boss')
+                if self.appear_then_click(self.I_BOSS_SUPER_FIRE, interval=3):
+                    boss_find_count = boss_find_count + 1
+                    logger.info(f'lantern find super Boss click:{boss_find_count}')
+                if self.appear_then_click(self.I_BOSS_FIRE, interval=3):
+                    boss_find_count = boss_find_count + 1
+                    logger.info(f'lantern find normal Boss click:{boss_find_count}')
+                # 等待挑战, 5秒也是等
+                time.sleep(5)
+            # enter super boss
+            if self.appear(self.I_BOSS_GATHER):
+                logger.warning('Boss battle ENTER wait fight!!!')
+                # 延长时间并在战斗结束后改回来
+                # 少人的極逢魔BOSS 會超過10分鐘
+                self.device.stuck_timer_long = Timer(900, count=900).start()
+                self.device.stuck_record_add('BATTLE_STATUS_S')
+                self.wait_until_disappear(self.I_BOSS_GATHER)
+                logger.warning('Boss battle FIGHTING!!!')
+                self.device.stuck_record_clear()
+                self.device.stuck_record_add('BATTLE_STATUS_S')
+                config = self.con
+                self.run_general_battle(config)
+                self.device.stuck_timer_long = Timer(300, count=300).start()
             
+                # 等待回到挑战boss主界面
+                self.wait_until_appear(self.I_BOSS_GATHER)
+                while 1:
+                    self.screenshot()
+                    if self.appear(self.I_DE_LOCATION):
+                        break
+                    if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
+                        continue
+                    if self.appear_then_click(self.I_BOSS_BACK_WHITE, interval=1):
+                        continue
+                # 返回到封魔主界面
+            if boss_find_count >= 4:
+                # the super boss maybe already done close it
+                logger.warning('super Boss enter count over 4')
+                self.ui_click_until_disappear(self.I_UI_BACK_RED)
+                return
+            if click_count >= 5:
+                logger.warning('lantern Battle click count over 5')
+                self.ui_click_until_disappear(self.I_UI_BACK_RED)
+                return
             if self.click(target_click, interval=1):
                 click_count = click_count + 1
                 continue
-            if click_count >= 5:
-                return
         if self.run_general_battle(config):
             logger.info('Battle End')
 

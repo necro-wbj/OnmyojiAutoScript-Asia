@@ -272,6 +272,8 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         self.ui_goto(page_soul_zones)
         self.fallen_sun_enter()
         layer = self.config.fallen_sun.fallen_sun_config.layer
+        if layer is '叁层':
+            layer = '参层'
         self.check_layer(layer[0])
         self.check_lock(self.config.fallen_sun.general_battle_config.lock_team_enable)
 

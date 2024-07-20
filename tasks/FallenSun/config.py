@@ -21,13 +21,13 @@ class UserStatus(str, Enum):
 class Layer(str, Enum):
     ONE = '壹层'
     TWO = '贰层'
-    THREE = '参层'
+    THREE = '叁层'
 
 class FallenSunConfig(ConfigBase):
     # 身份
     user_status: UserStatus = Field(default=UserStatus.LEADER, description='user_status_help')
     # 层数
-    layer: Layer = Field(default=Layer.THREE, description='layer_help')
+    layer: Layer = Field(default=Layer.ONE, description='layer_help')
     # 限制时间
     limit_time: Time = Field(default=Time(minute=30), description='limit_time_help')
     # 限制次数
