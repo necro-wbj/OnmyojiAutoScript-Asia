@@ -296,8 +296,6 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
             if not self.appear(add_button):
                 return False
             self.ui_click(add_button, self.I_INVITE_ENSURE, interval=2.5)
-            # I_WQ_INVITE_READY
-            self.wait_until_stable(self.I_WQ_INVITE_READY)
             sleep(1)
             self.click(self.I_WQ_FIREND_1)
             sleep(0.4)

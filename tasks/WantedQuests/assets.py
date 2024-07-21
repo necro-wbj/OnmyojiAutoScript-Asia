@@ -65,15 +65,15 @@ class WantedQuestsAssets:
 	# description 
 	I_WQ_INVITE_3 = RuleImage(roi_front=(754,366,39,42), roi_back=(728,339,100,100), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/invite_wq_invite_3.png")
 	# description 
-	I_WQ_FIREND_1 = RuleImage(roi_front=(445,190,175,70), roi_back=(445,190,175,70), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/invite_wq_firend_1.png")
+	I_WQ_FIREND_1 = RuleImage(roi_front=(245,190,175,70), roi_back=(245,190,175,70), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/invite_wq_firend_1.png")
 	# description 
-	I_WQ_FIREND_2 = RuleImage(roi_front=(737,190,175,70), roi_back=(737,190,175,70), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/invite_wq_firend_2.png")
+	I_WQ_FIREND_2 = RuleImage(roi_front=(537,190,175,70), roi_back=(537,190,175,70), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/invite_wq_firend_2.png")
 	# description 
-	I_WQ_FIREND_3 = RuleImage(roi_front=(445,286,175,70), roi_back=(445,286,175,70), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/invite_wq_firend_3.png")
+	I_WQ_FIREND_3 = RuleImage(roi_front=(245,286,175,70), roi_back=(245,286,175,70), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/invite_wq_firend_3.png")
 	# description 
-	I_WQ_FIREND_4 = RuleImage(roi_front=(737,286,175,70), roi_back=(737,286,175,70), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/invite_wq_firend_4.png")
+	I_WQ_FIREND_4 = RuleImage(roi_front=(537,286,175,70), roi_back=(537,286,175,70), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/invite_wq_firend_4.png")
 	# description 
-	I_WQ_FIREND_5 = RuleImage(roi_front=(445,382,175,70), roi_back=(445,382,175,70), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/invite_wq_firend_5.png")
+	I_WQ_FIREND_5 = RuleImage(roi_front=(245,382,175,70), roi_back=(245,382,175,70), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/invite_wq_firend_5.png")
 
 
 	# Image Rule Assets
@@ -101,8 +101,7 @@ class WantedQuestsAssets:
 	I_GOTO_4 = RuleImage(roi_front=(979,447,87,42), roi_back=(979,447,87,42), threshold=0.75, method="Template matching", file="./tasks/WantedQuests/wq/wq_goto_4.png")
 	# 判断是否还有任务 
 	I_WQ_CHECK_TASK = RuleImage(roi_front=(110,188,21,77), roi_back=(110,188,41,459), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_wq_check_task.png")
-    # 判斷邀請的好友是否準備好
-	I_WQ_INVITE_READY = RuleImage(roi_front=(914,174,21,341), roi_back=(914,174,21,341), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_wq_invite_ready.png")
+
 
 	# Image Rule Assets
 	# 挑戰，字大小會不一樣… 百戰的粗一點 大一點 

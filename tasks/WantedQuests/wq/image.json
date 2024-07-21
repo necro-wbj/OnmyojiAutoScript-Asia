@@ -106,14 +106,5 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "判断是否还有任务"
-  },
-  {
-    "itemName": "wq_invite_ready",
-    "imageName": "wq_wq_invite_ready.png",
-    "roiFront": "914,174,21,341",
-    "roiBack": "914,174,21,341",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "判斷邀請的好友是否準備好"
   }
 ]
