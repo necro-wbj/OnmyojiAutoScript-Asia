@@ -188,6 +188,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         # 当结束或者是失败退出循环的时候只有两个UI的可能，在房间或者是在组队界面
         # 如果在房间就退出
         while 1:
+            self.screenshot()
             # 有一种情况是本来要退出的，但是队长邀请了进入的战斗的加载界面
             if self.appear(self.I_GI_HOME) or self.appear(self.I_GI_EXPLORE):
                 break
@@ -197,6 +198,9 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             # 如果还在战斗中，就退出战斗
             if self.exit_battle():
                 pass
+            if self.appear_then_click(self.I_BACK_BLUE, interval=1):
+                logger.info('exit fallen_sun list page')
+                continue
 
         self.ui_get_current_page()
         self.ui_goto(page_main)

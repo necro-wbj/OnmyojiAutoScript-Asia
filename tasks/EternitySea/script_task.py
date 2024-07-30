@@ -188,6 +188,7 @@ class ScriptTask(
                 break
 
         while 1:
+            self.screenshot()
             # 有一种情况是本来要退出的，但是队长邀请了进入的战斗的加载界面
             if self.appear(self.I_GI_HOME) or self.appear(self.I_GI_EXPLORE):
                 break
@@ -197,6 +198,9 @@ class ScriptTask(
             # 如果还在战斗中，就退出战斗
             if self.exit_battle():
                 pass
+            if self.appear_then_click(self.I_BACK_BLUE, interval=1):
+                logger.info('exit eternity_sea list page')
+                continue
 
         self.ui_get_current_page()
         self.ui_goto(page_main)

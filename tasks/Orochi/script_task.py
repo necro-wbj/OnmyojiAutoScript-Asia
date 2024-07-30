@@ -122,6 +122,11 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         success = True
         is_first = True
         # 这个时候我已经进入房间了哦
+        
+        self.device.stuck_record_clear()
+        self.device.stuck_record_add('BATTLE_STATUS_S')
+        self.timer_invite = Timer(200)
+        self.timer_invite.start()
         while 1:
             self.screenshot()
             # 无论胜利与否, 都会出现是否邀请一次队友
@@ -170,6 +175,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                 break
 
         while 1:
+            self.screenshot()
             # 有一种情况是本来要退出的，但是队长邀请了进入的战斗的加载界面
             if self.appear(self.I_GI_HOME) or self.appear(self.I_GI_EXPLORE):
                 break
@@ -179,6 +185,9 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             # 如果还在战斗中，就退出战斗
             if self.exit_battle():
                 pass
+            if self.appear_then_click(self.I_BACK_BLUE, interval=1):
+                logger.info('exit Orochi list page')
+                continue
 
         self.ui_get_current_page()
         self.ui_goto(page_main)
@@ -195,7 +204,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         # if no invite 60S just return False
         self.device.stuck_record_clear()
         self.device.stuck_record_add('BATTLE_STATUS_S')
-        self.timer_invite = Timer(60)
+        self.timer_invite = Timer(200)
         self.timer_invite.start()
         #invite check
         while 1:
