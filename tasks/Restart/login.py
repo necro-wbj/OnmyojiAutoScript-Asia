@@ -101,6 +101,23 @@ class LoginHandler(BaseTask, RestartAssets):
                         logger.info('already find OCR over 20 times, stop find')
                         login_find_post = False
                     continue
+        while_login_event_count = 10
+        while while_login_event_count:
+            self.screenshot()
+            while_login_event_count = while_login_event_count - 1
+            logger.info(f'while_login_event_count: {while_login_event_count}')
+            if self.appear(self.I_UI_BACK_RED):
+                self.device.click(self.I_UI_BACK_RED)
+                logger.info('login click I_UI_BACK_RED')
+            if self.appear(self.I_UI_BACK_BLUE):
+                self.device.click(self.I_UI_BACK_BLUE)
+                logger.info('login click I_UI_BACK_BLUE')
+            if self.appear(self.I_UI_CONFIRM):
+                self.device.click(self.I_UI_CONFIRM)
+                logger.info('login click I_UI_CONFIRM')
+            if self.appear(self.I_UI_CONFIRM_SAMLL):
+                self.device.click(self.I_UI_CONFIRM_SAMLL)
+                logger.info('login click I_UI_CONFIRM_SAMLL')
 
         return login_success
 
