@@ -90,6 +90,14 @@ class LoginHandler(BaseTask, RestartAssets):
             #     continue
             if not login_find_post:
                 continue
+            if self.appear_then_click(self.I_UI_BACK_RED):
+                logger.info('login click I_UI_BACK_RED')
+            if self.appear_then_click(self.I_UI_BACK_BLUE):
+                logger.info('login click I_UI_BACK_BLUE')
+            if self.appear_then_click(self.I_UI_CONFIRM):
+                logger.info('login click I_UI_CONFIRM')
+            if self.appear_then_click(self.I_UI_CONFIRM_SAMLL):
+                logger.info('login click I_UI_CONFIRM_SAMLL')
             time.sleep(0.5)
             if self.ocr_appear_click(self.O_LOGIN_ENTER_GAME, interval=2.5):
                 login_find_enter_game_ocr = login_find_enter_game_ocr + 1
@@ -106,17 +114,13 @@ class LoginHandler(BaseTask, RestartAssets):
             self.screenshot()
             while_login_event_count = while_login_event_count - 1
             logger.info(f'while_login_event_count: {while_login_event_count}')
-            if self.appear(self.I_UI_BACK_RED):
-                self.device.click(self.I_UI_BACK_RED)
+            if self.appear_then_click(self.I_UI_BACK_RED):
                 logger.info('login click I_UI_BACK_RED')
-            if self.appear(self.I_UI_BACK_BLUE):
-                self.device.click(self.I_UI_BACK_BLUE)
+            if self.appear_then_click(self.I_UI_BACK_BLUE):
                 logger.info('login click I_UI_BACK_BLUE')
-            if self.appear(self.I_UI_CONFIRM):
-                self.device.click(self.I_UI_CONFIRM)
+            if self.appear_then_click(self.I_UI_CONFIRM):
                 logger.info('login click I_UI_CONFIRM')
-            if self.appear(self.I_UI_CONFIRM_SAMLL):
-                self.device.click(self.I_UI_CONFIRM_SAMLL)
+            if self.appear_then_click(self.I_UI_CONFIRM_SAMLL):
                 logger.info('login click I_UI_CONFIRM_SAMLL')
 
         return login_success
