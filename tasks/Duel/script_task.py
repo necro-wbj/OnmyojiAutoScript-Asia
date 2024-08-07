@@ -48,10 +48,29 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
                 logger.info('Duel task is over honor')
                 break
             current_score = self.check_score(con.target_score)
-            if not current_score:
+            logger.info(f'current_score = {current_score}')
+            # handle 3000+ time
+            if current_score >= 3000:
+                now = datetime.now()
+                master_morning_end = now.replace(hour=13, minute=0, second=0, microsecond=0)
+                master_evening_end = now.replace(hour=21, minute=0, second=0, microsecond=0)
+                if now >= master_morning_end or now >= master_evening_end:
+                    logger.info('Duel task is over master time')
+                    break
+            if not current_score and con.target_score != 0:
                 # 分数够了，退出
                 logger.info('Duel task is over score')
                 break
+            
+            count = 0
+            while 1:
+                self.screenshot()
+                if self.appear(self.I_D_BATTLE, interval=1):
+                    count += 1
+                if self.appear(self.I_D_BATTLE_PROTECT, interval=1.6):
+                    count += 1
+                if count >= 5:
+                    break
             self.duel_one(current_score, con.green_enable, con.green_mark)
             # 取得現在時間
             now = datetime.strptime("2024-03-25 23:00", "%Y-%m-%d %H:%M")
@@ -100,11 +119,14 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
         :return:
         """
         click_count = 0  # 计数
+        logger.info('Souls Switch start')
         while 1:
             self.screenshot()
+            logger.info(f"click_count: {click_count}")
             if click_count >= 4:
                 break
-
+            if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
+                continue
             if self.appear_then_click(self.I_D_TEAM, interval=1):
                 continue
             if self.appear_then_click(self.I_UI_CONFIRM, interval=0.6):
@@ -112,6 +134,7 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
             if self.appear_then_click(self.I_D_TEAM_SWTICH, interval=1):
                 click_count += 1
                 continue
+            logger.info('Souls Switch no find nothing')
         logger.info('Souls Switch is complete')
         self.ui_click(self.I_UI_BACK_YELLOW, self.I_D_TEAM)
 
@@ -135,10 +158,13 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
             self.screenshot()
             if self.appear(self.I_D_CELEB_STAR) or self.appear(self.I_D_CELEB_HONOR):
                 logger.info('You are already a celeb')
-                return None
+                # if target == 0, return 3000 else return None
+                return 3000 if target == 0 else None
             current_score = self.O_D_SCORE.ocr(self.device.image)
             if current_score < 1200 or current_score > 3000:
                 continue
+            if target == 0:
+                return current_score
             return current_score if current_score <= target else None
 
     def duel_one(self, current_score: int, enable: bool=False,
@@ -152,12 +178,12 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
         """
         while 1:
             self.screenshot()
-            if not self.appear(self.I_D_HELP):
-                break
             if self.appear_then_click(self.I_D_BATTLE, interval=1):
                 continue
             if self.appear_then_click(self.I_D_BATTLE_PROTECT, interval=1.6):
                 continue
+            if not self.appear(self.I_D_HELP):
+                break
         # 点击斗技 开始匹配对手
         logger.hr('Duel start match')
         while 1:

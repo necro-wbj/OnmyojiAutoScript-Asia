@@ -386,7 +386,8 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             case OcrMode.SINGLE:
                 # 測試使用regex 保留原始邏輯
                 # appear = result == target.keyword
-                appear = (target.keyword in result)
+                appear = re.match(target.keyword,result)
+                logger.info(f"Ocr appear {appear}")
             case OcrMode.DIGIT:
                 appear = result == int(target.keyword)
             case OcrMode.DIGITCOUNTER:

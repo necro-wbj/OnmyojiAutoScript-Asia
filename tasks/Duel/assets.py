@@ -17,13 +17,13 @@ class DuelAssets:
 
 	# Image Rule Assets
 	# 点击阵容 
-	I_D_TEAM = RuleImage(roi_front=(813,284,34,74), roi_back=(813,284,34,74), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_team.png")
+	I_D_TEAM = RuleImage(roi_front=(813,284,34,74), roi_back=(813,284,50,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_team.png")
 	# 一键切换所有的御魂 
 	I_D_TEAM_SWTICH = RuleImage(roi_front=(1082,85,38,41), roi_back=(1082,85,38,41), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_team_swtich.png")
 	# 观战 
 	I_D_VISIT = RuleImage(roi_front=(1045,613,53,55), roi_back=(1045,613,53,55), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_visit.png")
 	# description 
-	I_D_BATTLE = RuleImage(roi_front=(1143,566,100,100), roi_back=(1143,566,100,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_battle.png")
+	I_D_BATTLE = RuleImage(roi_front=(1170,593,73,73), roi_back=(1143,566,100,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_battle.png")
 	# 战斗带保护的 
 	I_D_BATTLE_PROTECT = RuleImage(roi_front=(1145,563,100,100), roi_back=(1145,563,100,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_battle_protect.png")
 	# 预选点击确认 
@@ -33,7 +33,7 @@ class DuelAssets:
 	# 手动，弃用 
 	I_D_HAND = RuleImage(roi_front=(34,635,55,55), roi_back=(34,635,55,55), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_hand.png")
 	# 主界面的感叹号 
-	I_D_HELP = RuleImage(roi_front=(719,434,32,30), roi_back=(708,397,49,78), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_help.png")
+	I_D_HELP = RuleImage(roi_front=(719,434,32,30), roi_back=(708,397,70,90), threshold=0.7, method="Template matching", file="./tasks/Duel/duel/duel_d_help.png")
 	# 准备 
 	I_D_PREPARE = RuleImage(roi_front=(1127,541,100,100), roi_back=(1127,541,100,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_prepare.png")
 	# 准备完毕 

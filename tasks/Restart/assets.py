@@ -66,7 +66,7 @@ class RestartAssets:
 	# 正在连接服务器 
 	O_LOGIN_NETWORK = RuleOcr(roi=(534,649,189,39), area=(210,492,100,100), mode="Single", method="Default", keyword="正在连接服务器", name="login_network")
 	# 進入遊戲 
-	O_LOGIN_ENTER_GAME = RuleOcr(roi=(558,573,161,44), area=(545,560,191,73), mode="Single", method="Default", keyword="進入", name="login_enter_game")
+	O_LOGIN_ENTER_GAME = RuleOcr(roi=(558,573,161,44), area=(545,560,191,73), mode="Single", method="Default", keyword="進入..", name="login_enter_game")
 	# 点击屏幕跳过 
 	O_LOGIN_SKIP_1 = RuleOcr(roi=(1046,35,130,37), area=(1046,35,130,37), mode="Single", method="Default", keyword="点击屏幕跳过", name="login_skip_1")
 	# 登录指定角色，默认第一个 

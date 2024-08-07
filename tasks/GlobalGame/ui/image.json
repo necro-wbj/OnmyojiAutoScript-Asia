@@ -2,8 +2,8 @@
   {
     "itemName": "ui_confirm",
     "imageName": "ui_ui_confirm.png",
-    "roiFront": "667,398,179,66",
-    "roiBack": "667,398,179,66",
+    "roiFront": "602,411,77,39",
+    "roiBack": "550,370,320,110",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "长一点的确认"
@@ -65,8 +65,8 @@
   {
     "itemName": "ui_confirm_samll",
     "imageName": "ui_ui_confirm_samll.png",
-    "roiFront": "677,390,130,62",
-    "roiBack": "677,390,130,62",
+    "roiFront": "604,413,72,39",
+    "roiBack": "550,370,320,110",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "短一点的确认"

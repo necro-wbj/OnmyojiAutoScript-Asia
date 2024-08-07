@@ -51,7 +51,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, SwitchSoul):
         self.ui_goto(page_team)
         if 5 <= self.start_time.weekday() <= 6:
             # 周末
-            self.check_zones('喷怒的石距')
+            self.check_zones('...石距')
         else:
             self.check_zones('石距')
         if not self.create_room():

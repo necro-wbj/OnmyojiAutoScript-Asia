@@ -3,7 +3,7 @@
     "itemName": "d_team",
     "imageName": "duel_d_team.png",
     "roiFront": "813,284,34,74",
-    "roiBack": "813,284,34,74",
+    "roiBack": "813,284,50,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击阵容"
@@ -29,7 +29,7 @@
   {
     "itemName": "d_battle",
     "imageName": "duel_d_battle.png",
-    "roiFront": "1143,566,100,100",
+    "roiFront": "1170,593,73,73",
     "roiBack": "1143,566,100,100",
     "method": "Template matching",
     "threshold": 0.8,

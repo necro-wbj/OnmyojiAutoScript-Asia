@@ -35,7 +35,7 @@ class AreaBossAssets:
 
 	# Ocr Rule Assets
 	# 急殺數最多 
-	O_AB_KILL_BEST = RuleOcr(roi=(942,123,157,52), area=(942,123,157,52), mode="Single", method="Default", keyword="数最多", name="ab_kill_best")
+	O_AB_KILL_BEST = RuleOcr(roi=(942,123,157,52), area=(942,123,157,52), mode="Single", method="Default", keyword="..数最多", name="ab_kill_best")
 	# 我的收藏 
 	O_AB_MY_COLLECT = RuleOcr(roi=(949,124,129,53), area=(949,124,129,53), mode="Single", method="Default", keyword="我的收藏", name="ab_my_collect")
 	# 熱門 
