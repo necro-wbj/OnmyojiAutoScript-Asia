@@ -23,7 +23,7 @@ class DuelAssets:
 	# 观战 
 	I_D_VISIT = RuleImage(roi_front=(1045,613,53,55), roi_back=(1045,613,53,55), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_visit.png")
 	# description 
-	I_D_BATTLE = RuleImage(roi_front=(1170,593,73,73), roi_back=(1143,566,100,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_battle.png")
+	I_D_BATTLE = RuleImage(roi_front=(1174,594,60,59), roi_back=(1131,553,143,158), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_battle.png")
 	# 战斗带保护的 
 	I_D_BATTLE_PROTECT = RuleImage(roi_front=(1145,563,100,100), roi_back=(1145,563,100,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_battle_protect.png")
 	# 预选点击确认 

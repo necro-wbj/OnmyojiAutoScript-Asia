@@ -29,8 +29,8 @@
   {
     "itemName": "d_battle",
     "imageName": "duel_d_battle.png",
-    "roiFront": "1170,593,73,73",
-    "roiBack": "1143,566,100,100",
+    "roiFront": "1174,594,60,59",
+    "roiBack": "1131,553,143,158",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

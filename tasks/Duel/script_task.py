@@ -11,7 +11,7 @@ from module.base.timer import Timer
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main, page_duel
+from tasks.GameUi.page import page_main, page_duel, page_town
 from tasks.Duel.config import Duel
 from tasks.Duel.assets import DuelAssets
 
@@ -22,7 +22,23 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
         self.limit_time: timedelta = timedelta(hours=limit_time.hour, minutes=limit_time.minute,
                                                seconds=limit_time.second)
         self.ui_get_current_page()
-        self.ui_goto(page_duel)
+        # fix event duel add
+        # self.ui_goto(page_duel)
+        self.ui_goto(page_town)
+        while 1:
+            self.screenshot()
+            if self.appear_then_click(self.I_TOWN_GOTO_DUEL, interval=1):
+                logger.info('Goto I_TOWN_GOTO_DUEL')
+                continue
+            if self.appear(self.I_CHECK_DUEL):
+                logger.info('arrive I_CHECK_DUEL')
+                break
+            if self.appear_then_click(self.I_BACK_YOLLOW, interval=1):
+                logger.info('close event AD I_BACK_YOLLOW')
+                continue
+            if self.appear_then_click(self.I_MAIN_GOTO_TOWN, interval=1):
+                logger.info('Goto I_MAIN_GOTO_TOWN')
+                continue
         if con.switch_all_soul:
             self.switch_all_soul()
         # 設定時間範圍

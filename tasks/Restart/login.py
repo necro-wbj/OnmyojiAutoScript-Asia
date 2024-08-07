@@ -88,8 +88,6 @@ class LoginHandler(BaseTask, RestartAssets):
             #     continue
             # if self.ocr_appear_click(self.O_LOGIN_ENTER_GAME, interval=2.5):
             #     continue
-            if not login_find_post:
-                continue
             if self.appear_then_click(self.I_UI_BACK_RED):
                 logger.info('login click I_UI_BACK_RED')
             if self.appear_then_click(self.I_UI_BACK_BLUE):
@@ -98,6 +96,9 @@ class LoginHandler(BaseTask, RestartAssets):
                 logger.info('login click I_UI_CONFIRM')
             if self.appear_then_click(self.I_UI_CONFIRM_SAMLL):
                 logger.info('login click I_UI_CONFIRM_SAMLL')
+            self.device.click_record_clear()
+            if not login_find_post:
+                continue
             time.sleep(0.5)
             if self.ocr_appear_click(self.O_LOGIN_ENTER_GAME, interval=2.5):
                 login_find_enter_game_ocr = login_find_enter_game_ocr + 1
