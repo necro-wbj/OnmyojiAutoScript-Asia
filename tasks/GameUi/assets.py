@@ -118,7 +118,7 @@ class GameUiAssets:
 	# description 
 	I_DEMON_ENCOUNTER_GOTO_TOWN = RuleImage(roi_front=(28,20,56,52), roi_back=(3,4,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_demon_encounter_goto_town.png")
 	# description 
-	I_TOWN_GOTO_HYAKKIYAKOU = RuleImage(roi_front=(880,165,53,69), roi_back=(827,149,148,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_town_goto_hyakkiyakou.png")
+	I_TOWN_GOTO_HYAKKIYAKOU = RuleImage(roi_front=(880,165,53,69), roi_back=(827,149,148,100), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_town_goto_hyakkiyakou.png")
 	# description 
 	I_CHECK_KYAKKIYAKOU = RuleImage(roi_front=(305,567,56,64), roi_back=(280,545,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_kyakkiyakou.png")
 	# description 

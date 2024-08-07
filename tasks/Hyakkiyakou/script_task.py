@@ -129,6 +129,16 @@ class ScriptTask(GameUi, HyaSlave):
 
 
         while 1:
+            self.fast_screenshot()
+            if self.appear(self.I_HACCESS):
+                break
+            #check self.device.image size is 1280x720
+            if self.device.image.size != (1280, 720):
+                logger.error('game windoq size error it should be 1280x720')
+                raise RequestHumanTakeover('game windoq size should be 1280x720')
+
+        logger.info('Hyakkiyakou Start and fast_screenshot is OK')
+        while 1:
             if hya_count >= self.limit_count:
                 logger.info('Hyakkiyakou count limit out')
                 break
@@ -141,7 +151,7 @@ class ScriptTask(GameUi, HyaSlave):
             hya_count += 1
 
         while 1:
-            self.screenshot()
+            self.fast_screenshot()
 
             if not self.appear(self.I_HACCESS):
                 continue
@@ -163,7 +173,7 @@ class ScriptTask(GameUi, HyaSlave):
         # 随机选一个
         click_button = choice([self.C_HSELECT_1, self.C_HSELECT_2, self.C_HSELECT_3])
         while 1:
-            self.screenshot()
+            self.fast_screenshot()
             if not self.appear(self.I_HTITLE):
                 break
             if self.appear_then_click(self.I_HSTART, interval=2):
@@ -177,6 +187,7 @@ class ScriptTask(GameUi, HyaSlave):
         last_action = [0, 0, False, 10]
         if self._config.debug_config.hya_show:
             self.debugger.show_start()
+        
         while 1:
             self.fast_screenshot()
             if self.appear(self.I_HEND):
@@ -210,7 +221,7 @@ class ScriptTask(GameUi, HyaSlave):
             self.debugger.show_stop()
         if self._config.debug_config.hya_save_result:
             # 走个动画
-            time.sleep(1.5)
+            time.sleep(2)
             self.debugger.save_result(self.device.image)
         self.ui_click(self.I_HEND, self.I_HACCESS)
         self.debugger.save_images()
