@@ -39,6 +39,9 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
             if self.appear_then_click(self.I_MAIN_GOTO_TOWN, interval=1):
                 logger.info('Goto I_MAIN_GOTO_TOWN')
                 continue
+            if self.appear_then_click(self.I_UI_BACK_RED, interval=1):
+                logger.info('Goto I_UI_BACK_RED')
+                continue
         if con.switch_all_soul:
             self.switch_all_soul()
         # 設定時間範圍
@@ -68,12 +71,16 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
             # handle 3000+ time
             if current_score >= 3000:
                 now = datetime.now()
+                morning_start = now.replace(hour=11, minute=0, second=0, microsecond=0)
+                evening_start = now.replace(hour=18, minute=0, second=0, microsecond=0)
                 master_morning_end = now.replace(hour=13, minute=0, second=0, microsecond=0)
                 master_evening_end = now.replace(hour=21, minute=0, second=0, microsecond=0)
-                if now >= master_morning_end or now >= master_evening_end:
-                    logger.info('Duel task is over master time')
+                if morning_start <= now <= master_morning_end or evening_start <= now <= master_evening_end:
+                    logger.info('Duel task is in master time')
+                else:
+                    logger.info('Duel task is over time')
                     break
-            if not current_score and con.target_score != 0:
+            if current_score <= con.target_score and con.target_score != 0:
                 # 分数够了，退出
                 logger.info('Duel task is over score')
                 break
@@ -175,7 +182,7 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
             if self.appear(self.I_D_CELEB_STAR) or self.appear(self.I_D_CELEB_HONOR):
                 logger.info('You are already a celeb')
                 # if target == 0, return 3000 else return None
-                return 3000 if target == 0 else None
+                return 3000 #if target == 0 else None
             current_score = self.O_D_SCORE.ocr(self.device.image)
             if current_score < 1200 or current_score > 3000:
                 continue
@@ -194,11 +201,14 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
         """
         while 1:
             self.screenshot()
-            if self.appear_then_click(self.I_D_BATTLE, interval=1):
+            if self.appear_then_click(self.I_D_BATTLE):
+                logger.info('appear_then_click I_D_BATTLE')
                 continue
-            if self.appear_then_click(self.I_D_BATTLE_PROTECT, interval=1.6):
+            if self.appear_then_click(self.I_D_BATTLE_PROTECT):
+                logger.info('click I_D_BATTLE_PROTECT')
                 continue
-            if not self.appear(self.I_D_HELP):
+            if not self.appear(self.I_D_TEAM):
+                logger.info('no Duel I_D_TEAM')
                 break
         # 点击斗技 开始匹配对手
         logger.hr('Duel start match')

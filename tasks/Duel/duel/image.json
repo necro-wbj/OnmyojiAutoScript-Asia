@@ -75,7 +75,7 @@
     "itemName": "d_help",
     "imageName": "duel_d_help.png",
     "roiFront": "719,434,32,30",
-    "roiBack": "708,397,49,78",
+    "roiBack": "680,400,80,80",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "主界面的感叹号"
