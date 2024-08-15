@@ -30,7 +30,8 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
             # 无法完成预处理 很有可能你已经完成了悬赏任务
             logger.warning('Cannot pre-work')
             logger.warning('You may have completed the reward task')
-            self.set_next_run(task='WantedQuests', success=True, finish=True)
+            # self.set_next_run(task='WantedQuests', success=True, finish=True)
+            self.next_run()
             raise TaskEnd('WantedQuests')
 
         self.screenshot()
@@ -101,19 +102,24 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
             return
         time_delta = timedelta(hours=-before_end.hour, minutes=-before_end.minute, seconds=-before_end.second)
         now_datetime = datetime.now()
-        now_time = now_datetime.time()
-        if time(hour=5) < now_time < time(hour=18):
-            # 如果是在5點到18點之間，那就設定下一次運行的時間為今天的18点 + before_end
+        now_time = now_datetime.time() 
+        logger.info(f'now_time now_time {now_time}')
+        
+        if (datetime.combine(datetime.now().date(), time(hour=5)) + time_delta).time() < now_time < (datetime.combine(datetime.now().date(), time(hour=18)) + time_delta).time():
+            # 如果是在5+delta點到18+delta 點之間，那就設定下一次運行的時間為今天的18点 + delta
             next_run_datetime = datetime.combine(now_datetime.date(), time(hour=18))
             next_run_datetime = next_run_datetime + time_delta
-        elif time(hour=18) <= now_time < time(hour=23, minute=59, second=59):
-            # 如果是在18點到23點59分59秒之間，那就設定下次運行的時間為第二天的5點 + before_end
+            logger.info(f'5<time<18 {next_run_datetime}')
+        elif (datetime.combine(datetime.now().date(), time(hour=18)) + time_delta).time() <= now_time <= time(hour=23, minute=59, second=59):
+            # 如果是在18+delta點到23點59分59秒之間，那就設定下次運行的時間為第二天的5+delta
             next_run_datetime = datetime.combine(now_datetime.date() + timedelta(days=1), time(hour=5))
             next_run_datetime = next_run_datetime + time_delta
+            logger.info(f'18<=time<24 {next_run_datetime}')
         else:
-            # 如果是在0點到5點之間，那就設定下次運行的時間為今天的5點 + before_end
+            # 如果是在0點到5點之間，那就設定下次運行的時間為今天的5+delta
             next_run_datetime = datetime.combine(now_datetime.date(), time(hour=5))
             next_run_datetime = next_run_datetime + time_delta
+            logger.info(f'time<5 {next_run_datetime}')
         
         self.set_next_run(task='WantedQuests', target=next_run_datetime)
 
