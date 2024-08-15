@@ -5,6 +5,7 @@ import copy
 import datetime
 import operator
 import threading
+import random
 
 from datetime import datetime, timedelta
 from cached_property import cached_property
@@ -286,6 +287,12 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         :param finish: 是完成任务后的时间为基准还是开始任务的时间为基准
         :return:
         """
+        # 获取真蛇成功次数
+        global current_success, true_orochi_config
+        if task == 'TrueOrochi':
+            current_success = self.model.true_orochi.true_orochi_config.current_success
+
+        # 加载配置文件
         self.reload()
         # 任务预处理
         if not task:
@@ -333,6 +340,19 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
 
         run = min(run).replace(microsecond=0)
         next_run = run
+
+        if server and hasattr(scheduler, 'server_update'):
+            # 加入随机浮动时间
+            float_seconds = (scheduler.float_time.hour * 3600 +
+                             scheduler.float_time.minute * 60 +
+                             scheduler.float_time.second)
+            random_float = random.randint(-float_seconds, float_seconds)
+            # 如果有强制运行时间
+            if scheduler.server_update == time(hour=9):
+                next_run += timedelta(seconds=random_float)
+            else:
+                next_run = parse_tomorrow_server(scheduler.server_update, random_float)
+
         # 将这些连接起来，方便日志输出
         kv = dict_to_kv(
             {
@@ -344,16 +364,13 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         )
         logger.info(f"Delay task `{task}` to {next_run} ({kv})")
 
-        # 强制设定下一次的运行时间
-        if server and hasattr(scheduler, 'server_update') and scheduler.server_update != time(hour=9):
-            next_run = parse_tomorrow_server(scheduler.server_update)
-
-
         # 保证线程安全的
         self.lock_config.acquire()
         try:
             scheduler.next_run = next_run
-
+            if task == 'true_orochi':
+                true_orochi_config = getattr(task_object, 'true_orochi_config', None)
+                true_orochi_config.current_success = current_success
             self.save()
         finally:
             self.lock_config.release()

@@ -171,12 +171,12 @@
     "description": "description"
   },
   {
-    "itemName": "box",
-    "imageName": "res_box.png",
-    "roiFront": "47,256,43,24",
-    "roiBack": "45,126,52,489",
+    "itemName": "treasure_box_click",
+    "imageName": "res_treasure_box_click.png",
+    "roiFront": "33,476,70,49",
+    "roiBack": "2,130,135,406",
     "method": "Template matching",
-    "threshold": 0.8,
-    "description": "寶箱"
+    "threshold": 0.7,
+    "description": "宝箱"
   }
 ]

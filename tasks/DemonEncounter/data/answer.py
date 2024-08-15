@@ -2,69 +2,108 @@
 # @author runhey
 # github https://github.com/runhey
 import csv
+import re
 
 from datetime import datetime
 from pathlib import Path
 from module.logger import logger
 
+from module.logger import logger
 
-def answer_one(question: str, options: list[str]) -> int:
-    """
+def count_intersection(str1, str2):
+    set1 = set(str1)
+    set2 = set(str2)
+    intersection = set1.intersection(set2)
+    return len(intersection)
 
-    每一个问题有四个选项， 返回选项的序号(1、2、3)
-    :param question:
-    :param options:
-    :return:
-    """
-    question_lcut = set(list(str(question)))
-    logger.info(f'OCR Question: {question}, Answer: {options}')
-    file = str(Path(__file__).parent / 'data.csv')
-    with open(file, newline='', encoding='utf-8-sig') as csvfile:
-        reader = csv.reader(csvfile)
-        next(reader)
-        max_score = 0
-        max_score_index = 0
-        for row in reader:
-            # score 為row[0]與question的相似度
-            score = 0
-            question_row_lcut = set(list(str(row[0])))
-            score = len(question_lcut & question_row_lcut) / len(question_lcut | question_row_lcut)
-            if score >= max_score:
-                max_score = score
-                max_score_index = row[1]
-                logger.info(f"CSV question: {row[0]} ans: {row[1]} better")
-                #TODO: handle same score EX :who has brother or sister? 
-        # here match the answer
-        logger.info(f"final ans={max_score_index}")
-        Ans_lcut = set(list(str(max_score_index)))
-        Ans_score = 0
-        Ans_score_max = 0
-        final_ans = 0
-        # check fully match answer exists or use similar answer
-        if max_score_index in options:
-            logger.info(f"Ans: {max_score_index} fully match")
-            return options.index(max_score_index) + 1
-        else:
-            for option in options:
-                logger.info(f"matching ans: {option} better")
-                option_lcut = set(list(str(option)))
-                Ans_score = len(Ans_lcut & option_lcut) / len(Ans_lcut | option_lcut)
-                if Ans_score > Ans_score_max:
-                    Ans_score_max = Ans_score
-                    final_ans = option
+def remove_symbols(text):
+    return re.sub(r'[^\w\s]', '', text)
+
+class Answer:
+    def __init__(self):
+        self.data: dict[str, list] = {}
+        self.data_options: dict[str, list] = {}
+        file = str(Path(__file__).parent / 'data.csv')
+        with open(file, newline='', encoding='utf-8-sig') as csvfile:
+            reader = csv.reader(csvfile)
+            next(reader)
+            for row in reader:
+                key = remove_symbols(row[0])
+                value = remove_symbols(row[1])
+                if key not in self.data:
+                    self.data[key] = []
+                self.data[key].append(value)
+                if value not in self.data_options:
+                    self.data_options[value] = []
+                self.data_options[value].append(key)
+
+    def answer_one(self, question: str, options: list[str]) -> int|None:
+        """
+
+        每一个问题有三个选项， 返回选项的序号(1、2、3)
+        :param question:
+        :param options:
+        :return:
+        """
+        def decide_by_options(question: str, option: list[str]):
+            # 瞎猫当死耗子
+            opts = {}
+            for index, option in enumerate(options):
+                if option in self.data_options.keys():
+                    cnts = [count_intersection(question, ques) for ques in self.data_options[option] ]
+                    cnts.sort(reverse=True)
+                    opts[index + 1] = cnts[0]
+            #
+            if opts:
+                opts = sorted(opts.items(), key=lambda x: x[1], reverse=True)
+            if opts:
+                return opts[0][0]
+            else:
+                return None
+
+
+        question = question.replace('「', '').replace('」', '').replace('?', '')
+        question = remove_symbols(question)
+        options = [remove_symbols(option) for option in options]
+
+        for index, option in enumerate(options):
+            if option == '其余选项皆对':
+                return index + 1
+
+        question_matches: list = []
         try:
-            #print question and answer
-            logger.info(f"1Question: {question} Ans: {final_ans}")
-            return options.index(final_ans) + 1
-        except ValueError:
-            return 1
-    return 1
+            question_matches = self.data[question]
+        except Exception as e:
+            # 没有出现题目，从选项反入手
+            logger.error('Exception: %s', e)
+            return decide_by_options(question=question, option=options)
+        # 出现了题目，开始对答案
+        for index, option in enumerate(options):
+            for match in question_matches:
+                if match == option:
+                    return index + 1
+        # 可能选项识别某一个字错误
+        if options[0] != '' and options[1] != '' and options[2] != '' and options[3] != '':
+            for index, option in enumerate(options):
+                for match in question_matches:
+                    if len(match) != len(option):
+                        continue
+                    if len(match) - count_intersection(match, option) <= 1 :
+                        logger.warning('Option is not match: %s, %s', match, option)
+                        return index + 1
+        # 选项一个都对不上可能是，识别的选项异常
+        for index, option in enumerate(options):
+            if option == '':
+                logger.error('Option is empty: %s', options)
+                return index + 1
+        return None
 
 
 if __name__ == "__main__":
-    question = '以下式神中，手持折扇的是'
-    options = ['生命上限', '鬼王', '荒川之主']
+    answer = Answer()
+    question = '以下式神中，谁从小就是孤'
+    options = ['生命上限', '小鹿男', '荒川之主']
     start_time = datetime.now()
-    print(answer_one(question, options))
+    print(answer.answer_one(question, options))
+    print(answer.answer_one(question, options))
     print(datetime.now() - start_time)
-    print(answer_one(question, options))

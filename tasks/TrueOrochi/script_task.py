@@ -37,11 +37,31 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets, SwitchSoul):
                                          self.config.true_orochi.switch_soul.team_name)
 
         conf = self.config.true_orochi.true_orochi_config
+
+        # 周一重置真蛇次数
+        now = datetime.now()
+        day_of_week = now.weekday()
+        if day_of_week == 0:
+            conf.current_success = 0
+
         if conf.current_success >= 2:
             # 超过两次就说明这周打完了没有必要再打了
             logger.warning('This week is full')
             self.check_times(True)
             raise TaskEnd('TrueOrochi')
+
+        # 御魂切换方式一
+        if self.config.true_orochi.switch_soul.enable:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul(self.config.true_orochi.switch_soul.switch_group_team)
+        # 御魂切换方式二
+        if self.config.true_orochi.switch_soul.enable_switch_by_name:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul_by_name(self.config.true_orochi.switch_soul.group_name,
+                                         self.config.true_orochi.switch_soul.team_name)
+
         self.ui_get_current_page()
         self.ui_goto(page_soul_zones)
         self.orochi_enter()
@@ -109,9 +129,10 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets, SwitchSoul):
             self.screenshot()
             if not self.appear(self.I_BUFF):
                 break
-            if self.appear_then_click(self.I_ST_AUTO_FALSE, interval=0.8):
+            if self.appear_then_click(self.I_ST_AUTO_FALSE, interval=1.8):
                 continue
-            # TODO:CHECK: only use AUTO 
+
+            # 下面代码 "点击准备" 会造成，点击了准备打第一层 循环 if not self.appear(self.I_BUFF): 时候跳出while循环，导致真蛇卡在第二层
             # if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.8):
             #     continue
         self.device.stuck_record_add('BATTLE_STATUS_S')
@@ -149,7 +170,6 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets, SwitchSoul):
         logger.info("Battle process end")
         self.check_times(battle)
         raise TaskEnd('TrueOrochi')
-
 
     def check_true_orochi(self, screenshot=False) -> bool:
         """
@@ -194,6 +214,7 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets, SwitchSoul):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
+
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)

@@ -8,6 +8,8 @@ from time import sleep
 from datetime import datetime, timedelta, time
 from typing import Union
 
+from dev_tools.decorator import usage_time
+
 from module.config.utils import convert_to_underscore
 from module.atom.image import RuleImage
 from module.atom.click import RuleClick
@@ -16,6 +18,7 @@ from module.atom.swipe import RuleSwipe
 from module.atom.ocr import RuleOcr
 from module.atom.list import RuleList
 from module.ocr.base_ocr import OcrMode, OcrMethod
+from module.atom.animate import RuleAnimate
 from module.logger import logger
 from module.base.timer import Timer
 from module.config.config import Config
@@ -49,16 +52,63 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         self.device = device
 
         self.interval_timer = {}  # 这个是用来记录每个匹配的运行间隔的，用于控制运行频率
+        self.animates = {}  # 保存缓存
         self.start_time = datetime.now()  # 启动的时间
         self.check_costume(self.config.global_game.costume_config)
-        self.friend_timer = None  # 这个是用来记录勾协的时间的
-        if self.config.global_game.emergency.invitation_detect_interval:
-            self.interval_time = self.config.global_game.emergency.invitation_detect_interval
-            self.friend_timer = Timer(self.interval_time)
-            self.friend_timer.start()
+        # self.friend_timer = None  # 这个是用来记录勾协的时间的
+        # if self.config.global_game.emergency.invitation_detect_interval:
+        #     self.interval_time = self.config.global_game.emergency.invitation_detect_interval
+        #     self.friend_timer = Timer(self.interval_time)
+        #     self.friend_timer.start()
 
         # 战斗次数相关
         self.current_count = 0  # 战斗次数
+
+    def _burst(self) -> bool:
+        """
+        游戏界面突发异常检测
+        :return: 没有出现返回False, 其他True
+        """
+        image = self.device.image
+        appear_invitation = self.appear(self.I_G_ACCEPT)
+        if not appear_invitation:
+            return False
+        logger.info('Invitation appearing')
+        invite_type = self.config.global_game.emergency.friend_invitation
+        detect_record = self.device.detect_record
+        match invite_type:
+            case FriendInvitation.ACCEPT:
+                logger.info(f"Accept friend invitation")
+                click_button = self.I_G_ACCEPT
+            case FriendInvitation.REJECT:
+                logger.info(f"Reject friend invitation")
+                click_button = self.I_G_REJECT
+            case FriendInvitation.ONLY_JADE:
+                # 勾协
+                logger.info(f"Only accept jade invitation")
+                if self.appear(self.I_G_JADE):
+                    click_button = self.I_G_ACCEPT
+                else:
+                    click_button = self.I_G_IGNORE
+            case FriendInvitation.JADE_AND_FOOD:
+                # 如果是接受勾协和粮协
+                logger.info(f"Accept jade and food invitation")
+                if self.appear(self.I_G_JADE) or self.appear(self.I_G_CAT_FOOD) or self.appear(self.I_G_DOG_FOOD):
+                    click_button = self.I_G_ACCEPT
+                else:
+                    click_button = self.I_G_IGNORE
+            case FriendInvitation.IGNORE:
+                # 如果是忽略
+                logger.info(f"Ignore friend invitation")
+                click_button = self.I_G_IGNORE
+            case _:
+                raise ScriptError(f'Unknown friend invitation type: {invite_type}')
+        if not click_button:
+            raise ScriptError(f'Unknown click button type: {invite_type}')
+        self.ui_click_until_disappear(click_button)
+        # 有的时候长战斗 点击后会取消战斗状态
+        self.device.detect_record = detect_record
+        return True
 
     def screenshot(self):
         """
@@ -67,78 +117,19 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         """
         self.device.screenshot()
         # 判断勾协
-        if self.friend_timer and self.friend_timer.reached():
-            self.friend_timer.reset()
-            invite = self.appear(self.I_G_ACCEPT)
-            detect_record = self.device.detect_record
-            # 如果是全部接受
-            if invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.ACCEPT:
-                # 如果是接受邀请
-                logger.info(f"Accept friend invitation")
-                while 1:
-                    self.device.screenshot()
-                    if self.appear_then_click(self.I_G_ACCEPT, interval=1):
-                        continue
-                    if not self.appear(self.I_G_ACCEPT):
-                        self.set_next_run(task='WantedQuests',target=datetime.now())
-                        break
-            # 如果是全部拒绝
-            elif invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.REJECT:
-                logger.info(f"Reject friend invitation")
-                while 1:
-                    self.device.screenshot()
-                    if self.appear_then_click(self.I_G_REJECT, interval=1):
-                        continue
-                    if not self.appear(self.I_G_REJECT):
-                        break
-            # 如果是仅接受勾协
-            elif invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.ONLY_JADE:
-                logger.info(f"Accept jade invitation")
-                while 1:
-                    self.device.screenshot()
-                    if self.appear(self.I_G_JADE):
-                        if self.appear_then_click(self.I_G_ACCEPT, interval=1):
-                            continue
-                    elif self.appear_then_click(self.I_G_IGNORE, interval=1):
-                        continue
-                    if not self.appear(self.I_G_ACCEPT):
-                        self.set_next_run(task='WantedQuests',target=datetime.now())
-                        break
-            # 如果是接受勾协和粮协
-            elif invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.JADE_AND_FOOD:
-                logger.info(f"Accept jade and food invitation")
-                while 1:
-                    self.device.screenshot()
-                    if self.appear(self.I_G_JADE) or self.appear(self.I_G_CAT_FOOD) or self.appear(self.I_G_DOG_FOOD):
-                        if self.appear_then_click(self.I_G_ACCEPT, interval=1):
-                            continue
-                    elif self.appear_then_click(self.I_G_IGNORE, interval=1):
-                        continue
-                    if not self.appear(self.I_G_ACCEPT):
-                        break
-            # 如果是全部忽略
-            elif invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.IGNORE:
-                logger.info(f"Ignore friend invitation")
-                while 1:
-                    self.device.screenshot()
-                    if self.appear_then_click(self.I_G_IGNORE, interval=1):
-                        continue
-                    if not self.appear(self.I_G_IGNORE):
-                        break
-            # 有的时候长战斗 点击后会取消战斗状态
-            self.device.detect_record = detect_record
-            # 判断网络异常
-            if self.appear(self.I_NETWORK_ABNORMAL):
-                logger.warning(f"Network abnormal")
-                raise GameStuckError
+        self._burst()
 
-            # 判断网络错误
-            if self.appear(self.I_NETWORK_ERROR):
-                logger.warning(f"Network error")
-                raise GameStuckError
+        # # 判断网络异常
+        # if self.appear(self.I_NETWORK_ABNORMAL):
+        #     logger.warning(f"Network abnormal")
+        #     raise GameStuckError
+        #
+        # # 判断网络错误
+        # if self.appear(self.I_NETWORK_ERROR):
+        #     logger.warning(f"Network error")
+        #     raise GameStuckError
 
         return self.device.image
-        # 返回截图
 
     def appear(self, target: RuleImage, interval: float = None, threshold: float = None):
         """
@@ -286,6 +277,39 @@ class BaseTask(GlobalGameAssets, CostumeBase):
 
             if timeout.reached():
                 logger.warning(f'Wait_until_stable({target}) timeout')
+                break
+
+    def wait_animate_stable(self, rule: RuleAnimate, interval: float = None, timeout: float = None):
+        """
+        不同与上面的wait_until_stable，这个将会匹配连续的两帧图片的特定区域
+        @param rule:
+        @param interval:
+        @param timeout:
+        @return:
+        """
+        if not isinstance(rule, RuleAnimate):
+            rule = RuleAnimate(rule)
+        timeout_timer = Timer(timeout).start() if timeout is not None else None
+        while 1:
+            self.screenshot()
+
+            if interval:
+                if rule.name in self.interval_timer:
+                    if self.interval_timer[rule.name].limit != interval:
+                        self.interval_timer[rule.name] = Timer(interval)
+                else:
+                    self.interval_timer[rule.name] = Timer(interval)
+                if not self.interval_timer[rule.name].reached():
+                    return False
+
+            stable = rule.stable(self.device.image)
+            if stable:
+                if interval:
+                    self.interval_timer[rule.name].reset()
+                break
+
+            if timeout_timer and timeout_timer.reached():
+                logger.info(f'Wait_animate_stable({rule}) timeout')
                 break
 
     def swipe(self, swipe: RuleSwipe, interval: float = None) -> None:
@@ -567,3 +591,5 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                 break
             elif self.appear_then_click(click, interval=interval):
                 continue
+
+

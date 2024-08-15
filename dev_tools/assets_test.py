@@ -34,10 +34,11 @@ def detect_ocr(file: str, target: RuleOcr):
 
 
 # 图片文件路径 可以是相对路径
-IMAGE_FILE = r"C:\Users\R0\Nox_share\ImageShare\Screenshots\2024-07-01_21-59-28-029038.png"
+IMAGE_FILE = r"C:\Users\Ryland\Desktop\2024-07-31_21-14-21-574521.png"
 if __name__ == '__main__':
-    from tasks.WantedQuests.assets import WantedQuestsAssets
-    targe = WantedQuestsAssets.I_WQSE_FIRE
+    from tasks.SixRealms.assets import SixRealmsAssets
+    from tasks.GameUi.assets import GameUiAssets
+    targe = SixRealmsAssets.I_BACK_EXIT
     print(detect_image(IMAGE_FILE, targe))
 
     # ocr demo

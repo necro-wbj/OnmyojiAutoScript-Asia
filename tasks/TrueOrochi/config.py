@@ -9,6 +9,7 @@ from tasks.Component.SwitchSoul.switch_soul_config import SwitchSoulConfig
 from tasks.Component.config_scheduler import Scheduler
 from tasks.Component.config_base import ConfigBase, TimeDelta
 from tasks.Utils.config_enum import ShikigamiClass
+from tasks.Component.SwitchSoul.switch_soul_config import SwitchSoulConfig
 
 class GreenMarkType(str, Enum):
     LEFT_1 = 'left_1'

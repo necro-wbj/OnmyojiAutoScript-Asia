@@ -5,7 +5,7 @@
     "roiFront": "1216,366,31,87",
     "roiBack": "1191,352,78,116",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.6,
     "description": "寮突"
   },
   {

@@ -19,8 +19,8 @@
   },
   {
     "itemName": "ab_famous",
-    "roiFront": "1190,249,40,82",
-    "roiBack": "1190,249,40,82",
+    "roiFront": "1190,220,50,120",
+    "roiBack": "1190,220,50,120",
     "mode": "Single",
     "method": "Default",
     "keyword": "熱門",
@@ -28,11 +28,20 @@
   },
   {
     "itemName": "ab_collecting",
-    "roiFront": "1190,592,40,100",
-    "roiBack": "1190,592,40,100",
+    "roiFront": "1190,580,50,120",
+    "roiBack": "1190,580,50,120",
     "mode": "Single",
     "method": "Default",
     "keyword": "收藏",
     "description": "收藏"
+  },
+  {
+    "itemName": "ab_num_of_challenge",
+    "roiFront": "270,630,150,36",
+    "roiBack": "270,630,150,36",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "挑战人数"
   }
 ]

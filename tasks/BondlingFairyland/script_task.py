@@ -39,6 +39,12 @@ class ScriptTask(GameUi, BondlingBattle, SwitchSoul, BondlingFairylandAssets):
         # 引用配置
         cong = self.config.bondling_fairyland
 
+        # 御魂切换方式一
+        if cong.switch_soul_config.enable:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul(cong.switch_soul_config.switch_group_team)
+          # 御魂切换方式二
         if cong.switch_soul_config.enable_switch_by_name:
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
@@ -377,11 +383,11 @@ class ScriptTask(GameUi, BondlingBattle, SwitchSoul, BondlingFairylandAssets):
             self.screenshot()
             if self.appear(self.I_CLICK_CAPTION):
                 return True
-            if click_count >= 4:
+            if click_count >= 5:
                 return False
             # 点击
-            self.click(click_target, interval=1)
-            click_count += 1
+            if self.click(click_target, interval=1):
+                click_count += 1
 
 
     def capture_setting(self, mode: BondlingMode) -> None:
