@@ -30,6 +30,7 @@ class FallenSunAssets:
 	L_LAYER_LIST = RuleList(folder="./tasks/FallenSun/res", direction="vertical", mode="ocr", roi_back=(138,130,359,500), size=(40, 93), 
 					 array=["壹", "贰", "参"])
 
+
 	# Ocr Rule Assets
 	# Ocr-description 
 	O_O_TEST_OCR = RuleOcr(roi=(126,136,360,491), area=(126,136,360,491), mode="Full", method="Default", keyword="", name="o_test_ocr")

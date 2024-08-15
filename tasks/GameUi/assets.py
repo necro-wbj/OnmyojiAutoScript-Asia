@@ -71,7 +71,7 @@ class GameUiAssets:
 	# description 
 	I_CHECK_SECRET_ZONES = RuleImage(roi_front=(1145,592,110,119), roi_back=(1145,592,110,119), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_secret_zones.png")
 	# 地域鬼王的式神錄 
-	I_CHECK_AREA_BOSS = RuleImage(roi_front=(1176,505,65,62), roi_back=(1159,487,101,106), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_area_boss.png")
+	I_CHECK_AREA_BOSS = RuleImage(roi_front=(1181,502,48,58), roi_back=(1181,502,48,58), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_area_boss.png")
 	# description 
 	I_CHECK_HEIAN_KITAN = RuleImage(roi_front=(27,48,47,39), roi_back=(27,48,47,39), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_heian_kitan.png")
 	# description 
@@ -118,7 +118,7 @@ class GameUiAssets:
 	# description 
 	I_DEMON_ENCOUNTER_GOTO_TOWN = RuleImage(roi_front=(28,20,56,52), roi_back=(3,4,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_demon_encounter_goto_town.png")
 	# description 
-	I_TOWN_GOTO_HYAKKIYAKOU = RuleImage(roi_front=(880,165,53,69), roi_back=(827,149,148,100), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_town_goto_hyakkiyakou.png")
+	I_TOWN_GOTO_HYAKKIYAKOU = RuleImage(roi_front=(880,165,53,69), roi_back=(827,149,148,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_town_goto_hyakkiyakou.png")
 	# description 
 	I_CHECK_KYAKKIYAKOU = RuleImage(roi_front=(305,567,56,64), roi_back=(280,545,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_kyakkiyakou.png")
 	# description 
@@ -127,17 +127,17 @@ class GameUiAssets:
 
 	# Image Rule Assets
 	# 式神录 
-	I_MAIN_GOTO_SHIKIGAMI_RECORDS = RuleImage(roi_front=(1098,611,56,64), roi_back=(1084,589,93,106), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_shikigami_records.png")
+	I_MAIN_GOTO_SHIKIGAMI_RECORDS = RuleImage(roi_front=(1098,611,56,64), roi_back=(1084,589,93,106), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_shikigami_records.png")
 	# 陰陽術 
 	I_MAIN_GOTO_ONMYODO = RuleImage(roi_front=(992,614,51,60), roi_back=(992,614,51,60), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_onmyodo.png")
 	# 好友 
-	I_MAIN_GOTO_FRIENDS = RuleImage(roi_front=(879,623,55,55), roi_back=(867,606,79,77), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_friends.png")
-	# 進入花合戰 
+	I_MAIN_GOTO_FRIENDS = RuleImage(roi_front=(879,623,55,55), roi_back=(867,606,79,77), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_friends.png")
+	# Main daily 
 	I_MAIN_GOTO_DAILY = RuleImage(roi_front=(760,656,70,28), roi_back=(744,595,98,102), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_daily.png")
 	# description 
 	I_MAIN_GOTO_MALL = RuleImage(roi_front=(663,661,41,22), roi_back=(644,613,81,78), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_mall.png")
 	# description 
-	I_MAIN_GOTO_GUILD = RuleImage(roi_front=(539,661,58,22), roi_back=(529,615,77,77), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_guild.png")
+	I_MAIN_GOTO_GUILD = RuleImage(roi_front=(539,661,58,22), roi_back=(529,615,77,77), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_guild.png")
 	# description 
 	I_MAIN_GOTO_TEAM = RuleImage(roi_front=(437,625,38,48), roi_back=(366,606,192,83), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_team.png")
 	# description 

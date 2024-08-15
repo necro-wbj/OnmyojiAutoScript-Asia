@@ -16,7 +16,7 @@ class AreaBossAssets:
 	# 热门按钮 
 	C_AB_FAMOUS_BTN = RuleClick(roi_front=(1190,220,50,120), roi_back=(1190,220,50,120), name="ab_famous_btn")
 	# 收藏按钮 
-	C_AB_COLLECTION_BTN = RuleClick(roi_front=(1190,580,50,120), roi_back=(1190,580,50,120), name="ab_collection_btn")
+	C_AB_COLLECTION_BTN = RuleClick(roi_front=(1190,593,43,107), roi_back=(1190,593,43,107), name="ab_collection_btn")
 	# 筛选中 除悬赏外 第一个boss的头像位置 
 	C_AB_BOSS_PHOTO_1 = RuleClick(roi_front=(940,210,95,70), roi_back=(940,210,95,70), name="ab_boss_photo_1")
 	# 筛选中 除悬赏外 第二个boss的头像位置 
@@ -103,11 +103,11 @@ class AreaBossAssets:
 
 	# Ocr Rule Assets
 	# 急殺數最多 
-	O_AB_KILL_BEST = RuleOcr(roi=(942,123,157,52), area=(942,123,157,52), mode="Single", method="Default", keyword="..数最多", name="ab_kill_best")
+	O_AB_KILL_BEST = RuleOcr(roi=(942,123,157,52), area=(942,123,157,52), mode="Single", method="Default", keyword="数最多", name="ab_kill_best")
 	# 我的收藏 
 	O_AB_MY_COLLECT = RuleOcr(roi=(949,124,129,53), area=(949,124,129,53), mode="Single", method="Default", keyword="我的收藏", name="ab_my_collect")
-	# 热门 
-	O_AB_FAMOUS = RuleOcr(roi=(1190,220,50,120), area=(1190,220,50,120), mode="Single", method="Default", keyword="热门", name="ab_famous")
+	# 熱門 
+	O_AB_FAMOUS = RuleOcr(roi=(1190,220,50,120), area=(1190,220,50,120), mode="Single", method="Default", keyword="熱門", name="ab_famous")
 	# 收藏 
 	O_AB_COLLECTING = RuleOcr(roi=(1190,580,50,120), area=(1190,580,50,120), mode="Single", method="Default", keyword="收藏", name="ab_collecting")
 	# 挑战人数 

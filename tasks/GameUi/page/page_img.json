@@ -182,8 +182,8 @@
   {
     "itemName": "check_area_boss",
     "imageName": "page_check_area_boss.png",
-    "roiFront": "20,320,150,130",
-    "roiBack": "20,320,150,130",
+    "roiFront": "1181,502,48,58",
+    "roiBack": "1181,502,48,58",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "地域鬼王的式神錄"

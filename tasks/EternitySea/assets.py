@@ -17,12 +17,11 @@ class EternitySeaAssets:
 	I_FORM_TEAM = RuleImage(roi_front=(939,594,96,90), roi_back=(939,594,96,90), threshold=0.8, method="Template matching", file="./tasks/EternitySea/res/es_form_team.png")
 	# 挑战 
 	I_ETERNITY_SEA_FIRE = RuleImage(roi_front=(1108,592,96,93), roi_back=(1108,592,96,93), threshold=0.8, method="Template matching", file="./tasks/EternitySea/res/es_eternity_sea_fire.png")
-	# description 
-	I_ETERNITY_SEA_UNLOCK = RuleImage(roi_front=(557,560,31,38), roi_back=(557,560,31,38), threshold=0.8, method="Template matching", file="./tasks/FallenSun/f/f_fallen_sun_unlock.png")
-	# description 
-	I_ETERNITY_SEA_LOCK = RuleImage(roi_front=(557,561,31,37), roi_back=(557,561,31,37), threshold=0.8, method="Template matching", file="./tasks/FallenSun/f/f_fallen_sun_lock.png")
+
 
 	# List Rule Assets
-	# 这个是御魂界面选择不同层数的
-	L_LAYER_LIST = RuleList(folder="./tasks/Eternity/res", direction="vertical", mode="ocr", roi_back=(138,130,359,430), size=(40, 93),
-						 array=["壹", "贰", "参", "肆"])
+	# 这个是御魂界面选择不同层数的 
+	L_LAYER_LIST = RuleList(folder="./tasks/EternitySea/res", direction="vertical", mode="ocr", roi_back=(138,130,359,430), size=(41, 91), 
+					 array=["壹", "贰", "参", "肆"])
+
+

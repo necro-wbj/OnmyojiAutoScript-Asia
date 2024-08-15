@@ -33,7 +33,7 @@ class DuelAssets:
 	# 手动，弃用 
 	I_D_HAND = RuleImage(roi_front=(34,635,55,55), roi_back=(34,635,55,55), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_hand.png")
 	# 主界面的感叹号 
-	I_D_HELP = RuleImage(roi_front=(719,434,32,30), roi_back=(680,400,80,80), threshold=0.7, method="Template matching", file="./tasks/Duel/duel/duel_d_help.png")
+	I_D_HELP = RuleImage(roi_front=(719,434,32,30), roi_back=(680,400,80,80), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_help.png")
 	# 准备 
 	I_D_PREPARE = RuleImage(roi_front=(1127,541,100,100), roi_back=(1127,541,100,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_prepare.png")
 	# 准备完毕 

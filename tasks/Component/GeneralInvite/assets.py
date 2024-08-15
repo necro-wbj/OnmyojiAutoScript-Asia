@@ -91,8 +91,9 @@ class GeneralInviteAssets:
 	I_GI_BUFF = RuleImage(roi_front=(794,38,46,42), roi_back=(794,38,46,42), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_buff.png")
 	# 三人御魂组队左上角的协站队伍 
 	I_GI_IN_ROOM = RuleImage(roi_front=(92,17,162,46), roi_back=(92,17,162,46), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_in_room.png")
-	# 永生之海退出隊伍
+	# 永生之海退出隊伍 
 	I_GI_ETERNITY_SEA_EXIT = RuleImage(roi_front=(36,17,38,42), roi_back=(36,17,38,42), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_eternity_sea_exit.png")
+
 
 	# Image Rule Assets
 	# description 
