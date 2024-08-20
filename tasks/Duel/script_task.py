@@ -22,26 +22,7 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
         self.limit_time: timedelta = timedelta(hours=limit_time.hour, minutes=limit_time.minute,
                                                seconds=limit_time.second)
         self.ui_get_current_page()
-        # fix event duel add
-        # self.ui_goto(page_duel)
-        self.ui_goto(page_town)
-        while 1:
-            self.screenshot()
-            if self.appear_then_click(self.I_TOWN_GOTO_DUEL, interval=1):
-                logger.info('Goto I_TOWN_GOTO_DUEL')
-                continue
-            if self.appear(self.I_CHECK_DUEL):
-                logger.info('arrive I_CHECK_DUEL')
-                break
-            if self.appear_then_click(self.I_BACK_YOLLOW, interval=1):
-                logger.info('close event AD I_BACK_YOLLOW')
-                continue
-            if self.appear_then_click(self.I_MAIN_GOTO_TOWN, interval=1):
-                logger.info('Goto I_MAIN_GOTO_TOWN')
-                continue
-            if self.appear_then_click(self.I_UI_BACK_RED, interval=1):
-                logger.info('Goto I_UI_BACK_RED')
-                continue
+        self.ui_goto(page_duel)
         if con.switch_all_soul:
             self.switch_all_soul()
         # 設定時間範圍
