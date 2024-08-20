@@ -99,7 +99,6 @@ page_exploration.link(button=G.I_EXPLORATION_GOTO_BONDLING_FAIRYLAND, destinatio
 # ************************************* 町中部分 *****************************************#
 # 斗鸡 duel
 page_duel = Page(G.I_CHECK_DUEL)
-page_duel.additional = [G.I_BACK_YOLLOW]
 page_duel.link(button=G.I_BACK_YOLLOW, destination=page_town)
 page_town.link(button=G.I_TOWN_GOTO_DUEL, destination=page_duel)
 # 封魔之时 demon_encounter
