@@ -79,5 +79,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "login_download_draw",
+    "imageName": "login_login_download_draw.png",
+    "roiFront": "743,459,100,42",
+    "roiBack": "651,328,320,241",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

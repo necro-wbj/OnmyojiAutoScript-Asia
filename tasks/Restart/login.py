@@ -96,6 +96,8 @@ class LoginHandler(BaseTask, RestartAssets):
                 logger.info('login click I_UI_CONFIRM')
             if self.appear_then_click(self.I_UI_CONFIRM_SAMLL):
                 logger.info('login click I_UI_CONFIRM_SAMLL')
+            if self.appear_then_click(self.I_LOGIN_DOWNLOAD_DRAW):
+                logger.info('login click I_LOGIN_DOWNLOAD_DRAW')
             self.device.click_record_clear()
             if not login_find_post:
                 continue
