@@ -148,7 +148,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                     self.interval_timer[target.name] = Timer(interval)
             else:
                 self.interval_timer[target.name] = Timer(interval)
-            if not self.interval_timer[target.name].reached():
+            if self.interval_timer[target.name].started() and not self.interval_timer[target.name].reached():
                 return False
 
         appear = target.match(self.device.image, threshold=threshold)
@@ -331,7 +331,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                 # 如果没有限制时间，则创建限制时间
                 self.interval_timer[swipe.name] = Timer(interval)
             # 如果时间还没到达，则不执行
-            if not self.interval_timer[swipe.name].reached():
+            if self.interval_timer[swipe.name].started() and not self.interval_timer[swipe.name].reached():
                 return
 
         x1, y1, x2, y2 = swipe.coord()
@@ -357,9 +357,11 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                 # 如果传入的限制时间不一样，则替换限制新的传入的时间
                 if self.interval_timer[click.name].limit != interval:
                     self.interval_timer[click.name] = Timer(interval)
+                    self.interval_timer[click.name].start()
             else:
                 # 如果没有限制时间，则创建限制时间
                 self.interval_timer[click.name] = Timer(interval)
+                self.interval_timer[click.name].start()
             # 如果时间还没到达，则不执行
             if not self.interval_timer[click.name].reached():
                 return False
