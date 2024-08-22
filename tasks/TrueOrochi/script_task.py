@@ -2,7 +2,7 @@
 # @author runhey
 # github https://github.com/runhey
 from time import sleep
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 
 from module.logger import logger
 from module.exception import TaskEnd
@@ -101,6 +101,28 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets, SwitchSoul):
         # 如果有真蛇，那么就开始战斗
         logger.hr('True Orochi Battle')
         conf.current_success += 1
+        #update current_success count
+        cu, re, total = self.O_TRUE_OROCHI_REMAIN.ocr(self.device.image)
+        loop_count = 20
+        while loop_count:
+            loop_count -= 1
+            self.screenshot()
+            if self.appear_then_click(self.I_FIND_TS):
+                continue
+            cu, re, total = self.O_TRUE_OROCHI_REMAIN.ocr(self.device.image)
+            logger.info(f'O_TRUE_OROCHI_REMAIN cu{cu} re{re} total{total}')
+            if total != 2:
+                logger.warning('total is not 2')
+                continue
+            number_challenge = cu
+            # number_challenge is how many times you already challenge 2/2, 1/2
+            if 0 < number_challenge <= 2:
+                logger.info(f'Challenge number: {number_challenge}')
+                conf.current_success = re + 1
+                break
+            if loop_count <= 1:
+                logger.warning('loop_count is 1 OCR failed')
+                break
         while 1:
             self.screenshot()
             if self.appear(self.I_ST_CREATE_ROOM):
@@ -188,11 +210,18 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets, SwitchSoul):
         :return:
         """
         now = datetime.now()
+        # 获取当前的年份，周数，星期数
         now_year, now_week_number, now_weekday = now.isocalendar()
         if battle:
             next_run = now + self.config.true_orochi.scheduler.success_interval
         else:
             next_run = now + self.config.true_orochi.scheduler.failure_interval
+        if self.config.true_orochi.true_orochi_config.current_success == 2:
+            logger.warning('This week is fight enough, set next run to next monday')
+            days_until_next_monday = (7 - now_weekday + 1) % 7
+            next_monday = now + timedelta(days=days_until_next_monday)
+            next_run = next_monday
+
         next_run_year, next_run_week_number, next_run_weekday = next_run.isocalendar()
         self.set_next_run(task='TrueOrochi', target=next_run)
         # 如果下次运行的时间是下一周，那么就重置成功次数
