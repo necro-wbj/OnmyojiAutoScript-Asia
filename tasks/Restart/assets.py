@@ -60,7 +60,7 @@ class RestartAssets:
 	I_LOGIN_LOAD_DOWN = RuleImage(roi_front=(725,408,69,32), roi_back=(653,350,232,131), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_load_down.png")
 	# description 
 	I_LOGIN_FIX = RuleImage(roi_front=(1196,514,60,54), roi_back=(1196,514,60,54), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_fix.png")
-	# 庭院下载插画
+	# description 
 	I_LOGIN_DOWNLOAD_DRAW = RuleImage(roi_front=(743,459,100,42), roi_back=(651,328,320,241), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_download_draw.png")
 
 

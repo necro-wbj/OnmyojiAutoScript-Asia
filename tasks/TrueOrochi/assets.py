@@ -59,6 +59,9 @@ class TrueOrochiAssets:
 	# 头像框 
 	I_ST_FRAME = RuleImage(roi_front=(571,442,135,65), roi_back=(571,442,135,65), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_st_frame.png")
 
-	# 真蛇剩餘次數
-	O_TRUE_OROCHI_REMAIN = RuleOcr(roi=(454,387,50,26), area=(454,387,50,26), mode="DigitCounter", method="Default", keyword="", name="true_orochi_remain")
+
+	# Ocr Rule Assets
+	# 真蛇剩餘次數 
+	O_TRUE_OROCHI_REMAIN = RuleOcr(roi=(454,387,50,26), area=(454,387,50,26), mode="Digit", method="Default", keyword="", name="true_orochi_remain")
+
 

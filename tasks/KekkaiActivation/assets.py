@@ -64,7 +64,7 @@ class KekkaiActivationAssets:
 	# 激活, 灰色不可激活 
 	I_A_ACTIVATE_GRAY = RuleImage(roi_front=(1064.5,578,100,100), roi_back=(1046,556,100,100), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_activate_gray.png")
 	# 空着的表示没有卡在里面 
-	I_A_EMPTY = RuleImage(roi_front=(513,32,95,44), roi_back=(677,255,353,128), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_empty.png")
+	I_A_EMPTY = RuleImage(roi_front=(677,255,353,128), roi_back=(677,255,353,128), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_empty.png")
 	# description 
 	I_A_CHECK_CARD = RuleImage(roi_front=(806,271,260,49), roi_back=(513,32,260,49), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_check_card.png")
 	# 太鼓4 

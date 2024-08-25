@@ -31,8 +31,7 @@ class ScriptTask(KU, KekkaiActivationAssets):
         self.goto_realm()
         if con.exchange_before:
             self.check_max_lv(con.shikigami_class)
-        logger.info("收穫")
-        self.click(self.C_A_HARVEST_CARD,0.5)
+        self.harvest_card()
 
         self.run_activation(con)
         while 1:
@@ -104,8 +103,8 @@ class ScriptTask(KU, KekkaiActivationAssets):
 
             # 不稳定太，等待动画结束
             if not card_status and not card_effect:
-                logger.info(f"卦卡: {card_status}, 生效: {card_effect}")
-                if self.appear(self.I_A_ACTIVATE_YELLOW, threshold=1):
+                # 黄色的 ”激活“
+                if self.appear(self.I_A_ACTIVATE_YELLOW, threshold=0.97):
                     continue
                 if self.appear(self.I_A_DEMOUNT):
                     # 现在在动画里面
@@ -138,12 +137,16 @@ class ScriptTask(KU, KekkaiActivationAssets):
                 logger.info('Card is not selected also not using')
                 self.screening_card(_config.card_rule)
 
+
+
+
+
+
     def goto_cards(self):
         """
         寮结界,前往挂卡界面
         :return:
         """
-        logger.info('Enter card page')
         while 1:
             self.screenshot()
 
@@ -152,8 +155,8 @@ class ScriptTask(KU, KekkaiActivationAssets):
             if self.appear(self.I_A_AUTO_INVITE):
                 break
             if self.appear_then_click(self.I_SHI_CARD, interval=1):
-                logger.info("點擊進入結界")
                 continue
+        logger.info('Enter card page')
 
     def check_card_status(self, screenshot=False) -> bool:
         """
@@ -177,6 +180,7 @@ class ScriptTask(KU, KekkaiActivationAssets):
             return True
         elif self.appear(self.I_A_ACTIVATE_YELLOW):
             return False
+        logger.info('Unknown card effect')
         while 1:
             self.screenshot()
             if self.appear(self.I_A_INVITE, threshold=0.7):
@@ -185,7 +189,6 @@ class ScriptTask(KU, KekkaiActivationAssets):
                 return False
             elif self.appear(self.I_A_ACTIVATE_GRAY):
                 return False
-        logger.info('Unknown card effect')
         return False
 
     def ocr_time(self, screenshot=False) -> timedelta or None:
@@ -223,7 +226,6 @@ class ScriptTask(KU, KekkaiActivationAssets):
         card_class = None
         target_class = None
         top_card = self.order_cards[0]
-        logger.info(f'top_card: {top_card}')
         if top_card.startswith(CardClass.TAIKO):  # 太鼓
             card_class = CardClass.TAIKO
             target_class = self.I_A_CARD_KAIKO
@@ -354,19 +356,16 @@ class ScriptTask(KU, KekkaiActivationAssets):
             self.switch_shikigami_class(shikigami_class)
             self.set_shikigami(shikigami_order=7, stop_image=self.I_RS_NO_ADD)
 
-        logger.info("回到结界界面")
+        # 回到结界界面
         while 1:
             self.screenshot()
 
             if self.appear(self.I_REALM_SHIN) and self.appear(self.I_SHI_GROWN):
-                logger.info("出現結界皮膚與結界育成")
                 self.screenshot()
                 if not self.appear(self.I_REALM_SHIN):
-                    logger.info("尚未出現結界皮膚")
                     continue
                 break
             if self.appear_then_click(self.I_UI_BACK_BLUE, interval=2.5):
-                logger.info("點擊藍色返回")
                 continue
 
     def harvest_card(self):

@@ -137,7 +137,7 @@
   {
     "itemName": "a_empty",
     "imageName": "a_a_empty.png",
-    "roiFront": "513,32,95,44",
+    "roiFront": "677,255,353,128",
     "roiBack": "677,255,353,128",
     "method": "Template matching",
     "threshold": 0.8,
