@@ -96,7 +96,7 @@ class AreaBossAssets:
 	# 极地鬼 层数列表打开 标志 
 	I_AB_JI_FLOOR_LIST_CHECK = RuleImage(roi_front=(390,150,60,290), roi_back=(390,150,60,290), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_ji_floor_list_check.png")
 	# 极地鬼 一层 
-	I_AB_JI_FLOOR_ONE = RuleImage(roi_front=(390,150,60,290), roi_back=(390,150,60,290), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_ab_ji_floor_one.png")
+	I_AB_JI_FLOOR_ONE = RuleImage(roi_front=(390,150,60,290), roi_back=(390,150,60,290), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_ji_floor_one.png")
 	# 小组内未取得名次 
 	I_AB_GROUP_RANK_NONE = RuleImage(roi_front=(903,432,42,40), roi_back=(903,432,42,40), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_ab_group_rank_none.png")
 

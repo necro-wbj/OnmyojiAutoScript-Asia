@@ -30,7 +30,6 @@ class HyaDevice(BaseTask):
         self.hya_screenshot_interval.wait()
         self.hya_screenshot_interval.reset()
         self.device.image = self.device.screenshot_window_background()
-        self.device.screenshot_droidcast_raw()
         if image_black(self.device.image):
             logger.error('Screenshot image is black, try again')
             raise RequestHumanTakeover('Screenshot image is black, try again')

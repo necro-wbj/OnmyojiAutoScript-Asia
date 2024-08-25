@@ -521,6 +521,3 @@ if __name__ == "__main__":
 
     t.run()
 
-    print(t.find_one())
-    # target, order = t.find_one()
-    # print(t.check_medal_is_frog(True, target, order))

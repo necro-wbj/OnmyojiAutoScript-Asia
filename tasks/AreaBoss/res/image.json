@@ -172,7 +172,7 @@
   },
   {
     "itemName": "ab_ji_floor_one",
-    "imageName": "res_ab_ji_floor_one.png",
+    "imageName": "ab_ji_floor_one.png",
     "roiFront": "390,150,60,290",
     "roiBack": "390,150,60,290",
     "method": "Template matching",
