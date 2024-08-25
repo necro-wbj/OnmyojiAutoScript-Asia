@@ -25,20 +25,15 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
         self.ui_goto(page_duel)
         if con.switch_all_soul:
             self.switch_all_soul()
-        # 設定時間範圍
-        start_time_1 = datetime.strptime("11:00", "%H:%M")
-        end_time_1 = datetime.strptime("14:00", "%H:%M")
-        start_time_2 = datetime.strptime("17:00", "%H:%M")
-        end_time_2 = datetime.strptime("22:00", "%H:%M")
-        # 取得現在時間
-        now = datetime.strptime("2024-03-25 23:00", "%Y-%m-%d %H:%M")
+
         # 循环
-        while self.is_time_in_range():
+        while 1:
             self.screenshot()
-            if self.appear_then_click(self.I_REWARD):
+            if self.appear_then_click(self.I_REWARD, interval=0.6):
                 continue
             if not self.duel_main():
                 continue
+
             if datetime.now() - self.start_time >= self.limit_time:
                 # 任务执行时间超过限制时间，退出
                 logger.info('Duel task is over time')
@@ -48,39 +43,15 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
                 logger.info('Duel task is over honor')
                 break
             current_score = self.check_score(con.target_score)
-            logger.info(f'current_score = {current_score}')
-            # handle 3000+ time
-            if current_score >= 3000:
-                now = datetime.now()
-                morning_start = now.replace(hour=11, minute=0, second=0, microsecond=0)
-                evening_start = now.replace(hour=18, minute=0, second=0, microsecond=0)
-                master_morning_end = now.replace(hour=13, minute=0, second=0, microsecond=0)
-                master_evening_end = now.replace(hour=21, minute=0, second=0, microsecond=0)
-                if morning_start <= now <= master_morning_end or evening_start <= now <= master_evening_end:
-                    logger.info('Duel task is in master time')
-                else:
-                    logger.info('Duel task is over time')
-                    break
-            if current_score <= con.target_score and con.target_score != 0:
+            if not current_score:
                 # 分数够了，退出
                 logger.info('Duel task is over score')
                 break
-            
-            count = 0
-            while 1:
-                self.screenshot()
-                if self.appear(self.I_D_BATTLE, interval=1):
-                    count += 1
-                if self.appear(self.I_D_BATTLE_PROTECT, interval=1.6):
-                    count += 1
-                if count >= 5:
-                    break
             self.duel_one(current_score, con.green_enable, con.green_mark)
-            # 取得現在時間
-            now = datetime.strptime("2024-03-25 23:00", "%Y-%m-%d %H:%M")
+
         # 记得退回去到町中
         self.ui_click(self.I_UI_BACK_YELLOW, self.I_CHECK_TOWN)
-        self.set_next_schedule()
+        self.set_next_run(task='Duel', success=True, finish=False)
         raise TaskEnd('Duel')
 
     def is_time_in_range(self):
