@@ -75,7 +75,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
         if con_scrolls.scrolls_enable:
             exploration_count = 50
         else:
-            exploration_count = explorationConfig.exploration_config.current_exploration_count
+            exploration_count = int(explorationConfig.exploration_config.current_exploration_count)
 
         logger.info("exploration_count:" + str(exploration_count))
         if exploration_count > 0:
