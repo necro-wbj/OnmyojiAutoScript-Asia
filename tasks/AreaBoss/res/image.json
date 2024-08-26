@@ -187,5 +187,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "小组内未取得名次"
+  },
+  {
+    "itemName": "timeout",
+    "imageName": "res_timeout.png",
+    "roiFront": "468,224,55,32",
+    "roiBack": "468,224,55,32",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

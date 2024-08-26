@@ -194,6 +194,12 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
     def start_fight(self) -> bool:
         while 1:
             self.screenshot()
+            if self.appear(self.I_TIMEOUT):
+                self.wait_until_appear(self.I_AB_CLOSE_RED)
+                self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=1)
+                self.go_back()
+                self.set_next_run(task='AreaBoss', success=True, finish=False)
+                raise TaskEnd
             if self.appear_then_click(self.I_FIRE, interval=1):
                 continue
             if not self.appear(self.I_AB_CLOSE_RED):  # 如果这个红色的关闭不见了才可以进行继续
