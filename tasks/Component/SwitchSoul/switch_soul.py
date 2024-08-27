@@ -94,7 +94,7 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
         while 1:
             self.screenshot()
             compare1 = self.O_SS_GROUP_NAME.detect_and_ocr(self.device.image)
-            ocr_text = str([result.ocr_text for result in compare1])
+            ocr_text = str(compare1[0])
             # 相等时 滑动到最上层
             if cur_text == ocr_text:
                 break
