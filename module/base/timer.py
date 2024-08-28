@@ -125,9 +125,9 @@ class Timer:
         self._reach_count += 1
         if not self.started():
             logger.warn("timer has not been started yet")
-            self.start()
+            # self.start()
             # raise Exception("timer has not been started yet")
-            return False
+            return True
         return time.time() - self._current > self.limit and self._reach_count > self.count
 
     def reset(self):
