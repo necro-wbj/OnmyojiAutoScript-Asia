@@ -94,7 +94,7 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
         while 1:
             self.screenshot()
             compare1 = self.O_SS_GROUP_NAME.detect_and_ocr(self.device.image)
-            ocr_text = str(compare1[0])
+            ocr_text = str(compare1[0].ocr_text)
             # 相等时 滑动到最上层
             if cur_text == ocr_text:
                 break
@@ -183,7 +183,7 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
         while 1:
             self.screenshot()
             compare1 = self.O_SS_GROUP_NAME.detect_and_ocr(self.device.image)
-            now_group_text = str([result.ocr_text for result in compare1])
+            now_group_text = str(compare1[0].ocr_text)
             if now_group_text == last_group_text:
                 break
             self.swipe(self.S_SS_GROUP_SWIPE_UP, 2)
@@ -219,7 +219,7 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
         while 1:
             self.screenshot()
             compare1 = self.O_SS_TEAM_NAME.detect_and_ocr(self.device.image)
-            now_team_text = str([result.ocr_text for result in compare1])
+            now_team_text = str(compare1[0].ocr_text)
             # 向上滑动
             if now_team_text == last_team_text:
                 break
