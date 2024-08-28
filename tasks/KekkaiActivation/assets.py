@@ -34,9 +34,9 @@ class KekkaiActivationAssets:
 
 	# Image Rule Assets
 	# 斗鱼收获奖励4星 
-	I_A_HARVEST_FISH4 = RuleImage(roi_front=(897,159,48,40), roi_back=(897,159,48,40), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_harvest_fish4.png")
+	I_A_HARVEST_FISH4 = RuleImage(roi_front=(897,159,48,40), roi_back=(872,128,100,100), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_harvest_fish4.png")
 	# 一般的收获奖励 
-	I_A_HARVEST_EXP = RuleImage(roi_front=(891,153,49,43), roi_back=(891,153,49,43), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_harvest_exp.png")
+	I_A_HARVEST_EXP = RuleImage(roi_front=(891,153,49,43), roi_back=(865,121,100,100), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_harvest_exp.png")
 	# "结界卡" 
 	I_A_CARDS_REALM = RuleImage(roi_front=(0,0,100,100), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_cards_realm.png")
 	# description 

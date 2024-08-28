@@ -3,7 +3,7 @@
     "itemName": "a_harvest_fish4",
     "imageName": "a_a_harvest_fish4.png",
     "roiFront": "897,159,48,40",
-    "roiBack": "897,159,48,40",
+    "roiBack": "872,128,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "斗鱼收获奖励4星"
@@ -12,7 +12,7 @@
     "itemName": "a_harvest_exp",
     "imageName": "a_a_harvest_exp.png",
     "roiFront": "891,153,49,43",
-    "roiBack": "891,153,49,43",
+    "roiBack": "865,121,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "一般的收获奖励"
