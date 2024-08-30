@@ -124,7 +124,7 @@ class Timer:
         """
         self._reach_count += 1
         if not self.started():
-            logger.warn("timer has not been started yet")
+            # logger.warn("timer has not been started yet")
             # self.start()
             # raise Exception("timer has not been started yet")
             return True
