@@ -25,6 +25,7 @@ class HyaDevice(BaseTask):
     """
     hya_screenshot_interval = Timer(0.2)  # 300ms
     hya_fs_check_timer = Timer(5 * 60)  # 五分钟跑不完就应该是出问题了
+    hya_fs_check_timer.start()
 
     def fast_screenshot(self):
         self.hya_screenshot_interval.wait()
