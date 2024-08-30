@@ -160,6 +160,28 @@ class ScriptTask(GameUi, HyaSlave):
         self.set_next_run(task='Hyakkiyakou', success=True, finish=False)
         raise TaskEnd
 
+    def choose_click(self,click,stop):
+        success = False
+        while not self.appear(stop):
+            self.fast_screenshot()
+            if self.appear(click):
+                success = not success
+                x, y = click.coord()
+                if success:
+                    self.fast_click(x, y)
+                else:
+                    self.device.click(x=x, y=y)
+                time.sleep(2)
+
+        if not success:
+            logger.warn("fast click failed, replaced it with the original click.")
+            self.fast_click = self.slow_click
+            
+
+    def slow_click (self, x, y):
+        self.device.click(x=x, y=y)
+        self.device.click_record.clear()
+
     def one(self):
         self.reset_state()
         if not self.appear(self.I_HACCESS):
@@ -167,7 +189,7 @@ class ScriptTask(GameUi, HyaSlave):
         if self._config.hyakkiyakou_config.hya_invite_friend:
             self.invite_friend(True)
         # start
-        self.ui_click(self.I_HACCESS, self.I_HSTART, interval=2)
+        self.choose_click(self.I_HACCESS, self.I_HSTART)
         self.wait_until_appear(self.I_HTITLE)
         # 随机选一个
         click_button = choice([self.C_HSELECT_1, self.C_HSELECT_2, self.C_HSELECT_3])
