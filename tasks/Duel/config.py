@@ -4,6 +4,7 @@
 from pydantic import BaseModel, Field
 from datetime import time
 
+from tasks.Component.config_base import MultiLine
 from tasks.Component.config_scheduler import Scheduler
 from tasks.Component.config_base import ConfigBase, Time
 from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType
@@ -22,8 +23,14 @@ class DuelConfig(ConfigBase):
     # 选哪一个绿标
     green_mark: GreenMarkType = Field(default=GreenMarkType.GREEN_LEFT1, description='green_mark_help')
 
+class CelebBanConfig(BaseModel):
+    celeb_got_ban_go_lose: bool = Field(default=False, description='celeb_got_ban_go_lose')
+    celeb_ban_rule: MultiLine = Field(default='神殷荒,神肽荒,言靈,心狩鬼女红童,心狩鬼女红查,不知火,统浪芜川之主',
+                                     description='celeb_ban_rule_help')
+
 
 class Duel(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     duel_config: DuelConfig = Field(default_factory=DuelConfig)
+    celeb_ban_config: CelebBanConfig = Field(default_factory=CelebBanConfig)
 
