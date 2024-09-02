@@ -62,6 +62,6 @@ class TrueOrochiAssets:
 
 	# Ocr Rule Assets
 	# 真蛇剩餘次數 
-	O_TRUE_OROCHI_REMAIN = RuleOcr(roi=(454,387,50,26), area=(454,387,50,26), mode="Digit", method="Default", keyword="", name="true_orochi_remain")
+	O_TRUE_OROCHI_REMAIN = RuleOcr(roi=(454,387,50,26), area=(454,387,50,26), mode="DigitCounter", method="Default", keyword="", name="true_orochi_remain")
 
 
