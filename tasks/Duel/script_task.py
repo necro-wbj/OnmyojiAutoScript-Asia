@@ -159,6 +159,7 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
         :param target: 目标分数
         :return:
         """
+        logger.info(f'Check score: {target}')
         while 1:
             self.screenshot()
             if self.appear(self.I_D_CELEB_STAR) or self.appear(self.I_D_CELEB_HONOR):
@@ -182,13 +183,14 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
                 logger.warning('Remove the highest digit')
                 current_score = int(str(current_score)[1:])
             elif current_score > 3000:
+                logger.info('current score over 3000 this is error')
                 continue
             if target == 0:
                 return current_score
             # if current_score is less than target return current_score
             # else return None to stop the task
             if current_score <= target:
-                current_score
+                return current_score
             else:
                 None
 
@@ -200,10 +202,9 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
         """
         if self.config.duel.celeb_ban_config.celeb_got_ban_go_lose == False:
             return False
-        # convert celeb_ban_rule to list
-        # celeb_ban_rule = '神殷荒,神肽荒,言靈,心狩鬼女红童,心狩鬼女红查,不知火,统浪芜川之主'
-        # set ban_list as ban_list = ["神殷荒", "神肽荒", "言靈","心狩鬼女红童","心狩鬼女红查","不知火","统浪芜川之主",]
+        # convert setting celeb_ban_rule text to list
         ban_list = self.config.duel.celeb_ban_config.celeb_ban_rule.split(',')
+        # ban_list_card_pic is for ocr fail card, example: YANLIN in OCR always is emety ''
         ban_list_card_pic = []
         if "言靈" in ban_list:
             ban_list_card_pic.append(self.I_D_CELEB_BAN_YANLIN)
@@ -262,7 +263,8 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
             while self.appear(self.I_D_CELEB_BATTLE_BAN):
                 self.screenshot()
                 if self.appear(self.I_D_CELEB_BAN_LOCK):
-                    if self.celeb_ban_card():# 我的隊伍被BAN了
+                    if self.celeb_ban_card(): 
+                        # my team be banned current no change card rule so just go lose
                         logger.info('My team is banned')
                         battle_GO_LOSE = True
                         break
