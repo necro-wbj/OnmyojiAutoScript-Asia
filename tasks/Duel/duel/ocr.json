@@ -34,5 +34,41 @@
     "method": "Default",
     "keyword": "自勤",
     "description": "自動"
+  },
+  {
+    "itemName": "d_celeb_ban_who",
+    "roiFront": "714,163,34,139",
+    "roiBack": "714,163,34,139",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "名士局的禁用腳色"
+  },
+  {
+    "itemName": "d_celeb_my_ban_who",
+    "roiFront": "138,163,34,139",
+    "roiBack": "138,163,34,139",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "名士局的禁用腳色"
+  },
+  {
+    "itemName": "d_celeb_ban_who_short",
+    "roiFront": "713,179,34,61",
+    "roiBack": "713,179,34,61",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "名士局的禁用腳色"
+  },
+  {
+    "itemName": "d_celeb_my_ban_who_short",
+    "roiFront": "138,184,34,58",
+    "roiBack": "138,184,34,58",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "MY名士局的禁用腳色"
   }
 ]
