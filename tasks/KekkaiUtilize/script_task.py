@@ -369,7 +369,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                 current_index = self.order_cards.index(card_class)
                 if current_index > last_index:
                     # 不比上一张卡好就退出不执行操作
-                    logger.info('Current card is not better than last best card')
+                    logger.info(f'Current card is not better than last best card: {last_index} current: {current_index}')
                     return last_best
             logger.info('Current select card: %s', card_class)
 
@@ -396,6 +396,9 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                 break
             else:
                 card_best = current_card
+            if self.order_cards.index(current_card) == 0:
+                logger.info('Current card is the best card')
+                break
 
             # 超过十次就退出
             if swipe_count > 10:
