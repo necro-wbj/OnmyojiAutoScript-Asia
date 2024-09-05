@@ -155,7 +155,7 @@ class Answer:
                 if match == option:
                     return index + 1
         # 可能选项识别某一个字错误
-        if options[0] != '' and options[1] != '' and options[2] != '' and options[3] != '':
+        if options[0] != '' and options[1] != '' and options[2] != '':
             for index, option in enumerate(options):
                 for match in question_matches:
                     if len(match) != len(option):
