@@ -88,5 +88,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "login_contract_agree",
+    "imageName": "login_login_contract_agree.png",
+    "roiFront": "535,575,209,62",
+    "roiBack": "535,575,209,62",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "同意协议"
+  },
+  {
+    "itemName": "login_comment_request",
+    "imageName": "login_login_comment_request.png",
+    "roiFront": "535,523,201,42",
+    "roiBack": "535,523,201,42",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "請求評論"
   }
 ]
