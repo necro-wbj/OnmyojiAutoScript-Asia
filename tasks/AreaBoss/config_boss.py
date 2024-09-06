@@ -14,5 +14,7 @@ class Boss(BaseModel):
                              ge=1, le=3)
     # 是否查找当日悬赏鬼王
     boss_reward: bool = Field(default=False, description='boss_reward_help')
+    # 是否查找当日悬赏鬼王打最高難度十層
+    boss_reward_fight_ten: bool = Field(default=False, description='boss_reward_fight_lv_ten_help')
     # 是否使用收藏的
     use_collect: bool = Field(default=False, description='use_collect_help')

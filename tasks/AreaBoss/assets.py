@@ -50,6 +50,8 @@ class AreaBossAssets:
 	S_AB_FILTER_UP = RuleSwipe(roi_front=(920,680,10,10), roi_back=(1130,230,10,10), mode="default", name="ab_filter_up")
 	# 筛选列表 手指向下滑动 
 	S_AB_FILTER_DOWN = RuleSwipe(roi_front=(1130,230,10,10), roi_back=(920,680,10,10), mode="default", name="ab_filter_down")
+	# 极地鬼 层数列表 手指向上滑动  
+	S_AB_FLOOR_UP = RuleSwipe(roi_front=(450,500,10,10), roi_back=(390,260,10,10), mode="default", name="ab_floor_up")
 	# 极地鬼 层数列表 手指向下滑动  
 	S_AB_FLOOR_DOWN = RuleSwipe(roi_front=(390,260,10,10), roi_back=(450,500,10,10), mode="default", name="ab_floor_down")
 	# 普通地鬼 等级滑轨 手指向右滑动  
@@ -97,6 +99,8 @@ class AreaBossAssets:
 	I_AB_JI_FLOOR_LIST_CHECK = RuleImage(roi_front=(390,150,60,290), roi_back=(390,150,60,290), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_ji_floor_list_check.png")
 	# 极地鬼 一层 
 	I_AB_JI_FLOOR_ONE = RuleImage(roi_front=(390,150,60,290), roi_back=(390,150,60,290), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_ji_floor_one.png")
+	# 极地鬼 十层 
+	I_AB_JI_FLOOR_TEN = RuleImage(roi_front=(390,150,60,290), roi_back=(390,150,60,290), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_ji_floor_ten.png")
 	# 小组内未取得名次 
 	I_AB_GROUP_RANK_NONE = RuleImage(roi_front=(903,432,42,40), roi_back=(903,432,42,40), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_ab_group_rank_none.png")
 	# description 
