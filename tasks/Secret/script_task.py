@@ -186,6 +186,11 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
                     logger.info(f'No find jade number, but find gold number {gold_number}')
                     return 1
                 return None
+            elif jade_num > 100:
+                # the number must under 70, 100 is ocr detect wrong.
+                # jade_num = 170  remove hundred digit 170 % 100 = 70
+                jade_num = jade_num % 100
+                logger.info(f'OCR failed, try again {jade_num}')
             elif jade_num > 70:
                 logger.warning(f'OCR failed, try again {jade_num}')
                 return None
@@ -249,15 +254,17 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
         self.device.stuck_record_add('BATTLE_STATUS_S')
         self.device.click_record_clear()
         # 战斗过程 随机点击和滑动 防封
-        logger.info("Start battle process")
+        logger.info("Start battle process SECRET")
         while 1:
             self.screenshot()
             if self.appear(self.I_SE_BATTLE_WIN):
                 logger.info('Win battle')
                 self.ui_click_until_disappear(self.I_SE_BATTLE_WIN, interval=2)
                 return True
-            if self.appear_then_click(self.I_WIN, interval=1):
-                continue
+            if self.appear(self.I_WIN):
+                logger.info('Win battle')
+                self.ui_click_until_disappear(self.I_WIN, interval=2)
+                return True
             if self.appear(self.I_REWARD):
                 logger.info('Win battle')
                 self.ui_click_until_disappear(self.I_REWARD)
