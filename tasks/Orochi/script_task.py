@@ -435,9 +435,12 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         while 1:
             self.screenshot()
             action_click = random.choice([self.C_WIN_1, self.C_WIN_2, self.C_WIN_3])
-            #TODO: handle too much souls make click action_click too much ERROR.
             if self.appear_then_click(self.I_WIN, action=action_click ,interval=0.8):
                 # 赢的那个鼓
+                continue
+            if self.appear(self.I_UI_CONFIRM_SAMLL):
+                self.click(self.I_UI_CONFIRM_SAMLL)
+                logger.info('too much souls')
                 continue
             if self.appear(self.I_GREED_GHOST):
                 # 贪吃鬼
@@ -449,6 +452,10 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                     continue
                 while 1:
                     self.screenshot()
+                    if self.appear(self.I_UI_CONFIRM_SAMLL):
+                        self.click(self.I_UI_CONFIRM_SAMLL)
+                        logger.info('too much souls')
+                        continue
                     action_click = random.choice([self.C_REWARD_1, self.C_REWARD_2, self.C_REWARD_3])
                     if not self.appear(self.I_GREED_GHOST):
                         break
@@ -461,6 +468,10 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                 appear_greed_ghost = self.appear(self.I_GREED_GHOST)
                 while 1:
                     self.screenshot()
+                    if self.appear(self.I_UI_CONFIRM_SAMLL):
+                        self.click(self.I_UI_CONFIRM_SAMLL)
+                        logger.info('too much souls')
+                        continue
                     action_click = random.choice([self.C_REWARD_1, self.C_REWARD_2, self.C_REWARD_3])
                     if self.appear_then_click(self.I_REWARD, action=action_click, interval=1.5):
                         continue
