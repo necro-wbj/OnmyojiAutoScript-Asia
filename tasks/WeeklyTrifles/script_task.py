@@ -42,7 +42,7 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
             if self.appear(self.I_WT_QR_CODE):
                 break
             if self.appear_then_click(wechat, interval=2.5):
-                continue
+                break
         logger.info('Click share')
         get_timer = Timer(7)
         get_timer.start()
@@ -149,6 +149,7 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
                 continue
             if self.appear_then_click(self.I_WT_SHARE_AB, interval=1):
                 continue
+        logger.info('find I_WT_AB_WECHAT gp share')
         # 再次检查一次这周有没有领取
         time.sleep(1)
         self.screenshot()
