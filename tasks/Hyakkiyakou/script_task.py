@@ -119,6 +119,11 @@ class ScriptTask(GameUi, HyaSlave):
                         hya_save_result=hya_save_result)
 
     def run(self):
+        self.fast_screenshot()
+        logger.info(f'game window size: {self.device.image.shape}')
+        if self.device.image.shape != (1280,720,3):
+            logger.error('game windoq size error it should be 1280x720')
+            raise RequestHumanTakeover('game windoq size should be 1280x720')
         hya_count: int = 0
         self.limit_count: int = self._config.hyakkiyakou_config.hya_limit_count
         limit_time = self._config.hyakkiyakou_config.hya_limit_time
@@ -132,10 +137,6 @@ class ScriptTask(GameUi, HyaSlave):
             self.fast_screenshot()
             if self.appear(self.I_HACCESS):
                 break
-            #check self.device.image size is 1280x720
-            if self.device.image.size != (1280, 720):
-                logger.error('game windoq size error it should be 1280x720')
-                raise RequestHumanTakeover('game windoq size should be 1280x720')
 
         logger.info('Hyakkiyakou Start and fast_screenshot is OK')
         while 1:
