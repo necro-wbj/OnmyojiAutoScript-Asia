@@ -56,8 +56,8 @@
   {
     "itemName": "guild_check_scrap",
     "imageName": "guild_guild_check_scrap.png",
-    "roiFront": "561,429,90,88",
-    "roiBack": "561,429,90,88",
+    "roiFront": "592,249,90,88",
+    "roiBack": "592,249,90,88",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "购买检查"

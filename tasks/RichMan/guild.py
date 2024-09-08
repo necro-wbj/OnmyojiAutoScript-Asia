@@ -98,6 +98,8 @@ class Guild(Buy, GameUi, RichManAssets):
         return True
 
     def check_remain(self, image: RuleImage) -> int:
+        self.screenshot()
+        self.appear(image)
         self.O_GUILD_REMAIN.roi[0] = image.roi_front[0] - 38
         self.O_GUILD_REMAIN.roi[1] = image.roi_front[1] + 83
         logger.info(f'Image roi {image.roi_front}')

@@ -20,6 +20,7 @@ class MallNavbar(GameUi, RichManAssets):
         :return:
         """
         self.ui_click(self.I_MALL_CONSIGNMENT, self.I_MALL_CONSIGNMENT_CHECK)
+        self.wait_until_stable(self.I_MALL_CONSIGNMENT_CHECK)
 
     def _enter_scales(self):
         """
@@ -27,6 +28,7 @@ class MallNavbar(GameUi, RichManAssets):
         :return:
         """
         self.ui_click(self.I_MALL_SCCALES, self.I_MALL_SCCALES_CHECK)
+        self.wait_until_stable(self.I_MALL_SCCALES_CHECK)
 
     def _enter_bondlings(self):
         """
@@ -35,6 +37,7 @@ class MallNavbar(GameUi, RichManAssets):
         """
         self._enter_scales()
         self.ui_click(self.I_MALL_BONDLINGS_SURE, self.I_MALL_BONDLINGS_CHECK)
+        self.wait_until_stable(self.I_MALL_BONDLINGS_CHECK)
 
     def _enter_sundry(self):
         """
@@ -42,6 +45,7 @@ class MallNavbar(GameUi, RichManAssets):
         :return:
         """
         self.ui_click(self.I_MALL_SUNDRY, self.I_MALL_SUNDRY_CHECK)
+        self.wait_until_stable(self.I_MALL_SUNDRY_CHECK)
 
     def _enter_special(self):
         """
@@ -50,6 +54,7 @@ class MallNavbar(GameUi, RichManAssets):
         """
         self._enter_sundry()
         self.ui_click(self.I_SIDE_SURE_SPECIAL, self.I_SIDE_CHECK_SPECIAL)
+        self.wait_until_stable(self.I_SIDE_CHECK_SPECIAL)
 
     def _enter_honor(self):
         """
@@ -58,6 +63,7 @@ class MallNavbar(GameUi, RichManAssets):
         """
         self._enter_sundry()
         self.ui_click(self.I_SIDE_SUER_HONOR, self.I_SIDE_CHECK_HONOR)
+        self.wait_until_stable(self.I_SIDE_CHECK_HONOR)
 
     def _enter_friendship(self):
         """
@@ -66,6 +72,7 @@ class MallNavbar(GameUi, RichManAssets):
         """
         self._enter_sundry()
         self.ui_click(self.I_SIDE_SURE_FRIENDS, self.I_SIDE_CHECK_FRIENDS)
+        self.wait_until_stable(self.I_SIDE_CHECK_FRIENDS)
 
     def _enter_medal(self):
         """
@@ -74,6 +81,7 @@ class MallNavbar(GameUi, RichManAssets):
         """
         self._enter_sundry()
         self.ui_click(self.I_SIDE_SURE_MEDAL, self.I_SIDE_CHECK_MEDAL)
+        self.wait_until_stable(self.I_SIDE_CHECK_MEDAL)
 
     def _enter_charisma(self):
         """
@@ -82,6 +90,7 @@ class MallNavbar(GameUi, RichManAssets):
         """
         self._enter_sundry()
         self.ui_click(self.I_SIDE_SURE_CHARISMA, self.I_SIDE_CHECK_CHARISMA)
+        self.wait_until_stable(self.I_SIDE_CHECK_CHARISMA)
 
     def back_mall(self):
         """
@@ -89,6 +98,7 @@ class MallNavbar(GameUi, RichManAssets):
         :return:
         """
         self.ui_click(self.I_UI_BACK_YELLOW, self.I_CHECK_MALL)
+        self.wait_until_stable(self.I_CHECK_MALL)
 
     def mall_resource(self, index: int) -> int:
         """

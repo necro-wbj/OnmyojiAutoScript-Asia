@@ -24,7 +24,7 @@ class RichManAssets:
 	# 皮肤券 
 	I_GUILD_SKIN = RuleImage(roi_front=(795,437,71,72), roi_back=(320,162,573,371), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_skin.png")
 	# 购买检查 
-	I_GUILD_CHECK_SCRAP = RuleImage(roi_front=(561,429,90,88), roi_back=(561,429,90,88), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_check_scrap.png")
+	I_GUILD_CHECK_SCRAP = RuleImage(roi_front=(592,249,90,88), roi_back=(592,249,90,88), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_check_scrap.png")
 
 
 	# Ocr Rule Assets
@@ -66,7 +66,7 @@ class RichManAssets:
 	# 中级盘剩余 
 	O_BL_RES_MEDIUM = RuleOcr(roi=(918,285,28,27), area=(918,285,28,27), mode="Digit", method="Default", keyword="", name="bl_res_medium")
 	# 检查契灵的钱是否够 
-	O_BL_CHECK_MONEY = RuleOcr(roi=(1123,12,127,33), area=(1123,12,127,33), mode="DigitCounter", method="Default", keyword="", name="bl_check_money")
+	O_BL_CHECK_MONEY = RuleOcr(roi=(1075,12,127,33), area=(1075,12,127,33), mode="DigitCounter", method="Default", keyword="", name="bl_check_money")
 
 
 	# Image Rule Assets
@@ -301,18 +301,18 @@ class RichManAssets:
 
 	# Click Rule Assets
 	# description 
-	C_C_SHRINE = RuleClick(roi_front=(1098,261,56,100), roi_back=(1098,261,56,100), name="c_shrine")
+	C_C_SHRINE = RuleClick(roi_front=(1214,338,56,100), roi_back=(1214,338,56,100), name="c_shrine")
 
 
 	# Image Rule Assets
 	# 下期预览 
 	I_S_NEXT_PERIOD = RuleImage(roi_front=(1083,574,90,86), roi_back=(1083,574,90,86), threshold=0.8, method="Template matching", file="./tasks/RichMan/shrine/shrine_s_next_period.png")
 	# description 
-	I_S_WHITE_FIVE = RuleImage(roi_front=(769,143,77,85), roi_back=(769,143,77,85), threshold=0.85, method="Template matching", file="./tasks/RichMan/shrine/shrine_s_white_five.png")
+	I_S_WHITE_FIVE = RuleImage(roi_front=(769,143,77,85), roi_back=(205,143,844,402), threshold=0.9, method="Template matching", file="./tasks/RichMan/shrine/shrine_s_white_five.png")
 	# description 
-	I_S_WHITE_FOUR = RuleImage(roi_front=(951,144,73,82), roi_back=(951,144,73,82), threshold=0.85, method="Template matching", file="./tasks/RichMan/shrine/shrine_s_white_four.png")
+	I_S_WHITE_FOUR = RuleImage(roi_front=(951,144,73,82), roi_back=(205,143,844,402), threshold=0.9, method="Template matching", file="./tasks/RichMan/shrine/shrine_s_white_four.png")
 	# 黑蛋 
-	I_S_BLACK = RuleImage(roi_front=(588,143,78,83), roi_back=(588,143,78,83), threshold=0.9, method="Template matching", file="./tasks/RichMan/shrine/shrine_s_black.png")
+	I_S_BLACK = RuleImage(roi_front=(588,143,78,83), roi_back=(205,143,844,402), threshold=0.9, method="Template matching", file="./tasks/RichMan/shrine/shrine_s_black.png")
 	# description 
 	I_S_BUY_BLACK = RuleImage(roi_front=(777,508,173,60), roi_back=(777,508,173,60), threshold=0.8, method="Template matching", file="./tasks/RichMan/shrine/shrine_s_buy_black.png")
 	# description 

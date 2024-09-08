@@ -118,6 +118,8 @@ class Scales(Buy, MallNavbar):
         :param buy_number:
         :return:
         """
+        scales_orochi_max = 40
+        buy_number_backup = buy_number
         logger.hr('Scales orochi', 3)
         if buy_number == 0:
             logger.info('The purchase quantity of Scales orochi is 0')
@@ -148,9 +150,13 @@ class Scales(Buy, MallNavbar):
                 logger.warning('Scales orochi money can not buy two')
                 return
         # 购买
-        if not money_enough:
+        logger.info(f'Scales orochi buy money_enough {money_enough}')
+        if (not money_enough) or (buy_number_backup==scales_orochi_max):
+            logger.info('Scales orochi money is not enough, buy all')
+            self._scales_buy_more(self.I_SCA_OROCHI_SCALES)
             self._scales_buy_more(self.I_SCA_OROCHI_SCALES)
         else:
+            logger.info(f'Scales orochi buy {buy_number}')
             self._scales_buy_more(self.I_SCA_OROCHI_SCALES, buy_number)
         time.sleep(0.5)
 
@@ -266,6 +272,8 @@ class Scales(Buy, MallNavbar):
         :param buy_rule:
         :return:
         """
+        buy_number_backup = buy_number
+        buy_number_max = 30
         logger.hr('Scales sea', 3)
         if buy_number == 0:
             logger.info('The purchase quantity of Scales sea is 0')
@@ -309,7 +317,7 @@ class Scales(Buy, MallNavbar):
                 self._scales_buy_sea_more(self.I_SCA_PICTURE_BOOK)
                 time.sleep(0.5)
         if buy_res_number and buy_res_number >= 2:
-            self._scales_buy_sea_more(self.I_SCA_PICTURE_BOOK, buy_res_number)
+            self._scales_buy_sea_more(self.I_SCA_PICTURE_BOOK)
             time.sleep(0.5)
 
 

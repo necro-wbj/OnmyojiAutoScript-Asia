@@ -23,6 +23,8 @@ class Bondlings(Buy, MallNavbar):
             logger.info('Bondlings is disable')
             return
         self._enter_bondlings()
+        logger.info('Enter bondlings')
+        self.wait_until_appear(self.I_MALL_BONDLINGS_CHECK)
 
         # 购买石头
         self._bondlings_base(buy_button=self.I_BL_BUY_STONE, remain_number=self.O_BL_RES_STONE, check_class=2,
