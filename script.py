@@ -110,6 +110,50 @@ class Script:
                 lines = handle_sensitive_logs(lines)
             with open(f'{folder}/log.txt', 'w', encoding='utf-8') as f:
                 f.writelines(lines)
+                   
+        from module.config.config_model import ConfigModel
+        if self.config.script.error.notify_tg_pic_log_send == True:
+            import yaml
+            logger.info(self.config.script.error.notify_config)
+            config = {}
+            for item in yaml.safe_load_all(self.config.script.error.notify_config):
+                config.update(item)
+
+            provider_name: str = config.pop("provider", None)
+            if provider_name is None:
+                logger.info("No provider specified, skip sending")
+            else:
+                logger.info(f'provider_name is OK')
+            if provider_name == 'telegram':
+                from telegram.ext import Updater, CommandHandler
+                # 获取notifier
+                token_name: str = config.pop("token", None)
+                if token_name is None:
+                    logger.info("No token specified, skip sending")
+                else:
+                    logger.info(f'token_name is OK')
+                    
+                userid_name: str = config.pop("userid", None)
+                if userid_name is None:
+                    logger.info("No userid specified, skip sending")
+                else:
+                    logger.info(f'userid_name is OK')
+                updater = Updater(token_name)
+                dispatcher = updater.dispatcher
+                #dend msg
+                dispatcher.bot.send_message(chat_id=userid_name, text=f'TG send message')
+                logger.info(f'TG send message')
+                # TG PNG
+                file = open(f'{folder}/{image_time}.png','rb')
+                dispatcher.bot.send_document(chat_id=userid_name, document=file) 
+                logger.info(f'TG send PIC')
+                file.close()
+                # TG TXT
+                file = open(f'{folder}/log.txt','rb')
+                dispatcher.bot.send_document(chat_id=userid_name, document=file) 
+                logger.info(f'TG send TXT')
+                file.close()
+        
 
     def init_server(self, port: int) -> int:
         """

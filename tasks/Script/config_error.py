@@ -17,5 +17,7 @@ class Error(BaseModel):
     notify_enable: bool = Field(default=False,
                                 description='')
     notify_config: MultiLine = Field(default='provider: null', description='notify_config_help')
+    notify_tg_pic_log_send: bool = Field(default=False,
+                                description='')
 
 
