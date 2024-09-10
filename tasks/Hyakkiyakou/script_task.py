@@ -121,7 +121,7 @@ class ScriptTask(GameUi, HyaSlave):
     def run(self):
         self.fast_screenshot()
         logger.info(f'game window size: {self.device.image.shape}')
-        if self.device.image.shape != (1280,720,3):
+        if self.device.image.shape != (720,1280,3):
             logger.error('game windoq size error it should be 1280x720')
             raise RequestHumanTakeover('game windoq size should be 1280x720')
         hya_count: int = 0
@@ -131,7 +131,6 @@ class ScriptTask(GameUi, HyaSlave):
                                                seconds=limit_time.second)
         self.ui_get_current_page()
         self.ui_goto(page_hyakkiyakou)
-
 
         while 1:
             self.fast_screenshot()
