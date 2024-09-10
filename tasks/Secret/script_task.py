@@ -264,7 +264,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
             if self.appear(self.I_WIN):
                 logger.info('Win battle')
                 self.ui_click_until_disappear(self.I_WIN, interval=2)
-                return True
+                continue
             if self.appear(self.I_REWARD):
                 logger.info('Win battle')
                 self.ui_click_until_disappear(self.I_REWARD)
