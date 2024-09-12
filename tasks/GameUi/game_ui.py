@@ -15,6 +15,7 @@ from tasks.Restart.assets import RestartAssets
 from tasks.base_task import BaseTask
 from module.logger import logger
 from module.exception import (GameNotRunningError, GamePageUnknownError, RequestHumanTakeover)
+from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 
 
 class GameUi(BaseTask, GameUiAssets):
@@ -34,7 +35,9 @@ class GameUi(BaseTask, GameUiAssets):
                 BaseTask.I_UI_BACK_RED, BaseTask.I_UI_BACK_YELLOW, BaseTask.I_UI_BACK_BLUE,
                 GameUiAssets.I_BACK_FRIENDS, GameUiAssets.I_BACK_DAILY,
                 GameUiAssets.I_REALM_RAID_GOTO_EXPLORATION,
-                GameUiAssets.I_SIX_GATES_GOTO_EXPLORATION]
+                GameUiAssets.I_SIX_GATES_GOTO_EXPLORATION,
+                GeneralBattle.I_REWARD,
+                GeneralBattle.I_WIN]
 
     def home_explore(self) -> bool:
         """
