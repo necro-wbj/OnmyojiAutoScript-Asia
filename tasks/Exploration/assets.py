@@ -78,7 +78,7 @@ class ExplorationAssets:
 	# 自动轮换开着 
 	I_E_AUTO_ROTATE_ON = RuleImage(roi_front=(104,649,153,44), roi_back=(104,649,153,44), threshold=0.9, method="Template matching", file="./tasks/Exploration/res/res_e_auto_rotate_on.png")
 	# 自动轮换关闭 
-	I_E_AUTO_ROTATE_OFF = RuleImage(roi_front=(108,650,150,46), roi_back=(108,650,150,46), threshold=0.85, method="Template matching", file="./tasks/Exploration/res/res_e_auto_rotate_off.png")
+	I_E_AUTO_ROTATE_OFF = RuleImage(roi_front=(113,658,138,27), roi_back=(113,658,138,27), threshold=0.85, method="Template matching", file="./tasks/Exploration/res/res_e_auto_rotate_off.png")
 	# 成功打开设置 
 	I_E_OPEN_SETTINGS = RuleImage(roi_front=(480,121,114,29), roi_back=(480,121,114,29), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_open_settings.png")
 	# 选择式神稀有度 

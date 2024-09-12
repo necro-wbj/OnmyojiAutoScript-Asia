@@ -29,8 +29,8 @@
   {
     "itemName": "e_auto_rotate_off",
     "imageName": "res_e_auto_rotate_off.png",
-    "roiFront": "108,650,150,46",
-    "roiBack": "108,650,150,46",
+    "roiFront": "113,658,138,27",
+    "roiBack": "113,658,138,27",
     "method": "Template matching",
     "threshold": 0.85,
     "description": "自动轮换关闭"

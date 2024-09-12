@@ -64,7 +64,7 @@ class RestartAssets:
 	I_LOGIN_DOWNLOAD_DRAW = RuleImage(roi_front=(743,459,100,42), roi_back=(651,328,320,241), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_download_draw.png")
 	# 同意协议 
 	I_LOGIN_CONTRACT_AGREE = RuleImage(roi_front=(535,575,209,62), roi_back=(535,575,209,62), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_contract_agree.png")
-	# 请求评论 
+	# 請求評論 
 	I_LOGIN_COMMENT_REQUEST = RuleImage(roi_front=(535,523,201,42), roi_back=(535,523,201,42), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_comment_request.png")
 
 
