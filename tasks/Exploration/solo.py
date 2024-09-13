@@ -68,18 +68,14 @@ class SoloExploration(BaseExploration):
                         continue
                 # boss
                 if self.appear(self.I_BOSS_BATTLE_BUTTON):
-                    self.ui_click_until_disappear(self.I_BOSS_BATTLE_BUTTON)
-                    self.run_general_battle(self._config.general_battle_config)
-                    self.minions_cnt += 1
-                    logger.info(f'Boss battle, minions cnt {self.minions_cnt}')
+                    if self.fire(self.I_BOSS_BATTLE_BUTTON):
+                        logger.info(f'Boss battle, minions cnt {self.minions_cnt}')
                     continue
                 # 小怪
                 fight_button = self.search_up_fight()
                 if fight_button is not None:
-                    self.ui_click_until_disappear(fight_button)
-                    self.run_general_battle(self._config.general_battle_config)
-                    self.minions_cnt += 1
-                    logger.info(f'Fight, minions cnt {self.minions_cnt}')
+                    if self.fire(fight_button):
+                        logger.info(f'Fight, minions cnt {self.minions_cnt}')
                     continue
                 # 向后拉,寻找怪
                 if search_fail_cnt >= 4:
@@ -158,9 +154,8 @@ class SoloExploration(BaseExploration):
                 if self.appear(self.I_FIRE, threshold=0.8) and not self.appear(self.I_ADD_2):
                     self.ui_click_until_disappear(self.I_FIRE, interval=1)
                     continue
-                if self.appear(self.I_ADD_2):
-                    if self.run_invite(config=self._invite_config, is_first=True):
-                        continue
+                if self.appear(self.I_ADD_2) and self.run_invite(config=self._invite_config, is_first=True):
+                    continue
                 else:
                     logger.warning('Invite failed, quit')
                     while 1:
@@ -200,19 +195,14 @@ class SoloExploration(BaseExploration):
                         continue
                 # boss
                 if self.appear(self.I_BOSS_BATTLE_BUTTON):
-                    self.ui_click_until_disappear(self.I_BOSS_BATTLE_BUTTON, interval=4)
-                    self.run_general_battle(self._config.general_battle_config)
-                    self.minions_cnt += 1
-                    friend_leave_timer = Timer(10)
-                    logger.info(f'Boss battle, minions cnt {self.minions_cnt}')
+                    if self.fire(self.I_BOSS_BATTLE_BUTTON):
+                        logger.info(f'Boss battle, minions cnt {self.minions_cnt}')
                     continue
                 # 小怪
                 fight_button = self.search_up_fight()
                 if fight_button is not None:
-                    self.ui_click_until_disappear(fight_button, interval=3)
-                    self.run_general_battle(self._config.general_battle_config)
-                    self.minions_cnt += 1
-                    logger.info(f'Fight, minions cnt {self.minions_cnt}')
+                    if self.fire(fight_button):
+                        logger.info(f'Fight, minions cnt {self.minions_cnt}')
                     continue
                 # 向后拉,寻找怪
                 if search_fail_cnt >= 4:
