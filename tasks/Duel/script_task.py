@@ -50,9 +50,6 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
             if not current_score: #check_score return None is over target_score 
                 # 分数够了，退出
                 logger.info('Duel task is over score')
-            if con.target_score < current_score and con.target_score != 0:
-                # 分数够了，退出
-                logger.info(f'Duel task is over score: {current_score} > {con.target_score}')
                 break
             if current_score<3000:
                 if self.is_time_in_range():
