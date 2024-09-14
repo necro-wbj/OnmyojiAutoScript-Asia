@@ -40,6 +40,10 @@ class UtilizeScheduler(Scheduler):
 class SuperBossConfig(BaseModel):
     find_super_boss: bool = Field(default=False, description='FIGHT SUPER BOSS')
 
+class SuperBossConfig(BaseModel):
+    find_super_boss: bool = Field(default=False, description='FIGHT SUPER BOSS')
+
 class DemonEncounter(ConfigBase):
     scheduler: UtilizeScheduler = Field(default_factory=UtilizeScheduler)
     demon_soul_config: DemonConfig = Field(default_factory=DemonConfig)
+    super_boss_config: SuperBossConfig = Field(default_factory=SuperBossConfig)

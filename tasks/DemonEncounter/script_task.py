@@ -11,7 +11,6 @@ from module.logger import logger
 from module.exception import TaskEnd
 from module.base.timer import Timer
 
-from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_demon_encounter, page_shikigami_records
 from tasks.DemonEncounter.assets import DemonEncounterAssets
@@ -36,19 +35,6 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             logger.warning('Time is not right')
             raise TaskEnd('DemonEncounter')
 
-        # 御魂切换方式一
-        if self.config.demon_encounter.switch_soul.enable:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
-            self.run_switch_soul(self.config.demon_encounter.switch_soul.switch_group_team)
-
-        # 御魂切换方式二
-        if self.config.demon_encounter.switch_soul.enable_switch_by_name:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
-            self.run_switch_soul_by_name(self.config.demon_encounter.switch_soul.group_name,
-                                         self.config.demon_encounter.switch_soul.team_name)
-
         self.ui_get_current_page()
         # 切换御魂
         soul_config = self.config.demon_encounter.demon_soul_config
@@ -70,20 +56,20 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         today = datetime.now().weekday()
         soul_config = self.config.demon_encounter.demon_soul_config
         if today == 0:
-            self.run_switch_soul(soul_config.demon_kiryou_utahime)
-            self.run_switch_soul(soul_config.demon_kiryou_utahime_supplementary)
+            self.run_demon_soul_config(soul_config.demon_kiryou_utahime)
+            self.run_demon_soul_config(soul_config.demon_kiryou_utahime_supplementary)
         elif today == 1:
-            self.run_switch_soul(soul_config.demon_shinkirou)
+            self.run_demon_soul_config(soul_config.demon_shinkirou)
         elif today == 2:
-            self.run_switch_soul(soul_config.demon_tsuchigumo)
+            self.run_demon_soul_config(soul_config.demon_tsuchigumo)
         elif today == 3:
-            self.run_switch_soul(soul_config.demon_gashadokuro)
+            self.run_demon_soul_config(soul_config.demon_gashadokuro)
         elif today == 4:
-            self.run_switch_soul(soul_config.demon_namazu)
+            self.run_demon_soul_config(soul_config.demon_namazu)
         elif today == 5:
-            self.run_switch_soul(soul_config.demon_oboroguruma)
+            self.run_demon_soul_config(soul_config.demon_oboroguruma)
         elif today == 6:
-            self.run_switch_soul(soul_config.demon_nightly_aramitama)
+            self.run_demon_soul_config(soul_config.demon_nightly_aramitama)
 
     def execute_boss(self):
         """
