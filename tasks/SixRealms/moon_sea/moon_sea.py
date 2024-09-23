@@ -163,15 +163,17 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
         while 1:
             self.screenshot()
             text = self.O_ISLAND_NAME.ocr(self.device.image)
-            if '星' in text:
+            if '星' in text: #OCR get CHS[星之屿] CHT[星之噢]
                 return MoonSeaType.island105
-            if '战' in text:
+            if '战' in text: #OCR get CHS[麼战之屿]
                 return MoonSeaType.island104
-            if '混' in text:
+            if '载' in text: #TODO#OCR get CHT[愿载之噢]
+                return MoonSeaType.island104
+            if '混' in text: #OCR get CHS[混沌之屿] CHT[混之噢],[混池之噢]
                 return MoonSeaType.island103
-            if '神秘' in text:
+            if '神秘' in text: #OCR get CHS[神秘之屿] CHT[神秘之噢]
                 return MoonSeaType.island102
-            if '宁息' in text:
+            if '息' in text: #OCR get CHS[宁息之屿] CHT[辜息之噢]
                 return MoonSeaType.island101
 
     def boss_team_lock(self):
