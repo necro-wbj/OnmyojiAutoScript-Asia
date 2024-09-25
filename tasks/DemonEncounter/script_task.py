@@ -56,20 +56,20 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         today = datetime.now().weekday()
         soul_config = self.config.demon_encounter.demon_soul_config
         if today == 0:
-            self.run_demon_soul_config(soul_config.demon_kiryou_utahime)
-            self.run_demon_soul_config(soul_config.demon_kiryou_utahime_supplementary)
+            self.run_switch_soul(soul_config.demon_kiryou_utahime)
+            self.run_switch_soul(soul_config.demon_kiryou_utahime_supplementary)
         elif today == 1:
-            self.run_demon_soul_config(soul_config.demon_shinkirou)
+            self.run_switch_soul(soul_config.demon_shinkirou)
         elif today == 2:
-            self.run_demon_soul_config(soul_config.demon_tsuchigumo)
+            self.run_switch_soul(soul_config.demon_tsuchigumo)
         elif today == 3:
-            self.run_demon_soul_config(soul_config.demon_gashadokuro)
+            self.run_switch_soul(soul_config.demon_gashadokuro)
         elif today == 4:
-            self.run_demon_soul_config(soul_config.demon_namazu)
+            self.run_switch_soul(soul_config.demon_namazu)
         elif today == 5:
-            self.run_demon_soul_config(soul_config.demon_oboroguruma)
+            self.run_switch_soul(soul_config.demon_oboroguruma)
         elif today == 6:
-            self.run_demon_soul_config(soul_config.demon_nightly_aramitama)
+            self.run_switch_soul(soul_config.demon_nightly_aramitama)
 
     def execute_boss(self):
         """

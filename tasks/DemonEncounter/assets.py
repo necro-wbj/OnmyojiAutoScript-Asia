@@ -72,7 +72,7 @@ class DemonEncounterAssets:
 	# 点击首领 
 	I_DE_BOSS = RuleImage(roi_front=(1001,645,45,45), roi_back=(1001,645,45,45), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_boss.png")
 	# 点击封魔极 
-	I_DE_BOSS_BEST = RuleImage(roi_front=(900,644,45,50), roi_back=(900,644,45,50), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_boss_best.png")
+	I_DE_BOSS_BEST = RuleImage(roi_front=(900,644,45,50), roi_back=(900,644,45,50), threshold=0.7, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_boss_best.png")
 	# 式神录 
 	I_DE_SHI_RECORDS = RuleImage(roi_front=(789,639,48,48), roi_back=(789,639,48,48), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_shi_records.png")
 	# 左下角小指针 

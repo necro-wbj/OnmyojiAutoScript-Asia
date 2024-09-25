@@ -32,7 +32,7 @@
     "roiFront": "900,644,45,50",
     "roiBack": "900,644,45,50",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "点击封魔极"
   },
   {
