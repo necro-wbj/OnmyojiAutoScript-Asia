@@ -213,9 +213,9 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets, SwitchSoul
             result[2] = wq_number
             if type_wq == '探索':
                 result[0] = -1
-            elif type_wq == '挑战':
+            elif re.match(r"挑.?",type_wq):
                 result[0] = 1 if num_challenge >= 10 else -1
-            elif type_wq == '秘闻':
+            elif re.match(r"秘.?",type_wq):
                 result[0] = 2
             logger.info(f'[Wanted Quests] type: {type_wq} destination: {wq_destination} number: {wq_number} ')
             return tuple(result) if result[0] != -1 else None
