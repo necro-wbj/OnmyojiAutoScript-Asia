@@ -53,6 +53,7 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets, SwitchSoul
         number_challenge = self.O_WQ_NUMBER.ocr(self.device.image)
         ocr_error_count = 0
         no_fight_count = 0
+        logger.info(f'Number of challenge tickets: {number_challenge}')
         while 1:
             self.screenshot()
             if self.appear(self.I_WQ_BOX):
@@ -204,9 +205,11 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets, SwitchSoul
             info_wq_1 = OCR_WQ_INFO[index].ocr(self.device.image)
             info_wq_1 = info_wq_1.replace('：', ':').replace('（', '(').replace('）', ')')
             info_wq_1 = info_wq_1.replace('：', ':')
-            match = re.match(r"^(.*?)\(数量:\s*(\d+)\)", info_wq_1)
+            match = re.match(r"^(.*?)\(.*量:\s*(\d+)\)", info_wq_1)
             if not match:
+                logger.warning(f"[Wanted Quests] not match, info_wq_1: {info_wq_1}")
                 return None
+            logger.info(f'[Wanted Quests] match: {match.group(0)}')
             wq_destination = match.group(1)
             wq_number = int(match.group(2))
             result[1] = wq_destination
