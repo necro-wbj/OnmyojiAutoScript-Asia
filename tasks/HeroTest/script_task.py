@@ -163,7 +163,7 @@ class ScriptTask(GameUi, BaseActivity, HeroTestAssets, SwitchSoul):
                 break
 
             # 如果领奖励出现金币
-            if self.appear(self.I_REWARD_GOLD, threshold=0.8):
+            if self.appear_then_click(self.I_REWARD_GOLD, threshold=0.8):
                 win = True
                 break
             # 如果开启战斗过程随机滑动
@@ -190,7 +190,7 @@ class ScriptTask(GameUi, BaseActivity, HeroTestAssets, SwitchSoul):
                 if not self.appear(self.I_FALSE, threshold=0.6):
                     return False
         # 最后保证能点击 获得奖励
-        if not is_skill and not self.wait_until_appear(self.I_REWARD, wait_time=2):
+        if not is_skill and not self.wait_until_appear(self.I_REWARD, wait_time=10):
             # 有些的战斗没有下面的奖励，所以直接返回
             logger.info("There is no reward, Exit battle")
             return win
