@@ -36,7 +36,8 @@ class Full(BaseCor):
         if not boxed_results:
             return 0, 0, 0, 0
 
-        index_list = self.filter(boxed_results, keyword)
+        regex = re.compile(keyword)
+        index_list = [index for index, result in enumerate(boxed_results) if regex.match(result.ocr_text)]
         logger.info(f"OCR [{self.name}] detected in {index_list}")
         # 如果一个都没有匹配到
         if not index_list:
