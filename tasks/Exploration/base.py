@@ -37,7 +37,7 @@ class Scene(Enum):
 
 
 
-class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigami, GameUi, SwitchSoul, ExplorationAssets):
+class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigami, SwitchSoul, ExplorationAssets):
     minions_cnt = 0
 
     @cached_property
@@ -182,8 +182,8 @@ class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigam
             logger.warning('Opening settings failed due to now in battle')
             return
         cu, res, total = self.O_E_ALTERNATE_NUMBER.ocr(self.device.image)
-        if cu >= 40:
-            logger.info("Alternate number is full")
+        if cu >= 10:
+            logger.info("Alternate number is enough")
             self.ui_click_until_disappear(self.I_E_SURE_BUTTON)
             return
         else:
@@ -341,6 +341,7 @@ class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigam
 
     def fire(self, button) -> bool:
         self.ui_click_until_disappear(button, interval=3)
+        self.screenshot()
         if (self.appear(self.I_E_SETTINGS_BUTTON) or
                 self.appear(self.I_E_AUTO_ROTATE_ON) or
                 self.appear(self.I_E_AUTO_ROTATE_OFF)):

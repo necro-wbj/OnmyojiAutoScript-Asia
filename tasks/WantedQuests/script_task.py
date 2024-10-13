@@ -22,12 +22,14 @@ from tasks.Secret.script_task import ScriptTask as SecretScriptTask
 from tasks.WantedQuests.config import WantedQuestsConfig, CooperationType, CooperationSelectMask, \
     CooperationSelectMaskDescription
 from tasks.WantedQuests.assets import WantedQuestsAssets
+from tasks.WantedQuests.explore import WQExplore, ExploreWantedBoss
 from tasks.Component.Costume.config import MainType
 from typing import List
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 
 
-class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets, SwitchSoul):
+class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
+    want_strategy_excluding: list[list] = []  # 不需要执行的
 
     def run(self):
         con = self.config.model.wanted_quests
@@ -62,41 +64,28 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets, SwitchSoul
             if ocr_error_count > 10:
                 logger.warning('OCR failed too many times, exit')
                 break
-            if no_fight_count > 10:
-                logger.warning('Keep find invite fight and it is done, exit')
-                break
-            if self.appear(self.I_WQ_CHECK_TASK):
-                
-                logger.info('find WQ TASK get its number and challenge number')
-                if self.ocr_appear(self.O_WQ_TEXT_1, interval=1):
-                    cu, re, total = self.O_WQ_NUM_1.ocr(self.device.image)
-                    if cu == re == total == 0:
-                        logger.warning('OCR failed and skip this round')
-                        ocr_error_count += 1
-                    if cu > total:
-                        logger.warning('Current number of wanted quests is greater than total number')
-                        cu = cu % 10
-                    if cu < total and re != 0:
-                        no_fight_count = 0
-                        self.execute_mission(self.O_WQ_TEXT_1, total, number_challenge)
-                    if cu == total:
-                        no_fight_count = no_fight_count + 1
+            if self.ocr_appear(self.O_WQ_TEXT_1, interval=1):
+                cu, re, total = self.O_WQ_NUM_1.ocr(self.device.image)
+                if cu == re == total == 0:
+                    logger.warning('OCR failed and skip this round')
+                    ocr_error_count += 1
+                if cu > total:
+                    logger.warning('Current number of wanted quests is greater than total number')
+                    cu = cu % 10
+                if cu < total and re != 0:
+                    self.execute_mission(self.O_WQ_TEXT_1, min(total, 20), number_challenge)
 
-
-                if self.ocr_appear(self.O_WQ_TEXT_2, interval=1):
-                    cu, re, total = self.O_WQ_NUM_2.ocr(self.device.image)
-                    if cu == re == total == 0:
-                        logger.warning('OCR failed and skip this round')
-                        ocr_error_count += 1
-                    if cu > total:
-                        logger.warning('Current number of wanted quests is greater than total number')
-                        cu = cu % 10
-                    if cu < total and re != 0:
-                        no_fight_count = 0
-                        self.execute_mission(self.O_WQ_TEXT_2, total, number_challenge)
-                    if cu == total:
-                        no_fight_count = no_fight_count + 1
-                    continue
+            if self.ocr_appear(self.O_WQ_TEXT_2, interval=1):
+                cu, re, total = self.O_WQ_NUM_2.ocr(self.device.image)
+                if cu == re == total == 0:
+                    logger.warning('OCR failed and skip this round')
+                    ocr_error_count += 1
+                if cu > total:
+                    logger.warning('Current number of wanted quests is greater than total number')
+                    cu = cu % 10
+                if cu < total and re != 0:
+                    self.execute_mission(self.O_WQ_TEXT_2, min(total, 20), number_challenge)
+                continue
 
             if self.appear(self.I_WQ_CHECK_TASK):
                 logger.info('find I_WQ_CHECK_TASK')
@@ -215,7 +204,7 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets, SwitchSoul
             result[1] = wq_destination
             result[2] = wq_number
             if type_wq == '探索':
-                result[0] = -1
+                result[0] = 0
             elif re.match(r"挑.?",type_wq):
                 result[0] = 1 if num_challenge >= 10 else -1
             elif re.match(r"秘.?",type_wq):
@@ -241,6 +230,7 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets, SwitchSoul
             info_wq = extract_info(i)
             if info_wq:
                 info_wq_list.append(info_wq)
+        info_wq_list = [item for item in info_wq_list if item not in self.want_strategy_excluding]
         if not info_wq_list:
             logger.warning('No wanted quests can be challenged')
             return False
@@ -248,18 +238,19 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets, SwitchSoul
         info_wq_list.sort(key=lambda x: x[0])
         best_type, destination, once_number, goto_button = info_wq_list[0]
         do_number = 1 if once_number >= num_want else num_want // once_number + (1 if num_want % once_number > 0 else 0)
-        match best_type:
-            case 0:
-                self.explore(goto_button, do_number)
-            case 1:
-                self.challenge(goto_button, do_number)
-            case 2:
-                self.secret(goto_button, do_number)
-            case _:
-                logger.warning('No wanted quests can be challenged')
-
-    def explore(self, goto, num):
-        self.challenge(goto, num)
+        try:
+            match best_type:
+                case 0:
+                    self.explore(goto_button, do_number)
+                case 1:
+                    self.challenge(goto_button, do_number)
+                case 2:
+                    self.secret(goto_button, do_number)
+                case _:
+                    logger.warning('No wanted quests can be challenged')
+        except ExploreWantedBoss:
+            logger.warning('The extreme case. The quest only needs to challenge one final boss, so skip it')
+            self.want_strategy_excluding.append(info_wq_list[0])
 
     def challenge(self, goto, num):
         self.ui_click(goto, self.I_WQC_FIRE)
