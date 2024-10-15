@@ -271,3 +271,4 @@ adb_port.ini
 *.zip
 console.bat
 .vscode/*
+!toolkit\Lib\site-packages\ppocronnx\rec\predict_rec.py
