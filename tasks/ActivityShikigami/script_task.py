@@ -127,8 +127,9 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                     self.main_home()
                     self.set_next_run(task="ActivityShikigami", success=True)
                     raise TaskEnd
-                if self.appear_then_click(self.I_FIRE, interval=2):
-                    continue
+                if self.appear(self.I_FIRE):
+                    self.ui_click_until_disappear(self.I_FIRE)
+                    logger.info("GO F battle")
                 if not self.appear(self.I_FIRE):
                     break
                 if self.appear_then_click(self.I_C_CONFIRM1, interval=0.6):
