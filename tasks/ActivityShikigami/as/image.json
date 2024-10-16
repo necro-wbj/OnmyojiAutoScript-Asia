@@ -2,7 +2,7 @@
   {
     "itemName": "shi",
     "imageName": "as_shi.png",
-    "roiFront": "524,205,33,34",
+    "roiFront": "443,172,33,34",
     "roiBack": "64,115,1110,427",
     "method": "Template matching",
     "threshold": 0.7,
@@ -20,8 +20,8 @@
   {
     "itemName": "battle",
     "imageName": "as_battle.png",
-    "roiFront": "290,209,35,145",
-    "roiBack": "248,146,138,315",
+    "roiFront": "943,337,23,46",
+    "roiBack": "858,130,138,315",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入爬塔"
@@ -38,8 +38,8 @@
   {
     "itemName": "lock",
     "imageName": "as_lock.png",
-    "roiFront": "1144,511,25,32",
-    "roiBack": "1118,473,139,116",
+    "roiFront": "802,645,25,32",
+    "roiBack": "755,601,139,116",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "上锁图标"
@@ -47,7 +47,7 @@
   {
     "itemName": "unlock",
     "imageName": "as_unlock.png",
-    "roiFront": "823,654,28,28",
+    "roiFront": "802,650,28,28",
     "roiBack": "776,610,112,87",
     "method": "Template matching",
     "threshold": 0.8,
@@ -56,8 +56,8 @@
   {
     "itemName": "fire",
     "imageName": "as_fire.png",
-    "roiFront": "1134,587,84,78",
-    "roiBack": "1107,522,142,174",
+    "roiFront": "1142,611,76,38",
+    "roiBack": "1106,562,139,143",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击战斗"
@@ -65,8 +65,8 @@
   {
     "itemName": "ap",
     "imageName": "as_ap.png",
-    "roiFront": "1127,509,23,24",
-    "roiBack": "1092,487,103,71",
+    "roiFront": "1131,510,26,24",
+    "roiBack": "1092,487,168,71",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "体力按钮"
@@ -74,8 +74,8 @@
   {
     "itemName": "ap_activity",
     "imageName": "as_ap_activity.png",
-    "roiFront": "1124,514,21,21",
-    "roiBack": "1090,500,84,54",
+    "roiFront": "1133,510,21,21",
+    "roiBack": "1121,495,84,54",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "活动体力"
@@ -83,7 +83,7 @@
   {
     "itemName": "switch",
     "imageName": "as_switch.png",
-    "roiFront": "1212,514,23,23",
+    "roiFront": "1228,508,23,23",
     "roiBack": "1200,497,69,56",
     "method": "Template matching",
     "threshold": 0.8,

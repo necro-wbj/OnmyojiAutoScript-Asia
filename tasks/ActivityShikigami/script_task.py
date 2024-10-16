@@ -162,7 +162,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 continue
             if self.appear_then_click(self.I_DRUM, interval=1):
                 continue
-            if not self.appear(self.I_BATTLE, interval=1):
+            if self.appear_then_click(self.I_BATTLE, interval=1):
                 continue
             if not self.appear(self.I_BACK_GREEN):
                 continue

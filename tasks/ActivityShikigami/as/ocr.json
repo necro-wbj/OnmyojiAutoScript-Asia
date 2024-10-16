@@ -1,8 +1,8 @@
 [
   {
     "itemName": "remain_ap",
-    "roiFront": "1155,668,87,25",
-    "roiBack": "1155,668,87,25",
+    "roiFront": "1192,679,87,25",
+    "roiBack": "1192,679,87,25",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
@@ -10,8 +10,8 @@
   },
   {
     "itemName": "remain_ap_activity",
-    "roiFront": "909,25,95,30",
-    "roiBack": "909,25,95,30",
+    "roiFront": "710,24,105,32",
+    "roiBack": "710,24,105,32",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
