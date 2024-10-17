@@ -119,7 +119,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
                     continue
 
-            if self.run_general_battle(config=config.general_battle):
+            if self.battle_wait(config.general_battle.random_click_swipt_enable):
                 logger.info("General battle success")
 
         self.main_home()
