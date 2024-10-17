@@ -67,7 +67,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         # # 2024-04-04 ---------------------end
         # 选择是游戏的体力还是活动的体力
         current_ap = config.general_climb.ap_mode
-        # self.switch(current_ap)
+        self.switch(current_ap)
 
         # 设定是否锁定阵容
         if config.general_battle.lock_team_enable:
@@ -144,7 +144,8 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
 
         self.main_home()
         if config.general_climb.active_souls_clean:
-            self.set_next_run(task='SoulsTidy', success=False, finish=False, target=datetime.now())
+            # self.set_next_run(task='SoulsTidy', success=False, finish=False, target=datetime.now())
+            self.set_next_run(task='SoulsTidy', server=False , target=datetime.now())
         self.set_next_run(task="ActivityShikigami", success=True)
         raise TaskEnd
 
