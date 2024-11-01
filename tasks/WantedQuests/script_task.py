@@ -67,8 +67,12 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             if self.ocr_appear(self.O_WQ_TEXT_1, interval=1):
                 cu, re, total = self.O_WQ_NUM_1.ocr(self.device.image)
                 if cu == re == total == 0:
-                    logger.warning('OCR failed and skip this round')
+                    logger.warning('OCR failed and have a try')
                     ocr_error_count += 1
+                    # 尝试打一次
+                    unknown_num = self.O_WQ_NUM_UNKNOWN_1.ocr(self.device.image)
+                    if unknown_num > 14:
+                        self.execute_mission(self.O_WQ_TEXT_1, 1, number_challenge)
                 if cu > total:
                     logger.warning('Current number of wanted quests is greater than total number')
                     cu = cu % 10
@@ -78,8 +82,12 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             if self.ocr_appear(self.O_WQ_TEXT_2, interval=1):
                 cu, re, total = self.O_WQ_NUM_2.ocr(self.device.image)
                 if cu == re == total == 0:
-                    logger.warning('OCR failed and skip this round')
+                    logger.warning('OCR failed and have a try')
                     ocr_error_count += 1
+                    # 尝试打一次
+                    unknown_num = self.O_WQ_NUM_UNKNOWN_2.ocr(self.device.image)
+                    if unknown_num > 14:
+                        self.execute_mission(self.O_WQ_TEXT_2, 1, number_challenge)
                 if cu > total:
                     logger.warning('Current number of wanted quests is greater than total number')
                     cu = cu % 10
@@ -106,24 +114,20 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             return
         time_delta = timedelta(hours=-before_end.hour, minutes=-before_end.minute, seconds=-before_end.second)
         now_datetime = datetime.now()
-        now_time = now_datetime.time() 
-        logger.info(f'now_time now_time {now_time}')
-        
-        if (datetime.combine(datetime.now().date(), time(hour=5)) + time_delta).time() < now_time < (datetime.combine(datetime.now().date(), time(hour=18)) + time_delta).time():
-            # 如果是在5+delta點到18+delta 點之間，那就設定下一次運行的時間為今天的18点 + delta
+        now_time = now_datetime.time()
+        if time(hour=5) <= now_time < time(hour=18):
+            # 如果是在5点到18点之间，那就设定下一次运行的时间为第二天的5点 + before_end
+            next_run_datetime = datetime.combine(now_datetime.date() + timedelta(days=1), time(hour=5))
+            next_run_datetime = next_run_datetime + time_delta
+        elif time(hour=18) <= now_time < time(hour=23, minute=59, second=59):
+            # 如果是在18点到23点59分59秒之间，那就设定下一次运行的时间为第二天的18点 + before_end
+            next_run_datetime = datetime.combine(now_datetime.date() + timedelta(days=1), time(hour=18))
+            next_run_datetime = next_run_datetime + time_delta
+        else:
+            # 如果是在0点到5点之间，那就设定下一次运行的时间为今天的18点 + before_end
             next_run_datetime = datetime.combine(now_datetime.date(), time(hour=18))
             next_run_datetime = next_run_datetime + time_delta
             logger.info(f'5<time<18 {next_run_datetime}')
-        elif (datetime.combine(datetime.now().date(), time(hour=18)) + time_delta).time() <= now_time <= time(hour=23, minute=59, second=59):
-            # 如果是在18+delta點到23點59分59秒之間，那就設定下次運行的時間為第二天的5+delta
-            next_run_datetime = datetime.combine(now_datetime.date() + timedelta(days=1), time(hour=5))
-            next_run_datetime = next_run_datetime + time_delta
-            logger.info(f'18<=time<24 {next_run_datetime}')
-        else:
-            # 如果是在0點到5點之間，那就設定下次運行的時間為今天的5+delta
-            next_run_datetime = datetime.combine(now_datetime.date(), time(hour=5))
-            next_run_datetime = next_run_datetime + time_delta
-            logger.info(f'time<5 {next_run_datetime}')
         
         self.set_next_run(task='WantedQuests', target=next_run_datetime)
 
@@ -179,17 +183,27 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         OCR_WQ_TYPE = [self.O_WQ_TYPE_1, self.O_WQ_TYPE_2, self.O_WQ_TYPE_3, self.O_WQ_TYPE_4]
         OCR_WQ_INFO = [self.O_WQ_INFO_1, self.O_WQ_INFO_2, self.O_WQ_INFO_3, self.O_WQ_INFO_4]
         GOTO_BUTTON = [self.I_GOTO_1, self.I_GOTO_2, self.I_GOTO_3, self.I_GOTO_4]
+        name_funcs: dict = {
+            '挑戰': self.challenge,
+            '探索': self.explore,
+            '秘聞': self.secret
+        }
 
         def extract_info(index: int) -> tuple or None:
             """
             提取每一个地点的信息
             :param index: 从零开始
             :return:
-            (type, destination, number, goto_button)
-            (类型, 地点层级，可以打败的数量，前往按钮)
-            类型： 探索0, 挑战1， 秘闻2
+            (type, destination, number, goto_button, func)
+            (类型, 地点层级，可以打败的数量，前往按钮, func)
+            类型： 挑战0, 秘闻1， 探索2
             """
-            result = [-1, '', -1, GOTO_BUTTON[index]]
+            layer_limit = {
+                # 低层不限制
+                # "壹", "贰", "叁", "肆", "伍", "陆",
+                "柒", "捌", "玖", "拾"
+            }
+            result = [-1, '', -1, GOTO_BUTTON[index], self.challenge]
             type_wq = OCR_WQ_TYPE[index].ocr(self.device.image)
             info_wq_1 = OCR_WQ_INFO[index].ocr(self.device.image)
             info_wq_1 = info_wq_1.replace('：', ':').replace('（', '(').replace('）', ')')
@@ -201,14 +215,21 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             logger.info(f'[Wanted Quests] match: {match.group(0)}')
             wq_destination = match.group(1)
             wq_number = int(match.group(2))
+            # 跳过高层秘闻
+            if wq_destination[-1] in layer_limit:
+                logger.warning('This secret layer is too high')
+                return None
             result[1] = wq_destination
             result[2] = wq_number
-            if type_wq == '探索':
-                result[0] = 0
-            elif re.match(r"挑.?",type_wq):
-                result[0] = 1 if num_challenge >= 10 else -1
+            order_list = self.config.model.wanted_quests.wanted_quests_config.battle_priority
+            order_list = order_list.replace(' ', '').replace('\n', '')
+            order_list: list = re.split(r'>', order_list)
+            if re.match(r"挑.?",type_wq):
+                type_wq = "挑戰"
             elif re.match(r"秘.?",type_wq):
-                result[0] = 2
+                type_wq = "秘聞"
+            result[0] = order_list.index(type_wq) if type_wq in order_list else -1
+            result[4] = name_funcs.get(type_wq, lambda: logger.warning('No task can be challenged'))
             logger.info(f'[Wanted Quests] type: {type_wq} destination: {wq_destination} number: {wq_number} ')
             return tuple(result) if result[0] != -1 else None
 
@@ -236,18 +257,10 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             return False
         # sort
         info_wq_list.sort(key=lambda x: x[0])
-        best_type, destination, once_number, goto_button = info_wq_list[0]
+        best_type, destination, once_number, goto_button, func = info_wq_list[0]
         do_number = 1 if once_number >= num_want else num_want // once_number + (1 if num_want % once_number > 0 else 0)
         try:
-            match best_type:
-                case 0:
-                    self.explore(goto_button, do_number)
-                case 1:
-                    self.challenge(goto_button, do_number)
-                case 2:
-                    self.secret(goto_button, do_number)
-                case _:
-                    logger.warning('No wanted quests can be challenged')
+            func(goto_button, do_number)
         except ExploreWantedBoss:
             logger.warning('The extreme case. The quest only needs to challenge one final boss, so skip it')
             self.want_strategy_excluding.append(info_wq_list[0])
