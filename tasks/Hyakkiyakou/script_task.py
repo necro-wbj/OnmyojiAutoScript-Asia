@@ -119,7 +119,7 @@ class ScriptTask(GameUi, HyaSlave):
                         hya_save_result=hya_save_result)
 
     def run(self):
-        self.fast_screenshot()
+        self.fast_screenshot(screenshot=self._config.debug_config.hya_screenshot_method)
         logger.info(f'game window size: {self.device.image.shape}')
         if self.device.image.shape != (720,1280,3):
             logger.error('game windoq size error it should be 1280x720')
@@ -133,7 +133,7 @@ class ScriptTask(GameUi, HyaSlave):
         self.ui_goto(page_hyakkiyakou)
 
         while 1:
-            self.fast_screenshot()
+            self.fast_screenshot(screenshot=self._config.debug_config.hya_screenshot_method)
             if self.appear(self.I_HACCESS):
                 break
 
@@ -150,7 +150,7 @@ class ScriptTask(GameUi, HyaSlave):
             hya_count += 1
 
         while 1:
-            self.fast_screenshot()
+            self.fast_screenshot(screenshot=self._config.debug_config.hya_screenshot_method)
 
             if not self.appear(self.I_HACCESS):
                 continue
@@ -163,7 +163,7 @@ class ScriptTask(GameUi, HyaSlave):
     def choose_click(self,click,stop):
         success = False
         while not self.appear(stop):
-            self.fast_screenshot()
+            self.fast_screenshot(screenshot=self._config.debug_config.hya_screenshot_method)
             if self.appear(click):
                 success = not success
                 x, y = click.coord()
@@ -194,7 +194,7 @@ class ScriptTask(GameUi, HyaSlave):
         # 随机选一个
         click_button = choice([self.C_HSELECT_1, self.C_HSELECT_2, self.C_HSELECT_3])
         while 1:
-            self.fast_screenshot()
+            self.fast_screenshot(screenshot=self._config.debug_config.hya_screenshot_method)
             if not self.appear(self.I_HTITLE):
                 break
             if self.appear_then_click(self.I_HSTART, interval=2):
