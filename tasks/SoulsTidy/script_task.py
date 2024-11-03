@@ -112,11 +112,14 @@ class ScriptTask(GameUi, SoulsTidyAssets):
         # 开始奉纳
         while 1:
             self.screenshot()
-            firvel = self.O_ST_FIRSET_LEVEL.ocr(self.device.image)
-            if firvel != '古':
-                # 问就是 把 +0 识别成了 古
+            if not self.appear(self.I_ST_FIRSET_LEVEL):
                 logger.info('No zero level, bongna done')
                 break
+            # firvel = self.O_ST_FIRSET_LEVEL.ocr(self.device.image)
+            # if firvel != '古':
+            #     # 问就是 把 +0 识别成了 古
+            #     logger.info('No zero level, bongna done')
+            #     break
             # !!!!!!  这里没有检查金币是否足够
             # 长按
             count_donate = 10

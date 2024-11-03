@@ -115,5 +115,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "已棄置"
+  },
+  {
+    "itemName": "st_firset_level",
+    "imageName": "simple_st_firset_level.png",
+    "roiFront": "91,237,35,28",
+    "roiBack": "91,237,35,28",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "+0"
   }
 ]
