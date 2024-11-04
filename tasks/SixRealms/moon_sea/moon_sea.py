@@ -165,9 +165,9 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
             text = self.O_ISLAND_NAME.ocr(self.device.image)
             if '星' in text: #OCR get CHS[星之屿] CHT[星之噢]
                 return MoonSeaType.island105
-            if '战' in text: #OCR get CHS[麼战之屿]
+            if '鏖' in text: #OCR get CHS[麼战之屿]
                 return MoonSeaType.island104
-            if '载' in text: #TODO#OCR get CHT[愿载之噢]
+            if '戰' in text: #TODO#OCR get CHT[愿载之噢]
                 return MoonSeaType.island104
             if '混' in text: #OCR get CHS[混沌之屿] CHT[混之噢],[混池之噢]
                 return MoonSeaType.island103
