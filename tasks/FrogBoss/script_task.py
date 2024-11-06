@@ -23,6 +23,17 @@ from tasks.FrogBoss.config import Strategy
 
 class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
     def run(self):
+        if self.is_time_in_frog():
+            logger.info('in FrogBoss time')
+        else:
+            logger.info('not in FrogBoss time')
+            self.next_run()
+            raise TaskEnd('FrogBoss')
+        if not self.appear(self.I_FROG_BOSS_ENTER):
+            logger.info('no find frog boss enter')
+            self.next_run()
+            raise TaskEnd('FrogBoss')
+
         self.enter(self.I_FROG_BOSS_ENTER)
         # 进入主界面
         status = ""
@@ -129,13 +140,13 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
             self.screenshot()
             if self.appear(self.I_BETTED):
                 break
-            if self.appear_then_click(self.I_GOLD_30, interval=2):
-                continue
             if self.appear_then_click(self.I_BET_SURE, interval=2):
                 continue
             if self.appear_then_click(self.I_UI_CONFIRM, interval=2):
                 continue
             if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=2):
+                continue
+            if self.appear_then_click(self.I_GOLD_30, interval=2):
                 continue
 
     def detect(self) -> bool:
@@ -305,6 +316,13 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
                 return self.I_BET_LEFT
             else:
                 return self.I_BET_RIGHT
+    def is_time_in_frog(self):
+        now = datetime.now()
+        morning_start = now.replace(hour=10, minute=0, second=0, microsecond=0)
+        morning_end = now.replace(hour=11, minute=59, second=0, microsecond=0)
+        if morning_start <= now <= morning_end:
+            return True
+        return False
 
 
 if __name__ == '__main__':
