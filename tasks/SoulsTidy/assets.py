@@ -44,6 +44,8 @@ class SoulsTidyAssets:
 	I_ST_GOD_PRESENT = RuleImage(roi_front=(578,234,131,73), roi_back=(542,117,204,219), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_god_present.png")
 	# 已棄置 
 	I_ST_ABANDON = RuleImage(roi_front=(31,116,131,40), roi_back=(20,107,152,58), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_abandon.png")
+	# +0 
+	I_ST_FIRSET_LEVEL = RuleImage(roi_front=(91,237,35,28), roi_back=(91,237,35,28), threshold=0.7, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_firset_level.png")
 
 
 	# Long Click Rule Assets
@@ -58,10 +60,10 @@ class SoulsTidyAssets:
 	O_ST_FIRSET_LEVEL = RuleOcr(roi=(91,237,35,28), area=(91,237,35,28), mode="Single", method="Default", keyword="", name="st_firset_level")
 	# 入手顺序 
 	O_ST_SORT_TIME = RuleOcr(roi=(387,118,110,42), area=(387,118,110,42), mode="Single", method="Default", keyword="入手顺序", name="st_sort_time")
-	# 等级/星级 最上边的 
-	O_ST_SORT_LEVEL_1 = RuleOcr(roi=(384,115,121,45), area=(384,115,121,45), mode="Single", method="Default", keyword="等级/星级", name="st_sort_level_1")
-	# 等级/星 下边的 
-	O_ST_SORT_LEVEL_2 = RuleOcr(roi=(400,290,128,42), area=(400,290,128,42), mode="Single", method="Default", keyword="等级/星级", name="st_sort_level_2")
+	# 等級/星級 最上边的 
+	O_ST_SORT_LEVEL_1 = RuleOcr(roi=(384,115,121,45), area=(384,115,121,45), mode="Single", method="Default", keyword="等級/星級", name="st_sort_level_1")
+	# 等級/星級 下边的 
+	O_ST_SORT_LEVEL_2 = RuleOcr(roi=(400,290,128,42), area=(400,290,128,42), mode="Single", method="Default", keyword="等級/星級", name="st_sort_level_2")
 	# 类型 
 	O_ST_SORT_TYPE = RuleOcr(roi=(414,118,64,43), area=(414,118,64,43), mode="Single", method="Default", keyword="类型", name="st_sort_type")
 	# 位置 

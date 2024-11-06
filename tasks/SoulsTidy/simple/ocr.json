@@ -32,8 +32,8 @@
     "roiBack": "384,115,121,45",
     "mode": "Single",
     "method": "Default",
-    "keyword": "等级/星级",
-    "description": "等级/星级 最上边的"
+    "keyword": "等級/星級",
+    "description": "等級/星級 最上边的"
   },
   {
     "itemName": "st_sort_level_2",
@@ -41,8 +41,8 @@
     "roiBack": "400,290,128,42",
     "mode": "Single",
     "method": "Default",
-    "keyword": "等级/星级",
-    "description": "等级/星 下边的"
+    "keyword": "等級/星級",
+    "description": "等級/星級 下边的"
   },
   {
     "itemName": "st_sort_type",

@@ -72,9 +72,9 @@ class DuelAssets:
 	# 分数 
 	O_D_SCORE = RuleOcr(roi=(701,509,61,33), area=(701,509,61,33), mode="Digit", method="Default", keyword="", name="d_score")
 	# 手動 
-	O_D_HAND = RuleOcr(roi=(31,639,63,45), area=(31,639,63,45), mode="Single", method="Default", keyword="手勤", name="d_hand")
+	O_D_HAND = RuleOcr(roi=(31,639,63,45), area=(31,639,63,45), mode="Single", method="Default", keyword="手動", name="d_hand")
 	# 自動 
-	O_D_AUTO = RuleOcr(roi=(30,640,65,44), area=(30,640,65,44), mode="Single", method="Default", keyword="自勤", name="d_auto")
+	O_D_AUTO = RuleOcr(roi=(30,640,65,44), area=(30,640,65,44), mode="Single", method="Default", keyword="自動", name="d_auto")
 	# 名士局的禁用腳色 
 	O_D_CELEB_BAN_WHO = RuleOcr(roi=(714,163,34,139), area=(714,163,34,139), mode="Single", method="Default", keyword="", name="d_celeb_ban_who")
 	# 名士局的禁用腳色 

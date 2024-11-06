@@ -64,7 +64,8 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             if ocr_error_count > 10:
                 logger.warning('OCR failed too many times, exit')
                 break
-            if self.ocr_appear(self.O_WQ_TEXT_1, interval=1):
+            # 如果有找到"懸賞封印" or 懸賞封印的計數器"0/10" 就去打
+            if self.ocr_appear(self.O_WQ_TEXT_1, interval=1) or self.O_WQ_NUM_1.ocr(self.device.image):
                 cu, re, total = self.O_WQ_NUM_1.ocr(self.device.image)
                 if cu == re == total == 0:
                     logger.warning('OCR failed and have a try')
@@ -79,7 +80,8 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                 if cu < total and re != 0:
                     self.execute_mission(self.O_WQ_TEXT_1, min(total, 20), number_challenge)
 
-            if self.ocr_appear(self.O_WQ_TEXT_2, interval=1):
+            # 如果有找到"懸賞封印" or 懸賞封印的計數器"0/10" 就去打
+            if self.ocr_appear(self.O_WQ_TEXT_2, interval=1) or self.O_WQ_NUM_2.ocr(self.device.image):
                 cu, re, total = self.O_WQ_NUM_2.ocr(self.device.image)
                 if cu == re == total == 0:
                     logger.warning('OCR failed and have a try')
@@ -224,6 +226,9 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             order_list = self.config.model.wanted_quests.wanted_quests_config.battle_priority
             order_list = order_list.replace(' ', '').replace('\n', '')
             order_list: list = re.split(r'>', order_list)
+            # 挑戰的怪物數量為14個 wq_number == 14
+            if wq_number == 14:
+                type_wq = "挑戰"
             if re.match(r"挑.?",type_wq):
                 type_wq = "挑戰"
             elif re.match(r"秘.?",type_wq):

@@ -23,7 +23,7 @@
     "roiBack": "31,639,63,45",
     "mode": "Single",
     "method": "Default",
-    "keyword": "手勤",
+    "keyword": "手動",
     "description": "手動"
   },
   {
@@ -32,7 +32,7 @@
     "roiBack": "30,640,65,44",
     "mode": "Single",
     "method": "Default",
-    "keyword": "自勤",
+    "keyword": "自動",
     "description": "自動"
   },
   {
