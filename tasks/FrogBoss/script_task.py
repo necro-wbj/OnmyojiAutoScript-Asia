@@ -319,7 +319,7 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
     def is_time_in_frog(self):
         now = datetime.now()
         morning_start = now.replace(hour=10, minute=0, second=0, microsecond=0)
-        morning_end = now.replace(hour=11, minute=59, second=0, microsecond=0)
+        morning_end = now.replace(hour=23, minute=59, second=0, microsecond=0)
         if morning_start <= now <= morning_end:
             return True
         return False
