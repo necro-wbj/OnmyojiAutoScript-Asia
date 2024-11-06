@@ -13,7 +13,7 @@ from module.atom.image import RuleImage
 from module.base.timer import Timer
 
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main
+from tasks.GameUi.page import page_main,page_town
 from tasks.Component.RightActivity.right_activity import RightActivity
 from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
 from tasks.Component.config_base import TimeDelta
@@ -23,18 +23,24 @@ from tasks.FrogBoss.config import Strategy
 
 class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
     def run(self):
-        if self.is_time_in_frog():
-            logger.info('in FrogBoss time')
+        self.ui_get_current_page()
+        self.ui_goto(page_main)
+        # try to enter frog boss
+        if self.wait_until_appear(self.I_FROG_BOSS_ENTER, wait_time=3):
+            logger.info('from main page enter frog boss')
+            self.ui_click(self.I_FROG_BOSS_ENTER, self.I_FROG_BOSS_IN)
         else:
-            logger.info('not in FrogBoss time')
-            self.next_run()
-            raise TaskEnd('FrogBoss')
-        if not self.appear(self.I_FROG_BOSS_ENTER):
-            logger.info('no find frog boss enter')
-            self.next_run()
-            raise TaskEnd('FrogBoss')
+            logger.info('try to enter frog boss from town')
+            self.ui_goto(page_town)
+            if self.wait_until_appear(self.I_FROG_BOSS_TOWN_ENTER, wait_time=3):
+                logger.info('from town page enter frog boss')
+                self.ui_click(self.I_FROG_BOSS_TOWN_ENTER, self.I_FROG_BOSS_IN)
+            else:
+                logger.info('not found frog boss enter button')
+                self.ui_goto(page_main)
+                self.next_run()
+                raise TaskEnd('FrogBoss')
 
-        self.enter(self.I_FROG_BOSS_ENTER)
         # 进入主界面
         status = ""
         while 1:
@@ -57,6 +63,9 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
                 while 1:
                     self.screenshot()
                     if self.appear(self.I_BET_LEFT) and self.appear(self.I_BET_RIGHT):
+                        break
+                    if self.appear(self.I_FROG_BOSS_REST):
+                        logger.info('Frog Boss Rest')
                         break
                     if self.appear_then_click(self.I_BET_SUCCESS_BOX, interval=1):
                         continue
@@ -128,7 +137,10 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
         while 1:
             self.screenshot()
             if self.appear(self.I_GOLD_30_CHECK):
-                break
+                logger.info('Gold 30 check appear')
+                if self.appear_then_click(self.I_GOLD_30, interval=3):
+                    logger.info('Gold 30 check appear (CLOSE)')
+                    break
             if gold_30_timer.reached():
                 logger.info('Gold 30 not appear')
                 break
@@ -139,15 +151,17 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
         while 1:
             self.screenshot()
             if self.appear(self.I_BETTED):
+                logger.info('betted')
                 break
             if self.appear_then_click(self.I_BET_SURE, interval=2):
+                logger.info('bet sure')
                 continue
             if self.appear_then_click(self.I_UI_CONFIRM, interval=2):
                 continue
             if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=2):
                 continue
-            if self.appear_then_click(self.I_GOLD_30, interval=2):
-                continue
+            # if self.appear_then_click(self.I_GOLD_30, interval=2):
+            #     continue
 
     def detect(self) -> bool:
         """
