@@ -476,6 +476,32 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
 
         return retList
 
+    def battle_wait(self, random_click_swipt_enable: bool) -> bool:
+        # 重写
+        self.device.stuck_record_add('BATTLE_STATUS_S')
+        self.device.click_record_clear()
+        # 战斗过程 随机点击和滑动 防封
+        logger.info("Start battle process WantedQuests")
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_SE_BATTLE_WIN):
+                logger.info('Win battle')
+                self.ui_click_until_disappear(self.I_SE_BATTLE_WIN, interval=2)
+                return True
+            if self.appear(self.I_WIN):
+                logger.info('Win battle')
+                self.ui_click_until_disappear(self.I_WIN, interval=2)
+                # for wanted quests it must end with self.I_REWARD
+                continue
+            if self.appear(self.I_REWARD):
+                logger.info('Win battle')
+                self.ui_click_until_disappear(self.I_REWARD)
+                return True
+            if self.appear(self.I_FALSE):
+                logger.warning('False battle')
+                self.ui_click_until_disappear(self.I_FALSE)
+                return False
+
     @cached_property
     def special_main(self) -> bool:
         # 特殊的庭院需要点一下，左边然后才能找到图标

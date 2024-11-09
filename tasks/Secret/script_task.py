@@ -274,6 +274,8 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
                 logger.warning('False battle')
                 self.ui_click_until_disappear(self.I_FALSE)
                 return False
+            if self.appear(self.I_SE_FIRE):
+                return True
 
 
 if __name__ == '__main__':
