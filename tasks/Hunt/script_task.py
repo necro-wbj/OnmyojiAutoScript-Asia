@@ -64,16 +64,15 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
             self.kirin_day = False
 
         now = datetime.now()
-        # 如果时间在00:00-19:00 之间则设定时间为当天的19:00，返回False
-        if now.time() < time(19, 0):
-            next_run = datetime.combine(now.date(), time(19, 0))
-            self.set_next_run(task="Hunt", success=False, finish=True, target=next_run)
-            raise TaskEnd("Hunt")
-        # 如果是在21:00-23:59之间则设定时间为明天的19:00，返回False
-        elif now.time() > time(21, 0):
-            next_run = datetime.combine(now.date() + timedelta(days=1), time(19, 0))
-            self.set_next_run(task="Hunt", success=False, finish=True, target=next_run)
-            raise TaskEnd("Hunt")
+        # 如果时间在00:00-19:00 之间则设定时间为当天的 server_update 時間，返回False
+        if now.hour < 19:
+            next_run = datetime.combine(now.date(), self.config.hunt.scheduler.server_update)
+            self.set_next_run(task="Hunt", server=False, target=next_run)
+            return False
+        # 如果是在21:00-23:59之间则设定时间为明天的 server_update 時間，返回False
+        elif now.hour >= 21:
+            self.set_next_run(task="Hunt", server=True)
+            return False
         # 如果是在19:00-21:00之间则返回True
         else:
             return True

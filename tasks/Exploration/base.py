@@ -313,8 +313,8 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
         # 设置下次执行行时间
         logger.info("RealmRaid and Exploration  set_next_run !")
         next_run = datetime.now() + con_scrolls.scrolls_cd
-        self.set_next_run(task='Exploration', success=False, finish=False, target=next_run)
-        self.set_next_run(task='RealmRaid', success=False, finish=False, target=datetime.now())
+        self.set_next_run(task='Exploration', server=False, target=next_run)
+        self.set_next_run(task='RealmRaid', server=False, target=datetime.now())
         raise TaskEnd
 
     #

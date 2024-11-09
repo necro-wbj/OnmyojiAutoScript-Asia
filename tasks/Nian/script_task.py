@@ -28,7 +28,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, NianAssets):
                 self.set_next_run(task='Nian', success=False, finish=True)
                 raise TaskEnd('Nian')
             next_run = datetime.now() + cd
-            self.set_next_run(task='Nian', success=False, finish=False, target=next_run)
+            self.set_next_run(task='Nian', server=False, target=next_run)
             raise TaskEnd('Nian')
 
         self.ui_get_current_page()

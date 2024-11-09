@@ -1,7 +1,8 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
-import time
+from time import sleep
+from datetime import timedelta, datetime, time
 
 import cv2
 import numpy as np
@@ -27,6 +28,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         运行脚本
         :return:
         """
+        if not self.check_datetime():
+            # 現在不是執行時間，設定下次執行時間為 server_update 時間
+            raise TaskEnd
         # 直接手动关闭这个锁定阵容的设置
         self.config.area_boss.general_battle.lock_team_enable = False
         con = self.config.area_boss.boss
@@ -103,7 +107,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             if self.appear_then_click(self.I_FILTER, interval=3):
                 continue
             #wait 1s
-            time.sleep(1)
+            sleep(1)
 
         if collect:
             self.switch_to_collect()
@@ -121,7 +125,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             if self.appear_then_click(battle, interval=1):
                 logger.info('try to get area boss')
                 # wait 2s to avoid click over timers
-                time.sleep(2)
+                sleep(2)
             if self.appear(self.I_AB_CLOSE_RED):
                 logger.info('find area boss')
                 break
@@ -567,6 +571,28 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                 self.click(self.C_AB_REWARD_BTN, 1.5)
                 continue
 
+    def check_datetime(self) -> bool:
+        """
+        检查时间, 6:00-23:00 之间才能运行
+        :return: 符合6:00-23:00的时间返回True, 否则返回False 且设置下次运行时间為server_update 時間
+        """
+
+        now = datetime.now()
+        # 如果时间在06:00-23:00 之间则返回True
+        if now.hour < 6:
+            # 過早執行，設定時間為當天的 server_update 時間
+            next_run = datetime.combine(now.date(), self.config.area_boss.scheduler.server_update)
+            logger.info(f"Too early to run, set next run time to {next_run}")
+            self.set_next_run(task='AreaBoss', server=False, target=next_run)
+            return False
+        elif now.hour >= 23:
+            # 過晚執行，設定時間為明天
+            logger.info("Too late to run, set next run time to tomorrow server_update time")
+            self.set_next_run(task='AreaBoss', success=False, finish=False)
+            return False
+        # 如果是在19:00-21:00之间则返回True
+        else:
+            return True
 
 if __name__ == '__main__':
     from module.config.config import Config
@@ -575,7 +601,7 @@ if __name__ == '__main__':
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
-    # time.sleep(3)
+    # sleep(3)
     # t.switchFloor2One()
     # t.switch2Level60()
     t.run()
