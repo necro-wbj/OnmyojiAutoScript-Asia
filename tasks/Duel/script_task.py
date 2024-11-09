@@ -58,7 +58,7 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
                     logger.info('Normal Duel task is over time')
                     break
             else:
-                if self.is_time_in_celeb_range():
+                if self.is_time_in_range(celeb=True):
                     logger.info('Celeb Duel task is in time')
                 else:
                     logger.info('Celeb Duel task is over time')
@@ -70,25 +70,20 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
         self.set_next_run(task='Duel', success=True, finish=False)
         raise TaskEnd('Duel')
 
-    def is_time_in_range(self):
-        now = datetime.now()
-        morning_start = now.replace(hour=11, minute=0, second=0, microsecond=0)
-        morning_end = now.replace(hour=14, minute=0, second=0, microsecond=0)
-        evening_start = now.replace(hour=17, minute=0, second=0, microsecond=0)
-        evening_end = now.replace(hour=22, minute=0, second=0, microsecond=0)
+    def is_time_in_range(self, celeb: bool = False) -> bool:
+        now_time = datetime.now().time()
+        if celeb:
+            morning_start = time(11, 0)
+            morning_end = time(13, 0)
+            evening_start = time(18, 0)
+            evening_end = time(21, 0)
+        else:
+            morning_start = time(11, 0)
+            morning_end = time(14, 0)
+            evening_start = time(17, 0)
+            evening_end = time(22, 0)
 
-        if morning_start <= now <= morning_end or evening_start <= now <= evening_end:
-            return True
-        return False
-
-    def is_time_in_celeb_range(self):
-        now = datetime.now()
-        morning_start = now.replace(hour=11, minute=0, second=0, microsecond=0)
-        morning_end = now.replace(hour=13, minute=0, second=0, microsecond=0)
-        evening_start = now.replace(hour=18, minute=0, second=0, microsecond=0)
-        evening_end = now.replace(hour=21, minute=0, second=0, microsecond=0)
-
-        if morning_start <= now <= morning_end or evening_start <= now <= evening_end:
+        if morning_start <= now_time <= morning_end or evening_start <= now_time <= evening_end:
             return True
         return False
 

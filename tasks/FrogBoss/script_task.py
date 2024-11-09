@@ -2,7 +2,7 @@
 # @author runhey
 # github https://github.com/runhey
 from cached_property import cached_property
-from datetime import datetime
+from datetime import datetime, time
 import requests
 import re
 import json
@@ -331,10 +331,9 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
             else:
                 return self.I_BET_RIGHT
     def is_time_in_frog(self):
-        now = datetime.now()
-        morning_start = now.replace(hour=10, minute=0, second=0, microsecond=0)
-        morning_end = now.replace(hour=23, minute=59, second=0, microsecond=0)
-        if morning_start <= now <= morning_end:
+        now = datetime.now().time()
+        morning_start = time(10, 0)
+        if morning_start <= now:
             return True
         return False
 
