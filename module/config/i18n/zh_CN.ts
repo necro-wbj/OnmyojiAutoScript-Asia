@@ -471,7 +471,7 @@ mode_3策略是刷到五个契灵后开始结契，选择高级、中级盘来�
 否则你可以开启这一项御魂轮换（探查是默认不需要轮换的）</translation></message>
 	<message><source>tomb_guard_switch_help</source><translation>初始值是不合适的，你需要根据自己的情况设置
 "1,2"表示第一个预设组，第二个队伍
-请使用英文输入法下的逗号
+请使用英文输入法下的分号如"1,1;1,2"
 预设组支持[1-7], 预设队伍支持[1-4]</translation></message>
 	<message><source>snowball_switch_help</source><translation> </translation></message>
 	<message><source>little_kuro_switch_help</source><translation> </translation></message>
@@ -552,7 +552,7 @@ mode_3策略是刷到五个契灵后开始结契，选择高级、中级盘来�
 	<message><source>Switch Group Team</source><translation>御魂装配分组设置</translation></message>
 	<message><source>switch_group_team_help</source><translation>初始值是不合适的，你需要根据自己的情况设置
 "1,2"表示第一个预设组，第二个队伍
-请使用英文输入法下的逗号
+请使用英文输入法下的分号如"1,1;1,2"
 预设组支持[1-7], 预设队伍支持[1-4]</translation></message>
 	<message><source>Group Name</source><translation>御魂分组名</translation></message>
 	<message><source>Team Name</source><translation>队伍名</translation></message>
