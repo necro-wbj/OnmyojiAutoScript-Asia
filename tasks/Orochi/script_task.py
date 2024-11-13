@@ -494,20 +494,25 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         if not orochi_switch_soul.auto_switch_soul:
             return
 
-        group_team: str = None
         layer = self.config.orochi.orochi_config.layer
-        match layer:
-            # case Layer.TEN:
-            #     group_team = orochi_switch_soul.ten_switch
-            case Layer.ELEVEN:
-                group_team = orochi_switch_soul.eleven_switch
-            case Layer.TWELVE:
-                group_team = orochi_switch_soul.twelve_switch
+        group_team = None
 
-        if orochi_switch_soul.auto_switch_soul:
+        # 使用字典映射來替代 match-case 語句
+        layer_to_group_team = {
+            Layer.ELEVEN: orochi_switch_soul.eleven_switch,
+            Layer.TWELVE: orochi_switch_soul.twelve_switch,
+        }
+
+        # 根據 layer 設置 group_team
+        group_team = layer_to_group_team.get(layer)
+
+        # 如果 auto_switch_soul 開啟且 layer 是 ELEVEN 或 TWELVE，則進行切換御魂操作
+        if group_team:
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
             self.run_switch_soul(group_team)
+        else:
+            logger.info('layer is not ELEVEN or TWELVE, no need to switch soul')
 
 
 if __name__ == '__main__':
