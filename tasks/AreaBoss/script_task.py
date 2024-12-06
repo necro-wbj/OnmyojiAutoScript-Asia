@@ -197,46 +197,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         self.wait_until_appear(self.I_AB_CLOSE_RED)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=1)
         return result
-
-    def boss_fight_already_open(self, ultra: bool = False) -> bool:
-        """
-            完成挑战一个鬼王的後半流程
-            在已经打开鬼王详情界面的情况下
-            开始 到结束战斗
-        @param ultra: 是否需要切换到极地鬼
-        @type ultra:
-        @return:    True        挑战成功
-                    False       挑战失败
-        @rtype:
-        """
-        # log noww run boss_fight_already_open
-        logger.info(f"now run boss_fight_already_open")
-        # 如果已经打过该BOSS,直接跳过不打了
-        if self.is_group_ranked():
-            self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=3)
-            return True
-
-        if ultra:
-            if not self.get_difficulty():
-                # 判断是否能切换到极地鬼
-                if not self.appear(self.I_AB_DIFFICULTY_NORMAL):
-                    self.switch_to_level_60()
-                    if not self.start_fight():
-                        logger.warning("you are so weakness!")
-                        self.wait_until_appear(self.I_AB_CLOSE_RED)
-                        self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=3)
-                        return False
-                # 切换到 极地鬼
-                self.switch_difficulty(True)
-
-            self.switch_to_floor_1()
-        result = True
-        if not self.start_fight():
-            result = False
-            logger.warning("Area Boss Fight Failed ")
-        self.wait_until_appear(self.I_AB_CLOSE_RED)
-        self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=1)
-        return result
     
     def start_fight(self) -> bool:
         while 1:

@@ -19,6 +19,13 @@ class ShikigamiType(str, Enum):
     FOOD_TYPE_3 = 'shikigami_type_3'
     FOOD_TYPE_4 = 'shikigami_type_4'
 
+
+class ShikigamiType(str, Enum):
+    FOOD_TYPE_1 = 'shikigami_type_1'
+    FOOD_TYPE_2 = 'shikigami_type_2'
+    FOOD_TYPE_3 = 'shikigami_type_3'
+    FOOD_TYPE_4 = 'shikigami_type_4'
+
 class ShikigamiConfig(BaseModel):
     # limit_time: TimeDelta = Field(default=TimeDelta(hours=0, minutes=30, seconds=0), description='limit_time_help')
     # limit_count: int = Field(default=10, description='limit_count_help')

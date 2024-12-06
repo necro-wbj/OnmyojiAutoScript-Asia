@@ -101,6 +101,23 @@ class LoginHandler(BaseTask, RestartAssets):
             if self.appear_then_click(self.I_LOGIN_LOGIN_ONMYOJI_GENIE):
                 logger.info("click onmyoji genie")
                 continue
+            # 绑定手机号弹窗
+            if self.appear_then_click(self.I_LOGIN_LOGIN_GOTO_BIND_PHONE):
+                while 1:
+                    self.screenshot()
+                    if self.appear_then_click(self.I_LOGIN_LOGIN_CANCEL_BIND_PHONE):
+                        logger.info("Close bind phone")
+                        break
+                continue
+            # 关闭各种邀请弹窗(主要时结界卡寄养邀请)
+            from tasks.Component.GeneralInvite.assets import GeneralInviteAssets as gia
+            if self.appear_then_click(gia.I_I_REJECT, interval=0.8):
+                logger.info("reject invites")
+                continue
+            # 关闭阴阳师精灵提示
+            if self.appear_then_click(self.I_LOGIN_LOGIN_ONMYOJI_GENIE):
+                logger.info("click onmyoji genie")
+                continue
             # 点击屏幕进入游戏
             if self.appear(self.I_LOGIN_SPECIFIC_SERVE, interval=0.6) \
                     and self.ocr_appear_click(self.O_LOGIN_SPECIFIC_SERVE, interval=0.6):
