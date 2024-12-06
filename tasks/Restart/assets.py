@@ -83,6 +83,12 @@ class RestartAssets:
 	I_LOGIN_LOGIN_CANCEL_BIND_PHONE = RuleImage(roi_front=(450,460,160,100), roi_back=(450,460,160,100), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_cancel_bind_phone.png")
 	# 登录界面 弹出框 阴阳师精灵 
 	I_LOGIN_LOGIN_ONMYOJI_GENIE = RuleImage(roi_front=(80,110,280,120), roi_back=(80,110,280,120), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_onmyoji_genie.png")
+	# description 
+	I_LOGIN_DOWNLOAD_DRAW = RuleImage(roi_front=(743,459,100,42), roi_back=(651,328,320,241), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_download_draw.png")
+	# 同意协议 
+	I_LOGIN_CONTRACT_AGREE = RuleImage(roi_front=(535,575,209,62), roi_back=(535,575,209,62), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_contract_agree.png")
+	# 請求評論 
+	I_LOGIN_COMMENT_REQUEST = RuleImage(roi_front=(535,523,201,42), roi_back=(535,523,201,42), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_comment_request.png")
 
 
 	# Ocr Rule Assets

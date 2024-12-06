@@ -106,5 +106,32 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "登录界面 弹出框 阴阳师精灵"
+  },
+  {
+    "itemName": "login_download_draw",
+    "imageName": "login_login_download_draw.png",
+    "roiFront": "743,459,100,42",
+    "roiBack": "651,328,320,241",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "login_contract_agree",
+    "imageName": "login_login_contract_agree.png",
+    "roiFront": "535,575,209,62",
+    "roiBack": "535,575,209,62",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "同意协议"
+  },
+  {
+    "itemName": "login_comment_request",
+    "imageName": "login_login_comment_request.png",
+    "roiFront": "535,523,201,42",
+    "roiBack": "535,523,201,42",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "請求評論"
   }
 ]
