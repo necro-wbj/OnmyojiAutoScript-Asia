@@ -10,6 +10,17 @@ from module.atom.list import RuleList
 class ActivityShikigamiAssets: 
 
 
+	# Click Rule Assets
+	# description 
+	C_CLICK1 = RuleClick(roi_front=(120,138,130,75), roi_back=(120,138,130,75), name="click1")
+	# description 
+	C_CLICK2 = RuleClick(roi_front=(121,234,125,81), roi_back=(121,234,125,81), name="click2")
+	# description 
+	C_CLICK3 = RuleClick(roi_front=(126,337,118,77), roi_back=(126,337,118,77), name="click3")
+	# description 
+	C_CLICK4 = RuleClick(roi_front=(124,438,126,77), roi_back=(124,438,126,77), name="click4")
+
+
 	# Image Rule Assets
 	# description 
 	I_N_BATTLE = RuleImage(roi_front=(70,280,91,25), roi_back=(3,50,277,635), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/0110/0110_n_battle.png")

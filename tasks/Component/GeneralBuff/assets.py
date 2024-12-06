@@ -35,13 +35,13 @@ class GeneralBuffAssets:
 
 	# Ocr Rule Assets
 	# Ocr-description 
-	O_GOLD_50 = RuleOcr(roi=(428,120,338,389), area=(0,0,100,100), mode="Full", method="Default", keyword=".*金幣增加50%", name="gold_50")
+	O_GOLD_50 = RuleOcr(roi=(428,120,338,389), area=(0,0,100,100), mode="Full", method="Default", keyword=".*金增加50%", name="gold_50")
 	# Ocr-description 
-	O_GOLD_100 = RuleOcr(roi=(425,118,342,397), area=(0,0,100,100), mode="Full", method="Default", keyword=".*金幣增加100%", name="gold_100")
+	O_GOLD_100 = RuleOcr(roi=(425,118,342,397), area=(0,0,100,100), mode="Full", method="Default", keyword=".*金增加100%", name="gold_100")
 	# Ocr-description 
-	O_EXP_50 = RuleOcr(roi=(426,119,335,394), area=(0,0,100,100), mode="Full", method="Default", keyword=".*經驗增加50%", name="exp_50")
+	O_EXP_50 = RuleOcr(roi=(426,119,335,394), area=(0,0,100,100), mode="Full", method="Default", keyword=".*經验增加50%", name="exp_50")
 	# Ocr-description 
-	O_EXP_100 = RuleOcr(roi=(421,127,342,388), area=(0,0,100,100), mode="Full", method="Default", keyword=".*經驗增加100%", name="exp_100")
+	O_EXP_100 = RuleOcr(roi=(421,127,342,388), area=(0,0,100,100), mode="Full", method="Default", keyword=".*经验增加100%", name="exp_100")
 	# 打开buff加成 
 	O_GB_BUFF_2 = RuleOcr(roi=(348,31,93,51), area=(363,36,29,43), mode="Single", method="Default", keyword="加成", name="gb_buff_2")
 

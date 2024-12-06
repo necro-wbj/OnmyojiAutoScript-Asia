@@ -6,15 +6,24 @@
     "roiBack": "1016,520,223,173",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "挑戰，字大小會不一樣… 百戰的粗一點 大一點"
+    "description": "奇怪了之前的不能用"
   },
   {
-    "itemName": "wqse_sp_fire",
-    "imageName": "wq_wqse_sp_fire.png",
-    "roiFront": "1127,566,67,66",
-    "roiBack": "1016,520,223,173",
+    "itemName": "wq_d1111",
+    "imageName": "wq_wq_d1111.png",
+    "roiFront": "20,171,99,105",
+    "roiBack": "6,148,150,299",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "特殊祕聞挑戰，每周競速,百戰"
+    "description": "妖气封印"
+  },
+  {
+    "itemName": "wq_nian",
+    "imageName": "wq_wq_nian.png",
+    "roiFront": "19,176,100,100",
+    "roiBack": "0,153,166,273",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "年兽"
   }
 ]

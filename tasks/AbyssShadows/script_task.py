@@ -4,7 +4,7 @@
 # @note     draft version without full test
 # github    https://github.com/roarhill/oas
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import random
 import numpy as np
 from enum import Enum
@@ -159,7 +159,18 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
 
         # 设置下次运行时间
         if success:
-            self.set_next_run(task='AbyssShadows', finish=True, server=True, success=True)
+            if today == 4:
+                # 周五推迟到周六
+                logger.info(f"The next abyss shadows day is Saturday")
+                self.custom_next_run(task='AbyssShadows', custom_time=cfg.abyss_shadows_time.custom_run_time_saturday, time_delta=1)
+            elif today == 5:
+                # 周六推迟到周日
+                logger.info(f"The next abyss shadows day is Sunday")
+                self.custom_next_run(task='AbyssShadows', custom_time=cfg.abyss_shadows_time.custom_run_time_sunday, time_delta=1)
+            elif today == 6:
+                # 周日推迟到下周五
+                logger.info(f"The next abyss shadows day is Friday")
+                self.custom_next_run(task='AbyssShadows', custom_time=cfg.abyss_shadows_time.custom_run_time_friday, time_delta=5)
         else:
             self.set_next_run(task='AbyssShadows', finish=True, server=True, success=False)
         raise TaskEnd
@@ -353,44 +364,45 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                 logger.info(f"Click {self.I_ABYSS_NAVIGATION.name}")
                 continue
             if self.appear(self.I_ABYSS_MAP):
-                logger.info(f"Find abyss map, exit")
-                break
-        click_times = 0
-        # 点击攻打区域
-        while 1:
-            self.screenshot()
+                logger.info("Find abyss map, exit")
             
-            # 如果点3次还没进去就表示目标已死亡,跳过
-            if click_times >= 3:
-                logger.warning(f"Failed to click {click_area}")
-                return 
-            # 出现前往按钮就退出
-            if self.appear(self.I_ABYSS_GOTO_ENEMY):
-                break
-            if self.click(click_area,interval=1.5):
-                click_times += 1
-                continue
-            if self.appear_then_click(self.I_ENSURE_BUTTON,interval=1):
-                continue
-            # TODO 有时出现bug，点了前往之后不动，需要再点一次，带解决
-
+            click_times = 0
+            # 点击攻打区域
+            while 1:
+                self.screenshot()
+                # 如果点3次还没进去就表示目标已死亡,跳过
+                if click_times >= 3:
+                    logger.warning(f"Failed to click {click_area}")
+                    return
+                # 出现前往按钮就退出
+                if self.appear(self.I_ABYSS_GOTO_ENEMY):
+                    break
+                if self.click(click_area,interval=1.5):
+                    click_times += 1
+                    continue
+                if self.appear_then_click(self.I_ENSURE_BUTTON,interval=1):
+                    continue
         
-        # 点击前往按钮
-        while 1:
-            self.screenshot()
-            if self.appear_then_click(self.I_ABYSS_GOTO_ENEMY,interval=1):
-                # 点击敌人后，如果是不同区域会确认框，点击确认                
-                if self.appear_then_click(self.I_ENSURE_BUTTON, interval=1):
-                    logger.info(f"Click {self.I_ENSURE_BUTTON.name}")
-                # 跑动画比较花时间
-                sleep(3)
-                continue
-            if self.appear(self.I_ABYSS_FIRE):
+            # 点击前往按钮
+            while 1:
+                self.screenshot()
+                if self.appear_then_click(self.I_ABYSS_GOTO_ENEMY,interval=1):
+                    logger.info(f"Click {self.I_ABYSS_GOTO_ENEMY.name}")
+                    # 点击敌人后，如果是不同区域会确认框，点击确认                
+                    if self.appear_then_click(self.I_ENSURE_BUTTON, interval=1):
+                        logger.info(f"Click {self.I_ENSURE_BUTTON.name}")
+                    # 跑动画比较花时间
+                    sleep(3)
+                    continue
+                else:
+                    break
+            
+            # 如果遇到点击前往按钮后不动的 bug，则再次尝试进入
+            if self.wait_until_appear(self.I_ABYSS_FIRE, wait_time=20):
                 break
-        logger.info(f"Click {self.I_ABYSS_GOTO_ENEMY.name}")
+            logger.warning("Failed to enter fire")
         
         # 点击战斗按钮
-        self.wait_until_appear(self.I_ABYSS_FIRE)
         while 1:
             self.screenshot()
             if self.appear_then_click(self.I_ABYSS_FIRE,interval=1):

@@ -33,7 +33,7 @@ class SecretAssets:
 
 
 	# Ocr Rule Assets
-	# 未通關 
+	# 未通 
 	O_SE_NO_PASS = RuleOcr(roi=(428,151,262,248), area=(428,151,262,248), mode="Full", method="Default", keyword="未通", name="se_no_pass")
 	# 第一个位置的层数 
 	O_SE_LAYER_1 = RuleOcr(roi=(210,150,44,39), area=(210,150,44,39), mode="Single", method="Default", keyword="", name="se_layer_1")

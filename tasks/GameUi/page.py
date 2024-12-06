@@ -27,6 +27,8 @@ class Page:
         self.links[destination] = button
 
 
+#登录login
+page_login=Page(G.I_CHECK_LOGIN_FORM)
 # Main Home 主页
 page_main = Page(G.I_CHECK_MAIN)
 page_main.additional = [G.I_BACK_BLUE, G.I_HYAKKIYAKOU_CLOSE, G.I_BONDLING_GOTO_EXPLORATION]

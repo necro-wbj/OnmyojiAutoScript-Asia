@@ -61,6 +61,9 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             if self.appear(self.I_WQ_BOX):
                 self.ui_get_reward(self.I_WQ_BOX)
                 continue
+            if self.appear(self.I_TREASURE_BOX_CLICK):
+                self.ui_get_reward(self.I_TREASURE_BOX_CLICK)
+                continue
             if ocr_error_count > 10:
                 logger.warning('OCR failed too many times, exit')
                 break
@@ -97,6 +100,12 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                     self.execute_mission(self.O_WQ_TEXT_2, min(total, 20), number_challenge)
                 continue
 
+            # 妖气封印或者年兽，那就四分钟后继续
+            if self.appear(self.I_WQ_D1111) or self.appear(self.I_WQ_NIAN):
+                logger.warning('Tiger is in the way, wait for 4 minutes')
+                logger.info('Time to wait for 4 minutes')
+                self.set_next_run('WantedQuests', target=datetime.now() + timedelta(minutes=4))
+                raise TaskEnd('WantedQuests')
             if self.appear(self.I_WQ_CHECK_TASK):
                 logger.info('find I_WQ_CHECK_TASK')
                 continue
@@ -186,9 +195,9 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         OCR_WQ_INFO = [self.O_WQ_INFO_1, self.O_WQ_INFO_2, self.O_WQ_INFO_3, self.O_WQ_INFO_4]
         GOTO_BUTTON = [self.I_GOTO_1, self.I_GOTO_2, self.I_GOTO_3, self.I_GOTO_4]
         name_funcs: dict = {
-            '挑戰': self.challenge,
+            '挑战': self.challenge,
             '探索': self.explore,
-            '秘聞': self.secret
+            '秘闻': self.secret
         }
 
         def extract_info(index: int) -> tuple or None:
@@ -226,13 +235,6 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             order_list = self.config.model.wanted_quests.wanted_quests_config.battle_priority
             order_list = order_list.replace(' ', '').replace('\n', '')
             order_list: list = re.split(r'>', order_list)
-            # 挑戰的怪物數量為14個 wq_number == 14
-            if wq_number == 14:
-                type_wq = "挑戰"
-            if re.match(r"挑.?",type_wq):
-                type_wq = "挑戰"
-            elif re.match(r"秘.?",type_wq):
-                type_wq = "秘聞"
             result[0] = order_list.index(type_wq) if type_wq in order_list else -1
             result[4] = name_funcs.get(type_wq, lambda: logger.warning('No task can be challenged'))
             logger.info(f'[Wanted Quests] type: {type_wq} destination: {wq_destination} number: {wq_number} ')

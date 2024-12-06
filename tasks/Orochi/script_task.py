@@ -495,7 +495,13 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             return
 
         layer = self.config.orochi.orochi_config.layer
-        group_team = None
+        match layer:
+            case Layer.TEN:
+                group_team = orochi_switch_soul.ten_switch
+            case Layer.ELEVEN:
+                group_team = orochi_switch_soul.eleven_switch
+            case Layer.TWELVE:
+                group_team = orochi_switch_soul.twelve_switch
 
         # 使用字典映射來替代 match-case 語句
         layer_to_group_team = {

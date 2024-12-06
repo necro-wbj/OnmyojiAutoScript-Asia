@@ -13,8 +13,7 @@ from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_area_boss, page_shikigami_records
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.AreaBoss.assets import AreaBossAssets
-
-from module.base.timer import Timer
+from tasks.AreaBoss.config_boss import AreaBossFloor
 from module.logger import logger
 from module.exception import TaskEnd
 from module.atom.image import RuleImage
@@ -50,7 +49,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         self.ui_goto(page_area_boss)
 
         self.open_filter()
-        # 以挑战鬼王数量
+        # 已挑战鬼王数量
         boss_fought = 0
         if con.boss_reward:
             self.fight_reward_boss()
@@ -82,7 +81,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
 
     def go_back(self) -> None:
         """
-        返回, 要求这个时候是出现在  地狱鬼王的主界面
+        返回, 要求这个时候是出现在地域鬼王的主界面
         :return:
         """
         # 点击返回
@@ -143,7 +142,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             if not self.appear(self.I_AB_CLOSE_RED):  # 如果这个红色的关闭不见了才可以进行继续
                 break
         if not self.run_general_battle(self.config.area_boss.general_battle):
-            logger.info("地狱鬼王第2只战斗失败")
+            logger.info("地域鬼王第2只战斗失败")
         # 红色关闭
         logger.info("Script close red")
         self.wait_until_appear(self.I_AB_CLOSE_RED)
@@ -161,6 +160,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                     False       挑战失败
         @rtype:
         """
+        reward_floor = self.config.area_boss.boss.reward_floor
         if not self.appear(self.I_AB_FILTER_OPENED):
             self.open_filter()
 
@@ -185,8 +185,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                         return False
                 # 切换到 极地鬼
                 self.switch_difficulty(True)
-
-            self.switch_to_floor_1()
+            # 调整悬赏层数
+            match reward_floor:
+                case AreaBossFloor.ONE: self.switch_to_floor_1()
+                case AreaBossFloor.TEN: self.switch_to_floor_10()
+                case AreaBossFloor.DEFAULT: logger.info("Not change floor")
         result = True
         if not self.start_fight():
             result = False
@@ -295,29 +298,29 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         # _Floor = ["壹星", "贰星", "叁星", "肆星", "伍星", "陆星", "柒星", "捌星", "玖星", "拾星"]
         # 打开选择列表
         self.ui_click(self.C_AB_JI_FLOOR_SELECTED, self.I_AB_JI_FLOOR_LIST_CHECK, interval=3)
-        # boss_reward_fight_ten
-        if not self.config.area_boss.boss.boss_reward:
-            # log now fight one floor
-            logger.info(f"now fight one floor")
-            while 1:
-                self.screenshot()
-                if self.appear(self.I_AB_JI_FLOOR_ONE):
-                    self.click(self.I_AB_JI_FLOOR_ONE)
-                    break
-                self.swipe(self.S_AB_FLOOR_DOWN, interval=1)
-                # 等待滑动动画
-                self.wait_until_appear(self.I_AB_JI_FLOOR_ONE, False, 1)
-        else:
-            # log now fight ten floor
-            logger.info(f"now fight ten floor")
-            while 1:
-                self.screenshot()
-                if self.appear(self.I_AB_JI_FLOOR_TEN):
-                    self.click(self.I_AB_JI_FLOOR_TEN)
-                    break
-                self.swipe(self.S_AB_FLOOR_UP, interval=1)
-                # 等待滑动动画
-                self.wait_until_appear(self.I_AB_JI_FLOOR_TEN, False, 1)
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_AB_JI_FLOOR_ONE):
+                self.click(self.I_AB_JI_FLOOR_ONE)
+                logger.info("Switch to floor 1")
+                break
+            self.swipe(self.S_AB_FLOOR_DOWN, interval=1)
+            # 等待滑动动画
+            self.wait_until_appear(self.I_AB_JI_FLOOR_ONE, False, 1)
+
+    def switch_to_floor_10(self):
+        """
+            更改层数为十层
+        """
+        # 打开选择列表
+        self.ui_click(self.C_AB_JI_FLOOR_SELECTED, self.I_AB_JI_FLOOR_LIST_CHECK, interval=3)
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_AB_JI_FLOOR_TEN):
+                self.click(self.I_AB_JI_FLOOR_TEN)
+                logger.info("Switch to floor 10")
+                break
+            self.wait_until_appear(self.I_AB_JI_FLOOR_TEN, False, 1)
 
     def fight_reward_boss(self):
         logger.info(f"now run fight_reward_boss")
@@ -331,7 +334,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         self.open_filter()
         # 滑动到最顶层
         if index < 3:
-            logger.info("swipe to top")
+            logger.info("Swipe to top")
             for i in range(random.randint(1, 3)):
                 self.swipe(self.S_AB_FILTER_DOWN)
         #

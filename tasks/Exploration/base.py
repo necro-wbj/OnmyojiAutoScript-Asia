@@ -21,8 +21,10 @@ from tasks.RealmRaid.script_task import ScriptTask as RealmRaidScriptTask
 from tasks.Utils.config_enum import ShikigamiClass
 
 from module.logger import logger
+from module.base.timer import Timer
 from module.exception import RequestHumanTakeover, TaskEnd
 from module.atom.image_grid import ImageGrid
+from module.atom.animate import RuleAnimate
 from module.base.utils import load_image
 
 class Scene(Enum):
@@ -50,6 +52,10 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
             seconds=limit_time.second
         )
         return self.config.model.exploration
+
+    @cached_property
+    def _match_end(self):
+        return RuleAnimate(self.I_SWIPE_END)
 
     def get_current_scene(self, reuse_screenshot: bool = True) -> Scene:
         if not reuse_screenshot:
@@ -106,6 +112,8 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
 
     def post_process(self):
         self.wait_until_stable(self.I_UI_BACK_RED)
+        if self.appear(self.I_UI_BACK_RED):
+            self.ui_click_until_disappear(self.I_UI_BACK_RED)
         self.ui_get_current_page()
         self.ui_goto(page_main)
         con = self._config.exploration_config
@@ -331,13 +339,21 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
 
     def quit_explore(self):
         logger.info('Quit explore')
+        boss_timer = Timer(15)
+        boss_timer.start()
         while 1:
             self.screenshot()
             if self.appear(self.I_UI_BACK_RED) and self.appear(self.I_E_EXPLORATION_CLICK):
                 break
+            if boss_timer.reached():
+                # https://github.com/runhey/OnmyojiAutoScript/issues/548
+                logger.warning('Exit immediately after the boss battle')
+                break
             if self.appear_then_click(self.I_E_EXIT_CONFIRM, interval=0.8):
                 continue
-            if self.appear_then_click(self.I_UI_BACK_BLUE, interval=1.5):
+            if self.appear(self.I_EXPLORATION_TITLE) or self.appear(self.I_CHECK_EXPLORATION):
+                continue
+            if self.appear_then_click(self.I_UI_BACK_BLUE, interval=3.5):
                 continue
 
     def fire(self, button) -> bool:
