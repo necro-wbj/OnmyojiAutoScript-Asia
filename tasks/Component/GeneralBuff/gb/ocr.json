@@ -5,7 +5,7 @@
     "roiBack": "0,0,100,100",
     "mode": "Full",
     "method": "Default",
-    "keyword": ".*金增加50%",
+    "keyword": ".*金幣增加50%",
     "description": "Ocr-description"
   },
   {
@@ -14,7 +14,7 @@
     "roiBack": "0,0,100,100",
     "mode": "Full",
     "method": "Default",
-    "keyword": ".*金增加100%",
+    "keyword": ".*金幣增加100%",
     "description": "Ocr-description"
   },
   {
@@ -23,7 +23,7 @@
     "roiBack": "0,0,100,100",
     "mode": "Full",
     "method": "Default",
-    "keyword": ".*經验增加50%",
+    "keyword": ".*經驗增加50%",
     "description": "Ocr-description"
   },
   {
@@ -32,7 +32,7 @@
     "roiBack": "0,0,100,100",
     "mode": "Full",
     "method": "Default",
-    "keyword": ".*经验增加100%",
+    "keyword": ".*經驗增加100%",
     "description": "Ocr-description"
   },
   {
