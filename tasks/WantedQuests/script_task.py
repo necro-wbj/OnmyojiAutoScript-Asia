@@ -188,16 +188,16 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
 
         :param ocr: 要点击的 文字
         :param num_want: 一共要打败的怪物数量
-        :param num_challenge: 现在有的挑战卷数量
+        :param num_challenge: 现在有的挑戰卷数量
         :return:
         """
         OCR_WQ_TYPE = [self.O_WQ_TYPE_1, self.O_WQ_TYPE_2, self.O_WQ_TYPE_3, self.O_WQ_TYPE_4]
         OCR_WQ_INFO = [self.O_WQ_INFO_1, self.O_WQ_INFO_2, self.O_WQ_INFO_3, self.O_WQ_INFO_4]
         GOTO_BUTTON = [self.I_GOTO_1, self.I_GOTO_2, self.I_GOTO_3, self.I_GOTO_4]
         name_funcs: dict = {
-            '挑战': self.challenge,
-            '探索': self.explore,
-            '秘闻': self.secret
+            '挑戰': self.challenge,
+            '秘聞': self.explore,
+            '探索': self.secret
         }
 
         def extract_info(index: int) -> tuple or None:
@@ -207,11 +207,11 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             :return:
             (type, destination, number, goto_button, func)
             (类型, 地点层级，可以打败的数量，前往按钮, func)
-            类型： 挑战0, 秘闻1， 探索2
+            类型： 挑戰0, 秘聞1， 探索2
             """
             layer_limit = {
-                # 低层不限制
-                # "壹", "贰", "叁", "肆", "伍", "陆",
+                # 低層不限制
+                # "壹", "貳", "叁", "肆", "伍", "陸",
                 "柒", "捌", "玖", "拾"
             }
             result = [-1, '', -1, GOTO_BUTTON[index], self.challenge]
@@ -226,13 +226,15 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             logger.info(f'[Wanted Quests] match: {match.group(0)}')
             wq_destination = match.group(1)
             wq_number = int(match.group(2))
-            # 跳过高层秘闻
+            # 跳过高层秘聞
             if wq_destination[-1] in layer_limit:
                 logger.warning('This secret layer is too high')
                 return None
             result[1] = wq_destination
             result[2] = wq_number
-            order_list = self.config.model.wanted_quests.wanted_quests_config.battle_priority
+            battle_priority = self.config.model.wanted_quests.wanted_quests_config.battle_priority
+            battle_priority = battle_priority.replace('战', '戰').replace('闻', '聞')    # 以前預設值是簡中 為了避免舊版的人錯誤 這裡做相容性轉換
+            order_list = battle_priority
             order_list = order_list.replace(' ', '').replace('\n', '')
             order_list: list = re.split(r'>', order_list)
             result[0] = order_list.index(type_wq) if type_wq in order_list else -1
@@ -281,7 +283,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         self.run_general_battle(config=wq_config)
         self.wait_until_appear(self.I_WQC_FIRE, wait_time=4)
         self.ui_click_until_disappear(self.I_UI_BACK_RED)
-        # 我忘记了打完后是否需要关闭 挑战界面
+        # 我忘记了打完后是否需要关闭 挑戰界面
 
     def secret(self, goto, num=1):
         for i in range(num):
