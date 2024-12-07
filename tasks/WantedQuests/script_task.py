@@ -286,27 +286,9 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         # 我忘记了打完后是否需要关闭 挑戰界面
 
     def secret(self, goto, num=1):
+        self.ui_click(goto, self.I_WQSE_FIRE)
         for i in range(num):
-            # TODO check it work
-            wait_count = 30
-            while wait_count:
-                # replace self.ui_click(goto, self.I_WQSE_FIRE)
-                # replace self.wait_until_appear(self.I_WQSE_FIRE)
-                wait_count = wait_count - 1
-                self.appear_then_click(goto) # here click "self.I_GOTO_1" img
-                self.screenshot()
-                if self.appear(self.I_WQSE_FIRE):
-                    logger.info('find I_WQSE_FIRE stop wait 30s')
-                    break
-                if self.appear(self.I_WQSE_SP_FIRE):
-                    logger.info('find I_WQSE_SP_FIRE stop wait 30s')
-                    break
-            
-            if self.appear(self.I_WQSE_SP_FIRE):
-                # 當本周還沒打(競速,百戰)，但是封印剛好選擇同一個副本時
-                # 在準備打第2次時，會出現這個(I_WQSE_SP_FIRE)圖示，層數會重設為你打得層數(停在第1層)
-                logger.info('find I_WQSE_SP_FIRE stop fight loop and refind it')
-                break
+            self.wait_until_appear(self.I_WQSE_FIRE)
             # self.ui_click_until_disappear(self.I_WQSE_FIRE)
             # 又臭又长的对话针的是服了这个网易
             click_count = 0
