@@ -283,14 +283,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             self.wait_until_appear(self.I_AB_JI_FLOOR_TEN, False, 1)
 
     def fight_reward_boss(self):
-        logger.info(f"now run fight_reward_boss")
         index = self.get_hot_in_reward()
-        logger.info(f"index: {index}")
-        max_people_num = self.get_hot_in_reward_people_num()
-        logger.info(f"max_people_num: {max_people_num}")
-        if self.open_hot_in_reward_people_num(max_people_num):
-            logger.info("open hottest boss success")
-            return self.boss_fight_already_open(True)
         self.open_filter()
         # 滑动到最顶层
         if index < 3:
