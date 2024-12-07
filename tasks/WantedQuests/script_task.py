@@ -196,8 +196,8 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         GOTO_BUTTON = [self.I_GOTO_1, self.I_GOTO_2, self.I_GOTO_3, self.I_GOTO_4]
         name_funcs: dict = {
             '挑戰': self.challenge,
-            '秘聞': self.explore,
-            '探索': self.secret
+            '探索': self.explore,
+            '秘聞': self.secret
         }
 
         def extract_info(index: int) -> tuple or None:
