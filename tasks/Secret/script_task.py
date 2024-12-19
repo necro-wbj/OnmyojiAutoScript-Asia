@@ -190,10 +190,11 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
                 # the number must under 70, 100 is ocr detect wrong.
                 # jade_num = 170  remove hundred digit 170 % 100 = 70
                 jade_num = jade_num % 100
-                logger.info(f'OCR failed, try again {jade_num}')
+                logger.info(f'OCR failed over 100, try again {jade_num}')
             elif jade_num > 70:
-                logger.warning(f'OCR failed, try again {jade_num}')
-                return None
+                # jade_num = 77 remove 70 digit 77 % 70 = 7
+                jade_num = jade_num % 70
+                logger.warning(f'OCR failed over 70, try again {jade_num}')
             # 勾玉数量 = 层数 * 7
             try:
                 lr = jade_num // 7
