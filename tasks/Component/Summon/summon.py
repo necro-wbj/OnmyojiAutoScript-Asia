@@ -65,7 +65,7 @@ class Summon(BaseTask, SummonAssets):
         logger.info('get I_BLUE_TICKET')
         while True:
             ticket_info = self.O_ONE_TICKET.ocr(self.device.image)
-        logger.info('ticket_info: %s' % ticket_info)
+            logger.info('ticket_info: %s' % ticket_info)
             # 处理 None 和空字符串
             if ticket_info is None or ticket_info == '':
                 ticket_info = 0
