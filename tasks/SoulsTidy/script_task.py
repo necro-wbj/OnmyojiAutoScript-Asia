@@ -14,6 +14,7 @@ from tasks.GameUi.page import page_main, page_shikigami_records
 from tasks.SoulsTidy.assets import SoulsTidyAssets
 from tasks.SoulsTidy.config import SimpleTidy
 
+
 class ScriptTask(GameUi, SoulsTidyAssets):
     def run(self):
         self.ui_get_current_page()
@@ -75,7 +76,7 @@ class ScriptTask(GameUi, SoulsTidyAssets):
                 continue
             if feed_count >= 3:
                 break
-            if self.appear_then_click(self.I_ST_FEED_NOW, interval=1.9):
+            if self.appear_then_click(self.I_ST_FEED_NOW, interval=3.5):
                 feed_count += 1
                 continue
         logger.info('Feed greed ghost done')
@@ -95,6 +96,12 @@ class ScriptTask(GameUi, SoulsTidyAssets):
         self.screenshot()
         self.appear_then_click(self.I_ST_ABANDON, interval=1, threshold=0.6)
         logger.hr('click abandon')
+        # 进入已弃置界面
+        while True:
+            if not self.appear(self.I_ST_ABANDONED_SELECTED):
+                self.click(self.I_ST_ABANDONED_SELECTED, interval=2)
+                continue
+            break
         # 确保是按照等级来排序的
         while 1:
             self.screenshot()
@@ -111,7 +118,16 @@ class ScriptTask(GameUi, SoulsTidyAssets):
         logger.info('Sort by level')
         # 开始奉纳
         while 1:
+            self.wait_until_appear(self.I_ST_LEVEL_0, wait_time=2)
             self.screenshot()
+            # 非+0的不弃置 双保险
+            if not self.appear(self.I_ST_LEVEL_0):
+                logger.info("First Orichi isn't Level 0,quit")
+                break
+            firvel = self.O_ST_FIRSET_LEVEL.ocr(self.device.image)
+            if firvel is None or firvel == '':
+                logger.info('ocr result is Null')
+                continue
             if not self.appear(self.I_ST_FIRSET_LEVEL):
                 logger.info('No zero level, bongna done')
                 break
@@ -120,6 +136,7 @@ class ScriptTask(GameUi, SoulsTidyAssets):
             #     # 问就是 把 +0 识别成了 古
             #     logger.info('No zero level, bongna done')
             #     break
+
             # !!!!!!  这里没有检查金币是否足够
             # 长按
             count_donate = 10
@@ -135,10 +152,20 @@ class ScriptTask(GameUi, SoulsTidyAssets):
                 if gold_amount > 0:
                     logger.warning('Gold Get')
                     break
+            self.click(self.L_ONE, interval=2.5)
+            self.screenshot()
+            gold_amount = self.O_ST_GOLD.ocr(self.device.image)
+            if not isinstance(gold_amount, int):
+                logger.warning('Gold amount not int, skip')
+                continue
+            if gold_amount == 0:
+                continue
+
             # 点击奉纳收取奖励
             if not self.appear(self.I_ST_DONATE):
                 logger.warning('Donate button not appear, skip')
                 continue
+            # 点击奉纳 及收取奖励
             count_donate = 10
             while count_donate:
                 count_donate -= 1
@@ -151,43 +178,25 @@ class ScriptTask(GameUi, SoulsTidyAssets):
                 # 出现神赐, 就点击然后消失，
                 if self.appear(self.I_ST_GOD_PRESENT):
                     logger.info('God present appear')
-                    sleep(0.5)
-                    self.screenshot()
-                    if not self.appear(self.I_ST_GOD_PRESENT):
-                        continue
-                    while 1:
-                        self.screenshot()
-                        if not self.appear(self.I_ST_GOD_PRESENT):
-                            logger.info('God present disappear')
-                            break
-                        if self.click(self.C_ST_GOD_PRSENT, interval=1):
-                            continue
-                    sleep(0.5)
-                    break
-                if self.appear_then_click(self.I_ST_DONATE, interval=5.5):
+                    self.click(self.C_ST_GOD_PRSENT, interval=2)
                     continue
-                sleep(1)
+                if self.appear_then_click(self.I_ST_DONATE, interval=5.5):
+                    self.wait_until_appear(self.I_ST_GOLD, True, wait_time=5)
+                    continue
+                if not self.appear(self.I_ST_GOLD):
+                    break
             logger.info('Donate one')
 
         logger.info('Bongna done')
 
 
-
-
-
-
-
-
-
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
+
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
-    t.screenshot()
 
-
-    # t.greed_maneki()
-    t.run()
-
+    t.greed_maneki()
+    # t.run()

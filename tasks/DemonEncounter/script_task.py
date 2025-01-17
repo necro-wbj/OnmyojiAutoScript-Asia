@@ -84,25 +84,27 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         :return:
         """
         logger.hr('Start boss battle', 1)
+        # 判断今天是周几
+        today = datetime.now().weekday()
         self.screenshot()
         # self.appear(self.I_DE_BOSS_BEST)
         logger.info(f'self.appear(self.I_DE_BOSS_BEST): {self.appear(self.I_DE_BOSS_BEST)}')
         # self.appear(self.I_DE_BOSS)
         logger.info(f'self.appear(self.I_DE_BOSS): {self.appear(self.I_DE_BOSS)}')
-        if (self.config.demon_encounter.super_boss_config.find_super_boss == True) and self.appear(self.I_DE_BOSS_BEST):
-            flag_to_fight_super_boss = True
+        if self.config.demon_encounter.best_demon_boss_config.enable and self.appear(self.I_DE_BOSS_BEST):
+            flag_to_fight_best_demon_boss = True
         else:
-            flag_to_fight_super_boss = False
-        logger.info(f'Find super boss flag: {flag_to_fight_super_boss}')
+            flag_to_fight_best_demon_boss = False
+        logger.info(f'Find best demon boss flag: {flag_to_fight_best_demon_boss}')
         fight_find_done_flag = 0
         while 1:
             self.screenshot()
             if 1:
-                logger.info(f'Find super boss flag : {flag_to_fight_super_boss}')
+                logger.info(f'Find best demon boss flag : {flag_to_fight_best_demon_boss}')
                 #init current, remain, total
                 current, remain, total = 0, 0, 0
                 if self.appear(self.I_BOSS_SUPER_FIRE)  or self.appear(self.I_BOSS_FIRE):
-                    if flag_to_fight_super_boss == True:
+                    if flag_to_fight_best_demon_boss == True:
                         current, remain, total = self.O_DE_SBOSS_PEOPLE.ocr(self.device.image)
                     else:
                         current, remain, total = self.O_DE_BOSS_PEOPLE.ocr(self.device.image)
@@ -123,7 +125,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                     self.screenshot()
                     current, remain, total = 0, 0, 0
                     if self.appear(self.I_BOSS_SUPER_FIRE)  or self.appear(self.I_BOSS_FIRE):
-                        if flag_to_fight_super_boss == True:
+                        if flag_to_fight_best_demon_boss == True:
                             current, remain, total = self.O_DE_SBOSS_PEOPLE.ocr(self.device.image)
                         else:
                             current, remain, total = self.O_DE_BOSS_PEOPLE.ocr(self.device.image)
@@ -142,10 +144,10 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                         fight_find_done_flag = 1
                         #this need add to outside loop
                         break
-                    if flag_to_fight_super_boss == True:
+                    if flag_to_fight_best_demon_boss == True:
                         if self.appear_then_click(self.I_BOSS_SUPER_FIRE, interval=3):
                             boss_fire_count += 1
-                            logger.info(f'Check enter super boss count {boss_fire_count}')
+                            logger.info(f'Check enter best demon boss count {boss_fire_count}')
                             continue
                     else:
                         if self.appear_then_click(self.I_BOSS_FIRE, interval=3):
@@ -158,7 +160,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                         logger.warning('Boss find count over 5')
                         self.ui_click_until_disappear(self.I_UI_BACK_RED)
                         #click I_DE_LOCATION to back to initial location
-                        if flag_to_fight_super_boss == True:
+                        if flag_to_fight_best_demon_boss == True:
                             self.appear_then_click(self.I_DE_BOSS_BEST, interval=4)
                         else:
                             self.appear_then_click(self.I_DE_BOSS, interval=4)
@@ -180,7 +182,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                 continue
             if self.appear_then_click(self.I_BOSS_SONGSTRESS, interval=1):
                 continue
-            if flag_to_fight_super_boss == True:
+            if self.config.demon_encounter.best_demon_boss_config.enable and today < 5:
                 if self.appear_then_click(self.I_DE_BOSS_BEST, interval=4):
                     continue
             else:
@@ -446,18 +448,18 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                     if self.appear_then_click(self.I_DE_SMALL_FIRE, interval=1):
                         continue
                 break
-            # find super boss
+            # find best demon boss
             if self.appear(self.I_BOSS_SUPER_FIRE) or self.appear(self.I_BOSS_FIRE):
-                logger.info('lantern find super Boss')
+                logger.info('lantern find best demon boss')
                 if self.appear_then_click(self.I_BOSS_SUPER_FIRE, interval=3):
                     boss_find_count = boss_find_count + 1
-                    logger.info(f'lantern find super Boss click:{boss_find_count}')
+                    logger.info(f'lantern find best demon boss click:{boss_find_count}')
                 if self.appear_then_click(self.I_BOSS_FIRE, interval=3):
                     boss_find_count = boss_find_count + 1
                     logger.info(f'lantern find normal Boss click:{boss_find_count}')
                 # 等待挑战, 5秒也是等
                 time.sleep(5)
-            # enter super boss
+            # enter best demon boss
             if self.appear(self.I_BOSS_GATHER):
                 logger.warning('Boss battle ENTER wait fight!!!')
                 # 延长时间并在战斗结束后改回来
@@ -484,8 +486,8 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                         continue
                 # 返回到封魔主界面
             if boss_find_count >= 4:
-                # the super boss maybe already done close it
-                logger.warning('super Boss enter count over 4')
+                # the best demon boss maybe already done close it
+                logger.warning('best demon boss enter count over 4')
                 self.ui_click_until_disappear(self.I_UI_BACK_RED)
                 return
             if click_count >= 5:

@@ -20,8 +20,8 @@
   {
     "itemName": "login_red_close",
     "imageName": "login_login_red_close.png",
-    "roiFront": "912,0,360,290",
-    "roiBack": "912,0,360,290",
+    "roiFront": "800,0,480,290",
+    "roiBack": "800,0,480,290",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -56,8 +56,8 @@
   {
     "itemName": "login_specific_serve",
     "imageName": "login_login_specific_serve.png",
-    "roiFront": "24,33,52,47",
-    "roiBack": "24,33,52,47",
+    "roiFront": "0,0,120,120",
+    "roiBack": "0,0,120,120",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "指定角色进入游戏,默认第一个"
@@ -133,5 +133,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "請求評論"
+  },
+  {
+    "itemName": "charactars",
+    "imageName": "login_charactars.png",
+    "roiFront": "246,535,100,31",
+    "roiBack": "219,523,173,57",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "已有角色"
   }
 ]
