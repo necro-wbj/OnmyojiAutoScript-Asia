@@ -103,7 +103,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                 logger.info(f'Find best demon boss flag : {flag_to_fight_best_demon_boss}')
                 #init current, remain, total
                 current, remain, total = 0, 0, 0
-                if self.appear(self.I_BOSS_SUPER_FIRE)  or self.appear(self.I_BOSS_FIRE):
+                if self.appear(self.I_BEST_BOSS_FIRE)  or self.appear(self.I_BOSS_FIRE):
                     if flag_to_fight_best_demon_boss == True:
                         current, remain, total = self.O_DE_SBOSS_PEOPLE.ocr(self.device.image)
                     else:
