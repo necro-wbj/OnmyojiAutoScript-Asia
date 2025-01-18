@@ -103,7 +103,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                 logger.info(f'Find best demon boss flag : {flag_to_fight_best_demon_boss}')
                 #init current, remain, total
                 current, remain, total = 0, 0, 0
-                if self.appear(self.I_BOSS_SUPER_FIRE)  or self.appear(self.I_BOSS_FIRE):
+                if self.appear(self.I_BEST_BOSS_FIRE)  or self.appear(self.I_BOSS_FIRE):
                     if flag_to_fight_best_demon_boss == True:
                         current, remain, total = self.O_DE_SBOSS_PEOPLE.ocr(self.device.image)
                     else:
@@ -124,7 +124,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                     logger.info('Boss battle people is not full')
                     self.screenshot()
                     current, remain, total = 0, 0, 0
-                    if self.appear(self.I_BOSS_SUPER_FIRE)  or self.appear(self.I_BOSS_FIRE):
+                    if self.appear(self.I_BEST_BOSS_FIRE)  or self.appear(self.I_BOSS_FIRE):
                         if flag_to_fight_best_demon_boss == True:
                             current, remain, total = self.O_DE_SBOSS_PEOPLE.ocr(self.device.image)
                         else:
@@ -145,7 +145,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                         #this need add to outside loop
                         break
                     if flag_to_fight_best_demon_boss == True:
-                        if self.appear_then_click(self.I_BOSS_SUPER_FIRE, interval=3):
+                        if self.appear_then_click(self.I_BEST_BOSS_FIRE, interval=3):
                             boss_fire_count += 1
                             logger.info(f'Check enter best demon boss count {boss_fire_count}')
                             continue
@@ -449,9 +449,9 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                         continue
                 break
             # find best demon boss
-            if self.appear(self.I_BOSS_SUPER_FIRE) or self.appear(self.I_BOSS_FIRE):
+            if self.appear(self.I_BEST_BOSS_FIRE) or self.appear(self.I_BOSS_FIRE):
                 logger.info('lantern find best demon boss')
-                if self.appear_then_click(self.I_BOSS_SUPER_FIRE, interval=3):
+                if self.appear_then_click(self.I_BEST_BOSS_FIRE, interval=3):
                     boss_find_count = boss_find_count + 1
                     logger.info(f'lantern find best demon boss click:{boss_find_count}')
                 if self.appear_then_click(self.I_BOSS_FIRE, interval=3):
