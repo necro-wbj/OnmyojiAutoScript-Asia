@@ -87,6 +87,14 @@ class ScriptTask(GameUi, SoulsTidyAssets):
             if self.appear(self.I_ST_CAT):
                 # 出现招财猫
                 break
+            
+            # https://github.com/runhey/OnmyojiAutoScript/issues/662
+            if self.appear(self.I_ST_UNSELECTED):
+                self.ui_click_until_disappear(self.I_ST_UNSELECTED)
+                continue
+            if self.appear_then_click(self.I_UI_CONFIRM, interval=0.5):
+                continue
+
             if self.appear_then_click(self.I_ST_GREED_CLOSE, interval=0.7):
                 continue
             if self.appear_then_click(self.I_ST_BONGNA, interval=1, threshold=0.6):
@@ -131,11 +139,6 @@ class ScriptTask(GameUi, SoulsTidyAssets):
             if not self.appear(self.I_ST_FIRSET_LEVEL):
                 logger.info('No zero level, bongna done')
                 break
-            # firvel = self.O_ST_FIRSET_LEVEL.ocr(self.device.image)
-            # if firvel != '古':
-            #     # 问就是 把 +0 识别成了 古
-            #     logger.info('No zero level, bongna done')
-            #     break
 
             # !!!!!!  这里没有检查金币是否足够
             # 长按
@@ -152,6 +155,15 @@ class ScriptTask(GameUi, SoulsTidyAssets):
                 if gold_amount > 0:
                     logger.warning('Gold Get')
                     break
+            self.click(self.L_ONE, interval=2.5)
+            self.screenshot()
+            gold_amount = self.O_ST_GOLD.ocr(self.device.image)
+            if not isinstance(gold_amount, int):
+                logger.warning('Gold amount not int, skip')
+                continue
+            if gold_amount == 0:
+                continue
+
             self.click(self.L_ONE, interval=2.5)
             self.screenshot()
             gold_amount = self.O_ST_GOLD.ocr(self.device.image)

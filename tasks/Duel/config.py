@@ -3,7 +3,6 @@
 # github https://github.com/runhey
 from typing import Any, Dict
 from pydantic import (Field,
-                      BaseModel,
                       model_validator,
                       ValidationError,
                       model_serializer,

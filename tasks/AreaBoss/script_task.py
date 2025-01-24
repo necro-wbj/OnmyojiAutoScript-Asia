@@ -551,17 +551,44 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         self.open_filter()
         self.switch_to_reward()
         lst = []
+        boosName = []
+        filter_open_flag = False
         num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_1)
+        #如果num为0则不再进行nameOcr
+        if num:
+            if num >= 20000:
+                logger.info("The number of challenges is enough")
+                return filter_open_flag, str("direct_attack")
+            name = self.get_bossName(self.C_AB_BOSS_REWARD_PHOTO_1)
+        else:
+            name = "声望不够"
         lst.append(num)
+        boosName.append(name)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
         #
         self.open_filter()
         num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_2)
+        if num:
+            if num >= 20000:
+                logger.info("The number of challenges is enough")
+                return filter_open_flag, str("direct_attack")
+            name = self.get_bossName(self.C_AB_BOSS_REWARD_PHOTO_1)
+        else:
+            name = "声望不够"
+        boosName.append(name)
         lst.append(num)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
         #
         self.open_filter()
         num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_3)
+        if num:
+            if num >= 20000:
+                logger.info("The number of challenges is enough")
+                return filter_open_flag, str("direct_attack")
+            name = self.get_bossName(self.C_AB_BOSS_REWARD_PHOTO_1)
+        else:
+            name = "声望不够"
+        boosName.append(name)
         lst.append(num)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
         #
@@ -570,6 +597,14 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             self.swipe(self.S_AB_FILTER_UP)
         self.wait_until_appear(self.C_AB_BOSS_REWARD_PHOTO_MINUS_2, wait_time=1)
         num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_MINUS_2)
+        if num:
+            if num >= 20000:
+                logger.info("The number of challenges is enough")
+                return filter_open_flag, str("direct_attack")
+            name = self.get_bossName(self.C_AB_BOSS_REWARD_PHOTO_1)
+        else:
+            name = "声望不够"
+        boosName.append(name)
         lst.append(num)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
         #
@@ -578,10 +613,26 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             self.swipe(self.S_AB_FILTER_UP)
         self.wait_until_appear(self.C_AB_BOSS_REWARD_PHOTO_MINUS_1, wait_time=1)
         num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_MINUS_1)
+        if num:
+            if num >= 20000:
+                logger.info("The number of challenges is enough")
+                return filter_open_flag, str("direct_attack")
+            name = self.get_bossName(self.C_AB_BOSS_REWARD_PHOTO_1)
+        else:
+            name = "声望不够"
+            filter_open_flag = True
+        boosName.append(name)
         lst.append(num)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
 
-        return max(lst)
+
+        iindex = 0
+        num = 0
+        for idx, val in enumerate(lst):
+            if val > num:
+                index = idx
+                num = val
+        return filter_open_flag, boosName[index]
 
     def open_hot_in_reward_people_num(self, people_num: int):
         """
@@ -640,6 +691,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
 
         return False
+
 
     def get_num_challenge(self, click_area):
         """
@@ -757,6 +809,17 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         else:
             return True
     def check_common_chars(self, bossName, name):
+        # 将两个字符串转为集合，去除重复的字符
+        set_boss = set(bossName)
+        set_name = set(name)
+
+        # 计算交集，判断交集的元素个数
+        common_chars = set_boss & set_name  # & 是集合的交集运算符
+
+        if len(common_chars) >= 2:
+            return 1
+        else:
+            return 0  # 如果交集的字符少于2个，可以根据需要返回其他值    def check_common_chars(self, bossName, name):
         # 将两个字符串转为集合，去除重复的字符
         set_boss = set(bossName)
         set_name = set(name)

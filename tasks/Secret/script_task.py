@@ -292,6 +292,18 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
                               server=time_now.replace(hour=9, minute=0, second=0, microsecond=0))
             raise TaskEnd('Secret')
 
+    def check_time(self) -> None:
+        """
+        周一早上不能打
+        @return:
+        """
+        time_now = datetime.now()
+        if time_now.weekday() == 0 and time_now.hour < 8:
+            self.set_next_run(task='Secret',
+                              finish=True,
+                              target=time_now.replace(hour=9, minute=0, second=0, microsecond=0))
+            raise TaskEnd('Secret')
+
 
 if __name__ == '__main__':
     from module.config.config import Config

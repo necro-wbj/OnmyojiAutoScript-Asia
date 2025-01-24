@@ -26,7 +26,7 @@ class BestDemonBossSelect(BaseModel):
 class DemonConfig(BaseModel):
     enable: bool = Field(
         default=False,
-        description="通过预设名称来匹配御魂分组\n例如=> 逢魔之时,歌(中间的是英文逗号)",
+        description="通过预设名称来匹配普通封魔御魂分组\n例如=> 逢魔之时,歌(中间的是英文逗号)",
     )
     # 周一
     demon_kiryou_utahime: str = Field(default="group,team", description="鬼灵歌姬御魂1")
@@ -67,7 +67,7 @@ class BestDemonConfig(BaseModel):
     best_demon_namazu: str = Field(default="group,team", description="极地震鲇御魂")
 
 class UtilizeScheduler(Scheduler):
-    priority:int = Field(default=2, description='priority_help')
+    priority: int = Field(default=2, description='priority_help')
 
 class DemonEncounter(ConfigBase):
     scheduler: UtilizeScheduler = Field(default_factory=UtilizeScheduler)
