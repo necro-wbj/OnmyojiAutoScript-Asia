@@ -435,7 +435,7 @@ class Script:
         except RequestHumanTakeover as e:
             logger.critical(e)
             logger.critical('Request human takeover')
-            self.config.notifier.push(title=f'{I18n.trans_zh_cn(command)}{f'{I18n.trans_zh_cn(command)}{command}'}', content=f"<{self.config_name}> RequestHumanTakeover")
+            self.config.notifier.push(title=f'{I18n.trans_zh_cn(command)}{command}', content=f"<{self.config_name}> RequestHumanTakeover")
             self.config.task_call('Restart')
             self.device.sleep(10)
             return False
