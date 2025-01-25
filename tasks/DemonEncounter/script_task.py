@@ -217,13 +217,9 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             if self.config.demon_encounter.best_demon_boss_config.enable and today < 5:
                 if self.appear_then_click(self.I_DE_BOSS_BEST, interval=4):
                     continue
-            else:
-                if self.config.demon_encounter.best_demon_boss_config.enable and today < 5:
+            if self.config.demon_encounter.best_demon_boss_config.enable and today < 5:
                 if self.appear_then_click(self.I_DE_BOSS_BEST, interval=4):
                     continue
-            else:
-                if self.appear_then_click(self.I_DE_BOSS, interval=4):
-                        continue
             # 處理定位小人位置 冒出一個小鬼王
             if self.appear(self.I_DE_SMALL_FIRE):
                 if self.appear_then_click(self.I_UI_BACK_RED, interval=1):
@@ -648,6 +644,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
+    from memory_profiler import profile
 
     c = Config('du')
     d = Device(c)
