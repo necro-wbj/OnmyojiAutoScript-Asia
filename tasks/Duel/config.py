@@ -2,7 +2,8 @@
 # @author runhey
 # github https://github.com/runhey
 from typing import Any, Dict
-from pydantic import (Field,
+from pydantic import (BaseModel, 
+                      Field,
                       model_validator,
                       ValidationError,
                       model_serializer,
