@@ -135,7 +135,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                 logger.info(f'Find best demon boss flag : {flag_to_fight_best_demon_boss}')
                 #init current, remain, total
                 current, remain, total = 0, 0, 0
-                if self.appear(self.I_BEST_BOSS_FIRE)  or self.appear(self.I_BOSS_FIRE) or self.appear(self.I_BEST_BOSS_FIRE):
+                if self.appear(self.I_BEST_BOSS_FIRE)  or self.appear(self.I_BOSS_FIRE):
                     if flag_to_fight_best_demon_boss == True:
                         current, remain, total = self.O_DE_SBOSS_PEOPLE.ocr(self.device.image)
                     else:
@@ -217,8 +217,8 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             if self.config.demon_encounter.best_demon_boss_config.enable and today < 5:
                 if self.appear_then_click(self.I_DE_BOSS_BEST, interval=4):
                     continue
-            if self.config.demon_encounter.best_demon_boss_config.enable and today < 5:
-                if self.appear_then_click(self.I_DE_BOSS_BEST, interval=4):
+            else:
+                if self.appear_then_click(self.I_DE_BOSS, interval=4):
                     continue
             # 處理定位小人位置 冒出一個小鬼王
             if self.appear(self.I_DE_SMALL_FIRE):
