@@ -258,7 +258,7 @@ class ScriptTask(GameUi, BaseActivity, HeroTestAssets, SwitchSoul):
             return True
         cu = self.O_ART_WAR_CARD_PLUS.ocr(image=self.device.image)
         # 转换为int
-        if cu != "":
+        if cu.isdigit():
             cu = int(cu)
         else:
             cu = 0
