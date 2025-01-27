@@ -73,14 +73,18 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
 
         now = datetime.now()
         # 如果时间在00:00-19:00 之间则设定时间为当天的自定义时间，返回False
-        next_run = datetime.combine(now.date(), self.config.hunt.scheduler.server_update)
-        if now.hour < 19:
-            self.set_next_run(task="Hunt", server=False, target=next_run)
-            return False
-        # 如果是在21:00-23:59之间则设定时间为明天的 server_update 時間，返回False
-        elif now.hour >= 21:
-            self.set_next_run(task="Hunt", server=True, target=next_run)
-            return False
+        if now.time() < time(19, 0):
+            if self.kirin_day:
+                logger.info('Today is the Kirin day')
+                self.custom_next_run(task='Hunt', custom_time=self.con_time.kirin_time, time_delta=0)
+            else:
+                logger.info('Today is the Netherworld day')
+                self.custom_next_run(task='Hunt', custom_time=self.con_time.netherworld_time, time_delta=0)
+            raise TaskEnd('Hunt')
+        # 如果是在21:00-23:59之间则设定时间为明天的自定义时间，返回False
+        elif now.time() > time(21, 0):
+            self.plan_tomorrow_hunt()
+            raise TaskEnd('Hunt')
         # 如果是在19:00-21:00之间则返回True
         else:
             return True
