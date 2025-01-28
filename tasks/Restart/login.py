@@ -117,23 +117,7 @@ class LoginHandler(BaseTask, RestartAssets):
             #     continue
             # if self.ocr_appear_click(self.O_LOGIN_ENTER_GAME, interval=2.5):
             #     continue
-            if self.appear_then_click(self.I_UI_BACK_RED):
-                logger.info('login click I_UI_BACK_RED')
-            if self.appear_then_click(self.I_UI_BACK_BLUE):
-                logger.info('login click I_UI_BACK_BLUE')
-            if self.appear_then_click(self.I_UI_CONFIRM):
-                logger.info('login click I_UI_CONFIRM')
-            if self.appear_then_click(self.I_UI_CONFIRM_SAMLL):
-                logger.info('login click I_UI_CONFIRM_SAMLL')
-            if self.appear_then_click(self.I_LOGIN_DOWNLOAD_DRAW):
-                logger.info('login click I_LOGIN_DOWNLOAD_DRAW')
-            if self.appear_then_click(self.I_LOGIN_CONTRACT_AGREE):
-                logger.info('login click I_LOGIN_CONTRACT_AGREE')
-            if self.appear_then_click(self.I_LOGIN_COMMENT_REQUEST):
-                logger.info('login click I_LOGIN_COMMENT_REQUEST')
             self.device.click_record_clear()
-            if not login_find_post:
-                continue
             if self.appear(self.I_CHARACTARS, interval=1):
                 # https://github.com/runhey/OnmyojiAutoScript/issues/585
                 self.device.click(x=246, y=535)
