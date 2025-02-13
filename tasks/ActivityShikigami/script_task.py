@@ -229,14 +229,14 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             reward_click = random.choice([self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT, self.C_RANDOM_TOP, self.C_RANDOM_BOTTOM])
             if self.appear_then_click(self.I_UI_REWARD, action=reward_click, interval=1.3):
                 continue
-            # 如果出现了 “鼓”
-            if self.appear(self.I_WIN):
+            # 如果出现了 “I_REWARD”
+            if self.appear(self.I_REWARD):
                 logger.info("Win")
                 while 1:
                     self.screenshot()
-                    if not self.appear(self.I_WIN):
+                    if not self.appear(self.I_REWARD):
                         break
-                    if self.appear_then_click(self.I_WIN, action=self.C_RANDOM_ALL, interval=1.1):
+                    if self.appear_then_click(self.I_REWARD, action=self.C_RANDOM_TOP, interval=1.1):
                         continue
                 return True
             # 失败 -> 正常人不会失败

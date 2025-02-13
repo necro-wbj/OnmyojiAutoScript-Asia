@@ -2,7 +2,7 @@
   {
     "itemName": "shi",
     "imageName": "as_shi.png",
-    "roiFront": "520,265,33,34",
+    "roiFront": "516,261,33,34",
     "roiBack": "64,115,1110,427",
     "method": "Template matching",
     "threshold": 0.7,
@@ -20,8 +20,8 @@
   {
     "itemName": "battle",
     "imageName": "as_battle.png",
-    "roiFront": "641,148,35,145",
-    "roiBack": "583,75,153,315",
+    "roiFront": "330,626,126,33",
+    "roiBack": "285,204,244,492",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入爬塔"
@@ -29,8 +29,8 @@
   {
     "itemName": "drum",
     "imageName": "as_drum.png",
-    "roiFront": "327,627,145,28",
-    "roiBack": "256,462,301,232",
+    "roiFront": "562,295,39,151",
+    "roiBack": "444,176,301,435",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "归鹿之途"
@@ -65,7 +65,7 @@
   {
     "itemName": "ap",
     "imageName": "as_ap.png",
-    "roiFront": "1138,668,23,24",
+    "roiFront": "1122,673,23,24",
     "roiBack": "1088,638,103,71",
     "method": "Template matching",
     "threshold": 0.8,
@@ -74,8 +74,8 @@
   {
     "itemName": "ap_activity",
     "imageName": "as_ap_activity.png",
-    "roiFront": "1141,673,21,21",
-    "roiBack": "1095,654,84,54",
+    "roiFront": "1123,674,21,21",
+    "roiBack": "1095,654,77,54",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "活动体力"
@@ -83,7 +83,7 @@
   {
     "itemName": "switch",
     "imageName": "as_switch.png",
-    "roiFront": "1220,671,23,23",
+    "roiFront": "1203,677,23,23",
     "roiBack": "1191,653,69,56",
     "method": "Template matching",
     "threshold": 0.8,
