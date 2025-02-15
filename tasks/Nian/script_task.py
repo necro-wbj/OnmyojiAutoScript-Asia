@@ -38,7 +38,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, NianAssets):
         # 进入
         self.ui_get_current_page()
         self.ui_goto(page_team)
-        self.check_zones('年兽')
+        self.check_zones('年獸')
         cd = self.check_cd()
         if cd:
             cd_exit(cd)

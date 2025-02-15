@@ -120,15 +120,21 @@ class GeneralRoom(BaseTask, GeneralRoomAssets):
         :param name:
         :return:
         """
+        if name == '年獸':
+            name = '每默' # OCR issue 年獸 in list_find will regconize as '每默'
+        if name == '憤怒的石距':
+            name = '...石距' # OCR issue 年獸 in list_find will regconize as '每默'
         pos = self.list_find(self.L_TEAM_LIST, name)
         if not pos:
             return False
-        if name == '憤怒的石距' or name == '噴怒的石距':
-            name = '價悠的石距'
+        if name == '憤怒的石距' or name == '...石距':
+            name = '情怒的石配'# OCR issue 憤怒的石距 in GR_ZONES_NAME will regconize as '情怒的石配'
         if name == '金幣妖怪':
-            name = '金帶妖怪' # 金幣妖怪 in GR_ZONES_NAME will regconize as '金帶妖怪'
+            name = '金帶妖怪' # OCR issue 金幣妖怪 in GR_ZONES_NAME will regconize as '金帶妖怪'
         if name == '經驗妖怪':
-            name = '征驗候怪' # 經驗妖怪 in GR_ZONES_NAME will regconize as '征驗候怪'
+            name = '征驗候怪' # OCR issue 經驗妖怪 in GR_ZONES_NAME will regconize as '征驗候怪'
+        if name == '年獸' or name == '每默':
+            name = '分' # OCR issue 每默 in GR_ZONES_NAME will regconize as '分'
         self.O_GR_ZONES_NAME.keyword = name
         click_timer = Timer(1.1)
         click_timer.start()
