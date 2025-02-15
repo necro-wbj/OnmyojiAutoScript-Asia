@@ -56,6 +56,7 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
         召唤结束后回到 召唤主界面
         :return:
         """
+        logger.info("run summon_recall")
         list = [self.O_SELECT_SM2, self.O_SELECT_SM3, self.O_SELECT_SM4]
         count = 0
         while True:
@@ -132,9 +133,11 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
             logger.info('Summon one success')
 
     def run_guild_wish(self):
+        logger.info("run run_guild_wish")
         pass
 
     def run_luck_msg(self):
+        logger.info("run run_luck_msg")
         self.ui_get_current_page()
         self.ui_goto(page_friends)
         while 1:
@@ -160,11 +163,13 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
                 break
             if check_timer.reached():
                 logger.warning('There is no any luck msg')
+                self.ui_click_until_disappear(self.I_CLOSE_BLESS)
                 break
 
         self.ui_click(self.I_UI_BACK_RED, self.I_CHECK_MAIN)
 
     def run_friend_love(self):
+        logger.info("run run_friend_love")
         self.ui_get_current_page()
         self.ui_goto(page_friends)
         # TODO: handle friend level up need to close it
@@ -195,6 +200,7 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
         self.ui_click(self.I_UI_BACK_RED, self.I_CHECK_MAIN)
 
     def run_store(self):
+        logger.info("run run_store")
         self.ui_get_current_page()
         self.ui_goto(page_mall, confirm_wait=3)
 
@@ -208,6 +214,7 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
         self.ui_goto(page_main)
 
     def run_store_sign(self):
+        logger.info("run run_store_sign")
 
         while 1:
             self.screenshot()
@@ -228,6 +235,7 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
             logger.info('Get reward of gift sign')
 
     def run_buy_sushi(self):
+        logger.info("run run_buy_sushi")
 
         # 进入Special
         while 1:
