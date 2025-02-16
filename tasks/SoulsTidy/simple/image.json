@@ -151,5 +151,14 @@
     "method": "Template matching",
     "threshold": 0.9,
     "description": "御魂奉纳后获得的金币"
+  },
+  {
+    "itemName": "st_overflow",
+    "imageName": "simple_st_overflow.png",
+    "roiFront": "693,404,100,37",
+    "roiBack": "693,404,100,37",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "太多魂的知道了"
   }
 ]

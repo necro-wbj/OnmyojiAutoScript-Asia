@@ -35,7 +35,6 @@ class ScriptTask(GameUi, SoulsTidyAssets):
         """
         while 1:
             self.screenshot()
-            #TODO: handle too much souls pop up
             if self.appear(self.I_ST_GREED) and self.appear(self.I_ST_TIDY):
                 break
 
@@ -47,6 +46,7 @@ class ScriptTask(GameUi, SoulsTidyAssets):
                 continue
         # 御魂超过上限的提示
         self.ocr_appear_click(self.O_ST_OVERFLOW)
+        self.appear_then_click(self.I_ST_OVERFLOW, interval=1)
         logger.info('Enter souls page')
 
     def back_records(self):
