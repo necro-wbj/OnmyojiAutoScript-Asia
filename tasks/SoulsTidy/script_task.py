@@ -106,6 +106,7 @@ class ScriptTask(GameUi, SoulsTidyAssets):
         logger.hr('click abandon')
         # 进入已弃置界面
         while True:
+            self.screenshot()
             if not self.appear(self.I_ST_ABANDONED_SELECTED):
                 self.click(self.I_ST_ABANDONED_SELECTED, interval=2)
                 continue

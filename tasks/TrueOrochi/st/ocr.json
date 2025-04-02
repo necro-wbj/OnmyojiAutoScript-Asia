@@ -1,11 +1,11 @@
 [
   {
-    "itemName": "true_orochi_remain",
-    "roiFront": "454,387,50,26",
-    "roiBack": "454,387,50,26",
+    "itemName": "times",
+    "roiFront": "461,388,40,26",
+    "roiBack": "461,388,40,26",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
-    "description": "真蛇剩餘次數"
+    "description": "本周剩余奖励次数"
   }
 ]

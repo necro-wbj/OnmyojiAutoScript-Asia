@@ -358,16 +358,40 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         self.switch_to_reward()
         lst = []
         num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_1)
+        #如果num为0则不再进行nameOcr
+        if num:
+            if num >= 20000 and not self.appear(self.I_AB_NUM_CHALLENGE_RAIL):
+                logger.info("The number of challenges is enough")
+                return filter_open_flag, str("direct_attack")
+            name = self.get_bossName(self.C_AB_BOSS_REWARD_PHOTO_1)
+        else:
+            name = "声望不够"
         lst.append(num)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
         #
         self.open_filter()
         num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_2)
+        if num:
+            if num >= 20000 and not self.appear(self.I_AB_NUM_CHALLENGE_RAIL):
+                logger.info("The number of challenges is enough")
+                return filter_open_flag, str("direct_attack")
+            name = self.get_bossName(self.C_AB_BOSS_REWARD_PHOTO_1)
+        else:
+            name = "声望不够"
+        boosName.append(name)
         lst.append(num)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
         #
         self.open_filter()
         num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_3)
+        if num:
+            if num >= 20000 and not self.appear(self.I_AB_NUM_CHALLENGE_RAIL):
+                logger.info("The number of challenges is enough")
+                return filter_open_flag, str("direct_attack")
+            name = self.get_bossName(self.C_AB_BOSS_REWARD_PHOTO_1)
+        else:
+            name = "声望不够"
+        boosName.append(name)
         lst.append(num)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
         #
@@ -376,6 +400,14 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             self.swipe(self.S_AB_FILTER_UP)
         self.wait_until_appear(self.C_AB_BOSS_REWARD_PHOTO_MINUS_2, wait_time=1)
         num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_MINUS_2)
+        if num:
+            if num >= 20000 and not self.appear(self.I_AB_NUM_CHALLENGE_RAIL):
+                logger.info("The number of challenges is enough")
+                return filter_open_flag, str("direct_attack")
+            name = self.get_bossName(self.C_AB_BOSS_REWARD_PHOTO_1)
+        else:
+            name = "声望不够"
+        boosName.append(name)
         lst.append(num)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
         #
@@ -384,6 +416,15 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             self.swipe(self.S_AB_FILTER_UP)
         self.wait_until_appear(self.C_AB_BOSS_REWARD_PHOTO_MINUS_1, wait_time=1)
         num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_MINUS_1)
+        if num:
+            if num >= 20000 and not self.appear(self.I_AB_NUM_CHALLENGE_RAIL):
+                logger.info("The number of challenges is enough")
+                return filter_open_flag, str("direct_attack")
+            name = self.get_bossName(self.C_AB_BOSS_REWARD_PHOTO_1)
+        else:
+            name = "声望不够"
+            filter_open_flag = True
+        boosName.append(name)
         lst.append(num)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
 

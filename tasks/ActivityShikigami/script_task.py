@@ -44,6 +44,11 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
 
         self.ui_get_current_page()
         self.ui_goto(page_main)
+
+        # self.open_buff()
+        # self.soul(is_open=True)
+        # self.close_buff()
+
         self.home_main()
 
         # 选择是游戏的体力还是活动的体力
@@ -122,6 +127,9 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 logger.info("General battle success")
 
         self.main_home()
+        self.open_buff()
+        self.soul(is_open=False)
+        self.close_buff()
         if config.general_climb.active_souls_clean:
             # self.set_next_run(task='SoulsTidy', success=False, finish=False, target=datetime.now())
             self.set_next_run(task='SoulsTidy', server=False , target=datetime.now())
@@ -141,8 +149,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 break
             if self.appear_then_click(self.I_SHI, interval=1):
                 continue
-            if self.appear_then_click(self.I_DRUM, interval=1):
-                continue
+
             if self.appear_then_click(self.I_BATTLE, interval=1):
                 continue
 
@@ -170,11 +177,16 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         """
         self.screenshot()
         if current_ap == ApMode.AP_ACTIVITY:
-            cu, res, total = self.O_REMAIN_AP_ACTIVITY.ocr(image=self.device.image)
-            if cu == 0 and cu + res == total:
-                logger.warning("Activity ap not enough")
+            res: int = self.O_REMAIN_AP_ACTIVITY2.ocr_digit(self.device.image)
+            if res <= 0:
+                logger.warning(f'Activity ap {res} not enough')
                 return False
             return True
+            # cu, res, total = self.O_REMAIN_AP_ACTIVITY.ocr(image=self.device.image)
+            # if cu == 0 and cu + res == total:
+            #     logger.warning("Activity ap not enough")
+            #     return False
+            # return True
 
         elif current_ap == ApMode.AP_GAME:
             cu, res, total = self.O_REMAIN_AP.ocr(image=self.device.image)
