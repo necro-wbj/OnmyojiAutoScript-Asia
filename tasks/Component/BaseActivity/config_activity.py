@@ -32,6 +32,8 @@ class GeneralClimb(ConfigBase):
     active_souls_clean: bool = Field(default=False, description='active_souls_clean_help')
     # 点击战斗随机休息
     random_sleep: bool = Field(default=False, description='random_delay_help')
+    # # 當票打滿是否要繼續打
+    # fight_over_50: bool = Field(default=False, description='option_fight_more_than_50_tickets')
 
     @validator('limit_time', pre=True, always=True)
     def parse_limit_time(cls, value):
@@ -65,6 +67,6 @@ class GeneralClimb(ConfigBase):
             return def_value
         return def_value
 
-    # @field_validator('ap_mode', mode='after')
-    # def check_mode(cls, value):
-    #     return ApMode.AP_GAME
+    @field_validator('ap_mode', mode='after')
+    def check_mode(cls, value):
+        return ApMode.AP_GAME
