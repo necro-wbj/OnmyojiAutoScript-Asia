@@ -40,7 +40,7 @@ class MetaDemonAssets:
 	# 准备 
 	I_A5 = RuleImage(roi_front=(1129,536,100,100), roi_back=(1129,536,100,100), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/Screenshots_a5.png")
 	# description 
-	I_A6 = RuleImage(roi_front=(435,147,100,100), roi_back=(435,147,100,100), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/Screenshots_a6.png")
+	I_A6 = RuleImage(roi_front=(465,143,100,100), roi_back=(409,107,197,179), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/Screenshots_a6.png")
 	# 超鬼王打完了 
 	I_BACK_CHECK = RuleImage(roi_front=(378,257,68,32), roi_back=(378,257,68,32), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_back_check.png")
 	# 红色的叉叉 

@@ -128,8 +128,8 @@
   {
     "itemName": "a6",
     "imageName": "Screenshots_a6.png",
-    "roiFront": "435,147,100,100",
-    "roiBack": "435,147,100,100",
+    "roiFront": "465,143,100,100",
+    "roiBack": "409,107,197,179",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
