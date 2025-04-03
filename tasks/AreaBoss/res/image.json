@@ -205,14 +205,5 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
-  },
-  {
-    "itemName": "ab_num_challenge_rail",
-    "imageName": "ab_num_challenge_rail.png",
-    "roiFront": "895,639,14,27",
-    "roiBack": "895,639,14,27",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "挑战数进度条"
   }
 ]
