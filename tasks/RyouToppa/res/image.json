@@ -41,7 +41,7 @@
     "roiFront": "134,417,241,40",
     "roiBack": "134,417,241,40",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.75,
     "description": "寮击破奖励"
   },
   {
