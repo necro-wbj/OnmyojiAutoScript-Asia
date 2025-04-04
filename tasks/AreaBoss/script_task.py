@@ -13,7 +13,7 @@ from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_area_boss, page_shikigami_records
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.AreaBoss.assets import AreaBossAssets
-
+import re
 from module.base.timer import Timer
 from module.logger import logger
 from module.exception import TaskEnd
@@ -349,6 +349,22 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         elif index == 4:
             return self.boss_fight(self.C_AB_BOSS_REWARD_PHOTO_MINUS_1, True)
 
+    def get_bossName(self, click_area):
+        """
+            获取鬼王名字
+        @param click_area: 鬼王相应的挑战按钮
+        @type click_area:
+        @return:
+        @rtype:
+        """
+        # 如果鬼王不可挑战(未解锁),限制3次尝试打开鬼王详情界面
+        if not self.open_boss_detail(click_area, 3):
+            logger.info("%s unavailable", str(click_area))
+            return 0
+        ocrName = self.O_AB_BOSS_NAME.detect_and_ocr(self.device.image)
+        bossName = re.sub(r"[\'\[\]]", "", str([result.ocr_text for result in ocrName]))
+        return bossName
+
     def get_hot_in_reward(self):
         """
             返回挑战人数最多的悬赏鬼王
@@ -357,6 +373,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         """
         self.switch_to_reward()
         lst = []
+        boosName = []
         num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_1)
         lst.append(num)
         self.ui_click_until_disappear(self.I_AB_CLOSE_RED)

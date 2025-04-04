@@ -34,7 +34,7 @@ class MetaDemonAssets:
 	# 进入鬼王界面 
 	I_A2 = RuleImage(roi_front=(751,137,41,149), roi_back=(751,137,41,149), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/Screenshots_a2.png")
 	# 召唤鬼王 
-	I_A3 = RuleImage(roi_front=(1137,581,100,100), roi_back=(1137,581,100,100), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/Screenshots_a3.png")
+	I_A3 = RuleImage(roi_front=(1137,581,100,100), roi_back=(1137,581,100,100), threshold=0.75, method="Template matching", file="./tasks/MetaDemon/md/Screenshots_a3.png")
 	# 挑战 
 	I_A4 = RuleImage(roi_front=(1137,581,100,100), roi_back=(1137,581,100,100), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/Screenshots_a4.png")
 	# 准备 

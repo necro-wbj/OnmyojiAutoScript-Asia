@@ -86,7 +86,7 @@ class AreaBossAssets:
 	# 筛选中 选中收藏标识 
 	I_AB_FILTER_TITLE_COLLECTION = RuleImage(roi_front=(920,110,190,70), roi_back=(920,110,190,70), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_filter_title_collection.png")
 	# 筛选界面打开标识 
-	I_AB_FILTER_OPENED = RuleImage(roi_front=(840,110,130,70), roi_back=(840,110,130,70), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_filter_opened.png")
+	I_AB_FILTER_OPENED = RuleImage(roi_front=(851,110,84,70), roi_back=(851,110,84,70), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_ab_filter_opened.png")
 	# 极地鬼标识 出现此图片表明 是 极地鬼 
 	I_AB_DIFFICULTY_JI = RuleImage(roi_front=(260,100,70,70), roi_back=(260,100,70,70), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_difficulty_ji.png")
 	# 极地鬼标识 出现此图片表明 是 普通地鬼 

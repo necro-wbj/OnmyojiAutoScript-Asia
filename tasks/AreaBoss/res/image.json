@@ -118,9 +118,9 @@
   },
   {
     "itemName": "ab_filter_opened",
-    "imageName": "ab_filter_opened.png",
-    "roiFront": "840,110,130,70",
-    "roiBack": "840,110,130,70",
+    "imageName": "res_ab_filter_opened.png",
+    "roiFront": "851,110,84,70",
+    "roiBack": "851,110,84,70",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "筛选界面打开标识"

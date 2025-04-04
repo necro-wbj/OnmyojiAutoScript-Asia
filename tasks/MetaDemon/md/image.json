@@ -104,7 +104,7 @@
     "roiFront": "1137,581,100,100",
     "roiBack": "1137,581,100,100",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.75,
     "description": "召唤鬼王"
   },
   {

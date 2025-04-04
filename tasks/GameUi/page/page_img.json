@@ -16,7 +16,8 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "庭院卷轴关闭标识"
-  },  {
+  },
+  {
     "itemName": "main_goto_exploration",
     "imageName": "page_main_goto_exploration.png",
     "roiFront": "493,116,45,75",
@@ -109,7 +110,7 @@
   {
     "itemName": "exploration_goto_six_gates",
     "imageName": "page_exploration_goto_six_gates.png",
-    "roiFront": "838,640,60,49",
+    "roiFront": "939,643,60,49",
     "roiBack": "818,631,200,66",
     "method": "Template matching",
     "threshold": 0.8,
@@ -118,7 +119,7 @@
   {
     "itemName": "exploration_goto_bondling_fairyland",
     "imageName": "page_exploration_goto_bondling_fairyland.png",
-    "roiFront": "937,639,56,49",
+    "roiFront": "1040,642,56,49",
     "roiBack": "928,633,203,64",
     "method": "Template matching",
     "threshold": 0.8,
