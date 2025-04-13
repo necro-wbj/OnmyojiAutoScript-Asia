@@ -23,7 +23,7 @@
     "roiFront": "104,649,153,44",
     "roiBack": "104,649,153,44",
     "method": "Template matching",
-    "threshold": 0.9,
+    "threshold": 0.8,
     "description": "自动轮换开着"
   },
   {
