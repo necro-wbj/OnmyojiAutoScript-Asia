@@ -10,8 +10,8 @@
   },
   {
     "itemName": "st_firset_level",
-    "roiFront": "91,237,35,28",
-    "roiBack": "91,237,35,28",
+    "roiFront": "91,237,35,26",
+    "roiBack": "91,237,35,26",
     "mode": "Single",
     "method": "Default",
     "keyword": "",
