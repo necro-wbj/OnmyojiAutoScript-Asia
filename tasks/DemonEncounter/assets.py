@@ -37,7 +37,7 @@ class DemonEncounterAssets:
 	# 还没选中 
 	I_BOSS_NO_SELECT = RuleImage(roi_front=(510,339,37,43), roi_back=(510,339,37,43), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_no_select.png")
 	# 集结 
-	I_BOSS_GATHER = RuleImage(roi_front=(801,589,100,100), roi_back=(801,589,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_gather.png")
+	I_BOSS_GATHER = RuleImage(roi_front=(801,589,100,100), roi_back=(801,589,100,100), threshold=0.75, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_gather.png")
 	# 战斗胜利 
 	I_BOSS_WIN = RuleImage(roi_front=(380,43,100,100), roi_back=(380,43,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_win.png")
 	# 白色退出 
