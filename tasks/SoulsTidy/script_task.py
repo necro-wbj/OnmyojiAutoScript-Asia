@@ -35,9 +35,10 @@ class ScriptTask(GameUi, SoulsTidyAssets):
         """
         while 1:
             self.screenshot()
+            if self.appear_then_click(self.I_ST_OVERFLOW, interval=1):
+                continue
             if self.appear(self.I_ST_GREED) and self.appear(self.I_ST_TIDY):
                 break
-
             if self.appear_then_click(self.I_ST_REPLACE, interval=1):
                 continue
             if self.appear_then_click(self.I_ST_SOULS, interval=1):
@@ -63,7 +64,16 @@ class ScriptTask(GameUi, SoulsTidyAssets):
         """
         # 先是贪吃鬼
         logger.hr('Greed Ghost')
-        self.ui_click(self.I_ST_GREED, self.I_ST_GREED_HABIT)
+        while 1:
+            self.screenshot()
+            if self.appear_then_click(self.I_ST_OVERFLOW, interval=1):
+                logger.info('greed_maneki I_ST_OVERFLOW')
+                continue
+            if self.appear(self.I_ST_GREED_HABIT):
+                break
+            if self.appear_then_click(self.I_ST_GREED):
+                continue
+        # self.ui_click(self.I_ST_GREED, self.I_ST_GREED_HABIT)
         self.ui_click(self.I_ST_GREED_HABIT, self.I_ST_FEED_NOW)
         logger.info('Feed greed ghost')
         feed_count = 0
@@ -136,7 +146,7 @@ class ScriptTask(GameUi, SoulsTidyAssets):
             firvel = self.O_ST_FIRSET_LEVEL.ocr(self.device.image)
             if firvel is None or firvel == '':
                 logger.info('ocr result is Null')
-                continue
+                # continue
             if not self.appear(self.I_ST_FIRSET_LEVEL):
                 logger.info('No zero level, bongna done')
                 break
@@ -144,6 +154,7 @@ class ScriptTask(GameUi, SoulsTidyAssets):
             # !!!!!!  这里没有检查金币是否足够
             # 长按
             count_donate = 10
+            logger.info('Click and hold')
             while count_donate:
                 count_donate -= 1
                 sleep(1)
