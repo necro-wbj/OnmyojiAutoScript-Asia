@@ -8,6 +8,7 @@ import difflib
 from datetime import datetime
 from pathlib import Path
 from module.logger import logger
+from module.logger import logger
 
 from module.logger import logger
 
@@ -17,173 +18,65 @@ def count_intersection(str1, str2):
     intersection = set1.intersection(set2)
     return len(intersection)
 
-def remove_symbols(text):
-    return re.sub(r'[^\w\s]', '', text)
-
-class Answer:
-    def __init__(self):
-        self.data: dict[str, list] = {}
-        self.data_options: dict[str, list] = {}
-        file = str(Path(__file__).parent / 'data.csv')
-        with open(file, newline='', encoding='utf-8-sig') as csvfile:
-            reader = csv.reader(csvfile)
-            next(reader)
-            for row in reader:
-                key = remove_symbols(row[0])
-                value = remove_symbols(row[1])
-                if key not in self.data:
-                    self.data[key] = []
-                self.data[key].append(value)
-                if value not in self.data_options:
-                    self.data_options[value] = []
-                self.data_options[value].append(key)
-
-    def answer_one(self, question: str, options: list[str]) -> int|None:
-        """
-
-        每一个问题有三个选项， 返回选项的序号(1、2、3)
-        :param question:
-        :param options:
-        :return:
-        """
-        def decide_by_options(question: str, option: list[str]):
-            # 瞎猫当死耗子
-            opts = {}
-            for index, option in enumerate(options):
-                if option in self.data_options.keys():
-                    cnts = [count_intersection(question, ques) for ques in self.data_options[option] ]
-                    cnts.sort(reverse=True)
-                    opts[index + 1] = cnts[0]
-            #
-            if opts:
-                opts = sorted(opts.items(), key=lambda x: x[1], reverse=True)
-            if opts:
-                return opts[0][0]
-            else:
-                return None
-
-from module.logger import logger
-
-def count_intersection(str1, str2):
-    set1 = set(str1)
-    set2 = set(str2)
-    intersection = set1.intersection(set2)
-    return len(intersection)
-
-def remove_symbols(text):
-    return re.sub(r'[^\w\s]', '', text)
-
-class Answer:
-    def __init__(self):
-        self.data: dict[str, list] = {}
-        self.data_options: dict[str, list] = {}
-        file = str(Path(__file__).parent / 'data.csv')
-        with open(file, newline='', encoding='utf-8-sig') as csvfile:
-            reader = csv.reader(csvfile)
-            next(reader)
-            for row in reader:
-                key = remove_symbols(row[0])
-                value = remove_symbols(row[1])
-                if key not in self.data:
-                    self.data[key] = []
-                self.data[key].append(value)
-                if value not in self.data_options:
-                    self.data_options[value] = []
-                self.data_options[value].append(key)
-
-    def answer_one(self, question: str, options: list[str]) -> int|None:
-        """
-
-        每一个问题有三个选项， 返回选项的序号(1、2、3)
-        :param question:
-        :param options:
-        :return:
-        """
-        def decide_by_question_foreach(ques: str, ops: list[str]):
-            # 这个是最耗时的操作，遍历数据库中的所有题目，找到最相识的题目和选项
-            for key, values in self.data.items():
-                question_match_ratio = difflib.SequenceMatcher(None, ques, key).ratio()
-                if question_match_ratio < 0.7:
-                    continue
-                for value in values:
-                    for index, option in enumerate(ops):
-                        option_match_ratio = difflib.SequenceMatcher(None, option, value).ratio()
-                        if option_match_ratio >= 0.5:
-                            logger.warning('The worst case: no match found for question and option')
-                            logger.warning('Now traversing the entire database to find the most similar question and option')
-                            logger.warning(f'Most similar question: {key} and most similar option: {value}')
-                            return index + 1
-            return None
-
-        def decide_by_options(question: str, ops: list[str]):
-            # 瞎猫当死耗子
-            matches = {}
-            for index, option in enumerate(ops):
-                if option not in self.data_options.keys():
-                    continue
-                for ques in self.data_options[option]:
-                    ques_match_ratio = difflib.SequenceMatcher(None, ques, question).ratio()
-                    if ques_match_ratio > 0.8:
-                        matches[index + 1] = ques_match_ratio
-            if matches:
-                opts = sorted(matches.items(), key=lambda x: x[1], reverse=True)
-                logger.warning('No match found for question,\n Now traversing the entire database to find the most similar question')
-                logger.warning(f'Most similar answer: {opts[0][0]}, and similarity char number is {opts[0][1]}')
-                return opts[0][0]
-            index = decide_by_question_foreach(question, ops)
-            return index if index else None
-
-
-        question = question.replace('「', '').replace('」', '').replace('?', '')
-        question = remove_symbols(question)
-        options = [remove_symbols(option) for option in options]
-
-        for index, option in enumerate(options):
-            if option == '其余选项皆对':
-                return index + 1
-
-        question_matches: list = []
+    每一个问题有四个选项， 返回选项的序号(1、2、3)
+    :param question:
+    :param options:
+    :return:
+    """
+    # file = str(Path(__file__).parent / 'data.csv')
+    # with open(file, newline='', encoding='utf-8-sig') as csvfile:
+    #     reader = csv.reader(csvfile)
+    #     next(reader)
+    #     for row in reader:
+    #         if row[0] == question:
+    #             try:
+    #                 return options.index(row[1]) + 1
+    #             except ValueError:
+    #                 return 1
+    #     return 1
+    ## 我要重寫上面的代碼 改為找最相似的 而不是完全一樣的
+    question_lcut = set(list(str(question)))
+    file = str(Path(__file__).parent / 'data.csv')
+    with open(file, newline='', encoding='utf-8-sig') as csvfile:
+        reader = csv.reader(csvfile)
+        next(reader)
+        max_score = 0
+        max_score_index = 0
+        max_score = 0
+        max_score_index = 0
+        for row in reader:
+            # score 為row[0]與question的相似度
+            score = 0
+            question_row_lcut = set(list(str(row[0])))
+            score = len(question_lcut & question_row_lcut) / len(question_lcut | question_row_lcut)
+            if score > max_score:
+                max_score = score
+                max_score_index = row[1]
+                logger.info(f"CSV question: {question} ans: {row[0]} score: {score}")
+        # here match the answer
+        Ans_lcut = set(list(str(row[1])))
+        Ans_score = 0
+        Ans_score_max = 0
+        final_ans = 0
+        # check fully match answer exists or use similar answer
+        if row[1] in options:
+            return options.index(row[1]) + 1
+        else:
+            for option in options:
+                option_lcut = set(list(str(option)))
+                Ans_score = len(Ans_lcut & option_lcut) / len(Ans_lcut | option_lcut)
+                if Ans_score > Ans_score_max:
+                    Ans_score_max = Ans_score
+                    final_ans = option
         try:
-            question_matches = self.data[question]
-        except Exception as e:
-            # 没有出现题目，从选项反入手
-            logger.error('Exception: %s', e)
-            return decide_by_options(question=question, ops=options)
-        # 出现了题目，开始对答案
-        for index, option in enumerate(options):
-            for match in question_matches:
-                if match == option:
-                    return index + 1
-        # 可能选项识别某一个字错误
-        if options[0] != '' and options[1] != '' and options[2] != '':
-            for index, option in enumerate(options):
-                for match in question_matches:
-                    if len(match) != len(option):
-                        continue
-                    if len(match) - count_intersection(match, option) <= 1 :
-                        logger.warning('Option is not match: %s, %s', match, option)
-                        return index + 1
-        # 最保守策略，答案匹配度最高
-        opts = {}
-        for index, option in enumerate(options):
-            item_match_ratio = 0
-            for match in question_matches:
-                match_ratio = difflib.SequenceMatcher(None, match, option).ratio()
-                if match_ratio >= 0.33 and match_ratio > item_match_ratio:
-                    item_match_ratio = match_ratio
-            if item_match_ratio > 0:
-                opts[index + 1] = item_match_ratio
-        if opts:
-            opts = sorted(opts.items(), key=lambda x: x[1], reverse=True)
-            logger.warning(f'Use SequenceMatcher and get answers: {opts[0][0]}, score: {opts[0][1]}')
-            return opts[0][0]
+            #print question and answer
+            print(question, final_ans)
+            return options.index(final_ans) + 1
+        except ValueError:
+            return 1
+    return 1
 
-        # 选项一个都对不上可能是，正确答案检测为空
-        for index, option in enumerate(options):
-            if option == '':
-                logger.error('Option is empty: %s', options)
-                return index + 1
-        return None
+
 
 
 if __name__ == "__main__":
