@@ -29,19 +29,19 @@ class DelegationAssets:
 	# 再考虑下 
 	I_D_CANCEL = RuleImage(roi_front=(945,413,130,56), roi_back=(945,413,130,56), threshold=0.8, method="Template matching", file="./tasks/Delegation/d/d_d_cancel.png")
 	# 出发 
-	I_D_START = RuleImage(roi_front=(1101,534,120,129), roi_back=(1101,534,120,129), threshold=0.8, method="Template matching", file="./tasks/Delegation/d/d_d_start.png")
+	I_D_START = RuleImage(roi_front=(1110,549,111,94), roi_back=(1110,549,111,94), threshold=0.8, method="Template matching", file="./tasks/Delegation/d/d_d_start.png")
 	# 跳过 
 	I_D_SKIP = RuleImage(roi_front=(661,518,70,39), roi_back=(661,518,70,39), threshold=0.67, method="Template matching", file="./tasks/Delegation/d/d_d_skip.png")
 	# description 
-	I_D_SELECT_1 = RuleImage(roi_front=(230,593,44,41), roi_back=(216,578,71,81), threshold=0.7, method="Template matching", file="./tasks/Delegation/d/d_d_select_1.png")
+	I_D_SELECT_1 = RuleImage(roi_front=(231,597,33,36), roi_back=(216,578,71,81), threshold=0.7, method="Template matching", file="./tasks/Delegation/d/d_d_select_1.png")
 	# description 
-	I_D_SELECT_2 = RuleImage(roi_front=(363,595,40,41), roi_back=(327,585,97,60), threshold=0.7, method="Template matching", file="./tasks/Delegation/d/d_d_select_2.png")
+	I_D_SELECT_2 = RuleImage(roi_front=(365,599,36,33), roi_back=(327,585,97,60), threshold=0.7, method="Template matching", file="./tasks/Delegation/d/d_d_select_2.png")
 	# description 
-	I_D_SELECT_3 = RuleImage(roi_front=(497,595,38,41), roi_back=(456,584,105,66), threshold=0.7, method="Template matching", file="./tasks/Delegation/d/d_d_select_3.png")
+	I_D_SELECT_3 = RuleImage(roi_front=(501,598,33,35), roi_back=(456,584,105,66), threshold=0.7, method="Template matching", file="./tasks/Delegation/d/d_d_select_3.png")
 	# description 
-	I_D_SELECT_4 = RuleImage(roi_front=(632,595,42,40), roi_back=(579,584,111,57), threshold=0.7, method="Template matching", file="./tasks/Delegation/d/d_d_select_4.png")
+	I_D_SELECT_4 = RuleImage(roi_front=(635,597,35,33), roi_back=(579,584,111,57), threshold=0.7, method="Template matching", file="./tasks/Delegation/d/d_d_select_4.png")
 	# description 
-	I_D_SELECT_5 = RuleImage(roi_front=(767,593,41,40), roi_back=(721,582,103,60), threshold=0.7, method="Template matching", file="./tasks/Delegation/d/d_d_select_5.png")
+	I_D_SELECT_5 = RuleImage(roi_front=(770,590,37,32), roi_back=(690,582,134,66), threshold=0.7, method="Template matching", file="./tasks/Delegation/d/d_d_select_5.png")
 	# 返回 
 	I_D_BACK = RuleImage(roi_front=(940,415,138,51), roi_back=(940,415,138,51), threshold=0.8, method="Template matching", file="./tasks/Delegation/d/d_d_back.png")
 

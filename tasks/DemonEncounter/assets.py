@@ -42,11 +42,15 @@ class DemonEncounterAssets:
 	I_BOSS_WIN = RuleImage(roi_front=(380,43,100,100), roi_back=(380,43,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_win.png")
 	# 白色退出 
 	I_BOSS_BACK_WHITE = RuleImage(roi_front=(16,12,39,40), roi_back=(16,12,39,40), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_back_white.png")
+	# 極逢魔挑战
+	I_BOSS_SUPER_FIRE = RuleImage(roi_front=(1088,562,99,32), roi_back=(1062,523,139,131), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_super_fire.png")
 
 
 	# Ocr Rule Assets
 	# 人數 
 	O_DE_BOSS_PEOPLE = RuleOcr(roi=(880,591,100,35), area=(880,591,100,35), mode="DigitCounter", method="Default", keyword="", name="de_boss_people")
+	# 極逢魔人數
+	O_DE_SBOSS_PEOPLE = RuleOcr(roi=(900,565,100,35), area=(900,565,100,35), mode="DigitCounter", method="Default", keyword="", name="de_sboss_people")
 
 
 	# Click Rule Assets

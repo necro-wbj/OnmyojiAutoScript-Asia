@@ -3,6 +3,7 @@
 # github https://github.com/runhey
 import random
 from datetime import datetime, timedelta, time
+from time import sleep
 
 from tasks.base_task import BaseTask
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
@@ -10,19 +11,19 @@ from tasks.AreaBoss.assets import AreaBossAssets
 from tasks.Component.BaseActivity.base_activity import BaseActivity
 from tasks.Component.BaseActivity.config_activity import ApMode
 from tasks.ActivityShikigami.assets import ActivityShikigamiAssets
-from tasks.GameUi.page import page_main,page_shikigami_records
+from tasks.GameUi.page import page_main, page_shikigami_records
 from tasks.GameUi.game_ui import GameUi
 from module.logger import logger
 from module.exception import TaskEnd
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 
 
-class ScriptTask(GameUi, BaseActivity,SwitchSoul, ActivityShikigamiAssets):
+class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
 
     def run(self) -> None:
 
         config = self.config.activity_shikigami
-        
+
         if config.switch_soul_config.enable:
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
@@ -30,17 +31,30 @@ class ScriptTask(GameUi, BaseActivity,SwitchSoul, ActivityShikigamiAssets):
         if config.switch_soul_config.enable_switch_by_name:
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
-            self.run_switch_soul_by_name(config.switch_soul_config.group_name, config.switch_soul_config.team_name)
-        
+            self.run_switch_soul_by_name(
+                config.switch_soul_config.group_name,
+                config.switch_soul_config.team_name,
+            )
+
         self.limit_time: timedelta = config.general_climb.limit_time
         if isinstance(self.limit_time, time):
-            self.limit_time = timedelta(hours=self.limit_time.hour, minutes=self.limit_time.minute,
-                                        seconds=self.limit_time.second)
+            self.limit_time = timedelta(
+                hours=self.limit_time.hour,
+                minutes=self.limit_time.minute,
+                seconds=self.limit_time.second,
+            )
         self.limit_count = config.general_climb.limit_count
 
         self.ui_get_current_page()
         self.ui_goto(page_main)
         self.home_main()
+
+        # # 2024-04-04 ---------------------start
+        # config.general_climb.ap_mode = ApMode.AP_GAME
+        # # 2024-04-04 ---------------------end
+        # 选择是游戏的体力还是活动的体力
+        current_ap = config.general_climb.ap_mode
+        # self.switch(current_ap)
 
         # 设定是否锁定阵容
         if config.general_battle.lock_team_enable:
@@ -60,10 +74,6 @@ class ScriptTask(GameUi, BaseActivity,SwitchSoul, ActivityShikigamiAssets):
                 if self.appear(self.I_UNLOCK):
                     break
 
-        # 选择是游戏的体力还是活动的体力
-        current_ap = config.general_climb.ap_mode
-        self.switch(current_ap)
-
         # 流程应该是 在页面处：
         # 1. 判定计数是否超了，时间是否超了
         # 2. 如果是消耗活动体力，判定活动体力是否足够 如果是消耗一般的体力，判定一般体力是否足够
@@ -71,47 +81,58 @@ class ScriptTask(GameUi, BaseActivity,SwitchSoul, ActivityShikigamiAssets):
         # 4. 如果开启了切换到游戏体力，就切换
         while 1:
             # 1
-            if self.limit_time is not None and self.limit_time + self.start_time < datetime.now():
+            if (
+                self.limit_time is not None
+                and self.limit_time + self.start_time < datetime.now()
+            ):
                 logger.info("Time out")
                 break
             if self.current_count >= self.limit_count:
                 logger.info("Count out")
                 break
             # 2
-            self.wait_until_appear(self.I_FIRE)
+            while 1:
+                self.screenshot()
+                if self.appear(self.I_FIRE):
+                    break
+                if self.appear_then_click(self.I_CONTINUE):
+                    continue
             is_remain = self.check_ap_remain(current_ap)
             # 如果没有剩余了且这个时候是体力，就退出活动
             if not is_remain and current_ap == ApMode.AP_GAME:
                 logger.info("Game ap out")
                 break
             # 如果不是那就切换到体力
-            elif not is_remain and current_ap == ApMode.AP_ACTIVITY:
-                if config.general_climb.activity_toggle:
-                    logger.info("Activity ap out and switch to game ap")
-                    current_ap = ApMode.AP_GAME
-                    self.switch(current_ap)
-                else:
-                    logger.info("Activity ap out")
-                    break
-
+            # elif not is_remain and current_ap == ApMode.AP_ACTIVITY:
+            #     if config.general_climb.activity_toggle:
+            #         logger.info("Activity ap out and switch to game ap")
+            #         current_ap = ApMode.AP_GAME
+            #         self.switch(current_ap)
+            #     else:
+            #         logger.info("Activity ap out")
+            #         break
 
             # 点击战斗
-
             logger.info("Click battle")
             while 1:
                 self.screenshot()
-                if self.appear_then_click(self.I_FIRE, interval=1):
+                if self.appear_then_click(self.I_FIRE, interval=2):
                     continue
                 if not self.appear(self.I_FIRE):
                     break
-
+                if self.appear_then_click(self.I_C_CONFIRM1, interval=0.6):
+                    continue
+                if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
+                    continue
+                if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
+                    continue
+            sleep(3)
             if self.run_general_battle(config=config.general_battle):
                 logger.info("General battle success")
 
         self.main_home()
         self.set_next_run(task="ActivityShikigami", success=True)
         raise TaskEnd
-
 
     def home_main(self) -> bool:
         """
@@ -124,14 +145,16 @@ class ScriptTask(GameUi, BaseActivity,SwitchSoul, ActivityShikigamiAssets):
             self.screenshot()
             if self.appear(self.I_FIRE):
                 break
+            # 2024-04-04 --------------start
+            if self.appear_then_click(self.I_N_BATTLE, interval=1):
+                continue
+            # 2024-04-04 --------------end
             if self.appear_then_click(self.I_SHI, interval=1):
                 continue
             if self.appear_then_click(self.I_DRUM, interval=1):
                 continue
             if self.appear_then_click(self.I_BATTLE, interval=1):
                 continue
-
-
 
     def main_home(self) -> bool:
         """
@@ -143,13 +166,12 @@ class ScriptTask(GameUi, BaseActivity,SwitchSoul, ActivityShikigamiAssets):
             self.screenshot()
             if self.appear(self.I_SHI):
                 break
-            if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=1):
+            if self.appear_then_click(self.I_UI_BACK_RED, interval=2):
                 continue
-            if self.appear_then_click(self.I_UI_BACK_BLUE, interval=1):
+            if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=2):
                 continue
-            if self.appear_then_click(self.I_BACK_GREEN, interval=1):
+            if self.appear_then_click(self.I_BACK_GREEN, interval=2):
                 continue
-
 
     def check_ap_remain(self, current_ap: ApMode) -> bool:
         """
@@ -168,9 +190,9 @@ class ScriptTask(GameUi, BaseActivity,SwitchSoul, ActivityShikigamiAssets):
             cu, res, total = self.O_REMAIN_AP.ocr(image=self.device.image)
             if cu == total and cu + res == total:
                 if cu > total:
-                    logger.warning(f'Game ap {cu} more than total {total}')
+                    logger.warning(f"Game ap {cu} more than total {total}")
                     return True
-                logger.warning(f'Game ap not enough: {cu}')
+                logger.warning(f"Game ap not enough: {cu}")
                 return False
 
             return True
@@ -187,6 +209,10 @@ class ScriptTask(GameUi, BaseActivity,SwitchSoul, ActivityShikigamiAssets):
                 self.screenshot()
                 if self.appear(self.I_AP_ACTIVITY):
                     break
+                if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
+                    continue
+                if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
+                    continue
                 if self.appear(self.I_AP, interval=1):
                     self.appear_then_click(self.I_SWITCH, interval=2)  # 点击切换
         else:
@@ -221,7 +247,7 @@ class ScriptTask(GameUi, BaseActivity,SwitchSoul, ActivityShikigamiAssets):
     #                 if not self.appear(self.I_WIN):
     #                     break
     #                 if self.appear_then_click(self.I_WIN, action=self.C_RANDOM_ALL, interval=1.1):
-    #                     continuee
+    #                     continue
     #             return True
     #         # 失败 -> 正常人不会失败
     #         if self.appear(self.I_FALSE):
@@ -233,10 +259,11 @@ class ScriptTask(GameUi, BaseActivity,SwitchSoul, ActivityShikigamiAssets):
     #             self.random_click_swipt()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from module.config.config import Config
     from module.device.device import Device
-    c = Config('oas1')
+
+    c = Config("oas1")
     d = Device(c)
     t = ScriptTask(c, d)
 

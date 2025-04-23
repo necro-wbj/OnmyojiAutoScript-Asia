@@ -10,6 +10,7 @@ from tasks.GameUi.page import page_area_boss, page_shikigami_records
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.AreaBoss.assets import AreaBossAssets
 
+from module.base.timer import Timer
 from module.logger import logger
 from module.exception import TaskEnd
 from module.atom.image import RuleImage
@@ -40,6 +41,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         self.ui_get_current_page()
         self.ui_goto(page_area_boss)
 
+        # TODO: add flag to fight "懸賞"
         if con.boss_number == 3:
             self.boss(self.I_BATTLE_1)
             self.boss(self.I_BATTLE_2)
@@ -79,21 +81,48 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                     break
                 if self.ocr_appear_click(self.O_AB_COLLECTING, interval=1):
                     continue
+        def switch_famous():
+            while 1:
+                self.screenshot()
+                if self.ocr_appear(self.O_AB_KILL_BEST):
+                    break
+                if self.ocr_appear_click(self.O_AB_FAMOUS, interval=1):
+                    continue
 
         # 点击右上角的鬼王选择
         logger.info("Script filter")
         while 1:
             self.screenshot()
-            if self.appear(self.I_BATTLE_1) or self.appear(self.I_BATTLE_2) or self.appear(self.I_BATTLE_3):
+            if self.ocr_appear(self.O_AB_FAMOUS) or self.ocr_appear(self.O_AB_COLLECTING):
                 break
             if self.appear_then_click(self.I_FILTER, interval=2):
                 continue
+            #wait 1s
+            time.sleep(1)
 
         if collect:
             switch_collect()
+        else:
+            switch_famous()
         # 点击第几个鬼王
         logger.info(f'Script area boss {battle}')
-        self.ui_click(battle, self.I_AB_CLOSE_RED)
+        # re-write it, add a timer 10s to avoid (battle is gray) click battle no I_AB_CLOSE_RED
+        timer_area_boss_find = Timer(10)
+        timer_area_boss_find.start()
+        while 1:
+            self.screenshot()
+            if self.appear_then_click(battle, interval=1):
+                logger.info('try to get area boss')
+                # wait 2s to avoid click over timers
+                time.sleep(2)
+            if self.appear(self.I_AB_CLOSE_RED):
+                logger.info('find area boss')
+                break
+            if timer_area_boss_find.reached():
+                logger.info('No area boss')
+                return
+
+        # self.ui_click(battle, self.I_AB_CLOSE_RED)
         # 点击挑战
         logger.info("Script fire ")
         while 1:

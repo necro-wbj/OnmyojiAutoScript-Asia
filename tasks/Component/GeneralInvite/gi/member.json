@@ -2,8 +2,8 @@
   {
     "itemName": "gi_emoji_1",
     "imageName": "gi_gi_emoji_1.png",
-    "roiFront": "25,538,50,56",
-    "roiBack": "25,538,50,56",
+    "roiFront": "30,531,46,45",
+    "roiBack": "12,512,83,94",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -11,8 +11,8 @@
   {
     "itemName": "gi_emoji_2",
     "imageName": "gi_gi_emoji_2.png",
-    "roiFront": "21,632,53,64",
-    "roiBack": "21,632,53,64",
+    "roiFront": "27,622,55,51",
+    "roiBack": "27,622,55,51",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -20,8 +20,8 @@
   {
     "itemName": "gi_home",
     "imageName": "gi_gi_home.png",
-    "roiFront": "359,44,34,46",
-    "roiBack": "359,44,34,46",
+    "roiFront": "361,34,34,46",
+    "roiBack": "361,34,34,46",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "判断是不是在庭院界面"
@@ -34,5 +34,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "判断是不是在探索界面"
+  },
+  {
+    "itemName": "gi_team",
+    "imageName": "gi_gi_team.png",
+    "roiFront": "94,25,123,38",
+    "roiBack": "94,25,123,38",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "協戰隊伍"
   }
 ]

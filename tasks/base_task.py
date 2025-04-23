@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
+import re
 import numpy as np
 
 from time import sleep
@@ -40,6 +41,10 @@ class BaseTask(GlobalGameAssets, CostumeBase):
     current_count: int = None  # 当前运行的次数
 
     def __init__(self, config: Config, device: Device) -> None:
+        """
+
+        :rtype: object
+        """
         self.config = config
         self.device = device
 
@@ -75,6 +80,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                     if self.appear_then_click(self.I_G_ACCEPT, interval=1):
                         continue
                     if not self.appear(self.I_G_ACCEPT):
+                        self.set_next_run(task='WantedQuests',target=datetime.now())
                         break
             # 如果是全部拒绝
             elif invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.REJECT:
@@ -85,14 +91,39 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                         continue
                     if not self.appear(self.I_G_REJECT):
                         break
-            # 最后一个是仅仅接受勾协
+            # 如果是仅接受勾协
             elif invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.ONLY_JADE:
                 logger.info(f"Accept jade invitation")
                 while 1:
                     self.device.screenshot()
-                    if self.appear_then_click(self.I_G_ACCEPT, interval=1):
+                    if self.appear(self.I_G_JADE):
+                        if self.appear_then_click(self.I_G_ACCEPT, interval=1):
+                            continue
+                    elif self.appear_then_click(self.I_G_IGNORE, interval=1):
                         continue
                     if not self.appear(self.I_G_ACCEPT):
+                        self.set_next_run(task='WantedQuests',target=datetime.now())
+                        break
+            # 如果是接受勾协和粮协
+            elif invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.JADE_AND_FOOD:
+                logger.info(f"Accept jade and food invitation")
+                while 1:
+                    self.device.screenshot()
+                    if self.appear(self.I_G_JADE) or self.appear(self.I_G_CAT_FOOD) or self.appear(self.I_G_DOG_FOOD):
+                        if self.appear_then_click(self.I_G_ACCEPT, interval=1):
+                            continue
+                    elif self.appear_then_click(self.I_G_IGNORE, interval=1):
+                        continue
+                    if not self.appear(self.I_G_ACCEPT):
+                        break
+            # 如果是全部忽略
+            elif invite and self.config.global_game.emergency.friend_invitation == FriendInvitation.IGNORE:
+                logger.info(f"Ignore friend invitation")
+                while 1:
+                    self.device.screenshot()
+                    if self.appear_then_click(self.I_G_IGNORE, interval=1):
+                        continue
+                    if not self.appear(self.I_G_IGNORE):
                         break
             # 有的时候长战斗 点击后会取消战斗状态
             self.device.detect_record = detect_record
@@ -207,12 +238,13 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         :return:
         """
         self.wait_until_appear(target)
+        x,y = target.coord()
         if action is None:
-            self.device.click(target.coord(), control_name=target.name)
+            self.device.click(x,y, control_name=target.name)
         elif isinstance(action, RuleLongClick):
-            self.device.long_click(target.coord(), duration=action.duration / 1000, control_name=target.name)
+            self.device.long_click(x,y, duration=action.duration / 1000, control_name=target.name)
         elif isinstance(action, RuleClick):
-            self.device.click(target.coord(), control_name=target.name)
+            self.device.click(x,y, control_name=target.name)
 
     def wait_until_disappear(self, target: RuleImage) -> None:
         while 1:
@@ -352,7 +384,9 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             case OcrMode.FULL:  # 全匹配
                 appear = result != (0, 0, 0, 0)
             case OcrMode.SINGLE:
-                appear = result == target.keyword
+                # 測試使用regex 保留原始邏輯
+                # appear = result == target.keyword
+                appear = (target.keyword in result)
             case OcrMode.DIGIT:
                 appear = result == int(target.keyword)
             case OcrMode.DIGITCOUNTER:
@@ -463,6 +497,8 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         :param click_image:
         :return:
         """
+        _timer = Timer(10)
+        _timer.start()
         while 1:
             self.screenshot()
 
@@ -478,6 +514,11 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                     # 一直点击
                     if self.ui_reward_appear_click():
                         continue
+                    #連續點擊會直接把獎勵點擊掉
+                    sleep(0.5)
+                break
+            if _timer.reached():
+                logger.warning('Get reward timeout')
                 break
 
             if isinstance(click_image, RuleImage):
@@ -489,6 +530,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             elif isinstance(click_image, RuleClick):
                 if self.click(click_image, interval=click_interval):
                     continue
+
 
         return True
 

@@ -145,12 +145,14 @@ class RuleImage:
         mat = self.image
         res = cv2.matchTemplate(source, mat, cv2.TM_CCOEFF_NORMED)
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)  # 最小匹配度，最大匹配度，最小匹配度的坐标，最大匹配度的坐标
-        # logger.attr(self.name, max_val)
         if max_val > threshold:
+            logger.attr(self.name, f"match success: {max_val}")
             self.roi_front[0] = max_loc[0] + self.roi_back[0]
             self.roi_front[1] = max_loc[1] + self.roi_back[1]
             return True
         else:
+            if(max_val > 0.6):
+                logger.attr(self.name, f"match faild: {max_val}")
             return False
 
     def coord(self) -> tuple:

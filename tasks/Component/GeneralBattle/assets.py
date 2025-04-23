@@ -20,9 +20,9 @@ class GeneralBattleAssets:
 	# description 
 	C_REWARD_1 = RuleClick(roi_front=(606,603,325,87), roi_back=(606,603,325,87), name="reward_1")
 	# description 
-	C_REWARD_2 = RuleClick(roi_front=(25,134,224,472), roi_back=(25,134,224,472), name="reward_2")
+	C_REWARD_2 = RuleClick(roi_front=(25,134,75,472), roi_back=(25,134,75,472), name="reward_2")
 	# description 
-	C_REWARD_3 = RuleClick(roi_front=(1092,156,168,437), roi_back=(1092,156,168,437), name="reward_3")
+	C_REWARD_3 = RuleClick(roi_front=(1175,156,85,437), roi_back=(1175,156,85,437), name="reward_3")
 
 
 	# Click Rule Assets
@@ -66,7 +66,7 @@ class GeneralBattleAssets:
 
 	# Image Rule Assets
 	# 奖励，就是那个魂 
-	I_REWARD = RuleImage(roi_front=(547,518,172,96), roi_back=(547,518,172,96), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_reward.png")
+	I_REWARD = RuleImage(roi_front=(555,606,166,21), roi_back=(494,364,285,274), threshold=0.75, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_reward.png")
 	# 预设的小图标 
 	I_PRESET = RuleImage(roi_front=(32,650,47,45), roi_back=(32,650,47,45), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_preset.png")
 	# 准备 
@@ -108,16 +108,23 @@ class GeneralBattleAssets:
 	# 结算金币 
 	I_REWARD_GOLD = RuleImage(roi_front=(943,312,97,69), roi_back=(943,312,97,69), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_reward_gold.png")
 	# 针对封魔的特殊 
-	I_DE_WIN = RuleImage(roi_front=(518.6666666666666,67.66666666666666,65.33333333333337,59.33333333333334), roi_back=(518.6666666666666,67.66666666666666,65.33333333333337,59.33333333333334), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_de_win.png")
+	I_DE_WIN = RuleImage(roi_front=(518,67,65,59), roi_back=(406,67,177,59), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_de_win.png")
 	# description 
 	I_PRESENT_LESS_THAN_5 = RuleImage(roi_front=(222,648,418,43), roi_back=(222,648,418,43), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_present_less_than_5.png")
 	# 封魔的金币 
 	I_DE_GOLD = RuleImage(roi_front=(61,52,30,25), roi_back=(45,33,65,64), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_de_gold.png")
+	# 取得獎勵 
+	I_GET_REWARD = RuleImage(roi_front=(467,188,344,90), roi_back=(467,188,344,90), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_get_reward.png")
 
 
 	# Image Rule Assets
 	# description 
 	I_GREED_GHOST = RuleImage(roi_front=(56,40,45,45), roi_back=(56,40,45,45), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_greed_ghost.png")
+
+
+	# Ocr Rule Assets
+	# 准备 
+	O_BATTLE_PREPARE = RuleOcr(roi=(1122,546,92,51), area=(1122,546,92,51), mode="Single", method="Default", keyword="准备", name="battle_prepare")
 
 
 	# Swipe Rule Assets

@@ -12,6 +12,7 @@ from module.base.timer import Timer
 from tasks.base_task import BaseTask
 from tasks.Component.GeneralInvite.assets import GeneralInviteAssets
 from tasks.Component.GeneralInvite.config_invite import InviteConfig, InviteNumber, FindMode
+from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
 from module.logger import logger
 
 
@@ -126,6 +127,9 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
 
             # 点击挑战
             if fire:
+                if is_first:
+                    # here wait member join and get is_in_room status
+                    sleep(10)
                 self.click_fire()
                 return True
 
@@ -160,6 +164,8 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
         """
         if is_screenshot:
             self.screenshot()
+        if self.appear(self.I_GI_TEAM):
+            return True
         if self.appear(self.I_GI_EMOJI_1):
             return True
         if self.appear(self.I_GI_EMOJI_2):
@@ -540,9 +546,6 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
 
         return True
 
-
-
-
     def check_then_accept(self) -> bool:
         """
         队员接受邀请
@@ -555,6 +558,10 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
             self.screenshot()
             if self.is_in_room():
                 return True
+            # 被秒开
+            # https://github.com/runhey/OnmyojiAutoScript/issues/230
+            if self.appear(GeneralBattleAssets.I_EXIT):
+                return False
             if self.appear_then_click(self.I_I_NO_DEFAULT, interval=1):
                 continue
             if self.appear_then_click(self.I_GI_SURE, interval=1):

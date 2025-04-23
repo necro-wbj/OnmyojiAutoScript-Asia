@@ -18,7 +18,7 @@ class AreaBossAssets:
 	# 蓝色的返回 
 	I_BACK_BLUE = RuleImage(roi_front=(51,30,51,52), roi_back=(4,1,128,110), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_back_blue.png")
 	# 右上边选中鬼王的 
-	I_FILTER = RuleImage(roi_front=(1108,31,48,49), roi_back=(1096,19,78,67), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_filter.png")
+	I_FILTER = RuleImage(roi_front=(1116,33,35,31), roi_back=(1076,19,98,78), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_filter.png")
 	# 选中第一个鬼王的 
 	I_BATTLE_1 = RuleImage(roi_front=(1066,210,100,100), roi_back=(1066,210,100,100), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_battle_1.png")
 	# 选中第二个鬼王的 
@@ -34,13 +34,13 @@ class AreaBossAssets:
 
 
 	# Ocr Rule Assets
-	# 击杀最多 
-	O_AB_KILL_BEST = RuleOcr(roi=(942,123,157,52), area=(942,123,157,52), mode="Single", method="Default", keyword="击杀最多", name="ab_kill_best")
+	# 急殺數最多 
+	O_AB_KILL_BEST = RuleOcr(roi=(942,123,157,52), area=(942,123,157,52), mode="Single", method="Default", keyword="数最多", name="ab_kill_best")
 	# 我的收藏 
 	O_AB_MY_COLLECT = RuleOcr(roi=(949,124,129,53), area=(949,124,129,53), mode="Single", method="Default", keyword="我的收藏", name="ab_my_collect")
-	# 热门 
-	O_AB_FAMOUS = RuleOcr(roi=(1188,181,78,82), area=(1188,181,78,82), mode="Single", method="Default", keyword="热门", name="ab_famous")
+	# 熱門 
+	O_AB_FAMOUS = RuleOcr(roi=(1190,249,40,82), area=(1190,249,40,82), mode="Single", method="Default", keyword="熱門", name="ab_famous")
 	# 收藏 
-	O_AB_COLLECTING = RuleOcr(roi=(1163,522,88,100), area=(1163,522,88,100), mode="Single", method="Default", keyword="收藏", name="ab_collecting")
+	O_AB_COLLECTING = RuleOcr(roi=(1190,592,40,100), area=(1190,592,40,100), mode="Single", method="Default", keyword="收藏", name="ab_collecting")
 
 

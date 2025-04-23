@@ -6,6 +6,7 @@ import csv
 from datetime import datetime
 from pathlib import Path
 from module.logger import logger
+from module.logger import logger
 
 
 def answer_one(question: str, options: list[str]) -> int:
@@ -33,6 +34,8 @@ def answer_one(question: str, options: list[str]) -> int:
     with open(file, newline='', encoding='utf-8-sig') as csvfile:
         reader = csv.reader(csvfile)
         next(reader)
+        max_score = 0
+        max_score_index = 0
         max_score = 0
         max_score_index = 0
         for row in reader:

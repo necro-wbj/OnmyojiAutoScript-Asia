@@ -9,6 +9,8 @@ from tasks.GameUi.page import page_main
 from tasks.Pets.assets import PetsAssets
 from tasks.Pets.config import PetsConfig
 
+import time
+
 class ScriptTask(GameUi, PetsAssets):
 
     def run(self):
@@ -29,6 +31,19 @@ class ScriptTask(GameUi, PetsAssets):
             self._play()
         if con.pets_feast:
             self._feed()
+        # here check get reward for 5 times
+        while_count = 5
+        while while_count:
+            while_count = while_count - 1
+            self.screenshot()
+            if self.ui_reward_appear_click():
+                logger.info('Get reward of pets')
+                continue
+            # here is to fix the bug only happen to me
+            # in pet page PAGE_CHECK_MAIN max_val still 0.847>0.8
+            if self.appear_then_click(self.I_PET_EXIT, interval=1):
+                continue
+            time.sleep(1)
         self.ui_click(self.I_PET_EXIT, self.I_CHECK_MAIN)
 
         self.set_next_run(task='Pets', success=True, finish=True)
@@ -47,7 +62,7 @@ class ScriptTask(GameUi, PetsAssets):
             logger.warning('Already feed')
             return
         self.ui_click(self.I_PET_FEED, self.I_PET_SKIP)
-        self.wait_until_disappear(self.I_PET_SKIP)
+        self.ui_click_until_disappear(self.I_PET_SKIP)
 
     def _play(self):
         """
@@ -74,7 +89,7 @@ class ScriptTask(GameUi, PetsAssets):
                 play_count += 1
                 logger.info(f'Play {play_count}')
                 continue
-        self.wait_until_disappear(self.I_PET_SKIP)
+        self.ui_click_until_disappear(self.I_PET_SKIP)
 
 
 if __name__ == '__main__':

@@ -32,7 +32,7 @@ class ScriptTask(KU, KekkaiActivationAssets):
         if con.exchange_before:
             self.check_max_lv(con.shikigami_class)
         logger.info("收穫")
-        self.harvest_card()
+        self.click(self.C_A_HARVEST_CARD,0.5)
 
         self.run_activation(con)
         while 1:
@@ -137,11 +137,6 @@ class ScriptTask(KU, KekkaiActivationAssets):
             if not card_status and not card_effect:
                 logger.info('Card is not selected also not using')
                 self.screening_card(_config.card_rule)
-
-
-
-
-
 
     def goto_cards(self):
         """
@@ -280,8 +275,12 @@ class ScriptTask(KU, KekkaiActivationAssets):
             elif current_best == self.order_cards[1]:
                 break
 
+            # 滑到底就退出
+            if self.appear(self.I_AA_SWIPE_BLOCK):
+                logger.warning('Swipe to the end but no card is found')
+                break
             # 超过十次就退出
-            if swipe_count > 20:
+            if swipe_count > 15:
                 logger.warning('Swipe count is more than 10')
                 break
             # 一直向下滑动
@@ -352,6 +351,7 @@ class ScriptTask(KU, KekkaiActivationAssets):
             logger.info('No max level shikigami')
         if self.detect_no_shikigami():
             logger.warning('There are no any shikigami grow room')
+            self.switch_shikigami_class(shikigami_class)
             self.set_shikigami(shikigami_order=7, stop_image=self.I_RS_NO_ADD)
 
         logger.info("回到结界界面")
@@ -381,6 +381,8 @@ class ScriptTask(KU, KekkaiActivationAssets):
         self.appear_then_click(self.I_A_HARVEST_KAIKO_6)  # 太鼓6
         self.appear_then_click(self.I_A_HARVEST_FISH_6)  # 斗鱼6
         self.appear_then_click(self.I_A_HARVEST_MOON_3)  # 太阴3
+        self.appear_then_click(self.I_A_HARVEST_FISH_3)  # 斗鱼三
+
 
 if __name__ == "__main__":
     from module.config.config import Config

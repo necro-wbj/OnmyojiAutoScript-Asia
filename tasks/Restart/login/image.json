@@ -65,8 +65,8 @@
   {
     "itemName": "login_load_down",
     "imageName": "login_login_load_down.png",
-    "roiFront": "711,450,153,58",
-    "roiBack": "711,450,153,58",
+    "roiFront": "725,408,69,32",
+    "roiBack": "653,350,232,131",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "下载插画"
@@ -74,8 +74,8 @@
   {
     "itemName": "login_fix",
     "imageName": "login_login_fix.png",
-    "roiFront": "1196.6666666666665,514.3333333333333,60,54.66666666666674",
-    "roiBack": "1196.6666666666665,514.3333333333333,60,54.66666666666674",
+    "roiFront": "1196,514,60,54",
+    "roiBack": "1196,514,60,54",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

@@ -11,12 +11,18 @@ class GlobalGameAssets:
 
 
 	# Image Rule Assets
-	# description 
+	# 接受 
 	I_G_ACCEPT = RuleImage(roi_front=(830,407,56,46), roi_back=(798,369,117,110), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/gg/gg_g_accept.png")
-	# description 
+	# 拒绝 
 	I_G_REJECT = RuleImage(roi_front=(832,508,53,51), roi_back=(808,480,108,101), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/gg/gg_g_reject.png")
 	# 勾玉 
 	I_G_JADE = RuleImage(roi_front=(661,466,43,46), roi_back=(661,466,43,46), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/gg/gg_g_jade.png")
+	# 猫粮 
+	I_G_CAT_FOOD = RuleImage(roi_front=(565,463,59,65), roi_back=(565,463,59,65), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/gg/gg_g_cat_food.png")
+	# 狗粮 
+	I_G_DOG_FOOD = RuleImage(roi_front=(565,464,60,63), roi_back=(565,464,60,63), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/gg/gg_g_dog_food.png")
+	# 忽略 
+	I_G_IGNORE = RuleImage(roi_front=(773,116,21,21), roi_back=(759,102,48,48), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/gg/gg_g_ignore.png")
 	# 网络异常 
 	I_NETWORK_ABNORMAL = RuleImage(roi_front=(583,330,221,67), roi_back=(583,330,221,67), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/gg/gg_network_abnormal.png")
 	# 已端口游戏服务器，需要重新连接，这种情况一般是断开很久了 

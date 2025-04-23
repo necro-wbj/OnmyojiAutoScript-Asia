@@ -43,13 +43,21 @@ class TransformVideo(HyakkiyakouAssets):
         else:
             self.parse_one(video, save_path)
 
-    def parse_one(self, video: Path, save_path: Path):
+    def parse_one(self, video: Path, save_path: Path = None, mode: int = 2):
         """
         单次解析一个视频
+        @param mode: 0:左边 1:右边 2: 两边
         @param video:
         @param save_path:
         @return:
         """
+        if isinstance(video, str):
+            video = Path(video)
+        if not save_path:
+            save_path = video.parent / f'images_{video.stem}'
+        if isinstance(save_path, str):
+            save_path = Path(save_path)
+        save_path.mkdir(parents=True, exist_ok=True)
         # 获取时间戳的str形式，用来命名图片
         datetime_now = datetime.now().strftime('%Y%m%dT%H%M%S')
         logger.info(f'Start transform video {video}')
@@ -66,31 +74,53 @@ class TransformVideo(HyakkiyakouAssets):
             ret, frame = cap.read()
             if not ret:
                 break
-            w, h, _ = frame.shape
-            if w != 1280 and h != 720:
-                frame = cv2.resize(frame, (1280, 720))
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            # 抽帧
+
+                # 抽帧
             count_frame += 1
             if count_frame % frame_skip != 0:
                 continue
 
-            if not self.I_CHECK_RUN.match(frame, threshold=0.6):
-                continue
+            h, w, _ = frame.shape
+            if h == 720 and w == 1280:
+                pass
+            elif h == 720 and w != 1280:
+                frame = frame[:, 0:1280]
+            elif w != 1280 and h != 720:
+                frame = cv2.resize(frame, (1280, 720))
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+            # 检查是否是百鬼夜行中
+            # if not self.I_CHECK_RUN.match(frame, threshold=0.5):
+            #     continue
             if not self.change_channel:
                 frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
             index_frame += 1
-            cv2.imwrite(str(save_path / f'{datetime_now}_{index_frame:05d}.png'), frame)
-            cv2.imshow('frame', frame)
-            cv2.waitKey(100)
-            cv2.destroyAllWindows()
+
+            h, w, _ = frame.shape
+
+            match mode:
+                case 0:
+                    img_a = frame[h-640:, 0:640]
+                    img_b = None
+                case 1:
+                    img_a = None
+                    img_b = frame[h-640:, 640:1280]
+                case 2:
+                    img_a = frame[h-640:, 0:640]
+                    img_b = frame[h-640:, 640:1280]
+                case _:
+                    raise ValueError('mode must be 0, 1, or 2')
+            if img_a is not None:
+                cv2.imwrite(str(save_path / f'{datetime_now}_{index_frame:05d}a.png'), img_a)
+            if img_b is not None:
+                cv2.imwrite(str(save_path / f'{datetime_now}_{index_frame:05d}b.png'), img_b)
 
         cap.release()
         logger.info(f'{video} done')
 
 
 if __name__ == '__main__':
-    VIDEO = 'D:/Project/Hyakkiyakou/OnmyojiAutoScript-hyakkiyakou/temp/sources_video/001-砸百鬼靠技术？在绝对的运气面前，所有技术.mp4'
-    SAVE_PATH = 'D:/Project/Hyakkiyakou/OnmyojiAutoScript-hyakkiyakou/temp/sources_images'
-    t = TransformVideo()
-    t.run(VIDEO, SAVE_PATH)
+    VIDEO = r'C:\Users\Ryland\Downloads\202404031513.mp4'
+    # SAVE_PATH = 'D:/Project/Hyakkiyakou/OnmyojiAutoScript-hyakkiyakou/temp/sources_images'
+    t = TransformVideo(change_channel=True, interval=0.1)
+    t.parse_one(VIDEO, mode=2)

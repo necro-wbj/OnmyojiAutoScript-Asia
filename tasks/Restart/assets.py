@@ -14,7 +14,7 @@ class RestartAssets:
 	# 点击勾玉 
 	I_HARVEST_JADE = RuleImage(roi_front=(732,489,34,33), roi_back=(177,451,973,141), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_jade.png")
 	# 签到小图标 
-	I_HARVEST_SIGN = RuleImage(roi_front=(397,500,24,34), roi_back=(70,471,889,89), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_sign.png")
+	I_HARVEST_SIGN = RuleImage(roi_front=(253,504,24,27), roi_back=(70,471,889,89), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_sign.png")
 	# description 
 	I_HARVEST_SIGN_2 = RuleImage(roi_front=(592,135,100,252), roi_back=(592,135,100,252), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_sign_2.png")
 	# 999签到福袋 
@@ -57,16 +57,16 @@ class RestartAssets:
 	# 指定角色进入游戏,默认第一个 
 	I_LOGIN_SPECIFIC_SERVE = RuleImage(roi_front=(24,33,52,47), roi_back=(24,33,52,47), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_specific_serve.png")
 	# 下载插画 
-	I_LOGIN_LOAD_DOWN = RuleImage(roi_front=(711,450,153,58), roi_back=(711,450,153,58), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_load_down.png")
+	I_LOGIN_LOAD_DOWN = RuleImage(roi_front=(725,408,69,32), roi_back=(653,350,232,131), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_load_down.png")
 	# description 
-	I_LOGIN_FIX = RuleImage(roi_front=(1196.6666666666665,514.3333333333333,60,54.66666666666674), roi_back=(1196.6666666666665,514.3333333333333,60,54.66666666666674), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_fix.png")
+	I_LOGIN_FIX = RuleImage(roi_front=(1196,514,60,54), roi_back=(1196,514,60,54), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_fix.png")
 
 
 	# Ocr Rule Assets
 	# 正在连接服务器 
 	O_LOGIN_NETWORK = RuleOcr(roi=(534,649,189,39), area=(210,492,100,100), mode="Single", method="Default", keyword="正在连接服务器", name="login_network")
-	# Ocr-description 
-	O_LOGIN_ENTER_GAME = RuleOcr(roi=(558,573,161,44), area=(545,560,191,73), mode="Single", method="Default", keyword="進入游彪", name="login_enter_game")
+	# 進入遊戲 
+	O_LOGIN_ENTER_GAME = RuleOcr(roi=(558,573,161,44), area=(545,560,191,73), mode="Single", method="Default", keyword="進入", name="login_enter_game")
 	# 点击屏幕跳过 
 	O_LOGIN_SKIP_1 = RuleOcr(roi=(1046,35,130,37), area=(1046,35,130,37), mode="Single", method="Default", keyword="点击屏幕跳过", name="login_skip_1")
 	# 登录指定角色，默认第一个 

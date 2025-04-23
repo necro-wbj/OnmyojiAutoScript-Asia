@@ -14,8 +14,8 @@
     "roiBack": "545,560,191,73",
     "mode": "Single",
     "method": "Default",
-    "keyword": "進入游彪",
-    "description": "Ocr-description"
+    "keyword": "進入",
+    "description": "進入遊戲"
   },
   {
     "itemName": "login_skip_1",

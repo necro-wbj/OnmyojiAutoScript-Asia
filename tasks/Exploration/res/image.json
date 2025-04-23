@@ -104,7 +104,7 @@
     "roiFront": "636,263,42,39",
     "roiBack": "0,0,1279,719",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.75,
     "description": "普通怪"
   },
   {
@@ -113,7 +113,7 @@
     "roiFront": "683,256,38,34",
     "roiBack": "0,0,1276,719",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.75,
     "description": "boss"
   },
   {
@@ -137,7 +137,7 @@
   {
     "itemName": "battle_start",
     "imageName": "res_battle_start.png",
-    "roiFront": "555,688,39,27.5",
+    "roiFront": "555,688,39,27",
     "roiBack": "221,677,561,41",
     "method": "Template matching",
     "threshold": 0.8,
@@ -160,5 +160,23 @@
     "method": "Template matching",
     "threshold": 0.6,
     "description": "description"
+  },
+  {
+    "itemName": "e_exit_confirm",
+    "imageName": "res_e_exit_confirm.png",
+    "roiFront": "694,380,163,49",
+    "roiBack": "694,380,163,49",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "box",
+    "imageName": "res_box.png",
+    "roiFront": "47,256,43,24",
+    "roiBack": "45,126,52,489",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寶箱"
   }
 ]

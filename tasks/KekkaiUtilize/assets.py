@@ -37,9 +37,9 @@ class KekkaiUtilizeAssets:
 	# 收取经验（没有满的图） 
 	I_CARD_EXP = RuleImage(roi_front=(903,148.66666666666663,57,54), roi_back=(833.6666666666665,101.66666666666663,199,185), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/realm/realm_card_exp.png")
 	# 收取体力（没有满） 
-	I_BOX_AP = RuleImage(roi_front=(815,435,57,51), roi_back=(744,336,202,204), threshold=0.7, method="Template matching", file="./tasks/KekkaiUtilize/realm/realm_box_ap.png")
+	I_BOX_AP = RuleImage(roi_front=(815,448,52,38), roi_back=(799,416,162,89), threshold=0.7, method="Template matching", file="./tasks/KekkaiUtilize/realm/realm_box_ap.png")
 	# 收取盒子的经验（没有满） 
-	I_BOX_EXP = RuleImage(roi_front=(842,384,42,45), roi_back=(784,343,147,127), threshold=0.7, method="Template matching", file="./tasks/KekkaiUtilize/realm/realm_box_exp.png")
+	I_BOX_EXP = RuleImage(roi_front=(886,449,59,29), roi_back=(799,419,161,81), threshold=0.7, method="Template matching", file="./tasks/KekkaiUtilize/realm/realm_box_exp.png")
 	# 结界皮肤 
 	I_REALM_SHIN = RuleImage(roi_front=(168,466,54,58), roi_back=(22,380,393,308), threshold=0.9, method="Template matching", file="./tasks/KekkaiUtilize/realm/realm_realm_shin.png")
 	# 寄养别人的经验 
@@ -122,5 +122,7 @@ class KekkaiUtilizeAssets:
 	# Swipe Rule Assets
 	# 向下滑动 
 	S_U_UP = RuleSwipe(roi_front=(235,419,50,21), roi_back=(225,177,72,21), mode="default", name="u_up")
+	# 滑动到底部 
+	S_U_END = RuleSwipe(roi_front=(175,179,26,26), roi_back=(164,518,49,102), mode="default", name="u_end")
 
 

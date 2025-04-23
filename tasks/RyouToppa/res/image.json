@@ -2,7 +2,7 @@
   {
     "itemName": "ryou_toppa",
     "imageName": "res_ryou_toppa.png",
-    "roiFront": "1191,352,78,116",
+    "roiFront": "1216,366,31,87",
     "roiBack": "1191,352,78,116",
     "method": "Template matching",
     "threshold": 0.8,

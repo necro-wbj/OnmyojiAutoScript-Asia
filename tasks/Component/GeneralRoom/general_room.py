@@ -105,11 +105,11 @@ class GeneralRoom(BaseTask, GeneralRoomAssets):
         在组队界面 退出组队的界面， 返回到庭院或者是你一开始进入的入口
         :return:
         """
-        if self.appear(self.I_GR_MATCHING_NEW):
+        if self.appear(self.I_CHECK_TEAM):
             logger.info('Exit team ui')
             while 1:
                 self.screenshot()
-                if not self.appear(self.I_GR_MATCHING_NEW):
+                if not self.appear(self.I_CHECK_TEAM):
                     return True
                 if self.appear_then_click(self.I_GR_BACK_YELLOW, interval=0.5):
                     continue
@@ -125,6 +125,10 @@ class GeneralRoom(BaseTask, GeneralRoomAssets):
             return False
         if name == '憤怒的石距' or name == '噴怒的石距':
             name = '價悠的石距'
+        if name == '金幣妖怪' or name == '金常妖怪' or name == '金妖怪': # CHS ORC "金幣妖怪" will regconize as "金幣妖怪", "金常妖怪", "金妖怪"
+            name = '金常妖怪'
+        if name == '經驗妖怪' or name == '經验妖怪' or name == '經妖怪': # "經驗妖怪", "經验妖怪", "經妖怪"
+            name = '经验妖怪'
         self.O_GR_ZONES_NAME.keyword = name
         click_timer = Timer(1.1)
         click_timer.start()

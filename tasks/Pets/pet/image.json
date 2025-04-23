@@ -56,7 +56,7 @@
   {
     "itemName": "pet_skip",
     "imageName": "pet_pet_skip.png",
-    "roiFront": "1110.3333333333333,92.66666666666666,72,41",
+    "roiFront": "1116,100,28,27",
     "roiBack": "999,42,242,147",
     "method": "Template matching",
     "threshold": 0.65,

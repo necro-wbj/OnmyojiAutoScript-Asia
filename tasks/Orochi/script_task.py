@@ -128,13 +128,15 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         self.ui_goto(page_soul_zones)
         self.orochi_enter()
         layer = self.config.orochi.orochi_config.layer
+        layer = layer[0]
+        logger.info(f'layer {layer}')
         self.check_layer(layer)
         self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
         # 创建队伍
         logger.info('Create team')
         while 1:
             self.screenshot()
-            if self.appear(self.I_OROCHI_MATCHING):
+            if self.appear(self.I_CHECK_TEAM):
                 break
             if self.appear_then_click(self.I_FORM_TEAM, interval=1):
                 continue
@@ -271,6 +273,8 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         self.ui_goto(page_soul_zones)
         self.orochi_enter()
         layer = self.config.orochi.orochi_config.layer
+        layer = layer[0]
+        logger.info(f'layer {layer}')
         self.check_layer(layer)
         self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
 
@@ -326,13 +330,15 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             self.ui_goto(page_soul_zones)
             self.orochi_enter()
             layer = self.config.orochi.orochi_config.layer
+            layer = layer[0]
+            logger.info(f'layer {layer}')
             self.check_layer(layer)
             self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
             # 创建队伍
             logger.info('Create team')
             while 1:
                 self.screenshot()
-                if self.appear(self.I_OROCHI_MATCHING):
+                if self.appear(self.I_CHECK_TEAM):
                     break
                 if self.appear_then_click(self.I_FORM_TEAM, interval=1):
                     continue
@@ -430,6 +436,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         while 1:
             self.screenshot()
             action_click = random.choice([self.C_WIN_1, self.C_WIN_2, self.C_WIN_3])
+            #TODO: handle too much souls make click action_click too much ERROR.
             if self.appear_then_click(self.I_WIN, action=action_click ,interval=0.8):
                 # 赢的那个鼓
                 continue

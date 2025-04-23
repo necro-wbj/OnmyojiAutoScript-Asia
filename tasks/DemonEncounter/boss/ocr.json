@@ -7,5 +7,14 @@
     "method": "Default",
     "keyword": "",
     "description": "人數"
+  },
+  {
+    "itemName": "de_sboss_people",
+    "roiFront": "900,565,100,35",
+    "roiBack": "900,565,100,35",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "極逢魔人數"
   }
 ]

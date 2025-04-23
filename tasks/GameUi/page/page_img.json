@@ -5,7 +5,7 @@
     "roiFront": "801,109,38,37",
     "roiBack": "49,98,1033,61",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.85,
     "description": "description"
   },
   {
@@ -146,10 +146,10 @@
   {
     "itemName": "check_realm_raid",
     "imageName": "page_check_realm_raid.png",
-    "roiFront": "507,72,261,46",
-    "roiBack": "507,72,261,46",
+    "roiFront": "1099,15,34,33",
+    "roiBack": "1099,15,34,33",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "description"
   },
   {
@@ -239,7 +239,7 @@
     "roiFront": "1201,234,62,105",
     "roiBack": "1201,234,62,105",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.75,
     "description": "description"
   }
 ]

@@ -74,8 +74,8 @@
   {
     "itemName": "boss_selected",
     "imageName": "boss_boss_selected.png",
-    "roiFront": "509.33333333333326,340,37,41",
-    "roiBack": "509.33333333333326,340,37,41",
+    "roiFront": "509,340,37,41",
+    "roiBack": "509,340,37,41",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "已选中"
@@ -115,5 +115,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "白色退出"
+  },
+  {
+    "itemName": "boss_super_fire",
+    "imageName": "boss_boss_super_fire.png",
+    "roiFront": "1088,562,99,32",
+    "roiBack": "1062,523,139,131",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "極逢魔挑战"
   }
 ]

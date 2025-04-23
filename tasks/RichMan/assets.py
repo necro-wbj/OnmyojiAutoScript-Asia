@@ -24,7 +24,7 @@ class RichManAssets:
 	# 皮肤券 
 	I_GUILD_SKIN = RuleImage(roi_front=(795,437,71,72), roi_back=(320,162,573,371), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_skin.png")
 	# 购买检查 
-	I_GUILD_CHECK_SCRAP = RuleImage(roi_front=(590,246,90,88), roi_back=(590,246,90,88), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_check_scrap.png")
+	I_GUILD_CHECK_SCRAP = RuleImage(roi_front=(561,429,90,88), roi_back=(561,429,90,88), threshold=0.8, method="Template matching", file="./tasks/RichMan/guild/guild_guild_check_scrap.png")
 
 
 	# Ocr Rule Assets
@@ -166,7 +166,7 @@ class RichManAssets:
 	# 雜貨鋪 
 	I_MALL_SUNDRY = RuleImage(roi_front=(856,639,74,61), roi_back=(856,639,74,61), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sundry.png")
 	# 雜貨舖確認 
-	I_MALL_SUNDRY_CHECK = RuleImage(roi_front=(454,7,31,44), roi_back=(454,7,31,44), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sundry_check.png")
+	I_MALL_SUNDRY_CHECK = RuleImage(roi_front=(1091,7,31,44), roi_back=(1091,7,31,44), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sundry_check.png")
 
 
 	# Image Rule Assets
@@ -331,6 +331,10 @@ class RichManAssets:
 	I_S_CHECK_WHITE_FIVE = RuleImage(roi_front=(810,222,109,182), roi_back=(810,222,109,182), threshold=0.8, method="Template matching", file="./tasks/RichMan/shrine/shrine_s_check_white_five.png")
 	# description 
 	I_S_CHECK_WHITE_FOUR = RuleImage(roi_front=(808,222,113,181), roi_back=(808,222,113,181), threshold=0.8, method="Template matching", file="./tasks/RichMan/shrine/shrine_s_check_white_four.png")
+	# description 
+	I_CENTER1 = RuleImage(roi_front=(1101,621,48,51), roi_back=(1072,596,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/shrine/shrine_center1.png")
+	# description 
+	I_CENTER2 = RuleImage(roi_front=(76,590,79,75), roi_back=(65,575,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/shrine/shrine_center2.png")
 
 
 	# Ocr Rule Assets
