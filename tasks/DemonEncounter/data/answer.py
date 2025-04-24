@@ -18,6 +18,8 @@ def count_intersection(str1, str2):
     intersection = set1.intersection(set2)
     return len(intersection)
 
+def answer_one(self, question: str, options: list[str]) -> int|None:
+    """
     每一个问题有四个选项， 返回选项的序号(1、2、3)
     :param question:
     :param options:
