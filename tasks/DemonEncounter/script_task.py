@@ -294,8 +294,6 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         self.screenshot()
         if not self.appear(self.I_DE_AWARD):
             self.ui_get_reward(self.I_DE_RED_DHARMA)
-            # ui_get_reward就已經把 領取獎勵處理掉了
-            # self.wait_until_appear_then_click(self.I_UI_REWARD)
             logger.info('紅色達摩領取完畢')
         self.wait_until_appear(self.I_DE_AWARD)
         # 然后到四个灯笼
@@ -441,8 +439,8 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             logger.hr(f'Answer {i}', 3)
             answer_click = answer()
             # wait 10s
-            time.sleep(10)
-            self.ui_get_reward(answer())
+            time.sleep(1)
+            self.click(answer_click, interval=1)
             while_count = 10
             while while_count:
                 while_count = while_count - 1
@@ -463,7 +461,6 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                 # 如果没有出现红色关闭按钮，说明答题结束
                 if not self.appear(self.I_LETTER_CLOSE):
                     logger.info('no red close button exit Question answering')
-                    logger.info('no red close button exit Question answering')
                     time.sleep(0.5)
                     self.screenshot()
                     if self.appear(self.I_LETTER_CLOSE):
@@ -473,10 +470,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                         return
                 # every wwhile loop sleep 0.5s
                 time.sleep(0.5)
-                # every wwhile loop sleep 0.5s
-                time.sleep(0.5)
                 # 一直点击
-                # self.click(answer_click, interval=1)
                 # self.click(answer_click, interval=1)
             time.sleep(0.5)
 
