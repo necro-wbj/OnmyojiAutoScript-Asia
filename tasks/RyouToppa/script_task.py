@@ -125,7 +125,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
                 ryou_toppa_start_flag = False
                 break
             # 出现寮奖励， 说明寮突已开
-            elif self.appear(self.I_RYOU_REWARD, threshold=0.8) or self.appear(self.I_RYOU_REWARD_90, threshold=0.8):
+            elif self.appear(self.I_RYOU_REWARD, threshold=0.7) or self.appear(self.I_RYOU_REWARD_90):
                 ryou_toppa_start_flag = True
                 break
 

@@ -91,7 +91,7 @@
   },
   {
     "itemName": "ab_filter_title_reward",
-    "imageName": "ab_filter_title_reward.png",
+    "imageName": "res_ab_filter_title_reward.png",
     "roiFront": "920,110,190,70",
     "roiBack": "920,110,190,70",
     "method": "Template matching",
@@ -100,7 +100,7 @@
   },
   {
     "itemName": "ab_filter_title_famous",
-    "imageName": "ab_filter_title_famous.png",
+    "imageName": "res_ab_filter_title_famous.png",
     "roiFront": "920,110,190,70",
     "roiBack": "920,110,190,70",
     "method": "Template matching",
@@ -109,7 +109,7 @@
   },
   {
     "itemName": "ab_filter_title_collection",
-    "imageName": "ab_filter_title_collection.png",
+    "imageName": "res_ab_filter_title_collection.png",
     "roiFront": "920,110,190,70",
     "roiBack": "920,110,190,70",
     "method": "Template matching",
