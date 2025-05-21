@@ -11,10 +11,10 @@ from pathlib import Path
 from module.logger import logger
 
 def count_intersection(str1, str2):
-    set1 = set(str1)
-    set2 = set(str2)
-    intersection = set1.intersection(set2)
-    return len(intersection)
+        set1 = set(str1)
+        set2 = set(str2)
+        intersection = set1.intersection(set2)
+        return len(intersection)
 
 def remove_symbols(text):
     return re.sub(r'[^\w\s]', '', text)
