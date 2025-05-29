@@ -20,8 +20,8 @@
   {
     "itemName": "battle",
     "imageName": "as_battle.png",
-    "roiFront": "375,285,35,135",
-    "roiBack": "300,200,153,315",
+    "roiFront": "285,288,35,135",
+    "roiBack": "252,195,153,315",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入爬塔"
@@ -83,8 +83,8 @@
   {
     "itemName": "switch",
     "imageName": "as_switch.png",
-    "roiFront": "1221,671,23,23",
-    "roiBack": "1191,653,69,56",
+    "roiFront": "1240,670,25,25",
+    "roiBack": "1229,649,50,70",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "切换按键"

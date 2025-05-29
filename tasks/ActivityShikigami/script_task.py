@@ -45,33 +45,35 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         self.ui_get_current_page()
         self.ui_goto(page_main)
 
-        self.open_buff()
-        self.soul(is_open=True)
-        self.close_buff()
+        # self.open_buff()
+        # self.soul(is_open=True)
+        # self.close_buff()
 
         self.home_main()
 
         # 选择是游戏的体力还是活动的体力
         current_ap = config.general_climb.ap_mode
-        #self.switch(current_ap)
+        current_ap = ApMode.AP_ACTIVITY
+        self.switch(current_ap)
 
         # 设定是否锁定阵容
-        # if config.general_battle.lock_team_enable:
-        #     logger.info("Lock team")
-        #     while 1:
-        #         self.screenshot()
-        #         if self.appear_then_click(self.I_UNLOCK, interval=1):
-        #             continue
-        #         if self.appear(self.I_LOCK):
-        #             break
-        # else:
-        #     logger.info("Unlock team")
-        #     while 1:
-        #         self.screenshot()
-        #         if self.appear_then_click(self.I_LOCK, interval=1):
-        #             continue
-        #         if self.appear(self.I_UNLOCK):
-        #             break
+
+        if config.general_battle.lock_team_enable:
+            logger.info("Lock team")
+            while 1:
+                self.screenshot()
+                if self.appear_then_click(self.I_UNLOCK, interval=1):
+                    continue
+                if self.appear(self.I_LOCK):
+                    break
+        else:
+            logger.info("Unlock team")
+            while 1:
+                self.screenshot()
+                if self.appear_then_click(self.I_LOCK, interval=1):
+                    continue
+                if self.appear(self.I_UNLOCK):
+                    break
 
         # 流程应该是 在页面处：
         # 1. 判定计数是否超了，时间是否超了
@@ -89,9 +91,6 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             # 2
             self.wait_until_appear(self.I_FIRE)
             is_remain = self.check_ap_remain(current_ap)
-            # 超鬼王不用切換
-            if not is_remain:
-                break
             # 如果没有剩余了且这个时候是体力，就退出活动
             if not is_remain and current_ap == ApMode.AP_GAME:
                 logger.info("Game ap out")
@@ -106,10 +105,9 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                     logger.info("Activity ap out")
                     break
 
-
-
             # 随机休息
             if config.general_climb.random_sleep:
+                logger.info("Random sleep")
                 random_sleep()
             # 点击战斗
             logger.info("Click battle")
@@ -128,16 +126,15 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 if self.appear_then_click(self.I_N_CONFIRM, interval=1):
                     continue
 
-            if self.battle_wait(config.general_battle.random_click_swipt_enable):
+            if self.run_general_battle(config=config.general_battle):
                 logger.info("General battle success")
 
         self.main_home()
-        self.open_buff()
-        self.soul(is_open=False)
-        self.close_buff()
+        # self.open_buff()
+        # self.soul(is_open=False)
+        # self.close_buff()
         if config.general_climb.active_souls_clean:
-            # self.set_next_run(task='SoulsTidy', success=False, finish=False, target=datetime.now())
-            self.set_next_run(task='SoulsTidy', server=False , target=datetime.now())
+            self.set_next_run(task='SoulsTidy', success=False, finish=False, target=datetime.now())
         self.set_next_run(task="ActivityShikigami", success=True)
         raise TaskEnd
 
@@ -181,36 +178,35 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         :return: 如何还有体力，返回True，否则返回False
         """
         self.screenshot()
-        if 1: 
-            # sepcial for super boss 50 ticket
-            cu, res, total = self.O_REMAIN_SUPERBOSS.ocr(image=self.device.image)
-            # log cu res total
-            logger.info(f"cu: {cu}, res: {res}, total: {total}")
-            if total>50:
-                # 如果是大于50的，不正常，只留下百位跟十位，取整數
-                total = int(total / 10)
-                res = total - cu
-            logger.info(f"cu: {cu}, res: {res}, total: {total}")
-            if res == 0 and cu + res == total:
-                logger.warning("Super boss get 50 ticket enough!!")
-                return False
         if current_ap == ApMode.AP_ACTIVITY:
-            cu, res, total = self.O_REMAIN_AP_ACTIVITY.ocr(image=self.device.image)
-            if cu == 0 and cu + res == total:
-                logger.warning("Activity ap not enough")
+            res: int = self.O_REMAIN_AP_ACTIVITY2.ocr_digit(self.device.image)
+            if res <= 0:
+                logger.warning(f'Activity ap {res} not enough')
                 return False
             return True
+            # cu, res, total = self.O_REMAIN_AP_ACTIVITY.ocr(image=self.device.image)
+            # if cu == 0 and cu + res == total:
+            #     logger.warning("Activity ap not enough")
+            #     return False
+            # return True
 
         elif current_ap == ApMode.AP_GAME:
-            cu, res, total = self.O_REMAIN_AP.ocr(image=self.device.image)
-            if cu == total and cu + res == total:
-                if cu > total:
-                    logger.warning(f'Game ap {cu} more than total {total}')
-                    return True
-                logger.warning(f'Game ap not enough: {cu}')
-                return False
+            cu: int = self.O_REMAIN_AP.ocr_digit(self.device.image)
+            if cu > 0:
+                logger.warning(f'Game ap {cu} more than 0')
+                return True
+            logger.warning(f'Game ap not enough: {cu}')
+            return False
 
-            return True
+            # cu, res, total = self.O_REMAIN_AP.ocr(image=self.device.image)
+            # if cu == total and cu + res == total:
+            #     if cu > total:
+            #         logger.warning(f'Game ap {cu} more than total {total}')
+            #         return True
+            #     logger.warning(f'Game ap not enough: {cu}')
+            #     return False
+            #
+            # return True
 
     def switch(self, current_ap: ApMode) -> None:
         """
@@ -239,49 +235,39 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 if self.appear(self.I_AP_ACTIVITY, interval=1):
                     self.appear_then_click(self.I_SWITCH, interval=2)
 
-    def battle_wait(self, random_click_swipt_enable: bool) -> bool:
-        # 重写
-        self.device.stuck_record_add('BATTLE_STATUS_S')
-        self.device.click_record_clear()
-        logger.info("Start battle process")
-        self.C_RANDOM_LEFT.name = "BATTLE_RANDOM"
-        self.C_RANDOM_RIGHT.name = "BATTLE_RANDOM"
-        self.C_RANDOM_TOP.name = "BATTLE_RANDOM"
-        self.C_RANDOM_BOTTOM.name = "BATTLE_RANDOM"
-        while 1:
-            self.screenshot()
-            # 如果出现了 “获得奖励”
-            reward_click = random.choice([self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT, self.C_RANDOM_TOP, self.C_RANDOM_BOTTOM])
-            if self.appear_then_click(self.I_UI_REWARD, action=reward_click, interval=1.3):
-                continue
-            # 如果出现了 “I_REWARD”
-            if self.appear(self.I_REWARD):
-                logger.info("Win")
-                while 1:
-                    self.screenshot()
-                    if self.appear(self.I_UI_CONFIRM_SAMLL):
-                        self.click(self.I_UI_CONFIRM_SAMLL)
-                        logger.info('too much souls')
-                    if self.appear(self.I_FIRE):
-                        logger.info("Fire find end win")
-                        break
-                    if not self.appear(self.I_REWARD):
-                        logger.info("No reward")
-                        continue
-                    if self.appear_then_click(self.I_REWARD, action=self.C_RANDOM_TOP, interval=1.1):
-                        continue
-                return True
-            # 失败 -> 正常人不会失败
-            if self.appear(self.I_FALSE):
-                logger.warning('False battle')
-                self.ui_click_until_disappear(self.I_FALSE)
-                return False
-            if self.appear(self.I_FIRE):
-                logger.info("i don know why no Win but have fire bus seems as win")
-                return True
-            # 如果开启战斗过程随机滑动
-            if random_click_swipt_enable:
-                self.random_click_swipt()
+    # def battle_wait(self, random_click_swipt_enable: bool) -> bool:
+    #     # 重写
+    #     self.device.stuck_record_add('BATTLE_STATUS_S')
+    #     self.device.click_record_clear()
+    #     logger.info("Start battle process")
+    #     self.C_RANDOM_LEFT.name = "BATTLE_RANDOM"
+    #     self.C_RANDOM_RIGHT.name = "BATTLE_RANDOM"
+    #     self.C_RANDOM_TOP.name = "BATTLE_RANDOM"
+    #     self.C_RANDOM_BOTTOM.name = "BATTLE_RANDOM"
+    #     while 1:
+    #         self.screenshot()
+    #         # 如果出现了 “获得奖励”
+    #         reward_click = random.choice([self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT, self.C_RANDOM_TOP, self.C_RANDOM_BOTTOM])
+    #         if self.appear_then_click(self.I_UI_REWARD, action=reward_click, interval=1.3):
+    #             continue
+    #         # 如果出现了 “鼓”
+    #         if self.appear(self.I_WIN):
+    #             logger.info("Win")
+    #             while 1:
+    #                 self.screenshot()
+    #                 if not self.appear(self.I_WIN):
+    #                     break
+    #                 if self.appear_then_click(self.I_WIN, action=self.C_RANDOM_ALL, interval=1.1):
+    #                     continue
+    #             return True
+    #         # 失败 -> 正常人不会失败
+    #         if self.appear(self.I_FALSE):
+    #             logger.warning('False battle')
+    #             self.ui_click_until_disappear(self.I_FALSE)
+    #             return False
+    #         # 如果开启战斗过程随机滑动
+    #         if random_click_swipt_enable:
+    #             self.random_click_swipt()
 
 
 if __name__ == '__main__':
