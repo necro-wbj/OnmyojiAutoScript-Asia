@@ -29,9 +29,8 @@ class LanternClass(Enum):
     MYSTERY = 5  # 神秘任务
     BOSS = 6  # 大鬼王
 
-
 class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
-
+    
     def run(self):
         if not self.check_time():
             logger.warning('Time is not right')
@@ -65,46 +64,67 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
 
         # 极逢魔选择
         best_demon_boss_config = self.config.demon_encounter.best_demon_boss_config
-
+        
         group, team = None, None
+        # 周一 鬼灵歌姬
         if today == 0:
             # 获取group,team
             if best_soul_config.enable and best_demon_boss_config.best_demon_kiryou_select:
                 group, team = best_soul_config.best_demon_kiryou_utahime.split(",")
+                logger.info(f'Best demon boss kiryou group: {group}, team: {team}')
             else:
                 group, team = soul_config.demon_kiryou_utahime.split(",")
+                logger.info(f'Normal demon boss kiryou group: {group}, team: {team}')
+        # 周二 极蜃气楼
         elif today == 1:
             if best_soul_config.enable and best_demon_boss_config.best_demon_shinkirou_select:
                 group, team = best_soul_config.best_demon_shinkirou.split(",")
+                logger.info(f'Best demon boss shinkirou group: {group}, team: {team}')
             else:
                 group, team = soul_config.demon_shinkirou.split(",")
+                logger.info(f'Normal demon boss shinkirou group: {group}, team: {team}')
+        # 周三 土蜘蛛
         elif today == 2:
             if best_soul_config.enable and best_demon_boss_config.best_demon_tsuchigumo_select:
                 group, team = best_soul_config.best_demon_tsuchigumo.split(",")
+                logger.info(f'Best demon boss tsuchigumo group: {group}, team: {team}')
             else:
                 group, team = soul_config.demon_tsuchigumo.split(",")
+                logger.info(f'Normal demon boss tsuchigumo group: {group}, team: {team}')
+        # 周四 荒骷髅
         elif today == 3:
             if best_soul_config.enable and best_demon_boss_config.best_demon_gashadokuro_select:
                 group, team = best_soul_config.best_demon_gashadokuro.split(",")
+                logger.info(f'Best demon boss gashadokuro group: {group}, team: {team}')
             else:
                 group, team = soul_config.demon_gashadokuro.split(",")
+                logger.info(f'Normal demon boss gashadokuro group: {group}, team: {team}')
+        # 周五 地震鲇
         elif today == 4:
             if best_soul_config.enable and best_demon_boss_config.best_demon_namazu_select:
                 group, team = best_soul_config.best_demon_namazu.split(",")
+                logger.info(f'Best demon boss namazu group: {group}, team: {team}')
             else:
                 group, team = soul_config.demon_namazu.split(",")
+                logger.info(f'Normal demon boss namazu group: {group}, team: {team}')
+        # 周六 胧车
         elif today == 5:
             group, team = soul_config.demon_oboroguruma.split(",")
+            logger.info(f'Normal demon boss oboroguruma group: {group}, team: {team}')
+        # 周日 夜荒魂
         elif today == 6:
             group, team = soul_config.demon_nightly_aramitama.split(",")
+            logger.info(f'Normal demon boss nightly aramitama group: {group}, team: {team}')
         if group and team:
             self.run_switch_soul_by_name(group, team)
         if today == 0:
             # 获取group,team
             if best_soul_config.enable and best_demon_boss_config.best_demon_kiryou_select:
                 group, team = best_soul_config.best_demon_kiryou_utahime_supplementary.split(",")
+                logger.info(f'Best demon boss kiryou supplementary group: {group}, team: {team}')
             else:
                 group, team = soul_config.demon_kiryou_utahime_supplementary.split(",")
+                logger.info(f'Normal demon boss kiryou supplementary group: {group}, team: {team}')
             self.run_switch_soul_by_name(group, team)
 
     def execute_boss(self):
@@ -113,95 +133,165 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         :return:
         """
         logger.hr('Start boss battle', 1)
-        # 判断今天是周几
         today = datetime.now().weekday()
         self.screenshot()
-        # self.appear(self.I_DE_BOSS_BEST)
         logger.info(f'self.appear(self.I_DE_BOSS_BEST): {self.appear(self.I_DE_BOSS_BEST)}')
-        # self.appear(self.I_DE_BOSS)
         logger.info(f'self.appear(self.I_DE_BOSS): {self.appear(self.I_DE_BOSS)}')
-        if self.config.demon_encounter.best_demon_boss_config.enable and self.appear(self.I_DE_BOSS_BEST):
-            flag_to_fight_best_demon_boss = True
-        else:
-            flag_to_fight_best_demon_boss = False
+        best_soul_config = self.config.demon_encounter.best_demon_soul_config
+        best_demon_boss_config = self.config.demon_encounter.best_demon_boss_config
+        # 
+        # 周一 鬼灵歌姬
+        if today == 0:
+            if best_demon_boss_config.enable and best_demon_boss_config.best_demon_kiryou_select and self.appear(self.I_DE_BOSS_BEST):
+                logger.info('find best demon boss kiryou(not implement yet in Aisa !!!!!)')
+                flag_to_fight_best_demon_boss = True
+            else:
+                logger.info('find normal demon boss kiryou')
+                flag_to_fight_best_demon_boss = False
+        # 周二 极蜃气楼
+        elif today == 1:
+            if best_demon_boss_config.enable and best_demon_boss_config.best_demon_shinkirou_select and self.appear(self.I_DE_BOSS_BEST):
+                logger.info('find best demon boss shinkirou')
+                flag_to_fight_best_demon_boss = True
+            else:
+                logger.info('find normal demon boss shinkirou')
+                flag_to_fight_best_demon_boss = False
+        # 周三 土蜘蛛
+        elif today == 2:
+            if best_demon_boss_config.enable and best_demon_boss_config.best_demon_tsuchigumo_select and self.appear(self.I_DE_BOSS_BEST):
+                logger.info('find best demon boss tsuchigumo')
+                flag_to_fight_best_demon_boss = True
+            else:
+                logger.info('find normal demon boss tsuchigumo')
+                flag_to_fight_best_demon_boss = False
+        # 周四 荒骷髅
+        elif today == 3:
+            if best_demon_boss_config.enable and best_demon_boss_config.best_demon_gashadokuro_select and self.appear(self.I_DE_BOSS_BEST):
+                logger.info('find best demon boss gashadokuro')
+                flag_to_fight_best_demon_boss = True
+            else:
+                logger.info('find normal demon boss gashadokuro')
+                flag_to_fight_best_demon_boss = False
+        # 周五 地震鲇
+        elif today == 4:
+            if best_demon_boss_config.enable and best_demon_boss_config.best_demon_namazu_select and self.appear(self.I_DE_BOSS_BEST):
+                logger.info('find best demon boss namazu')
+                flag_to_fight_best_demon_boss = True
+            else:
+                logger.info('find normal demon boss namazu')
+                flag_to_fight_best_demon_boss = False
+        # 周六 胧车
+        elif today == 5:
+            if self.enable and self.appear(self.I_DE_BOSS_BEST):
+                logger.info('find best demon boss oboroguruma(not implement yet in game !!!!!)')
+                flag_to_fight_best_demon_boss = True
+            else:
+                logger.info('find normal demon boss oboroguruma')
+                flag_to_fight_best_demon_boss = False
+        # 周日 夜荒魂
+        elif today == 6:
+            if self.enable and self.appear(self.I_DE_BOSS_BEST):
+                logger.info('find best demon boss nightly aramitama(not implement yet in game !!!!!)')
+                flag_to_fight_best_demon_boss = True
+            else:
+                logger.info('find normal demon boss nightly aramitama')
+                flag_to_fight_best_demon_boss = False
+
         logger.info(f'Find best demon boss flag: {flag_to_fight_best_demon_boss}')
         fight_find_done_flag = 0
         # 判断今天是周几
         today = datetime.now().weekday()
-
+        boss_fire_count = 0
         while 1:
             self.screenshot()
-            if 1:
-                logger.info(f'Find best demon boss flag : {flag_to_fight_best_demon_boss}')
-                #init current, remain, total
-                current, remain, total = 0, 0, 0
-                if self.appear(self.I_BEST_BOSS_FIRE)  or self.appear(self.I_BOSS_FIRE):
-                    if flag_to_fight_best_demon_boss == True:
-                        current, remain, total = self.O_DE_SBOSS_PEOPLE.ocr(self.device.image)
-                    else:
-                        current, remain, total = self.O_DE_BOSS_PEOPLE.ocr(self.device.image)
-                
+            current, remain, total = 0, 0, 0
+            # handle boss fire
+            if self.appear(self.I_BOSS_FIRE) or self.appear(self.I_BEST_BOSS_FIRE):
+                logger.info('Find boss fire get people count')
+                if self.appear(self.I_BOSS_FIRE):
+                    current, remain, total = self.O_DE_BOSS_PEOPLE.ocr(self.device.image)
+                    logger.info(f'Normal demon boss people count: {current}, remain: {remain}, total: {total}')
+                elif self.appear(self.I_BEST_BOSS_FIRE):
+                    current, remain, total = self.O_DE_SBOSS_PEOPLE.ocr(self.device.image)
+                    logger.info(f'Best demon boss people count: {current}, remain: {remain}, total: {total}')
                 if total == 300 and current >= 290:
                     logger.info('Boss battle people is full')
                     if not self.appear(self.I_UI_BACK_RED):
                         logger.warning('Boss battle people is full but no red back')
                         continue
                     self.ui_click_until_disappear(self.I_UI_BACK_RED)
+                    self.appear_then_click(self.I_DE_LOCATION, interval=4)
                     # 退出重新选一个没人慢的boss
                     logger.info('Exit and reselect')
                     continue
-                boss_fire_count = 0
-                while total == 300 and current <= 290:
-                    # 点击集结挑战
-                    logger.info('Boss battle people is not full')
-                    self.screenshot()
-                    current, remain, total = 0, 0, 0
-                    if self.appear(self.I_BEST_BOSS_FIRE)  or self.appear(self.I_BOSS_FIRE):
-                        if flag_to_fight_best_demon_boss == True:
+                else: 
+                    logger.info('find Boss battle and try to enter')
+                    boss_fire_count = 0
+                    while total == 300 and current <= 290:
+                        # 点击集结挑战
+                        logger.info(f'Not full try enter count {boss_fire_count}')
+                        self.screenshot()
+                        current, remain, total = 0, 0, 0
+                        if self.appear(self.I_BEST_BOSS_FIRE):
                             current, remain, total = self.O_DE_SBOSS_PEOPLE.ocr(self.device.image)
-                        else:
+                        elif self.appear(self.I_BOSS_FIRE):
                             current, remain, total = self.O_DE_BOSS_PEOPLE.ocr(self.device.image)
-                    
-                    if total == 300 and current == 0:
-                        logger.info('Boss battle people is 0 today already done')
-                        self.ui_click_until_disappear(self.I_UI_BACK_RED)
-                        fight_find_done_flag = 1
-                        return
-                    if self.appear(self.I_BOSS_CONFIRM):
-                        self.ui_click(self.I_BOSS_NO_SELECT, self.I_BOSS_SELECTED)
-                        self.ui_click(self.I_BOSS_CONFIRM, self.I_BOSS_GATHER)
-                        continue
-                    if self.appear(self.I_BOSS_GATHER):
-                        logger.warning('Boss battle ENTER!!!')
-                        fight_find_done_flag = 1
-                        #this need add to outside loop
-                        break
-                    if flag_to_fight_best_demon_boss == True:
+                        else:
+                            logger.warning('No boss fire found WTF close and refound')
+                            self.ui_click_until_disappear(self.I_UI_BACK_RED)
+                            break
+                        
+                        if total == 300 and current == 0:
+                            logger.info('Boss battle people is 0 today maybe already done')
+                            self.ui_click_until_disappear(self.I_UI_BACK_RED)
+                            boss_fire_count = boss_fire_count + 1
+                            time.sleep(1)
+                            if boss_fire_count >= 5:
+                                logger.warning(f'Boss battle already done {boss_fire_count}')
+                                self.appear_then_click(self.I_DE_LOCATION, interval=4)
+                                return
+                            continue
+                        if self.appear(self.I_BOSS_CONFIRM):
+                            self.ui_click(self.I_BOSS_NO_SELECT, self.I_BOSS_SELECTED)
+                            self.ui_click(self.I_BOSS_CONFIRM, self.I_BOSS_GATHER)
+                            continue
+                        if self.appear(self.I_BOSS_GATHER):
+                            logger.warning('Boss battle ENTER!!!')
+                            fight_find_done_flag = 1
+                            #this need add to outside loop
+                            break
                         if self.appear_then_click(self.I_BEST_BOSS_FIRE, interval=3):
                             boss_fire_count += 1
                             logger.info(f'Check enter best demon boss count {boss_fire_count}')
                             continue
-                    else:
                         if self.appear_then_click(self.I_BOSS_FIRE, interval=3):
                             boss_fire_count += 1
                             logger.info(f'Check enter normal boss count {boss_fire_count}')
                             continue
-                    if boss_fire_count >= 5:
-                        # Click over 5 times 1.close 2.go back to initial location 3.go to "Start boss battle" loop 
-                        # to avoid click too many times ERROR
-                        logger.warning('Boss find count over 5')
-                        self.ui_click_until_disappear(self.I_UI_BACK_RED)
-                        #click I_DE_LOCATION to back to initial location
-                        if flag_to_fight_best_demon_boss == True:
-                            self.appear_then_click(self.I_DE_BOSS_BEST, interval=4)
-                        else:
-                            self.appear_then_click(self.I_DE_BOSS, interval=4)
-                        time.sleep(1)
-                        break
-                    if fight_find_done_flag == 1:
-                        break
-            if fight_find_done_flag == 1:
+                        if boss_fire_count >= 5:
+                            # Click over 5 times 1.close 2.go back to initial location 3.go to "Start boss battle" loop 
+                            # to avoid click too many times ERROR
+                            logger.warning('Boss find count over 5')
+                            boss_fire_count = 0
+                            self.ui_click_until_disappear(self.I_UI_BACK_RED)
+                            self.appear_then_click(self.I_DE_LOCATION, interval=4)
+                            #click I_DE_LOCATION to back to initial location
+                            if flag_to_fight_best_demon_boss == True:
+                                self.appear_then_click(self.I_DE_BOSS_BEST, interval=4)
+                            else:
+                                self.appear_then_click(self.I_DE_BOSS, interval=4)
+                            time.sleep(1)
+                            break
+                        if fight_find_done_flag == 1:
+                            break
+                    logger.info('while 5 time Boss battle enter try done')
+            if fight_find_done_flag >= 1:
+                logger.info('Boss battle already done')
                 break
+            # handle find boss
+            logger.info(f'Find best demon boss flag : {flag_to_fight_best_demon_boss}')
+            logger.info(f'best boss finder:{self.appear(self.I_DE_BOSS_BEST)}; normal boss finder:{self.appear(self.I_DE_BOSS)}')
+            self.appear_then_click(self.I_DE_LOCATION, interval=4)
             if self.appear_then_click(self.I_BOSS_NAMAZU, interval=1):
                 continue
             if self.appear_then_click(self.I_BOSS_SHINKIRO, interval=1):
@@ -214,28 +304,34 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                 continue
             if self.appear_then_click(self.I_BOSS_SONGSTRESS, interval=1):
                 continue
-            if self.config.demon_encounter.best_demon_boss_config.enable and today < 5:
+            if flag_to_fight_best_demon_boss and self.appear(self.I_DE_BOSS_BEST):
+                logger.info('Best demon boss enabled and try to find it')
                 if self.appear_then_click(self.I_DE_BOSS_BEST, interval=4):
+                    logger.info('Search best demon boss')
                     continue
             else:
+                logger.info('Best demon boss not enabled')
                 if self.appear_then_click(self.I_DE_BOSS, interval=4):
+                    logger.info('Search normal demon boss')
                     continue
             # 處理定位小人位置 冒出一個小鬼王
             if self.appear(self.I_DE_SMALL_FIRE):
+                logger.info('Find small boss close it')
                 if self.appear_then_click(self.I_UI_BACK_RED, interval=1):
-                    logger.info('Find small boss close it')
+                    self.appear_then_click(self.I_DE_LOCATION, interval=4)
 
             if self.click(self.C_DM_BOSS_CLICK, interval=1.7):
                 continue
 
             if self.appear(self.I_BOSS_GATHER):
-                logger.warning('Boss battle ENTER!!!')
+                logger.warning('Should not run here. Boss battle ENTER!!!')
                 fight_find_done_flag = 1
                 #this need add to outside loop
                 break
             if boss_fire_count >= 5:
-                logger.warning('Boss battle already done')
+                logger.warning('Should not run here. Boss battle already done')
                 self.ui_click_until_disappear(self.I_UI_BACK_RED)
+                self.appear_then_click(self.I_DE_LOCATION, interval=4)
                 return
             if self.appear_then_click(self.I_BOSS_FIRE, interval=3) or self.appear_then_click(self.I_BEST_BOSS_FIRE, interval=3):
                 boss_fire_count += 1
@@ -414,6 +510,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             answer_1 = self.O_LETTER_ANSWER_1.detect_text(self.device.image)
             answer_2 = self.O_LETTER_ANSWER_2.detect_text(self.device.image)
             answer_3 = self.O_LETTER_ANSWER_3.detect_text(self.device.image)
+            options=[answer_1, answer_2, answer_3]
             if answer_1 == '其余选项皆对':
                 index = 1
             elif answer_2 == '其余选项皆对':
@@ -423,8 +520,9 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             if not index:
                 index = Answer().answer_one(question=question, options=[answer_1, answer_2, answer_3])
             if index is None:
+                logger.warning('No answer found, using default answer 1')
                 index = 1
-            logger.info(f'Question: {question}, Answer: {index}')
+            logger.info(f'Question: {question}, Answer: {index}{options[index-1]}')
             return click_match[index]
 
         while 1:
@@ -596,7 +694,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             next_run = datetime.combine(now.date(), self.config.demon_encounter.scheduler.server_update)
             self.set_next_run(task="DemonEncounter", server=False, target=next_run)
             return False
-        elif now.hour >= 23:
+        elif now.hour >= 22:
             # 23点之后，推迟到第二天的17:30
             logger.info('After 23:00, wait to 17:30')
             target_time = datetime(now.year, now.month, now.day, 17, 30, 0) + timedelta(days=1)
