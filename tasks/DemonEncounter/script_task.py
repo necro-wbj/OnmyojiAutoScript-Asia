@@ -182,7 +182,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                 flag_to_fight_best_demon_boss = False
         # 周六 胧车
         elif today == 5:
-            if self.enable and self.appear(self.I_DE_BOSS_BEST):
+            if best_demon_boss_config.enable and self.appear(self.I_DE_BOSS_BEST):
                 logger.info('find best demon boss oboroguruma(not implement yet in game !!!!!)')
                 flag_to_fight_best_demon_boss = True
             else:
@@ -190,7 +190,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                 flag_to_fight_best_demon_boss = False
         # 周日 夜荒魂
         elif today == 6:
-            if self.enable and self.appear(self.I_DE_BOSS_BEST):
+            if best_demon_boss_config.enable and self.appear(self.I_DE_BOSS_BEST):
                 logger.info('find best demon boss nightly aramitama(not implement yet in game !!!!!)')
                 flag_to_fight_best_demon_boss = True
             else:
