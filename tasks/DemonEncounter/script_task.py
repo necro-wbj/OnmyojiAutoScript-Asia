@@ -243,10 +243,10 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                         
                         if total == 300 and current == 0:
                             logger.info('Boss battle people is 0 today maybe already done')
-                            self.ui_click_until_disappear(self.I_UI_BACK_RED)
                             boss_fire_count = boss_fire_count + 1
                             time.sleep(1)
                             if boss_fire_count >= 5:
+                                self.ui_click_until_disappear(self.I_UI_BACK_RED)
                                 logger.warning(f'Boss battle already done {boss_fire_count}')
                                 self.appear_then_click(self.I_DE_LOCATION, interval=4)
                                 return
