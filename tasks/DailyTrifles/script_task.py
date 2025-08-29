@@ -220,16 +220,30 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
             self.screenshot()
             if self.appear(self.I_GIFT_RECOMMEND):
                 break
+            if self.appear(self.I_GIFT_DAILY):
+                break
             if self.appear_then_click(self.I_ROOM_GIFT, interval=1):
                 continue
         self.screenshot()
-        self.appear_then_click(self.I_GIFT_RECOMMEND, interval=1)
+        while 1:
+            if self.appear(self.I_GIFT_RECOMMEND):
+                self.appear_then_click(self.I_GIFT_RECOMMEND, interval=1)
+                break
+            if self.appear(self.I_GIFT_DAILY):
+                self.appear_then_click(self.I_GIFT_DAILY, interval=1)
+                break
         logger.info('Enter store sign')
-        sleep(1)  # 等个动画
-        self.screenshot()
-        if not self.appear(self.I_GIFT_SIGN):
-            logger.warning('There is no gift sign')
-            return
+        wait_count = 0
+        while 1: #wait 5 sec
+            wait_count = wait_count + 1
+            sleep(1)  # 等个动画
+            self.screenshot()
+            if self.appear(self.I_GIFT_SIGN):
+                logger.warning('There is gift sign')
+                break
+            if wait_count > 5: # can not find gift sign for 5 sec
+                logger.warning('There is no gift sign')
+                return
 
         if self.ui_get_reward(self.I_GIFT_SIGN, click_interval=2.5):
             logger.info('Get reward of gift sign')

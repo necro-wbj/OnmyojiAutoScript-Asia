@@ -12,7 +12,16 @@
     "itemName": "gift_recommend",
     "imageName": "store_gift_recommend.png",
     "roiFront": "1186,98,53,64",
-    "roiBack": "1172,83,83,306",
+    "roiBack": "1172,83,83,475",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "description"
+  },
+  {
+    "itemName": "gift_daily",
+    "imageName": "store_gift_daily.png",
+    "roiFront": "1186,372,53,64",
+    "roiBack": "1172,83,83,475",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "description"
@@ -20,8 +29,8 @@
   {
     "itemName": "gift_sign",
     "imageName": "store_gift_sign.png",
-    "roiFront": "236,129,306,218",
-    "roiBack": "236,129,306,218",
+    "roiFront": "175,178,153,165",
+    "roiBack": "145,136,671,218",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "免费一抽"
