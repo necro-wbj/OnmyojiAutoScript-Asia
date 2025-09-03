@@ -78,7 +78,7 @@ jobs:
         run: |
           git switch -C "$PR_BRANCH" upstream/dev
 
-      # === 套用 overlay 提交（加入路徑過濾＋區分：正常/衝突/空補丁） ===
+      # === 套用 overlay 提交（路徑過濾＋區分：正常/衝突/空補丁） ===
       - name: Cherry-pick overlay commit(s) from main
         run: |
           COMMITS=$(git log --reverse --format=%H upstream/dev..origin/${BASE_BRANCH})
@@ -94,7 +94,7 @@ jobs:
             echo "::group::Cherry-picking $c"
             FILES=$(git diff --name-only ${c}^! || true)
 
-            # 只改 CI/文件且未碰允許目錄 → 直接略過
+            # 只動 CI/文件 且 未碰允許目錄 → 略過
             if echo "$FILES" | grep -Ev "$ALLOW_PATTERNS" | grep -Eq '(^|/)\.github/|(^|/)docs/|^README|^CHANGELOG'; then
               if ! echo "$FILES" | grep -Eq "$ALLOW_PATTERNS"; then
                 echo "Skip CI/docs-only commit $c"
@@ -128,32 +128,32 @@ jobs:
           path: .git/rr-cache
           key: rr-cache-${{ github.ref_name }}
 
-      # === 這裡可接上你的測試（建議） ===
+      # === 測試（可接入） ===
       - name: Run tests
         if: env.CONFLICT != '1' && env.NO_OVERLAY != '1'
         run: |
           echo "Run your tests here"
           # pytest -q || true
 
-      # === 成功：自行 push 分支（若已存在則更新） ===
+      # === 成功：push 分支（若已存在則更新） ===
       - name: Push branch
         if: env.CONFLICT != '1' && env.NO_OVERLAY != '1'
         run: |
           git push -u origin "$PR_BRANCH" --force-with-lease
 
-      # === （診斷）用 GH CLI 登入＋列印權限，便於排錯 ===
-      - name: Authenticate gh cli & show permissions
+      # === Token 權限預檢（REST）——列出使用者與 repo 權限，方便排錯 ===
+      - name: Preflight permissions (REST)
         if: env.CONFLICT != '1' && env.NO_OVERLAY != '1'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
         run: |
-          echo "$GH_TOKEN" | gh auth login --with-token
-          gh auth status
-          echo "Viewer:"; gh api graphql -f query='{ viewer { login } }'
-          gh repo view "${{ github.repository }}" --json name,viewerPermission -q '.name + " permission: " + .viewerPermission'
+          echo "Viewer:" 
+          curl -sS -H "Authorization: Bearer $TOKEN" https://api.github.com/user | jq '{login, id}'
+          echo "Repo permissions:"
+          curl -sS -H "Authorization: Bearer $TOKEN" https://api.github.com/repos/$REPO | jq '.permissions'
 
-      # === 開或更新 PR（改用 GitHub REST API，避免 gh 的權限詭異） ===
+      # === 開或更新 PR（REST API） ===
       - name: Open or update PR (REST)
         id: pr
         if: env.CONFLICT != '1' && env.NO_OVERLAY != '1'
@@ -163,9 +163,8 @@ jobs:
         run: |
           set -e
           OWNER="${REPO%/*}"
-          NAME="${REPO#*/}"
 
-          # 先查是否已有 PR（base=main, head=auto-rebase/upstream-dev）
+          # 查是否已有 PR（base=main, head=OWNER:PR_BRANCH）
           EXISTING=$(curl -sS -H "Authorization: Bearer $TOKEN" \
             "https://api.github.com/repos/$REPO/pulls?state=open&base=${BASE_BRANCH}&head=${OWNER}:${PR_BRANCH}" \
             | jq -r '.[0].html_url // empty')
