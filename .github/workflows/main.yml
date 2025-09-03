@@ -1,0 +1,148 @@
+name: Auto sync from upstream/dev to main (overlay rebase)
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"   # 每 5 分鐘（UTC）
+  workflow_dispatch: {}
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: auto-rebase-upstream-dev
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout (full history)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Add upstream & fetch
+        run: |
+          git remote add upstream https://github.com/runhey/OnmyojiAutoScript.git || true
+          git fetch --all --prune
+
+      - name: Get upstream tip
+        id: tip
+        run: |
+          echo "sha=$(git rev-parse upstream/dev)" >> $GITHUB_OUTPUT
+
+      - name: Restore last-processed tip
+        id: last
+        uses: actions/cache/restore@v4
+        with:
+          path: .upstream-tip
+          key: upstream-tip-${{ steps.tip.outputs.sha }}
+
+      - name: Skip if no change
+        if: steps.last.outputs.cache-hit == 'true'
+        run: |
+          echo "Upstream dev has no new commits; exiting."
+          exit 0
+
+      - name: Enable rerere (local)
+        run: |
+          git config rerere.enabled true
+          git config rerere.autoupdate true
+
+      - name: Restore rerere cache
+        uses: actions/cache@v4
+        with:
+          path: .git/rr-cache
+          key: rr-cache-${{ github.ref_name }}
+          restore-keys: |
+            rr-cache-
+
+      - name: Prepare working branch from upstream/dev
+        run: |
+          git switch -C auto-rebase/upstream-dev upstream/dev
+
+      - name: Cherry-pick overlay commit(s) from main
+        env:
+          BASE_BRANCH: main
+        run: |
+          COMMITS=$(git log --reverse --format=%H upstream/dev..origin/${BASE_BRANCH})
+
+          if [ -z "$COMMITS" ]; then
+            echo "NO_OVERLAY=1" >> $GITHUB_ENV
+            exit 0
+          fi
+
+          set -e
+          for c in $COMMITS; do
+            echo "Cherry-picking $c"
+            git cherry-pick -x $c || { echo "CONFLICT=1" >> $GITHUB_ENV; break; }
+          done
+
+      - name: Save rerere cache (even on conflict)
+        if: always()
+        uses: actions/cache@v4
+        with:
+          path: .git/rr-cache
+          key: rr-cache-${{ github.ref_name }}
+
+      - name: Run tests
+        if: env.CONFLICT != '1' && env.NO_OVERLAY != '1'
+        run: |
+          echo "Run your tests here"
+          # pytest -q || true
+
+      - name: Push branch & open/update PR
+        if: env.CONFLICT != '1' && env.NO_OVERLAY != '1'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: auto-rebase/upstream-dev
+          title: "chore: Rebase overlay onto latest upstream/dev"
+          body: |
+            自動將 `main` 的 overlay 提交套到最新 `upstream/dev`。
+            - 使用 .gitattributes & rerere 降低衝突
+            - 測試通過即可合併
+          labels: auto-rebase
+          draft: false
+
+      - name: Open conflict issue
+        if: env.CONFLICT == '1'
+        run: |
+          echo "## 自動 rebase 發生衝突，需要人工處理" > body.md
+          echo "" >> body.md
+          echo "**衝突檔案清單：**" >> body.md
+          echo "" >> body.md
+          echo '```' >> body.md
+          git diff --name-only --diff-filter=U >> body.md || true
+          echo '```' >> body.md
+          gh issue create \
+            --title "Auto rebase 衝突，請協助處理" \
+            --body-file body.md \
+            --label "auto-rebase" || true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # === Discord 通知：成功 ===
+      - name: Discord notify success
+        if: env.CONFLICT != '1' && env.NO_OVERLAY != '1'
+        run: |
+          MSG="✅ Auto rebase 成功！已建立/更新 PR：auto-rebase/upstream-dev"
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d "{\"content\":\"$MSG\"}" \
+               "https://discord.com/api/webhooks/1412622397592305814/dfHIMMiqayaA55ODa2cznyI0enNc2qhpSkG2Hvauvs3gwq0jnSL2osOQaj2kbBBXysiw"
+
+      # === Discord 通知：衝突 ===
+      - name: Discord notify conflict
+        if: env.CONFLICT == '1'
+        run: |
+          FILES=$(git diff --name-only --diff-filter=U | tr '\n' ' ')
+          MSG="⚠️ Auto rebase 衝突，需要人工處理。\n衝突檔案: $FILES"
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d "{\"content\":\"$MSG\"}" \
+               "https://discord.com/api/webhooks/1412622397592305814/dfHIMMiqayaA55ODa2cznyI0enNc2qhpSkG2Hvauvs3gwq0jnSL2osOQaj2kbBBXysiw"
