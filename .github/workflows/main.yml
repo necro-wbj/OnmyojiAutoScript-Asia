@@ -31,6 +31,7 @@ jobs:
           git remote add upstream https://github.com/runhey/OnmyojiAutoScript.git || true
           git fetch --all --prune
 
+      # === 早退：若 upstream/dev tip 與上次相同，直接結束 ===
       - name: Get upstream tip
         id: tip
         run: |
@@ -49,6 +50,7 @@ jobs:
           echo "Upstream dev has no new commits; exiting."
           exit 0
 
+      # === 啟用 & 還原 rerere 快取 ===
       - name: Enable rerere (local)
         run: |
           git config rerere.enabled true
@@ -62,10 +64,12 @@ jobs:
           restore-keys: |
             rr-cache-
 
+      # === 以 upstream/dev 為基底建立工作分支 ===
       - name: Prepare working branch from upstream/dev
         run: |
           git switch -C auto-rebase/upstream-dev upstream/dev
 
+      # === 套用 overlay 提交（處理：正常/衝突/空補丁） ===
       - name: Cherry-pick overlay commit(s) from main
         env:
           BASE_BRANCH: main
@@ -79,8 +83,24 @@ jobs:
 
           set -e
           for c in $COMMITS; do
-            echo "Cherry-picking $c"
-            git cherry-pick -x $c || { echo "CONFLICT=1" >> $GITHUB_ENV; break; }
+            echo "::group::Cherry-picking $c"
+            if git cherry-pick -x $c; then
+              echo "Applied $c"
+              echo "::endgroup::"
+              continue
+            fi
+
+            # 非 0：判斷是「真衝突」還是「空補丁/已套用」
+            if git ls-files -u | grep -q . ; then
+              echo "Detected real conflicts while applying $c"
+              echo "CONFLICT=1" >> $GITHUB_ENV
+              echo "::endgroup::"
+              break
+            else
+              echo "Empty/Already-applied commit $c -> skip"
+              git cherry-pick --skip || true
+              echo "::endgroup::"
+            fi
           done
 
       - name: Save rerere cache (even on conflict)
@@ -90,12 +110,14 @@ jobs:
           path: .git/rr-cache
           key: rr-cache-${{ github.ref_name }}
 
+      # === 這裡可接上你的測試 ===
       - name: Run tests
         if: env.CONFLICT != '1' && env.NO_OVERLAY != '1'
         run: |
           echo "Run your tests here"
           # pytest -q || true
 
+      # === 成功：推分支並開/更新 PR ===
       - name: Push branch & open/update PR
         if: env.CONFLICT != '1' && env.NO_OVERLAY != '1'
         uses: peter-evans/create-pull-request@v6
@@ -109,6 +131,7 @@ jobs:
           labels: auto-rebase
           draft: false
 
+      # === 失敗：開 Issue 並列出衝突檔 ===
       - name: Open conflict issue
         if: env.CONFLICT == '1'
         run: |
@@ -117,7 +140,7 @@ jobs:
           echo "**衝突檔案清單：**" >> body.md
           echo "" >> body.md
           echo '```' >> body.md
-          git diff --name-only --diff-filter=U >> body.md || true
+          git ls-files -u | cut -f2 | sort -u >> body.md || true
           echo '```' >> body.md
           gh issue create \
             --title "Auto rebase 衝突，請協助處理" \
@@ -140,9 +163,17 @@ jobs:
       - name: Discord notify conflict
         if: env.CONFLICT == '1'
         run: |
-          FILES=$(git diff --name-only --diff-filter=U | tr '\n' ' ')
+          FILES=$(git ls-files -u | cut -f2 | sort -u | tr '\n' ' ')
           MSG="⚠️ Auto rebase 衝突，需要人工處理。\n衝突檔案: $FILES"
           curl -H "Content-Type: application/json" \
                -X POST \
                -d "{\"content\":\"$MSG\"}" \
                "https://discord.com/api/webhooks/1412622397592305814/dfHIMMiqayaA55ODa2cznyI0enNc2qhpSkG2Hvauvs3gwq0jnSL2osOQaj2kbBBXysiw"
+
+      # === 標記本次處理的 upstream tip（供下次早退） ===
+      - name: Save last-processed tip
+        if: env.CONFLICT != '1'
+        uses: actions/cache/save@v4
+        with:
+          path: .upstream-tip
+          key: upstream-tip-${{ steps.tip.outputs.sha }}
