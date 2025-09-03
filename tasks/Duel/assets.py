@@ -29,11 +29,11 @@ class DuelAssets:
 	# 预选点击确认 
 	I_D_CONFIRM = RuleImage(roi_front=(1097,517,139,156), roi_back=(1097,517,139,156), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_confirm.png")
 	# 自动上阵 
-	I_D_AUTO_ENTRY = RuleImage(roi_front=(42,133,66,62), roi_back=(20,119,115,111), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_auto_entry.png")
+	I_D_AUTO_ENTRY = RuleImage(roi_front=(30,127,66,62), roi_back=(20,119,115,111), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_auto_entry.png")
 	# 手动，弃用 
 	I_D_HAND = RuleImage(roi_front=(34,635,55,55), roi_back=(34,635,55,55), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_hand.png")
 	# 主界面的感叹号 
-	I_D_HELP = RuleImage(roi_front=(719,434,32,30), roi_back=(708,397,49,78), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_help.png")
+	I_D_HELP = RuleImage(roi_front=(719,434,32,30), roi_back=(680,400,80,80), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_help.png")
 	# 准备 
 	I_D_PREPARE = RuleImage(roi_front=(1127,541,100,100), roi_back=(1127,541,100,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_prepare.png")
 	# 准备完毕 
@@ -41,7 +41,7 @@ class DuelAssets:
 	# 战斗数据 
 	I_D_BATTLE_DATA = RuleImage(roi_front=(1068,610,38,60), roi_back=(1068,610,38,60), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_battle_data.png")
 	# 胜利 
-	I_D_VICTORY = RuleImage(roi_front=(433,76,100,100), roi_back=(433,76,100,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_victory.png")
+	I_D_VICTORY = RuleImage(roi_front=(466,88,95,95), roi_back=(433,55,160,165), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_victory.png")
 	# 失败 
 	I_D_FAIL = RuleImage(roi_front=(422,66,100,100), roi_back=(422,66,100,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_fail.png")
 	# 战 
@@ -54,6 +54,16 @@ class DuelAssets:
 	I_BATTLE_WITH_TRAIN = RuleImage(roi_front=(1161,588,78,81), roi_back=(1114,547,163,172), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_battle_with_train.png")
 	# 活动的战斗按钮 
 	I_D_BATTLE2 = RuleImage(roi_front=(1171,592,69,78), roi_back=(1119,566,154,143), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_battle2.png")
+	# 名士的BAN卡環節 
+	I_D_CELEB_BATTLE_BAN = RuleImage(roi_front=(611,39,55,59), roi_back=(611,39,55,59), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_celeb_battle_ban.png")
+	# 名士的BAN卡 鎖定 
+	I_D_CELEB_BAN_LOCK = RuleImage(roi_front=(1090,556,152,59), roi_back=(1090,556,152,59), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_celeb_ban_lock.png")
+	# 名士的BAN卡 SHORT 
+	I_D_CELEB_BAN_SHORT = RuleImage(roi_front=(714,241,34,61), roi_back=(714,241,34,61), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_celeb_ban_short.png")
+	# 名士的MY BAN卡 SHORT 
+	I_D_CELEB_MY_BAN_SHORT = RuleImage(roi_front=(138,241,34,61), roi_back=(138,241,34,61), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_celeb_MY_ban_short.png")
+	# description 
+	I_D_CELEB_BAN_YANLIN = RuleImage(roi_front=(718,136,26,143), roi_back=(718,136,26,143), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_celeb_ban_yanlin.png")
 
 
 	# Ocr Rule Assets
@@ -61,9 +71,17 @@ class DuelAssets:
 	O_D_HONOR = RuleOcr(roi=(699,562,131,31), area=(699,562,131,31), mode="DigitCounter", method="Default", keyword="", name="d_honor")
 	# 分数 
 	O_D_SCORE = RuleOcr(roi=(701,509,61,33), area=(701,509,61,33), mode="Digit", method="Default", keyword="", name="d_score")
-	# 手动 
-	O_D_HAND = RuleOcr(roi=(31,639,63,45), area=(31,639,63,45), mode="Single", method="Default", keyword="手动", name="d_hand")
-	# 自动 
-	O_D_AUTO = RuleOcr(roi=(30,640,65,44), area=(30,640,65,44), mode="Single", method="Default", keyword="自动", name="d_auto")
+	# 手動 
+	O_D_HAND = RuleOcr(roi=(31,639,63,45), area=(31,639,63,45), mode="Single", method="Default", keyword="手動", name="d_hand")
+	# 自動 
+	O_D_AUTO = RuleOcr(roi=(30,640,65,44), area=(30,640,65,44), mode="Single", method="Default", keyword="自動", name="d_auto")
+	# 名士局的禁用腳色 
+	O_D_CELEB_BAN_WHO = RuleOcr(roi=(714,163,34,139), area=(714,163,34,139), mode="Single", method="Default", keyword="", name="d_celeb_ban_who")
+	# 名士局的禁用腳色 
+	O_D_CELEB_MY_BAN_WHO = RuleOcr(roi=(138,163,34,139), area=(138,163,34,139), mode="Single", method="Default", keyword="", name="d_celeb_my_ban_who")
+	# 名士局的禁用腳色 
+	O_D_CELEB_BAN_WHO_SHORT = RuleOcr(roi=(713,179,34,61), area=(713,179,34,61), mode="Single", method="Default", keyword="", name="d_celeb_ban_who_short")
+	# MY名士局的禁用腳色 
+	O_D_CELEB_MY_BAN_WHO_SHORT = RuleOcr(roi=(138,184,34,58), area=(138,184,34,58), mode="Single", method="Default", keyword="", name="d_celeb_my_ban_who_short")
 
 

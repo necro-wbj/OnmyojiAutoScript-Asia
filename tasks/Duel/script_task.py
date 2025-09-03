@@ -3,6 +3,7 @@
 # github https://github.com/runhey
 from time import sleep
 from datetime import time, datetime, timedelta
+import re
 
 from module.logger import logger
 from module.exception import TaskEnd, RequestHumanTakeover
@@ -11,7 +12,7 @@ from module.base.timer import Timer
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main, page_duel
+from tasks.GameUi.page import page_main, page_duel, page_town
 from tasks.Duel.config import Duel
 from tasks.Duel.assets import DuelAssets
 
@@ -29,6 +30,9 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
         # 循环
         while 1:
             self.screenshot()
+            if self.appear(self.I_BATTLE_WITH_TRAIN, interval=1):
+                logger.info('Not Duel time')
+                break
             if self.appear_then_click(self.I_REWARD, interval=0.6):
                 continue
             if not self.duel_main():
@@ -43,10 +47,22 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
                 logger.info('Duel task is over honor')
                 break
             current_score = self.check_score(con.target_score)
-            if not current_score:
+            if not current_score: #check_score return None is over target_score 
                 # 分数够了，退出
                 logger.info('Duel task is over score')
                 break
+            if current_score<3000:
+                if self.is_time_in_range():
+                    logger.info('Normal Duel task is in time')
+                else:
+                    logger.info('Normal Duel task is over time')
+                    break
+            else:
+                if self.is_time_in_range(celeb=True):
+                    logger.info('Celeb Duel task is in time')
+                else:
+                    logger.info('Celeb Duel task is over time')
+                    break
             self.duel_one(current_score, con.green_enable, con.green_mark)
 
         # 记得退回去到町中
@@ -54,6 +70,37 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
         self.set_next_run(task='Duel', success=True, finish=False)
         raise TaskEnd('Duel')
 
+    def is_time_in_range(self, celeb: bool = False) -> bool:
+        now_time = datetime.now().time()
+        if celeb:
+            morning_start = time(11, 0)
+            morning_end = time(13, 0)
+            evening_start = time(18, 0)
+            evening_end = time(21, 0)
+        else:
+            morning_start = time(11, 0)
+            morning_end = time(14, 0)
+            evening_start = time(17, 0)
+            evening_end = time(22, 0)
+
+        if morning_start <= now_time <= morning_end or evening_start <= now_time <= evening_end:
+            return True
+        return False
+
+    def set_next_schedule(self):
+        now = datetime.now()
+        next_schedule = None
+        if now.hour < 11:
+            next_schedule = now.replace(hour=11, minute=0, second=0, microsecond=0)
+        elif 14 <= now.hour < 17:
+            next_schedule = now.replace(hour=17, minute=0, second=0, microsecond=0)
+        elif now.hour >= 22:
+            next_schedule = (now + timedelta(days=1)).replace(hour=11, minute=0, second=0, microsecond=0)
+        else:
+            # 當前時間在指定範圍內，不需要重新計劃
+            next_schedule = None
+        self.set_next_run(task='Duel', success=True, finish=False,target=next_schedule)
+        
     def duel_main(self, screenshot=False) -> bool:
         """
         判断是否斗技主界面
@@ -69,11 +116,14 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
         :return:
         """
         click_count = 0  # 计数
+        logger.info('Souls Switch start')
         while 1:
             self.screenshot()
+            logger.info(f"click_count: {click_count}")
             if click_count >= 4:
                 break
-
+            if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
+                continue
             if self.appear_then_click(self.I_D_TEAM, interval=1):
                 continue
             if self.appear_then_click(self.I_UI_CONFIRM, interval=0.6):
@@ -81,6 +131,7 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
             if self.appear_then_click(self.I_D_TEAM_SWTICH, interval=1):
                 click_count += 1
                 continue
+            logger.info('Souls Switch no find nothing')
         logger.info('Souls Switch is complete')
         self.ui_click(self.I_UI_BACK_YELLOW, self.I_D_TEAM)
 
@@ -100,12 +151,19 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
         :param target: 目标分数
         :return:
         """
+        logger.info(f'Check score: {target}')
         while 1:
             self.screenshot()
             if self.appear(self.I_D_CELEB_STAR) or self.appear(self.I_D_CELEB_HONOR):
                 logger.info('You are already a celeb')
-                return None
-            current_score = self.O_D_SCORE.ocr(self.device.image)
+                # celeb means score is 3000
+                current_score = 3000
+                if target == 3000: # goal is 3000 return None
+                    return None
+                else:
+                    return current_score
+            else:
+                current_score = self.O_D_SCORE.ocr(self.device.image)
             if current_score < 1200:
                 # 分太低了
                 logger.warning('Score is too low')
@@ -117,8 +175,47 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
                 logger.warning('Remove the highest digit')
                 current_score = int(str(current_score)[1:])
             elif current_score > 3000:
+                logger.info('current score over 3000 this is error')
                 continue
-            return current_score if current_score <= target else None
+            if target == 0:
+                return current_score
+            # if current_score is less than target return current_score
+            # else return None to stop the task
+            if current_score <= target:
+                return current_score
+            else:
+                None
+
+    def celeb_ban_card(self):
+        """
+        名士斗技禁用卡片
+        :param ban_card_name: 禁用卡片名
+        :return: 是否被禁用 True or False 被禁用返回True 否则返回False
+        """
+        if self.config.duel.celeb_ban_config.celeb_got_ban_go_lose == False:
+            return False
+        # convert setting celeb_ban_rule text to list
+        ban_list = self.config.duel.celeb_ban_config.celeb_ban_rule.split(',')
+        # ban_list_card_pic is for ocr fail card, example: YANLIN in OCR always is emety ''
+        ban_list_card_pic = []
+        if "言靈" in ban_list:
+            ban_list_card_pic.append(self.I_D_CELEB_BAN_YANLIN)
+        self.screenshot()
+        while self.appear(self.I_D_CELEB_BAN_LOCK):
+            self.screenshot()
+            # 检查ban_list_card_pic是否存在 以及 回傳是否被ban
+            for ban_card_pic in ban_list_card_pic:
+                if self.appear(ban_card_pic):
+                    logger.info(f'find ban card pic {ban_card_pic}')
+                    return True
+            # check ban_card ocr is in ban_list
+            ban_card = self.O_D_CELEB_BAN_WHO.ocr(self.device.image)
+            if ban_card:
+                for ban_list_item in ban_list:
+                    # if ban_card is in ban_list_item use re.match to check card is ban
+                    if re.match(ban_list_item, ban_card):
+                        return True
+        return False
 
     def duel_one(self, current_score: int, enable: bool=False,
                  mark_mode: GreenMarkType=GreenMarkType.GREEN_MAIN) -> bool:
@@ -131,18 +228,61 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
         """
         while 1:
             self.screenshot()
-            if not self.appear(self.I_D_HELP):
+            if self.appear_then_click(self.I_D_BATTLE):
+                logger.info('appear_then_click I_D_BATTLE')
+                continue
+            if self.appear_then_click(self.I_D_BATTLE_PROTECT):
+                logger.info('click I_D_BATTLE_PROTECT')
+                continue
+            if not self.appear(self.I_D_TEAM):
+                logger.info('no Duel I_D_TEAM')
                 break
             if self.appear_then_click(self.I_D_BATTLE, interval=1):
                 continue
             if self.appear_then_click(self.I_D_BATTLE2, interval=1):
                 continue
-            if self.appear_then_click(self.I_BATTLE_WITH_TRAIN, interval=1):
-                continue
+            if self.appear(self.I_BATTLE_WITH_TRAIN, interval=1):
+                logger.info('now is not Dual time')
+                return False
             if self.appear_then_click(self.I_D_BATTLE_PROTECT, interval=1.6):
                 continue
         # 点击斗技 开始匹配对手
         logger.hr('Duel start match')
+        battle_GO_LOSE = False
+        if current_score == 3000:
+            self.wait_until_appear(self.I_D_CELEB_BATTLE_BAN, wait_time=60)
+            self.screenshot()
+            while self.appear(self.I_D_CELEB_BATTLE_BAN):
+                self.screenshot()
+                if self.appear(self.I_D_CELEB_BAN_LOCK):
+                    if self.celeb_ban_card(): 
+                        # my team be banned current no change card rule so just go lose
+                        logger.info('My team is banned')
+                        battle_GO_LOSE = True
+                        break
+                    else:
+                        logger.info('My team no banned go fight.')
+                        battle_GO_LOSE = False
+                        break
+        if battle_GO_LOSE:
+            while 1:
+                self.screenshot()
+                if self.appear_then_click(self.I_EXIT_ENSURE):
+                    continue
+                if self.appear(self.I_FALSE):
+                    # 打输了
+                    logger.info('Duel battle lose')
+                    self.ui_click_until_disappear(self.I_FALSE)
+                    battle_win = False
+                    return battle_win
+                if self.appear(self.I_D_FAIL):
+                    # 输了
+                    logger.info('Duel battle lose')
+                    self.ui_click_until_disappear(self.I_D_FAIL)
+                    battle_win = False
+                    return battle_win
+                if self.appear_then_click(self.I_EXIT):
+                    continue
         while 1:
             self.screenshot()
             if self.appear(self.I_D_AUTO_ENTRY):

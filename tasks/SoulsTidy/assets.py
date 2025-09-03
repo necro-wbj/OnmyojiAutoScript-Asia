@@ -33,7 +33,7 @@ class SoulsTidyAssets:
 	# 立即进食 
 	I_ST_FEED_NOW = RuleImage(roi_front=(929,593,73,65), roi_back=(929,593,73,65), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_feed_now.png")
 	# 未选中 
-	I_ST_UNSELECTED = RuleImage(roi_front=(542,342,38,37), roi_back=(542,342,38,37), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_unselected.png")
+	I_ST_UNSELECTED = RuleImage(roi_front=(508,341,38,37), roi_back=(508,341,38,37), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_unselected.png")
 	# 关闭贪吃鬼 
 	I_ST_GREED_CLOSE = RuleImage(roi_front=(933,211,35,37), roi_back=(933,211,35,37), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_greed_close.png")
 	# 招财猫 
@@ -42,12 +42,18 @@ class SoulsTidyAssets:
 	I_ST_DONATE = RuleImage(roi_front=(813,628,126,68), roi_back=(813,628,126,68), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_donate.png")
 	# 神赐 
 	I_ST_GOD_PRESENT = RuleImage(roi_front=(578,234,131,73), roi_back=(542,117,204,219), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_god_present.png")
+	# 已棄置 
+	I_ST_ABANDON = RuleImage(roi_front=(31,116,107,40), roi_back=(20,107,152,58), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_abandon.png")
+	# +0 
+	I_ST_FIRSET_LEVEL = RuleImage(roi_front=(91,237,35,28), roi_back=(91,237,35,28), threshold=0.7, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_firset_level.png")
 	# 已弃置被选中 
 	I_ST_ABANDONED_SELECTED = RuleImage(roi_front=(47,118,84,33), roi_back=(45,119,85,34), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_abandoned_selected.png")
 	# 第一个御魂是+0的 
 	I_ST_LEVEL_0 = RuleImage(roi_front=(85,235,45,30), roi_back=(85,235,45,30), threshold=0.9, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_level_0.png")
 	# 御魂奉纳后获得的金币 
 	I_ST_GOLD = RuleImage(roi_front=(170,100,950,500), roi_back=(170,100,950,500), threshold=0.9, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_gold.png")
+	# 太多魂的知道了 
+	I_ST_OVERFLOW = RuleImage(roi_front=(693,404,100,37), roi_back=(693,404,100,37), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_overflow.png")
 
 
 	# Long Click Rule Assets
@@ -59,13 +65,13 @@ class SoulsTidyAssets:
 	# 奉纳获得的金币 
 	O_ST_GOLD = RuleOcr(roi=(888,575,105,32), area=(888,575,105,32), mode="Digit", method="Default", keyword="", name="st_gold")
 	# 奉纳的御魂等级 
-	O_ST_FIRSET_LEVEL = RuleOcr(roi=(91,237,35,28), area=(91,237,35,28), mode="Single", method="Default", keyword="", name="st_firset_level")
+	O_ST_FIRSET_LEVEL = RuleOcr(roi=(91,237,35,26), area=(91,237,35,26), mode="Single", method="Default", keyword="", name="st_firset_level")
 	# 入手顺序 
 	O_ST_SORT_TIME = RuleOcr(roi=(387,118,110,42), area=(387,118,110,42), mode="Single", method="Default", keyword="入手顺序", name="st_sort_time")
-	# 等级/星级 最上边的 
-	O_ST_SORT_LEVEL_1 = RuleOcr(roi=(384,115,121,45), area=(384,115,121,45), mode="Single", method="Default", keyword="等级/星级", name="st_sort_level_1")
-	# 等级/星 下边的 
-	O_ST_SORT_LEVEL_2 = RuleOcr(roi=(400,290,128,42), area=(400,290,128,42), mode="Single", method="Default", keyword="等级/星级", name="st_sort_level_2")
+	# 等級/星級 最上边的 
+	O_ST_SORT_LEVEL_1 = RuleOcr(roi=(384,115,121,45), area=(384,115,121,45), mode="Single", method="Default", keyword="等級/星級", name="st_sort_level_1")
+	# 等級/星級 下边的 
+	O_ST_SORT_LEVEL_2 = RuleOcr(roi=(400,290,128,42), area=(400,290,128,42), mode="Single", method="Default", keyword="等級/星級", name="st_sort_level_2")
 	# 类型 
 	O_ST_SORT_TYPE = RuleOcr(roi=(414,118,64,43), area=(414,118,64,43), mode="Single", method="Default", keyword="类型", name="st_sort_type")
 	# 位置 

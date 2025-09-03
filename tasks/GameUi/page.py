@@ -31,6 +31,7 @@ class Page:
 page_login=Page(G.I_CHECK_LOGIN_FORM)
 # Main Home 主页
 page_main = Page(G.I_CHECK_MAIN)
+page_main.additional = [G.I_BACK_BLUE, G.I_HYAKKIYAKOU_CLOSE, G.I_BONDLING_GOTO_EXPLORATION]
 # 召唤summon
 page_summon = Page(G.I_CHECK_SUMMON)
 page_summon.link(button=G.I_SUMMON_GOTO_MAIN, destination=page_main)

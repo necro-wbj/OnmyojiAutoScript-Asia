@@ -29,8 +29,8 @@
   {
     "itemName": "login_yellow_close",
     "imageName": "login_login_yellow_close.png",
-    "roiFront": "29,17,46,44",
-    "roiBack": "0,0,94,86",
+    "roiFront": "1177,28,46,44",
+    "roiBack": "1152,6,94,86",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -65,8 +65,8 @@
   {
     "itemName": "login_load_down",
     "imageName": "login_login_load_down.png",
-    "roiFront": "711,450,153,58",
-    "roiBack": "711,450,153,58",
+    "roiFront": "725,408,69,32",
+    "roiBack": "653,350,232,131",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "下载插画"
@@ -106,6 +106,33 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "登录界面 弹出框 阴阳师精灵"
+  },
+  {
+    "itemName": "login_download_draw",
+    "imageName": "login_login_download_draw.png",
+    "roiFront": "743,459,100,42",
+    "roiBack": "651,328,320,241",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "login_contract_agree",
+    "imageName": "login_login_contract_agree.png",
+    "roiFront": "535,575,209,62",
+    "roiBack": "535,575,209,62",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "同意协议"
+  },
+  {
+    "itemName": "login_comment_request",
+    "imageName": "login_login_comment_request.png",
+    "roiFront": "535,523,201,42",
+    "roiBack": "535,523,201,42",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "請求評論"
   },
   {
     "itemName": "charactars",
