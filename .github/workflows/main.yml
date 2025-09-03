@@ -183,27 +183,47 @@ jobs:
             echo "url=$URL" >> $GITHUB_OUTPUT
           fi
 
-      - name: Discord notify success
+      - name: Discord notify success (no-embed + changelog)
         if: steps.gate.outputs.skip != 'true' && env.CONFLICT != '1' && env.NO_OVERLAY != '1' && steps.pr.outputs.updated == 'true'
         run: |
+          set -e
           RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           PR_URL="${{ steps.pr.outputs.url }}"
-          MSG="✅ Auto rebase 成功（本次有實際更新）！\nPR：${PR_URL}\nRun：${RUN_URL}"
-          curl -H "Content-Type: application/json" \
-               -X POST \
-               -d "{\"content\":\"$MSG\"}" \
-               "https://discord.com/api/webhooks/1412622397592305814/dfHIMMiqayaA55ODa2cznyI0enNc2qhpSkG2Hvauvs3gwq0jnSL2osOQaj2kbBBXysiw"
+          PREV="${{ steps.beforepush.outputs.prev }}"
+          NEW="$(git rev-parse HEAD)"
+          USHA="${{ steps.tip.outputs.upstream_sha }}"
+          SHORT="$(echo "$USHA" | cut -c1-7)"
 
-      - name: Discord notify conflict
+          # 統計與前 10 筆提交（prev..HEAD）
+          STATS="$(git diff --shortstat ${PREV}..${NEW} || true)"
+          CHANGELOG="$(git log --no-merges --pretty=format:'- %s (%h)' ${PREV}..${NEW} | head -n 10 || true)"
+          if [ -z "$CHANGELOG" ]; then
+            CHANGELOG="- （無新的提交訊息，可能為快轉或等價覆寫）"
+          fi
+
+          CONTENT=$(printf '✅ Auto rebase 成功\nUpstream tip: %s\n變更統計：%s\n\n更新摘要（前 10 筆）：\n%s\n\nPR：<%s>\nRun：<%s>\n' \
+            "$SHORT" "$STATS" "$CHANGELOG" "$PR_URL" "$RUN_URL")
+
+          # flags: 4 = SUPPRESS_EMBEDS，避免連結預覽
+          jq -n --arg content "$CONTENT" --argjson flags 4 '{content:$content, flags:$flags}' \
+            | curl -H "Content-Type: application/json" -X POST -d @- \
+                "https://discord.com/api/webhooks/1412622397592305814/dfHIMMiqayaA55ODa2cznyI0enNc2qhpSkG2Hvauvs3gwq0jnSL2osOQaj2kbBBXysiw"
+
+      - name: Discord notify conflict (no-embed + file list)
         if: env.CONFLICT == '1'
         run: |
+          set -e
           RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          FILES=$(git ls-files -u | cut -f2 | sort -u | tr '\n' ' ')
-          MSG="⚠️ Auto rebase 衝突，需要人工處理。\n衝突檔案: $FILES\nRun：${RUN_URL}"
-          curl -H "Content-Type: application/json" \
-               -X POST \
-               -d "{\"content\":\"$MSG\"}" \
-               "https://discord.com/api/webhooks/1412622397592305814/dfHIMMiqayaA55ODa2cznyI0enNc2qhpSkG2Hvauvs3gwq0jnSL2osOQaj2kbBBXysiw"
+          FILES="$(git ls-files -u | cut -f2 | sort -u | head -n 30 || true)"
+          if [ -z "$FILES" ]; then
+            FILES="（衝突清單為空，可能是空補丁／rerere 已解或非追蹤檔）"
+          fi
+
+          CONTENT=$(printf '⚠️ Auto rebase 衝突，需要人工處理。\n衝突檔案（最多 30 筆）：\n%s\n\nRun：<%s>\n' "$FILES" "$RUN_URL")
+
+          jq -n --arg content "$CONTENT" --argjson flags 4 '{content:$content, flags:$flags}' \
+            | curl -H "Content-Type: application/json" -X POST -d @- \
+                "https://discord.com/api/webhooks/1412622397592305814/dfHIMMiqayaA55ODa2cznyI0enNc2qhpSkG2Hvauvs3gwq0jnSL2osOQaj2kbBBXysiw"
 
       - name: Update processed tag
         if: steps.gate.outputs.skip != 'true' && env.CONFLICT != '1'
