@@ -78,7 +78,7 @@ jobs:
         run: |
           git switch -C "$PR_BRANCH" upstream/dev
 
-      # === 套用 overlay 提交（加入「路徑過濾」＋區分：正常/衝突/空補丁） ===
+      # === 套用 overlay 提交（加入路徑過濾＋區分：正常/衝突/空補丁） ===
       - name: Cherry-pick overlay commit(s) from main
         run: |
           COMMITS=$(git log --reverse --format=%H upstream/dev..origin/${BASE_BRANCH})
@@ -87,7 +87,6 @@ jobs:
             exit 0
           fi
 
-          # 允許真正要帶上的目錄（依你的專案調整）
           ALLOW_PATTERNS='^(src/|tasks/|assets/|i18n/|scripts/|config/)'
 
           set -e
@@ -95,7 +94,7 @@ jobs:
             echo "::group::Cherry-picking $c"
             FILES=$(git diff --name-only ${c}^! || true)
 
-            # 只改 CI/文件且未碰到允許目錄 → 直接略過
+            # 只改 CI/文件且未碰允許目錄 → 直接略過
             if echo "$FILES" | grep -Ev "$ALLOW_PATTERNS" | grep -Eq '(^|/)\.github/|(^|/)docs/|^README|^CHANGELOG'; then
               if ! echo "$FILES" | grep -Eq "$ALLOW_PATTERNS"; then
                 echo "Skip CI/docs-only commit $c"
@@ -104,14 +103,12 @@ jobs:
               fi
             fi
 
-            # 嘗試套用
             if git cherry-pick -x $c; then
               echo "Applied $c"
               echo "::endgroup::"
               continue
             fi
 
-            # 非 0 → 判斷「真衝突」或「空補丁/已套用」
             if git ls-files -u | grep -q . ; then
               echo "Detected real conflicts while applying $c"
               echo "CONFLICT=1" >> $GITHUB_ENV
@@ -138,32 +135,58 @@ jobs:
           echo "Run your tests here"
           # pytest -q || true
 
-      # === 成功情況：自行 push 分支；若無分支則建立／若已存在則更新 ===
+      # === 成功：自行 push 分支（若已存在則更新） ===
       - name: Push branch
         if: env.CONFLICT != '1' && env.NO_OVERLAY != '1'
         run: |
-          # 以防 branch 存在不同歷史，使用 --force-with-lease 謹慎更新
           git push -u origin "$PR_BRANCH" --force-with-lease
 
-      # === 開或更新 PR（若已存在就抓取 URL；否則建立新的） ===
-      - name: Open or update PR
-        id: pr
+      # === （診斷）用 GH CLI 登入＋列印權限，便於排錯 ===
+      - name: Authenticate gh cli & show permissions
         if: env.CONFLICT != '1' && env.NO_OVERLAY != '1'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "$GH_TOKEN" | gh auth login --with-token
+          gh auth status
+          echo "Viewer:"; gh api graphql -f query='{ viewer { login } }'
+          gh repo view "${{ github.repository }}" --json name,viewerPermission -q '.name + " permission: " + .viewerPermission'
+
+      # === 開或更新 PR（改用 GitHub REST API，避免 gh 的權限詭異） ===
+      - name: Open or update PR (REST)
+        id: pr
+        if: env.CONFLICT != '1' && env.NO_OVERLAY != '1'
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
         run: |
           set -e
-          # 嘗試查看是否已有從 PR_BRANCH 指向 BASE_BRANCH 的 PR
-          if gh pr view --base "${BASE_BRANCH}" --head "${PR_BRANCH}" >/dev/null 2>&1; then
-            URL=$(gh pr view --base "${BASE_BRANCH}" --head "${PR_BRANCH}" --json url -q .url)
-            echo "url=$URL" >> $GITHUB_OUTPUT
-            echo "Found existing PR: $URL"
+          OWNER="${REPO%/*}"
+          NAME="${REPO#*/}"
+
+          # 先查是否已有 PR（base=main, head=auto-rebase/upstream-dev）
+          EXISTING=$(curl -sS -H "Authorization: Bearer $TOKEN" \
+            "https://api.github.com/repos/$REPO/pulls?state=open&base=${BASE_BRANCH}&head=${OWNER}:${PR_BRANCH}" \
+            | jq -r '.[0].html_url // empty')
+
+          if [ -n "$EXISTING" ]; then
+            echo "url=$EXISTING" >> $GITHUB_OUTPUT
+            echo "Found existing PR: $EXISTING"
           else
-            URL=$(gh pr create \
-              --base "${BASE_BRANCH}" \
-              --head "${PR_BRANCH}" \
-              --title "chore: Rebase overlay onto latest upstream/dev" \
-              --body "自動將 \`${BASE_BRANCH}\` 的 overlay 提交套到最新 \`upstream/dev\`。\n- 使用 .gitattributes & rerere 降低衝突\n- 測試通過即可合併")
+            DATA=$(jq -n --arg title "chore: Rebase overlay onto latest upstream/dev" \
+                        --arg head  "$PR_BRANCH" \
+                        --arg base  "$BASE_BRANCH" \
+                        --arg body  "自動將 \`${BASE_BRANCH}\` 的 overlay 提交套到最新 \`upstream/dev\`。\n- 使用 .gitattributes & rerere 降低衝突\n- 測試通過即可合併" \
+                        '{title:$title, head:$head, base:$base, body:$body}')
+            CREATED=$(curl -sS -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+              -d "$DATA" "https://api.github.com/repos/$REPO/pulls")
+            URL=$(echo "$CREATED" | jq -r '.html_url // empty')
+            if [ -z "$URL" ]; then
+              echo "$CREATED"
+              echo "Failed to create PR via REST" >&2
+              exit 1
+            fi
             echo "url=$URL" >> $GITHUB_OUTPUT
             echo "Created PR: $URL"
           fi
