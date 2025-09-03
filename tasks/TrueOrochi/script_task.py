@@ -2,7 +2,7 @@
 # @author runhey
 # github https://github.com/runhey
 from time import sleep
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 
 from module.logger import logger
 from module.exception import TaskEnd
@@ -16,9 +16,10 @@ from tasks.Orochi.script_task import ScriptTask as OrochiScriptTask
 from tasks.Orochi.config import Layer
 from tasks.GameUi.page import page_main, page_soul_zones, page_shikigami_records
 from tasks.TrueOrochi.assets import TrueOrochiAssets
+from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 
 
-class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
+class ScriptTask(OrochiScriptTask, TrueOrochiAssets, SwitchSoul):
 
     def run(self):
     
@@ -47,7 +48,7 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
         self.orochi_enter()
         sleep(0.5)
         battle = self.check_true_orochi(True)
-        if not battle:
+        if (not battle) and (self.config.true_orochi.true_orochi_config.find_true_orochi == True):
             logger.warning('Not find true orochi')
             logger.warning('Try to battle orochi for ten times')
 
@@ -89,6 +90,28 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
         # 如果有真蛇，那么就开始战斗
         logger.hr('True Orochi Battle')
         conf.current_success += 1
+        #update current_success count
+        cu, re, total = self.O_TRUE_OROCHI_REMAIN.ocr(self.device.image)
+        loop_count = 20
+        while loop_count:
+            loop_count -= 1
+            self.screenshot()
+            if self.appear_then_click(self.I_FIND_TS):
+                continue
+            cu, re, total = self.O_TRUE_OROCHI_REMAIN.ocr(self.device.image)
+            logger.info(f'O_TRUE_OROCHI_REMAIN cu{cu} re{re} total{total}')
+            if total != 2:
+                logger.warning('total is not 2')
+                continue
+            number_challenge = cu
+            # number_challenge is how many times you already challenge 2/2, 1/2
+            if 0 < number_challenge <= 2:
+                logger.info(f'Challenge number: {number_challenge}')
+                conf.current_success = re + 1
+                break
+            if loop_count <= 1:
+                logger.warning('loop_count is 1 OCR failed')
+                break
         while 1:
             self.screenshot()
             if self.appear(self.I_ST_CREATE_ROOM):
@@ -149,6 +172,7 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
                         break
                     if self.appear_then_click(self.I_GREED_GHOST, interval=1):
                         continue
+                    # TODO RENEWW I_ST_FRAME
                     if self.appear_then_click(self.I_ST_FRAME, interval=1):
                         continue
                 break

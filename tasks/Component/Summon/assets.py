@@ -21,6 +21,8 @@ class SummonAssets:
 	I_SM_CONFIRM = RuleImage(roi_front=(419,617,174,61), roi_back=(419,617,174,61), threshold=0.8, method="Template matching", file="./tasks/Component/Summon/sm/sm_sm_confirm.png")
 	# 抽到的时候出现的 
 	I_SM_CONFIRM_2 = RuleImage(roi_front=(377,630,206,62), roi_back=(377,630,206,62), threshold=0.8, method="Template matching", file="./tasks/Component/Summon/sm/sm_sm_confirm_2.png")
+	# 召喚活動 
+	I_SM_EVENT = RuleImage(roi_front=(103,20,130,41), roi_back=(0,0,260,81), threshold=0.8, method="Template matching", file="./tasks/Component/Summon/sm/sm_sm_event.png")
 
 
 	# Ocr Rule Assets
