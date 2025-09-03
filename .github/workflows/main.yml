@@ -232,6 +232,13 @@ jobs:
                -d "{\"content\":\"$MSG\"}" \
                "https://discord.com/api/webhooks/1412622397592305814/dfHIMMiqayaA55ODa2cznyI0enNc2qhpSkG2Hvauvs3gwq0jnSL2osOQaj2kbBBXysiw"
 
+       # === 寫入這次處理過的 upstream tip（建立目錄/檔案，供快取保存） ===
+      - name: Mark last-processed tip
+        if: env.CONFLICT != '1'
+        run: |
+          mkdir -p .upstream-tip
+          echo "${{ steps.tip.outputs.sha }}" > .upstream-tip/sha
+
       # === 標記本次處理的 upstream tip（供下次早退） ===
       - name: Save last-processed tip
         if: env.CONFLICT != '1'
