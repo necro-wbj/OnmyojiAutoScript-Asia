@@ -292,6 +292,8 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             if self.appear(self.I_U_ENTER_REALM):
                 break
             if self.appear_then_click(self.I_UTILIZE_ADD, interval=2):
+                #wait 5 sec for let it loading or 2nd click will close it
+                time.sleep(5)
                 continue
         logger.info('Enter utilize')
         return True
@@ -419,14 +421,21 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
 
         logger.hr('Start utilize')
         self.switch_friend_list(friend)
-        self.swipe(self.S_U_END, interval=3)
+        # self.swipe(self.S_U_END, interval=3)
         if friend == SelectFriendList.SAME_SERVER:
-            self.switch_friend_list(SelectFriendList.DIFFERENT_SERVER)
             self.switch_friend_list(SelectFriendList.SAME_SERVER)
         else:
-            self.switch_friend_list(SelectFriendList.SAME_SERVER)
             self.switch_friend_list(SelectFriendList.DIFFERENT_SERVER)
 
+<<<<<<< HEAD
+            if current_card is None:
+                break
+            else:
+                card_best = current_card
+            if self.order_cards.index(current_card) == 0:
+                logger.info('Current card is the best card')
+                break
+=======
         rule = self.config.kekkai_utilize.utilize_config.utilize_rule
         friend_name = self.config.kekkai_utilize.utilize_config.utilize_friend
         if rule == UtilizeRule.FRIEND:
@@ -435,6 +444,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                 self.screenshot()
                 if select_friend(friend_name):
                     break
+>>>>>>> f1ebafddfb35746df3ebbb517e014f5ee7a60df0
 
                 # 超过十次就退出
                 if swipe_count > 10:
@@ -457,6 +467,9 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                     break
                 else:
                     card_best = current_card
+            if self.order_cards.index(current_card) == 0:
+                logger.info('Current card is the best card')
+                break
 
                 # 超过十次就退出
                 if swipe_count > 10:
@@ -569,6 +582,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         回到寮的界面
         :return:
         """
+        logger.info("回到寮的界面")
         while 1:
             self.screenshot()
 

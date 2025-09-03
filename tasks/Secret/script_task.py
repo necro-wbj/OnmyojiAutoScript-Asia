@@ -197,9 +197,15 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
                     logger.info(f'No find jade number, but find gold number {gold_number}')
                     return 1
                 return None
+            elif jade_num > 100:
+                # the number must under 70, 100 is ocr detect wrong.
+                # jade_num = 170  remove hundred digit 170 % 100 = 70
+                jade_num = jade_num % 100
+                logger.info(f'OCR failed over 100, try again {jade_num}')
             elif jade_num > 70:
-                logger.warning(f'OCR failed, try again {jade_num}')
-                return None
+                # jade_num = 77 remove 70 digit 77 % 70 = 7
+                jade_num = jade_num % 70
+                logger.warning(f'OCR failed over 70, try again {jade_num}')
             # 勾玉数量 = 层数 * 7
             try:
                 lr = jade_num // 7
@@ -214,7 +220,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
             self.ui_click_until_disappear(self.I_CHAT_CLOSE_BUTTON, interval=2)
         text_pos = self.O_SE_NO_PASS.ocr(self.device.image)
         if text_pos != (0, 0, 0, 0):
-            # 如果能找得到 未通关 ，那可以挑战
+            # 如果能找得到 未通關 ，那可以挑战
             layer = confirm_layer(self.O_SE_JADE, text_pos)
             if layer:
                 self.C_SE_CLICK_LAYER.roi_front = text_pos
@@ -259,14 +265,16 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
         self.device.stuck_record_add('BATTLE_STATUS_S')
         self.device.click_record_clear()
         # 战斗过程 随机点击和滑动 防封
-        logger.info("Start battle process")
+        logger.info("Start battle process SECRET")
         while 1:
             self.screenshot()
             if self.appear(self.I_SE_BATTLE_WIN):
                 logger.info('Win battle')
                 self.ui_click_until_disappear(self.I_SE_BATTLE_WIN, interval=2)
                 return True
-            if self.appear_then_click(self.I_WIN, interval=1):
+            if self.appear(self.I_WIN):
+                logger.info('Win battle')
+                self.ui_click_until_disappear(self.I_WIN, interval=2)
                 continue
             if self.appear(self.I_REWARD):
                 logger.info('Win battle')
@@ -277,6 +285,20 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, SecretAssets):
                 logger.warning('False battle')
                 self.ui_click_until_disappear(self.I_FALSE)
                 return False
+            if self.appear(self.I_SE_FIRE):
+                return True
+
+    def check_time(self) -> None:
+        """
+        周一早上不能打
+        @return:
+        """
+        time_now = datetime.now()
+        if time_now.weekday() == 0 and time_now.hour < 8:
+            self.set_next_run(task='Secret',
+                              finish=True,
+                              server=time_now.replace(hour=9, minute=0, second=0, microsecond=0))
+            raise TaskEnd('Secret')
 
     def check_time(self) -> None:
         """
