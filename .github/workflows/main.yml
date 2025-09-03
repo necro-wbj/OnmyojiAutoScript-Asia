@@ -141,6 +141,7 @@ jobs:
         if: env.CONFLICT != '1' && env.NO_OVERLAY != '1'
         uses: peter-evans/create-pull-request@v6
         with:
+          base: main
           branch: auto-rebase/upstream-dev
           title: "chore: Rebase overlay onto latest upstream/dev"
           body: |
