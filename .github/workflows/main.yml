@@ -26,6 +26,7 @@ jobs:
       UPSTREAM_TAG: refs/tags/auto-rebase/last-upstream-dev
 
     steps:
+      # 1) 取庫
       - name: Checkout (full history)
         uses: actions/checkout@v4
         with:
@@ -36,38 +37,43 @@ jobs:
           git remote add upstream https://github.com/runhey/OnmyojiAutoScript.git || true
           git fetch --all --prune --tags
 
-      # === 取得 upstream tip 與本地標記的已處理 tip ===
+      # 2) 讀 upstream/dev 與已處理標記（tag）
       - name: Read upstream tip & processed tag
         id: tip
         run: |
           set -e
           USHA=$(git rev-parse upstream/dev)
           echo "upstream_sha=$USHA" >> $GITHUB_OUTPUT
-          # 若 tag 不存在則輸出空字串
-          PSHA=$(git rev-parse "${UPSTREAM_TAG}" 2>/dev/null || true)
+          PSHA=$(git show-ref -s --verify "${UPSTREAM_TAG}" 2>/dev/null || true)
           echo "processed_sha=$PSHA" >> $GITHUB_OUTPUT
           echo "Upstream: $USHA"
           echo "Processed(tag): ${PSHA:-<none>}"
 
-      # === 絕對早退：如果 tag 指向與 upstream/dev 一樣，直接離開 ===
-      - name: Skip (already processed this upstream tip)
-        if: steps.tip.outputs.processed_sha == steps.tip.outputs.upstream_sha
+      # 3) Gate：若已處理過同一個 upstream tip，整個 Job 早退
+      - name: Gate: decide early-exit
+        id: gate
         run: |
-          echo "Already processed this upstream/dev tip; exiting."
-          exit 0
+          if [ "${{ steps.tip.outputs.processed_sha }}" = "${{ steps.tip.outputs.upstream_sha }}" ]; then
+            echo "SKIP=1" >> $GITHUB_ENV
+            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "Already processed this upstream/dev tip; will skip subsequent steps."
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+            echo "New upstream tip detected; proceed."
+          fi
 
-      # === Git 設定（rerere / merge drivers / 身分 / safe dir）===
-      - name: Git config
+      # 4) Git 設定 & rerere
+      - name: Git config (rerere, identity, safe dir)
+        if: steps.gate.outputs.skip != 'true'
         run: |
           git config rerere.enabled true
           git config rerere.autoupdate true
-          git config merge.ours.driver true
-          git config merge.theirs.driver true
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
       - name: Restore rerere cache
+        if: steps.gate.outputs.skip != 'true'
         uses: actions/cache@v4
         with:
           path: .git/rr-cache
@@ -75,13 +81,15 @@ jobs:
           restore-keys: |
             rr-cache-
 
-      # === 以 upstream/dev 為基底建立工作分支 ===
+      # 5) 建立工作分支（以 upstream/dev 為基底）
       - name: Prepare working branch from upstream/dev
+        if: steps.gate.outputs.skip != 'true'
         run: |
           git switch -C "$PR_BRANCH" upstream/dev
 
-      # === 套用 overlay 提交（路徑過濾＋區分：正常/衝突/空補丁） ===
+      # 6) 套用 overlay（從 main 相對於 upstream/dev 的提交）
       - name: Cherry-pick overlay commit(s) from main
+        if: steps.gate.outputs.skip != 'true'
         run: |
           COMMITS=$(git log --reverse --format=%H upstream/dev..origin/${BASE_BRANCH})
           if [ -z "$COMMITS" ]; then
@@ -111,6 +119,7 @@ jobs:
               continue
             fi
 
+            # 非 0：判斷真衝突或空補丁（已存在）
             if git ls-files -u | grep -q . ; then
               echo "Detected real conflicts while applying $c"
               echo "CONFLICT=1" >> $GITHUB_ENV
@@ -130,32 +139,31 @@ jobs:
           path: .git/rr-cache
           key: rr-cache-${{ github.ref_name }}
 
-      # === 測試（可接入） ===
+      # 7) 測試（可自接）
       - name: Run tests
-        if: env.CONFLICT != '1' && env.NO_OVERLAY != '1'
+        if: steps.gate.outputs.skip != 'true' && env.CONFLICT != '1' && env.NO_OVERLAY != '1'
         run: |
           echo "Run your tests here"
           # pytest -q || true
 
-      # === 記錄 push 前的 PR 分支 HEAD，用於判斷是否真的有更新 ===
+      # 8) 推送 PR 分支 & 判斷是否真的有更新
       - name: Read remote PR branch before push
         id: beforepush
-        if: env.CONFLICT != '1' && env.NO_OVERLAY != '1'
+        if: steps.gate.outputs.skip != 'true' && env.CONFLICT != '1' && env.NO_OVERLAY != '1'
         run: |
           PREV=$(git ls-remote --heads origin "$PR_BRANCH" | awk '{print $1}')
           echo "prev=${PREV:-none}" >> $GITHUB_OUTPUT
           echo "Prev remote head: ${PREV:-<none>}"
 
-      # === push 分支（若已存在則更新） ===
       - name: Push branch
-        if: env.CONFLICT != '1' && env.NO_OVERLAY != '1'
+        if: steps.gate.outputs.skip != 'true' && env.CONFLICT != '1' && env.NO_OVERLAY != '1'
         run: |
           git push -u origin "$PR_BRANCH" --force-with-lease
 
-      # === 開或更新 PR（REST API） ===
+      # 9) 開/更新 PR（REST API）
       - name: Open or update PR (REST)
         id: pr
-        if: env.CONFLICT != '1' && env.NO_OVERLAY != '1'
+        if: steps.gate.outputs.skip != 'true' && env.CONFLICT != '1' && env.NO_OVERLAY != '1'
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
@@ -192,19 +200,18 @@ jobs:
             echo "Created PR: $URL"
           fi
 
-      # === 成功：只有「真的有更新」時才發通知 ===
+      # 10) Discord 通知（只有真的有更新才發）
       - name: Discord notify success
-        if: env.CONFLICT != '1' && env.NO_OVERLAY != '1' && steps.pr.outputs.updated == 'true'
+        if: steps.gate.outputs.skip != 'true' && env.CONFLICT != '1' && env.NO_OVERLAY != '1' && steps.pr.outputs.updated == 'true'
         run: |
           RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           PR_URL="${{ steps.pr.outputs.url }}"
-          MSG="✅ Auto rebase 成功（本次有實際更新）！\nPR：${PR_URL}\nRun：${RUN_URL}"
+          MSG="✅ Auto rebase 成功！\nPR：${PR_URL}\nRun：${RUN_URL}"
           curl -H "Content-Type: application/json" \
                -X POST \
                -d "{\"content\":\"$MSG\"}" \
                "https://discord.com/api/webhooks/1412622397592305814/dfHIMMiqayaA55ODa2cznyI0enNc2qhpSkG2Hvauvs3gwq0jnSL2osOQaj2kbBBXysiw"
 
-      # === 衝突：發通知 ===
       - name: Discord notify conflict
         if: env.CONFLICT == '1'
         run: |
@@ -216,9 +223,9 @@ jobs:
                -d "{\"content\":\"$MSG\"}" \
                "https://discord.com/api/webhooks/1412622397592305814/dfHIMMiqayaA55ODa2cznyI0enNc2qhpSkG2Hvauvs3gwq0jnSL2osOQaj2kbBBXysiw"
 
-      # === 成功時：更新 Tag 為本次處理的 upstream tip（讓下次能立即早退） ===
+      # 11) 成功時更新「已處理 tip」的 tag，讓下一輪可立即早退
       - name: Update processed tag
-        if: env.CONFLICT != '1'
+        if: steps.gate.outputs.skip != 'true' && env.CONFLICT != '1'
         run: |
           git tag -f "${UPSTREAM_TAG#refs/tags/}" "${{ steps.tip.outputs.upstream_sha }}"
           git push origin "refs/tags/${UPSTREAM_TAG#refs/tags/}" --force
