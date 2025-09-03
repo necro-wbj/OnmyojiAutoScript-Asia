@@ -50,11 +50,13 @@ jobs:
           echo "Upstream dev has no new commits; exiting."
           exit 0
 
-      # === 啟用 & 還原 rerere 快取 ===
-      - name: Enable rerere (local)
+      # === 啟用 & 還原 rerere 快取 ＋ 註冊 merge driver（支援 .gitattributes 的 theirs/ours）===
+      - name: Enable rerere & register merge drivers
         run: |
           git config rerere.enabled true
           git config rerere.autoupdate true
+          git config merge.ours.driver true
+          git config merge.theirs.driver true
 
       - name: Restore rerere cache
         uses: actions/cache@v4
@@ -69,7 +71,7 @@ jobs:
         run: |
           git switch -C auto-rebase/upstream-dev upstream/dev
 
-      # === 套用 overlay 提交（處理：正常/衝突/空補丁） ===
+      # === 套用 overlay 提交（加入「路徑過濾」＋區分：正常/衝突/空補丁） ===
       - name: Cherry-pick overlay commit(s) from main
         env:
           BASE_BRANCH: main
@@ -81,16 +83,32 @@ jobs:
             exit 0
           fi
 
+          # 允許真正要帶上的目錄（依你的專案調整）
+          ALLOW_PATTERNS='^(src/|tasks/|assets/|i18n/|scripts/|config/)'
+
           set -e
           for c in $COMMITS; do
             echo "::group::Cherry-picking $c"
+
+            FILES=$(git diff --name-only ${c}^! || true)
+
+            # 若這顆提交只動 CI/文件，且沒有動到允許目錄，直接略過
+            if echo "$FILES" | grep -Ev "$ALLOW_PATTERNS" | grep -Eq '(^|/)\.github/|(^|/)docs/|^README|^CHANGELOG'; then
+              if ! echo "$FILES" | grep -Eq "$ALLOW_PATTERNS"; then
+                echo "Skip CI/docs-only commit $c"
+                echo "::endgroup::"
+                continue
+              fi
+            fi
+
+            # 嘗試套用
             if git cherry-pick -x $c; then
               echo "Applied $c"
               echo "::endgroup::"
               continue
             fi
 
-            # 非 0：判斷是「真衝突」還是「空補丁/已套用」
+            # 非 0 → 判斷「真衝突」或「空補丁/已套用」
             if git ls-files -u | grep -q . ; then
               echo "Detected real conflicts while applying $c"
               echo "CONFLICT=1" >> $GITHUB_ENV
@@ -110,7 +128,7 @@ jobs:
           path: .git/rr-cache
           key: rr-cache-${{ github.ref_name }}
 
-      # === 這裡可接上你的測試 ===
+      # === 這裡可接上你的測試（建議） ===
       - name: Run tests
         if: env.CONFLICT != '1' && env.NO_OVERLAY != '1'
         run: |
@@ -119,6 +137,7 @@ jobs:
 
       # === 成功：推分支並開/更新 PR ===
       - name: Push branch & open/update PR
+        id: cpr
         if: env.CONFLICT != '1' && env.NO_OVERLAY != '1'
         uses: peter-evans/create-pull-request@v6
         with:
@@ -149,22 +168,25 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # === Discord 通知：成功 ===
+      # === Discord 通知：成功（附連結） ===
       - name: Discord notify success
         if: env.CONFLICT != '1' && env.NO_OVERLAY != '1'
         run: |
-          MSG="✅ Auto rebase 成功！已建立/更新 PR：auto-rebase/upstream-dev"
+          RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          PR_URL="${{ steps.cpr.outputs.pull-request-url }}"
+          MSG="✅ Auto rebase 成功！PR：${PR_URL}\nRun：${RUN_URL}"
           curl -H "Content-Type: application/json" \
                -X POST \
                -d "{\"content\":\"$MSG\"}" \
                "https://discord.com/api/webhooks/1412622397592305814/dfHIMMiqayaA55ODa2cznyI0enNc2qhpSkG2Hvauvs3gwq0jnSL2osOQaj2kbBBXysiw"
 
-      # === Discord 通知：衝突 ===
+      # === Discord 通知：衝突（附連結與檔名） ===
       - name: Discord notify conflict
         if: env.CONFLICT == '1'
         run: |
+          RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           FILES=$(git ls-files -u | cut -f2 | sort -u | tr '\n' ' ')
-          MSG="⚠️ Auto rebase 衝突，需要人工處理。\n衝突檔案: $FILES"
+          MSG="⚠️ Auto rebase 衝突，需要人工處理。\n衝突檔案: $FILES\nRun：${RUN_URL}"
           curl -H "Content-Type: application/json" \
                -X POST \
                -d "{\"content\":\"$MSG\"}" \
