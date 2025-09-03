@@ -11,12 +11,13 @@ from tasks.Component.config_scheduler import Scheduler
 from tasks.Component.config_base import ConfigBase, Time
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 from tasks.Orochi.config import UserStatus
+from tasks.Component.GeneralInvite.config_invite import InviteConfig
 
 
 class Layer(str, Enum):
     ONE = '壹层'
     TWO = '贰层'
-    THREE = '叁层'
+    THREE = '参层'
     FOUR = '肆层'
 
 class EternitySeaConfig(ConfigBase):
@@ -33,6 +34,7 @@ class EternitySea(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     eternity_sea_config: EternitySeaConfig = Field(default_factory=EternitySeaConfig)
     general_battle_config: GeneralBattleConfig = Field(default_factory=GeneralBattleConfig)
+    invite_config: InviteConfig = Field(default_factory=InviteConfig)
     switch_soul_config_1: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
     switch_soul_config_2: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
     invite_config: InviteConfig = Field(default_factory=InviteConfig)

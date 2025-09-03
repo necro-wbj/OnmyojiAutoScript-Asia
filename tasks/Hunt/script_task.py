@@ -17,6 +17,7 @@ from tasks.Component.GeneralInvite.general_invite import GeneralInvite
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.Hunt.assets import HuntAssets
 
+
 class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
     kirin_day = True  # 不是麒麟就是阴界之门
     tomorrow_kirin_day = True  # 明天是麒麟还是阴界之门
@@ -25,9 +26,9 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
         self.con_time = self.config.hunt.hunt_time
         if not self.check_datetime():
             # 设置下次运行时间 为今天的晚上七点钟
-            raise TaskEnd('Hunt')
+            raise TaskEnd("Hunt")
         con = self.config.hunt.hunt_config
-        if con.kirin_group_team != '-1,-1' or con.netherworld_group_team != '-1,-1':
+        if con.kirin_group_team != "-1,-1" or con.netherworld_group_team != "-1,-1":
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
 
@@ -42,6 +43,10 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
 
         if self.kirin_day:
             self.kirin()
+            # 判斷麒麟已挑戰後再回去 避免回去失敗
+            self.wait_until_appear(self.I_KIRIN_END)
+            self.ui_get_current_page()
+            self.ui_goto(page_main)
         else:
             self.netherworld()
         sleep(1)
@@ -98,11 +103,11 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
             self.custom_next_run(task='Hunt', custom_time=self.con_time.netherworld_time, time_delta=1)
 
     def kirin(self):
-        logger.hr('kirin', 2)
+        logger.hr("kirin", 2)
         # TODO: 没有碰到：（1）麒麟未开 （2）麒麟已经挑战完毕
+        
         while 1:
             self.screenshot()
-
             if self.appear(self.I_KIRIN_END):
                 # 你的阴阳寮已经打过的麒麟了
                 logger.warning('Your guild have already challenged the Kirin')
@@ -112,20 +117,30 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
                 break
             if self.click(self.C_HUNT_ENTER, interval=2.9):
                 continue
-        logger.info('Arrive the Kirin')
-        self.ui_click(self.I_KIRIN_CHALLAGE, self.I_KIRIN_GATHER)
+            if self.appear_then_click(self.I_KIRIN_CHALLAGE, interval=0.9):
+                logger.info("Arrive the Kirin")
+                break
+            
         # 等待进入战斗
         # 等待挑战, 5秒也是等
         sleep(5)
-        self.device.stuck_record_add('BATTLE_STATUS_S')
-        self.wait_until_disappear(self.I_KIRIN_GATHER)
+        while not self.is_in_battle(True):
+            self.screenshot()
+            if self.appear(self.I_KIRIN_WINE, interval=0.9):
+                self.ui_get_reward(self.I_KIRIN_WINE)
+            if self.appear_then_click(self.I_KIRIN_CHALLAGE):
+                # 清除點擊紀錄避免點擊過多次觸發錯誤 此處可以放心點擊 理論上結束後遊戲會把你趕出去
+                self.device.click_record_clear()
+
+
+        self.device.stuck_record_add("BATTLE_STATUS_S")
+
         self.device.stuck_record_clear()
-        self.device.stuck_record_add('BATTLE_STATUS_S')
+        self.device.stuck_record_add("BATTLE_STATUS_S")
         self.run_general_battle()
 
-
     def netherworld(self):
-        logger.hr('netherworld', 2)
+        logger.hr("netherworld", 2)
         while 1:
             self.screenshot()
             if self.is_in_room(False):
@@ -143,12 +158,11 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
                 continue
             if self.appear(self.I_NW_DONE):
                 # 今日已挑战
-                logger.warning('Today have already challenged the Netherworld')
+                logger.warning("Today have already challenged the Netherworld")
                 self.ui_click_until_disappear(self.I_UI_BACK_RED)
                 return
-        logger.info('Start battle')
+        logger.info("Start battle")
         self.run_general_battle()
-
 
     def battle_wait(self, random_click_swipt_enable: bool) -> bool:
         """
@@ -162,7 +176,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
         #     return super().battle_wait(random_click_swipt_enable)
 
         # 阴界之门
-        self.device.stuck_record_add('BATTLE_STATUS_S')
+        self.device.stuck_record_add("BATTLE_STATUS_S")
         self.device.click_record_clear()
         # 战斗过程 随机点击和滑动 防封
         logger.info("Start battle process")
@@ -171,7 +185,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
         while 1:
             self.screenshot()
             if self.appear(self.I_WIN):
-                logger.info('Battle win')
+                logger.info("Battle win")
                 self.ui_click_until_disappear(self.I_WIN)
                 return True
             # 如果出现失败 就点击，返回False
@@ -183,22 +197,16 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
             if stuck_timer and stuck_timer.reached():
                 stuck_timer = None
                 self.device.stuck_record_clear()
-                self.device.stuck_record_add('BATTLE_STATUS_S')
+                self.device.stuck_record_add("BATTLE_STATUS_S")
 
 
-
-
-
-
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     from module.config.config import Config
     from module.device.device import Device
-    c = Config('oas1')
+
+    c = Config("oas1")
     d = Device(c)
     t = ScriptTask(c, d)
     t.screenshot()
 
     t.run()
-
