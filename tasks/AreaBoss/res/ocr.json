@@ -5,8 +5,8 @@
     "roiBack": "942,123,157,52",
     "mode": "Single",
     "method": "Default",
-    "keyword": "击杀最多",
-    "description": "击杀最多"
+    "keyword": "数最多",
+    "description": "急殺數最多"
   },
   {
     "itemName": "ab_my_collect",
@@ -23,8 +23,8 @@
     "roiBack": "1190,220,50,120",
     "mode": "Single",
     "method": "Default",
-    "keyword": "热门",
-    "description": "热门"
+    "keyword": "熱門",
+    "description": "熱門"
   },
   {
     "itemName": "ab_collecting",

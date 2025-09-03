@@ -32,8 +32,8 @@
     "roiBack": "31,639,63,45",
     "mode": "Single",
     "method": "Default",
-    "keyword": "手动",
-    "description": "手动"
+    "keyword": "手動",
+    "description": "手動"
   },
   {
     "itemName": "d_auto",
@@ -41,8 +41,8 @@
     "roiBack": "30,640,65,44",
     "mode": "Single",
     "method": "Default",
-    "keyword": "自动",
-    "description": "自动"
+    "keyword": "自動",
+    "description": "自動"
   },
   {
     "itemName": "d_ban_name",
@@ -52,5 +52,41 @@
     "method": "Default",
     "keyword": "",
     "description": "被办式神名称"
+  },
+  {
+    "itemName": "d_celeb_ban_who",
+    "roiFront": "714,163,34,139",
+    "roiBack": "714,163,34,139",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "名士局的禁用腳色"
+  },
+  {
+    "itemName": "d_celeb_my_ban_who",
+    "roiFront": "138,163,34,139",
+    "roiBack": "138,163,34,139",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "名士局的禁用腳色"
+  },
+  {
+    "itemName": "d_celeb_ban_who_short",
+    "roiFront": "713,179,34,61",
+    "roiBack": "713,179,34,61",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "名士局的禁用腳色"
+  },
+  {
+    "itemName": "d_celeb_my_ban_who_short",
+    "roiFront": "138,184,34,58",
+    "roiBack": "138,184,34,58",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "MY名士局的禁用腳色"
   }
 ]

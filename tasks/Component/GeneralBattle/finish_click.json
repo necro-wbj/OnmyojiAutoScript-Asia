@@ -25,14 +25,14 @@
   },
   {
     "itemName": "reward_2",
-    "roiFront": "25,134,224,472",
-    "roiBack": "25,134,224,472",
+    "roiFront": "25,134,75,472",
+    "roiBack": "25,134,75,472",
     "description": "description"
   },
   {
     "itemName": "reward_3",
-    "roiFront": "1092,156,168,437",
-    "roiBack": "1092,156,168,437",
+    "roiFront": "1175,156,85,437",
+    "roiBack": "1175,156,85,437",
     "description": "description"
   }
 ]

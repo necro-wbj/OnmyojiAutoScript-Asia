@@ -327,7 +327,7 @@ class ProcessManager(QObject):
         :return:
         """
         if config in self.clients:
-            logger.info(f'Gui get mirror image of {config}')
+            # logger.info(f'Gui get mirror image of {config}')
             # 接收流对象
             stream = self.clients[config].gui_mirror_image()
             # 创建 BytesIO 对象来存储图像数据
