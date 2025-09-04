@@ -209,21 +209,63 @@ jobs:
             | curl -H "Content-Type: application/json" -X POST -d @- \
                 "https://discord.com/api/webhooks/1412622397592305814/dfHIMMiqayaA55ODa2cznyI0enNc2qhpSkG2Hvauvs3gwq0jnSL2osOQaj2kbBBXysiw"
 
-      - name: Discord notify conflict (no-embed + file list)
+      # --- 衝突時建立草稿 PR（讓人手進場解） ---
+      - name: Prepare draft PR branch on conflict
         if: env.CONFLICT == '1'
         run: |
           set -e
+          # 退出衝突狀態，讓工作樹乾淨（避免未合併路徑阻擋 push）
+          git cherry-pick --abort || true
+          # 建立哨兵空提交，讓分支有可推送的差異
+          git commit --allow-empty -m "chore: auto-rebase conflict sentinel (run $GITHUB_RUN_ID)"
+          git push -u origin "$PR_BRANCH" --force-with-lease
+
+      - name: Open or update DRAFT PR with conflict details
+        if: env.CONFLICT == '1'
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -e
+          OWNER="${REPO%/*}"
           RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          # 這裡的清單在前一步 abort 後可能取不到，重算一次，若為空就提示
           FILES="$(git ls-files -u | cut -f2 | sort -u | head -n 30 || true)"
-          if [ -z "$FILES" ]; then
-            FILES="（衝突清單為空，可能是空補丁／rerere 已解或非追蹤檔）"
+          [ -z "$FILES" ] && FILES="（清單為空；已 abort，請在本機重現後查）"
+
+          TITLE="chore: Auto rebase conflict - manual resolution needed"
+          BODY=$(
+            jq -n --arg run "$RUN_URL" --arg files "$FILES" '
+              "⚠️ 自動 rebase 遇到衝突，請人工處理。\n\n衝突檔案（最多 30 筆）：\n\($files)\n\nRun：<\($run)>\n
+              建議流程：
+              1) git fetch --all && git switch -C auto-rebase/upstream-dev origin/auto-rebase/upstream-dev
+              2) 手動解衝突、git add、git cherry-pick --continue（或直接在此分支做合併）
+              3) push 後轉正 PR 或請 reviewer 協助"
+            '
+          )
+
+          # 查是否已存在同 head/base 的開放 PR
+          EXISTING=$(curl -sS -H "Authorization: Bearer $TOKEN" \
+            "https://api.github.com/repos/$REPO/pulls?state=open&base=${BASE_BRANCH}&head=${OWNER}:${PR_BRANCH}" \
+            | jq -r '.[0].number // empty')
+
+          if [ -n "$EXISTING" ]; then
+            # 更新 body（不改草稿狀態）
+            curl -sS -X PATCH -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+              -d "$(jq -n --arg body "$BODY" '{body:$body}')" \
+              "https://api.github.com/repos/$REPO/pulls/$EXISTING" >/dev/null
+          else
+            # 建立草稿 PR
+            DATA=$(jq -n \
+              --arg title "$TITLE" \
+              --arg head  "$PR_BRANCH" \
+              --arg base  "$BASE_BRANCH" \
+              --arg body  "$BODY" \
+              --argjson draft true \
+              '{title:$title, head:$head, base:$base, body:$body, draft:$draft}')
+            curl -sS -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+              -d "$DATA" "https://api.github.com/repos/$REPO/pulls" >/dev/null
           fi
-
-          CONTENT=$(printf '⚠️ Auto rebase 衝突，需要人工處理。\n衝突檔案（最多 30 筆）：\n%s\n\nRun：<%s>\n' "$FILES" "$RUN_URL")
-
-          jq -n --arg content "$CONTENT" --argjson flags 4 '{content:$content, flags:$flags}' \
-            | curl -H "Content-Type: application/json" -X POST -d @- \
-                "https://discord.com/api/webhooks/1412622397592305814/dfHIMMiqayaA55ODa2cznyI0enNc2qhpSkG2Hvauvs3gwq0jnSL2osOQaj2kbBBXysiw"
 
       - name: Update processed tag
         if: steps.gate.outputs.skip != 'true' && env.CONFLICT != '1'
