@@ -45,7 +45,7 @@ class DemonEncounterAssets:
 	# 已击败 
 	I_BOSS_KILLED = RuleImage(roi_front=(654,596,35,68), roi_back=(614,537,123,176), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_killed.png")
 	# 极逢魔集结挑战 
-	I_BEST_BOSS_FIRE = RuleImage(roi_front=(1087,562,100,36), roi_back=(1087,562,100,36), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_best_boss_fire.png")
+	I_BEST_BOSS_FIRE = RuleImage(roi_front=(1088,562,99,32), roi_back=(1062,523,139,131), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_best_boss_fire.png")
 	# 战斗失败-等待界面 
 	I_BOSS_WAIT = RuleImage(roi_front=(490,50,350,150), roi_back=(490,50,350,150), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_wait.png")
 	# 战斗结束标识，左下角有战绩按钮 
@@ -55,8 +55,8 @@ class DemonEncounterAssets:
 	# Ocr Rule Assets
 	# 人數 
 	O_DE_BOSS_PEOPLE = RuleOcr(roi=(880,591,100,35), area=(880,591,100,35), mode="DigitCounter", method="Default", keyword="", name="de_boss_people")
-	# Ocr-description 
-	O_DE_BEST_BOSS_PEOPLE = RuleOcr(roi=(902,564,100,31), area=(902,564,100,31), mode="DigitCounter", method="Default", keyword="", name="de_best_boss_people")
+	# 極逢魔人數 
+	O_DE_SBOSS_PEOPLE = RuleOcr(roi=(900,565,100,35), area=(900,565,100,35), mode="DigitCounter", method="Default", keyword="", name="de_sboss_people")
 
 
 	# Click Rule Assets

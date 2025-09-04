@@ -13,6 +13,5 @@ class ExperienceYoukaiConfig(ConfigBase):
 
 class ExperienceYoukai(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
-    exp_youkai: ExpYoukaiConfig = Field(default_factory=ExpYoukaiConfig)
+    experience_youkai: ExperienceYoukaiConfig = Field(default_factory=ExperienceYoukaiConfig)
     switch_soul: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
-

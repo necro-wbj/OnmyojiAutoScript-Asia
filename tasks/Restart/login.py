@@ -113,9 +113,9 @@ class LoginHandler(BaseTask, RestartAssets):
                 self.device.click(x=106, y=535)
 
             # ——點擊「進入遊戲」區塊——
-            # 若「進入遊戲」識別位（I_LOGIN_8）不在畫面，先略過，避免誤點
-            if not self.appear(self.I_LOGIN_8):
-                continue
+            # 亞服沒有這個分級標誌
+            # if not self.appear(self.I_LOGIN_8):
+            #     continue
 
             # 體驗服彈窗：太快點會誤進體驗服，遇到則取消
             if self.appear(self.I_EARLY_SERVER):
