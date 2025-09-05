@@ -92,8 +92,8 @@
   {
     "itemName": "boss_gather",
     "imageName": "boss_boss_gather.png",
-    "roiFront": "801,589,100,100",
-    "roiBack": "801,589,100,100",
+    "roiFront": "801,589,100,91",
+    "roiBack": "801,589,100,91",
     "method": "Template matching",
     "threshold": 0.75,
     "description": "集结"
