@@ -1,274 +1,86 @@
-name: Auto sync from upstream/dev to main (overlay rebase)
+name: Auto Rebase Upstream Dev
 
 on:
   schedule:
-    - cron: "*/5 * * * *"   # 每 5 分鐘（UTC）
-  workflow_dispatch: {}
+    - cron: "*/15 * * * *"   # ⏱️ 降低排程頻率（每 15 分），更省資源；要更頻繁自行調整
+  workflow_dispatch: {}       # 手動觸發
   push:
-    branches: [ main ]
+    branches: [ main ]        # 只監聽 main，避免 PR 分支 push 造成連鎖觸發
+    paths-ignore:             # 文檔或 CI 變更不觸發，減少無謂跑動
+      - ".github/**"
+      - "docs/**"
+      - "README.md"
 
-permissions:
-  contents: write
-  pull-requests: write
-  issues: write
-
+# 🧠 只允許同一分支同一時間一個 run，新的來就取消舊的（安靜又省資源）
 concurrency:
-  group: auto-rebase-upstream-dev
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# 🔐 權限最小化：讀 repo、開 PR
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
-  sync:
+  sync-upstream:
+    # 避免 bot 的 push 反過來觸發自己（防自我觸發）
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-
-    env:
-      PR_BRANCH: auto-rebase/upstream-dev
-      BASE_BRANCH: main
-      UPSTREAM_TAG: refs/tags/auto-rebase/last-upstream-dev
-
+    timeout-minutes: 20       # 限制最長時間，防卡住浪費 runner
     steps:
-      - name: Checkout (full history)
+      - name: Checkout (shallow)
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1      # ⚡ 快：只抓最新 commit
+          fetch-tags: false
+          submodules: false
+          # persist-credentials 預設 true，足夠 create-pull-request 使用
 
-      - name: Add upstream & fetch
+      - name: Setup Git identity
         run: |
-          git remote add upstream https://github.com/runhey/OnmyojiAutoScript.git || true
-          git fetch --all --prune --tags
-
-      - name: Read upstream tip & processed tag
-        id: tip
-        run: |
-          set -e
-          USHA=$(git rev-parse upstream/dev)
-          echo "upstream_sha=$USHA" >> $GITHUB_OUTPUT
-          PSHA=$(git show-ref -s --verify "${UPSTREAM_TAG}" 2>/dev/null || true)
-          echo "processed_sha=$PSHA" >> $GITHUB_OUTPUT
-          echo "Upstream: $USHA"
-          echo "Processed(tag): ${PSHA:-<none>}"
-
-      - name: Gate - decide early-exit
-        id: gate
-        run: |
-          if [ "${{ steps.tip.outputs.processed_sha }}" = "${{ steps.tip.outputs.upstream_sha }}" ]; then
-            echo "skip=true"  >> $GITHUB_OUTPUT
-            echo "SKIP=1"     >> $GITHUB_ENV
-            echo "Already processed this upstream/dev tip; will skip subsequent steps."
-          else
-            echo "skip=false" >> $GITHUB_OUTPUT
-            echo "New upstream tip detected; proceed."
-          fi
-
-      - name: Git config (rerere, identity, safe dir)
-        if: steps.gate.outputs.skip != 'true'
-        run: |
-          git config rerere.enabled true
-          git config rerere.autoupdate true
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
-      - name: Restore rerere cache
-        if: steps.gate.outputs.skip != 'true'
-        uses: actions/cache@v4
-        with:
-          path: .git/rr-cache
-          key: rr-cache-${{ github.ref_name }}
-          restore-keys: rr-cache-
-
-      - name: Prepare working branch from upstream/dev
-        if: steps.gate.outputs.skip != 'true'
+      # ⬇️ 請把 <upstream-owner>/<upstream-repo> 與 upstream 分支名稱改成你的實際值
+      - name: Add upstream and fetch
         run: |
-          git switch -C "$PR_BRANCH" upstream/dev
+          set -e
+          # 中文註解：新增 upstream 來源，若已存在就忽略錯誤
+          git remote add upstream https://github.com/<upstream-owner>/<upstream-repo>.git || true
+          # 中文註解：只抓 upstream 的目標分支最新一個 commit（省流量、快）
+          git fetch --no-tags --depth=1 upstream dev
+          # 中文註解：同步抓一下 origin/main 最新一個 commit
+          git fetch --no-tags --depth=1 origin main
 
-      - name: Cherry-pick overlay commit(s) from main
-        if: steps.gate.outputs.skip != 'true'
+      # 💤 沒有差異 → 直接成功結束（安靜）
+      - name: Exit early if no changes from upstream
         run: |
-          COMMITS=$(git log --reverse --format=%H upstream/dev..origin/${BASE_BRANCH})
-          if [ -z "$COMMITS" ]; then
-            echo "NO_OVERLAY=1" >> $GITHUB_ENV
+          set -e
+          # 中文註解：比較 upstream/dev 與 origin/main 是否有差異
+          if git diff --quiet origin/main..upstream/dev; then
+            echo "No upstream changes. Exiting quietly."
             exit 0
           fi
 
-          ALLOW_PATTERNS='^(src/|tasks/|assets/|i18n/|scripts/|config/)'
+      # 🧹 用乾淨分支承載同步結果（避免污染 main）
+      - name: Prepare update branch
+        env:
+          PR_BRANCH: auto-rebase/upstream-dev
+        run: |
           set -e
-          for c in $COMMITS; do
-            echo "::group::Cherry-picking $c"
-            FILES=$(git diff --name-only ${c}^! || true)
+          git checkout -B "$PR_BRANCH" origin/main
+          # 中文註解：優先嘗試 fast-forward，同步不上就用直線合併（可依你流程改成 rebase）
+          git merge --ff-only upstream/dev || git merge --no-edit upstream/dev
 
-            if echo "$FILES" | grep -Ev "$ALLOW_PATTERNS" | grep -Eq '(^|/)\.github/|(^|/)docs/|^README|^CHANGELOG'; then
-              if ! echo "$FILES" | grep -Eq "$ALLOW_PATTERNS"; then
-                echo "Skip CI/docs-only commit $c"
-                echo "::endgroup::"
-                continue
-              fi
-            fi
-
-            if git cherry-pick -x $c; then
-              echo "Applied $c"
-              echo "::endgroup::"
-              continue
-            fi
-
-            if git ls-files -u | grep -q . ; then
-              echo "Detected real conflicts while applying $c"
-              echo "CONFLICT=1" >> $GITHUB_ENV
-              echo "::endgroup::"
-              break
-            else
-              echo "Empty/Already-applied commit $c -> skip"
-              git cherry-pick --skip || true
-              echo "::endgroup::"
-            fi
-          done
-
-      - name: Save rerere cache (even on conflict)
-        if: always()
-        uses: actions/cache@v4
+      # 📬 透過 PR 交付變更（不直接 push main，風險較低）
+      - name: Create / Update PR
+        uses: peter-evans/create-pull-request@v6
         with:
-          path: .git/rr-cache
-          key: rr-cache-${{ github.ref_name }}
-
-      - name: Run tests
-        if: steps.gate.outputs.skip != 'true' && env.CONFLICT != '1' && env.NO_OVERLAY != '1'
-        run: |
-          echo "Run your tests here"
-          # pytest -q || true
-
-      - name: Read remote PR branch before push
-        id: beforepush
-        if: steps.gate.outputs.skip != 'true' && env.CONFLICT != '1' && env.NO_OVERLAY != '1'
-        run: |
-          PREV=$(git ls-remote --heads origin "$PR_BRANCH" | awk '{print $1}')
-          echo "prev=${PREV:-none}" >> $GITHUB_OUTPUT
-
-      - name: Push branch
-        if: steps.gate.outputs.skip != 'true' && env.CONFLICT != '1' && env.NO_OVERLAY != '1'
-        run: |
-          git push -u origin "$PR_BRANCH" --force-with-lease
-
-      - name: Open or update PR (REST)
-        id: pr
-        if: steps.gate.outputs.skip != 'true' && env.CONFLICT != '1' && env.NO_OVERLAY != '1'
-        env:
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO: ${{ github.repository }}
-        run: |
-          set -e
-          OWNER="${REPO%/*}"
-          NEW=$(git rev-parse HEAD)
-
-          if [ "${{ steps.beforepush.outputs.prev }}" = "$NEW" ]; then
-            echo "updated=false" >> $GITHUB_OUTPUT
-          else
-            echo "updated=true" >> $GITHUB_OUTPUT
-          fi
-
-          EXISTING=$(curl -sS -H "Authorization: Bearer $TOKEN" \
-            "https://api.github.com/repos/$REPO/pulls?state=open&base=${BASE_BRANCH}&head=${OWNER}:${PR_BRANCH}" \
-            | jq -r '.[0].html_url // empty')
-
-          if [ -n "$EXISTING" ]; then
-            echo "url=$EXISTING" >> $GITHUB_OUTPUT
-          else
-            DATA=$(jq -n --arg title "chore: Rebase overlay onto latest upstream/dev" \
-                        --arg head  "$PR_BRANCH" \
-                        --arg base  "$BASE_BRANCH" \
-                        --arg body  "自動將 \`${BASE_BRANCH}\` 的 overlay 提交套到最新 \`upstream/dev\`。\n- 使用 .gitattributes & rerere 降低衝突\n- 測試通過即可合併" \
-                        '{title:$title, head:$head, base:$base, body:$body}')
-            CREATED=$(curl -sS -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
-              -d "$DATA" "https://api.github.com/repos/$REPO/pulls")
-            URL=$(echo "$CREATED" | jq -r '.html_url // empty')
-            [ -z "$URL" ] && { echo "$CREATED"; echo "Failed to create PR via REST" >&2; exit 1; }
-            echo "url=$URL" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Discord notify success (no-embed + changelog)
-        if: steps.gate.outputs.skip != 'true' && env.CONFLICT != '1' && env.NO_OVERLAY != '1' && steps.pr.outputs.updated == 'true'
-        run: |
-          set -e
-          RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          PR_URL="${{ steps.pr.outputs.url }}"
-          PREV="${{ steps.beforepush.outputs.prev }}"
-          NEW="$(git rev-parse HEAD)"
-          USHA="${{ steps.tip.outputs.upstream_sha }}"
-          SHORT="$(echo "$USHA" | cut -c1-7)"
-
-          # 統計與前 10 筆提交（prev..HEAD）
-          STATS="$(git diff --shortstat ${PREV}..${NEW} || true)"
-          CHANGELOG="$(git log --no-merges --pretty=format:'- %s (%h)' ${PREV}..${NEW} | head -n 10 || true)"
-          if [ -z "$CHANGELOG" ]; then
-            CHANGELOG="- （無新的提交訊息，可能為快轉或等價覆寫）"
-          fi
-
-          CONTENT=$(printf '✅ Auto rebase 成功\nUpstream tip: %s\n變更統計：%s\n\n更新摘要（前 10 筆）：\n%s\n\nPR：<%s>\nRun：<%s>\n' \
-            "$SHORT" "$STATS" "$CHANGELOG" "$PR_URL" "$RUN_URL")
-
-          # flags: 4 = SUPPRESS_EMBEDS，避免連結預覽
-          jq -n --arg content "$CONTENT" --argjson flags 4 '{content:$content, flags:$flags}' \
-            | curl -H "Content-Type: application/json" -X POST -d @- \
-                "https://discord.com/api/webhooks/1412622397592305814/dfHIMMiqayaA55ODa2cznyI0enNc2qhpSkG2Hvauvs3gwq0jnSL2osOQaj2kbBBXysiw"
-
-      # --- 衝突時建立草稿 PR（讓人手進場解） ---
-      - name: Prepare draft PR branch on conflict
-        if: env.CONFLICT == '1'
-        run: |
-          set -e
-          # 退出衝突狀態，讓工作樹乾淨（避免未合併路徑阻擋 push）
-          git cherry-pick --abort || true
-          # 建立哨兵空提交，讓分支有可推送的差異
-          git commit --allow-empty -m "chore: auto-rebase conflict sentinel (run $GITHUB_RUN_ID)"
-          git push -u origin "$PR_BRANCH" --force-with-lease
-
-      - name: Open or update DRAFT PR with conflict details
-        if: env.CONFLICT == '1'
-        env:
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO: ${{ github.repository }}
-        run: |
-          set -e
-          OWNER="${REPO%/*}"
-          RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          # 這裡的清單在前一步 abort 後可能取不到，重算一次，若為空就提示
-          FILES="$(git ls-files -u | cut -f2 | sort -u | head -n 30 || true)"
-          [ -z "$FILES" ] && FILES="（清單為空；已 abort，請在本機重現後查）"
-
-          TITLE="chore: Auto rebase conflict - manual resolution needed"
-          BODY=$(
-            jq -n --arg run "$RUN_URL" --arg files "$FILES" '
-              "⚠️ 自動 rebase 遇到衝突，請人工處理。\n\n衝突檔案（最多 30 筆）：\n\($files)\n\nRun：<\($run)>\n
-              建議流程：
-              1) git fetch --all && git switch -C auto-rebase/upstream-dev origin/auto-rebase/upstream-dev
-              2) 手動解衝突、git add、git cherry-pick --continue（或直接在此分支做合併）
-              3) push 後轉正 PR 或請 reviewer 協助"
-            '
-          )
-
-          # 查是否已存在同 head/base 的開放 PR
-          EXISTING=$(curl -sS -H "Authorization: Bearer $TOKEN" \
-            "https://api.github.com/repos/$REPO/pulls?state=open&base=${BASE_BRANCH}&head=${OWNER}:${PR_BRANCH}" \
-            | jq -r '.[0].number // empty')
-
-          if [ -n "$EXISTING" ]; then
-            # 更新 body（不改草稿狀態）
-            curl -sS -X PATCH -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
-              -d "$(jq -n --arg body "$BODY" '{body:$body}')" \
-              "https://api.github.com/repos/$REPO/pulls/$EXISTING" >/dev/null
-          else
-            # 建立草稿 PR
-            DATA=$(jq -n \
-              --arg title "$TITLE" \
-              --arg head  "$PR_BRANCH" \
-              --arg base  "$BASE_BRANCH" \
-              --arg body  "$BODY" \
-              --argjson draft true \
-              '{title:$title, head:$head, base:$base, body:$body, draft:$draft}')
-            curl -sS -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
-              -d "$DATA" "https://api.github.com/repos/$REPO/pulls" >/dev/null
-          fi
-
-      - name: Update processed tag
-        if: steps.gate.outputs.skip != 'true' && env.CONFLICT != '1'
-        run: |
-          git tag -f "${UPSTREAM_TAG#refs/tags/}" "${{ steps.tip.outputs.upstream_sha }}"
-          git push origin "refs/tags/${UPSTREAM_TAG#refs/tags/}" --force
+          branch: auto-rebase/upstream-dev
+          title: "Auto sync upstream/dev → main"
+          body: "Automated sync from upstream/dev."
+          labels: "chore,auto-sync"
+          # 中文註解：不自動刪分支，保留給下次覆寫同名分支使用
+          delete-branch: false
+          # 中文註解：把 PR 指到 main
+          base: main
