@@ -1,86 +1,156 @@
+# .github/workflows/auto-sync-upstream-dev.yml
 name: Auto Rebase Upstream Dev
 
 on:
   schedule:
-    - cron: "*/15 * * * *"   # ⏱️ 降低排程頻率（每 15 分），更省資源；要更頻繁自行調整
-  workflow_dispatch: {}       # 手動觸發
+    - cron: "*/15 * * * *"     # ⏱ 每 15 分鐘觸發（可自行調整）
+  workflow_dispatch: {}         # 🖐 手動觸發
   push:
-    branches: [ main ]        # 只監聽 main，避免 PR 分支 push 造成連鎖觸發
-    paths-ignore:             # 文檔或 CI 變更不觸發，減少無謂跑動
+    branches: [ main ]
+    paths-ignore:
       - ".github/**"
       - "docs/**"
       - "README.md"
 
-# 🧠 只允許同一分支同一時間一個 run，新的來就取消舊的（安靜又省資源）
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-# 🔐 權限最小化：讀 repo、開 PR
 permissions:
-  contents: read
-  pull-requests: write
+  contents: write               # 允許推分支
+  pull-requests: write          # 允許建立/更新 PR
 
 jobs:
   sync-upstream:
-    # 避免 bot 的 push 反過來觸發自己（防自我觸發）
-    if: github.actor != 'github-actions[bot]'
+    if: github.actor != 'github-actions[bot]'  # 避免機器人互相觸發
     runs-on: ubuntu-latest
-    timeout-minutes: 20       # 限制最長時間，防卡住浪費 runner
+    timeout-minutes: 20
+
     steps:
-      - name: Checkout (shallow)
+      # 1) 取出完整歷史，合併/變基才不會缺共同祖先
+      - name: Checkout (full)
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1      # ⚡ 快：只抓最新 commit
-          fetch-tags: false
-          submodules: false
-          # persist-credentials 預設 true，足夠 create-pull-request 使用
+          fetch-depth: 0
 
+      # 2) 設定 Git 身分
       - name: Setup Git identity
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      # ⬇️ 請把 <upstream-owner>/<upstream-repo> 與 upstream 分支名稱改成你的實際值
+      # 3) 新增 upstream 並抓取
       - name: Add upstream and fetch
         run: |
           set -e
-          # 中文註解：新增 upstream 來源，若已存在就忽略錯誤
-          git remote add upstream https://github.com/<upstream-owner>/<upstream-repo>.git || true
-          # 中文註解：只抓 upstream 的目標分支最新一個 commit（省流量、快）
-          git fetch --no-tags --depth=1 upstream dev
-          # 中文註解：同步抓一下 origin/main 最新一個 commit
-          git fetch --no-tags --depth=1 origin main
+          git remote add upstream https://github.com/runhey/OnmyojiAutoScript.git || true
+          git fetch --prune upstream
+          git fetch --prune origin
 
-      # 💤 沒有差異 → 直接成功結束（安靜）
+      # 4) 沒有變更就提前結束（不發通知）
       - name: Exit early if no changes from upstream
+        id: earlycheck
         run: |
           set -e
-          # 中文註解：比較 upstream/dev 與 origin/main 是否有差異
-          if git diff --quiet origin/main..upstream/dev; then
-            echo "No upstream changes. Exiting quietly."
-            exit 0
+          if git rev-parse --verify upstream/dev >/dev/null 2>&1; then
+            if git diff --quiet origin/main..upstream/dev; then
+              echo "no_changes=true" >> $GITHUB_OUTPUT
+              exit 0
+            fi
           fi
+          echo "no_changes=false" >> $GITHUB_OUTPUT
 
-      # 🧹 用乾淨分支承載同步結果（避免污染 main）
-      - name: Prepare update branch
+      # 5) 有變更才嘗試合併（先 fast-forward，失敗再一般 merge）
+      - name: Prepare update branch and merge
+        if: steps.earlycheck.outputs.no_changes != 'true'
+        id: merge
         env:
           PR_BRANCH: auto-rebase/upstream-dev
         run: |
           set -e
           git checkout -B "$PR_BRANCH" origin/main
-          # 中文註解：優先嘗試 fast-forward，同步不上就用直線合併（可依你流程改成 rebase）
-          git merge --ff-only upstream/dev || git merge --no-edit upstream/dev
 
-      # 📬 透過 PR 交付變更（不直接 push main，風險較低）
+          if git merge --ff-only upstream/dev; then
+            echo "result=merged" >> $GITHUB_OUTPUT
+            echo "detail=fast-forward" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          set +e
+          git merge --no-edit upstream/dev
+          code=$?
+          set -e
+
+          if [ $code -eq 0 ]; then
+            echo "result=merged" >> $GITHUB_OUTPUT
+            echo "detail=merge-commit" >> $GITHUB_OUTPUT
+          else
+            echo "result=failed" >> $GITHUB_OUTPUT
+            echo "detail=merge-conflict-or-error" >> $GITHUB_OUTPUT
+          fi
+
+      # 6) 合併成功才建立/更新 PR
       - name: Create / Update PR
+        if: steps.merge.outputs.result == 'merged'
+        id: cpr
         uses: peter-evans/create-pull-request@v6
         with:
           branch: auto-rebase/upstream-dev
           title: "Auto sync upstream/dev → main"
           body: "Automated sync from upstream/dev."
           labels: "chore,auto-sync"
-          # 中文註解：不自動刪分支，保留給下次覆寫同名分支使用
           delete-branch: false
-          # 中文註解：把 PR 指到 main
           base: main
+
+      # 7) Discord：成功建立/更新 PR（只在有變更且成功時發）
+      - name: Notify Discord (PR created/updated)
+        if: steps.merge.outputs.result == 'merged' && steps.cpr.outputs.pull-request-number != '' && steps.cpr.outputs.pull-request-operation != 'none'
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          REPO: ${{ github.repository }}
+          PR_NUM: ${{ steps.cpr.outputs.pull-request-number }}
+          PR_URL: ${{ steps.cpr.outputs.pull-request-url }}
+          OP: ${{ steps.cpr.outputs.pull-request-operation }}
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -e
+          PR_PATH="${REPO}/pull/${PR_NUM}"
+          SUMMARY=$(cat <<EOF
+          🔄 **Auto sync upstream/dev → main** (${OP})
+          Repo: ${REPO}
+          PR: ${PR_URL}
+          PR Path: ${PR_PATH}
+          Run: ${RUN_URL}
+          EOF
+          )
+                    curl -sS -X POST "$DISCORD_WEBHOOK" \
+                      -H 'Content-Type: application/json' \
+                      -d "$(jq -n --arg content "$SUMMARY" '{content: $content}')"
+          
+                # 8) Discord：合併失敗（有變更但失敗時發），並讓 job 失敗
+                - name: Notify Discord (merge failed)
+                  if: steps.merge.outputs.result == 'failed'
+                  env:
+                    DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+                    REPO: ${{ github.repository }}
+                    DETAIL: ${{ steps.merge.outputs.detail }}
+                    RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+                  run: |
+                    set -e
+                    MSG=$(cat <<EOF
+          ❌ **Auto sync upstream/dev → main failed (merge)**
+          Repo: ${REPO}
+          Reason: ${DETAIL}
+          Run: ${RUN_URL}
+          Hint: Resolve conflicts locally, then push a fix or re-run the workflow.
+          EOF
+          )
+                    curl -sS -X POST "$DISCORD_WEBHOOK" \
+                      -H 'Content-Type: application/json' \
+                      -d "$(jq -n --arg content "$MSG" '{content: $content}')"
+          
+                - name: Fail job if merge failed
+                  if: steps.merge.outputs.result == 'failed'
+                  run: |
+                    echo "Merge failed, marking job as failed."
+                    exit 1
