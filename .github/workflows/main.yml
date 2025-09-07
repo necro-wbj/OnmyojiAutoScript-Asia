@@ -3,8 +3,8 @@ name: Auto Rebase Upstream Dev
 
 on:
   schedule:
-    - cron: "*/15 * * * *"     # ⏱ 每 15 分鐘觸發（可自行調整）
-  workflow_dispatch: {}         # 🖐 手動觸發
+    - cron: "*/15 * * * *"
+  workflow_dispatch: {}
   push:
     branches: [ main ]
     paths-ignore:
@@ -17,30 +17,26 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: write               # 允許推分支
-  pull-requests: write          # 允許建立/更新 PR
+  contents: write
+  pull-requests: write
 
 jobs:
   sync-upstream:
-    # 避免 PR 事件的遞迴觸發；其他事件一律允許執行
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
     steps:
-      # 1) 取出完整歷史，合併/變基才不會缺共同祖先
       - name: Checkout (full)
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # 2) 設定 Git 身分
       - name: Setup Git identity
         run: |
-          git config user.name "github-actions[bot]"
+          git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      # 3) 新增 upstream 並抓取（先移除以確保乾淨）
       - name: Add upstream and fetch
         run: |
           set -e
@@ -49,7 +45,6 @@ jobs:
           git fetch --prune origin
           git fetch --prune upstream
 
-      # 4) 沒有變更就提前結束（加上 tip 與 ahead/behind 除錯輸出）
       - name: Exit early if no changes from upstream
         id: earlycheck
         shell: bash
@@ -73,44 +68,24 @@ jobs:
             echo "[LOG] Changes detected. Continue."
           fi
 
-      # 5) 有變更才嘗試合併（先 fast-forward，失敗再一般 merge）
-      - name: Prepare update branch and merge
+      # ✅ 關鍵更動：不在 CI 合併；直接把 upstream/dev 做成同步分支並推上去
+      - name: Publish sync branch from upstream/dev
         if: steps.earlycheck.outputs.no_changes != 'true'
-        id: merge
+        id: publish
         env:
           PR_BRANCH: auto-rebase/upstream-dev
         run: |
           set -e
-          git checkout -B "$PR_BRANCH" origin/main
-          if git merge --ff-only upstream/dev; then
-            echo "result=merged" >> $GITHUB_OUTPUT
-            echo "detail=fast-forward" >> $GITHUB_OUTPUT
-          else
-            echo "[LOG] FF not possible, try merge commit..."
-            set +e
-            git merge --no-edit upstream/dev
-            code=$?
-            set -e
-            if [ $code -eq 0 ]; then
-              echo "result=merged" >> $GITHUB_OUTPUT
-              echo "detail=merge-commit" >> $GITHUB_OUTPUT
-            else
-              echo "result=failed" >> $GITHUB_OUTPUT
-              echo "detail=merge-conflict-or-error" >> $GITHUB_OUTPUT
-            fi
-          fi
-          # ★ 把分支推上去，保留剛才的 FF/merge commit 歷史
-          if [ "$(grep -c '^result=merged$' $GITHUB_OUTPUT)" -gt 0 ]; then
-            git push --force origin "$PR_BRANCH"
-          fi
+          git checkout -B "$PR_BRANCH" upstream/dev
+          git push --force origin "$PR_BRANCH"
+          echo "result=published" >> $GITHUB_OUTPUT
 
-      # 6) 合併成功才建立/更新 PR
       - name: Create / Update PR
-        if: steps.merge.outputs.result == 'merged'
+        if: steps.publish.outputs.result == 'published'
         id: cpr
         uses: peter-evans/create-pull-request@v6
         with:
-          branch: auto-rebase/upstream-dev
+          branch: auto-rebase/upstream-dev   # 來源分支（已經推好）
           base: main
           title: "Auto sync upstream/dev → main"
           body: |
@@ -123,9 +98,8 @@ jobs:
           labels: "chore,auto-sync"
           delete-branch: false
 
-      # 7) Discord：成功建立/更新 PR（只在有變更且成功時發）
       - name: Notify Discord (PR created/updated)
-        if: steps.merge.outputs.result == 'merged' && steps.cpr.outputs.pull-request-number != '' && steps.cpr.outputs.pull-request-operation != 'none'
+        if: steps.publish.outputs.result == 'published' && steps.cpr.outputs.pull-request-number != '' && steps.cpr.outputs.pull-request-operation != 'none'
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           REPO: ${{ github.repository }}
