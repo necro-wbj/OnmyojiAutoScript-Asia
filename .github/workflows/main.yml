@@ -3,8 +3,8 @@ name: Auto Rebase Upstream Dev
 
 on:
   schedule:
-    - cron: "*/15 * * * *"
-  workflow_dispatch: {}
+    - cron: "*/5 * * * *"      # 每 5 分鐘觸發（可自行調整）
+  workflow_dispatch: {}         # 手動觸發
   push:
     branches: [ main ]
     paths-ignore:
@@ -22,7 +22,7 @@ permissions:
 
 jobs:
   sync-upstream:
-    if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request'   # 避免 PR 事件遞迴
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -45,107 +45,139 @@ jobs:
           git fetch --prune origin
           git fetch --prune upstream
 
+      # 解析要同步的來源：優先 upstream/dev；若不存在，fallback 到自己的 origin/main
+      - name: Resolve upstream ref (dev or origin/main)
+        id: resolve
+        shell: bash
+        run: |
+          set -e
+          TARGET_BRANCH="dev"
+          if git ls-remote --heads upstream "$TARGET_BRANCH" | grep -q "refs/heads/$TARGET_BRANCH"; then
+            UP_REF="upstream/${TARGET_BRANCH}"
+            REASON="found-branch"
+          else
+            UP_REF="origin/main"
+            REASON="fallback-origin-main"
+          fi
+
+          git fetch --prune origin
+          if [[ "$UP_REF" == upstream/* ]]; then git fetch --prune upstream; fi
+
+          UP_TIP=$(git rev-parse --short "${UP_REF}")
+          ORI_TIP=$(git rev-parse --short origin/main)
+          read BEHIND AHEAD < <(git rev-list --left-right --count origin/main..."${UP_REF}" | awk '{print $1" "$2}')
+
+          echo "up_ref=${UP_REF}"           >> $GITHUB_OUTPUT
+          echo "reason=${REASON}"           >> $GITHUB_OUTPUT
+          echo "upstream_tip=${UP_TIP}"     >> $GITHUB_OUTPUT
+          echo "origin_tip=${ORI_TIP}"      >> $GITHUB_OUTPUT
+          echo "ahead=${AHEAD}"             >> $GITHUB_OUTPUT
+          echo "behind=${BEHIND}"           >> $GITHUB_OUTPUT
+
+          echo "[LOG] Using upstream ref: ${UP_REF} (${REASON})"
+          echo "[LOG] origin/main tip:  ${ORI_TIP}"
+          echo "[LOG] ${UP_REF} tip:     ${UP_TIP}"
+          echo "[LOG] AHEAD=${AHEAD}, BEHIND=${BEHIND}"
+
       - name: Exit early if no changes from upstream
         id: earlycheck
         shell: bash
         run: |
           set -e
-          UP_TIP="$(git rev-parse --short upstream/dev)"
-          ORI_TIP="$(git rev-parse --short origin/main)"
-          read BEHIND AHEAD < <(git rev-list --left-right --count origin/main...upstream/dev | awk '{print $1" "$2}')
-          echo "upstream_tip=$UP_TIP" >> $GITHUB_OUTPUT
-          echo "origin_tip=$ORI_TIP"  >> $GITHUB_OUTPUT
-          echo "ahead=$AHEAD"         >> $GITHUB_OUTPUT
-          echo "behind=$BEHIND"       >> $GITHUB_OUTPUT
-          echo "[LOG] origin/main tip:  $ORI_TIP"
-          echo "[LOG] upstream/dev tip: $UP_TIP"
-          echo "[LOG] AHEAD=$AHEAD, BEHIND=$BEHIND"
-          if git diff --quiet origin/main..upstream/dev; then
+          UP_REF="${{ steps.resolve.outputs.up_ref }}"
+          if git diff --quiet origin/main.."${UP_REF}"; then
             echo "no_changes=true" >> $GITHUB_OUTPUT
-            echo "[LOG] No changes detected. Exit."
+            echo "[LOG] No changes detected between origin/main and ${UP_REF}. Exit for PR creation."
           else
             echo "no_changes=false" >> $GITHUB_OUTPUT
-            echo "[LOG] Changes detected. Continue."
+            echo "[LOG] Changes detected from ${UP_REF}. PR will be created/updated."
           fi
 
-      # ✅ 關鍵更動：不在 CI 合併；直接把 upstream/dev 做成同步分支並推上去
-      - name: Publish sync branch from upstream/dev
-        if: steps.earlycheck.outputs.no_changes != 'true'
+      - name: Publish sync branch from upstream ref
         id: publish
         env:
           PR_BRANCH: auto-rebase/upstream-dev
+        shell: bash
         run: |
           set -e
-          git checkout -B "$PR_BRANCH" upstream/dev
-          git push --force origin "$PR_BRANCH"
+          UP_REF="${{ steps.resolve.outputs.up_ref }}"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git remote -v
+
+          git checkout -B "$PR_BRANCH" "${UP_REF}"
+
+          echo "[LOG] ${UP_REF} tip: $(git rev-parse --short "${UP_REF}")"
+          echo "[LOG] ${PR_BRANCH} tip (local): $(git rev-parse --short HEAD)"
+
+          if git ls-remote --heads origin "$PR_BRANCH" | grep -q "$PR_BRANCH"; then
+            echo "[LOG] Remote branch exists. Showing remote tip..."
+            git fetch -q origin "$PR_BRANCH:$PR_BRANCH-remote-tmp" || true
+            echo "[LOG] ${PR_BRANCH} tip (remote): $(git rev-parse --short ${PR_BRANCH}-remote-tmp)"
+          else
+            echo "[LOG] Remote branch does not exist. Will create it."
+          fi
+
+          export GIT_TRACE=1
+          export GIT_CURL_VERBOSE=1
+          git push --force-with-lease origin "$PR_BRANCH"
+
           echo "result=published" >> $GITHUB_OUTPUT
 
       - name: Create / Update PR
-        if: steps.publish.outputs.result == 'published'
+        if: steps.publish.outputs.result == 'published' && steps.earlycheck.outputs.no_changes != 'true'
         id: cpr
         uses: peter-evans/create-pull-request@v6
         with:
-          branch: auto-rebase/upstream-dev   # 來源分支（已經推好）
+          branch: auto-rebase/upstream-dev
           base: main
-          title: "Auto sync upstream/dev → main"
+          title: >-
+            Auto sync ${{ steps.resolve.outputs.up_ref }} → main
           body: |
-            Automated sync from **upstream/dev** to **main**.
+            Automated sync from **${{ steps.resolve.outputs.up_ref }}** to **main**.
 
-            - upstream/dev tip: `${{ steps.earlycheck.outputs.upstream_tip }}`
-            - origin/main  tip: `${{ steps.earlycheck.outputs.origin_tip }}`
-            - ahead:  `${{ steps.earlycheck.outputs.ahead }}`
-            - behind: `${{ steps.earlycheck.outputs.behind }}`
+            - upstream ref: `${{ steps.resolve.outputs.up_ref }}`
+            - reason: `${{ steps.resolve.outputs.reason }}`  (found-branch / fallback-origin-main)
+            - upstream tip: `${{ steps.resolve.outputs.upstream_tip }}`
+            - origin tip:   `${{ steps.resolve.outputs.origin_tip }}`
+            - ahead:  `${{ steps.resolve.outputs.ahead }}`
+            - behind: `${{ steps.resolve.outputs.behind }}`
           labels: "chore,auto-sync"
           delete-branch: false
 
+      # ✅ 有 PR 就通知：顯示 PR 的網址
       - name: Notify Discord (PR created/updated)
-        if: steps.publish.outputs.result == 'published' && steps.cpr.outputs.pull-request-number != '' && steps.cpr.outputs.pull-request-operation != 'none'
+        if: steps.publish.outputs.result == 'published' && steps.earlycheck.outputs.no_changes != 'true' && steps.cpr.outputs.pull-request-operation != 'none'
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           REPO: ${{ github.repository }}
-          PR_NUM: ${{ steps.cpr.outputs.pull-request-number }}
           PR_URL: ${{ steps.cpr.outputs.pull-request-url }}
           OP: ${{ steps.cpr.outputs.pull-request-operation }}
-          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: |
-          set -e
-          PR_PATH="${REPO}/pull/${PR_NUM}"
-          SUMMARY=$(cat <<EOF
-          🔄 **Auto sync upstream/dev → main** (${OP})
-          Repo: ${REPO}
-          PR: ${PR_URL}
-          PR Path: ${PR_PATH}
-          Run: ${RUN_URL}
-          EOF
-          )
-          curl -sS -X POST "$DISCORD_WEBHOOK" \
-            -H 'Content-Type: application/json' \
-            -d "$(jq -n --arg content "$SUMMARY" '{content: $content}')"
-
-      # 8) Discord：合併失敗（有變更但失敗時發），並讓 job 失敗
-      - name: Notify Discord (merge failed)
-        if: steps.merge.outputs.result == 'failed'
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-          REPO: ${{ github.repository }}
-          DETAIL: ${{ steps.merge.outputs.detail }}
-          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           set -e
           MSG=$(cat <<EOF
-          ❌ **Auto sync upstream/dev → main failed (merge)**
-          Repo: ${REPO}
-          Reason: ${DETAIL}
-          Run: ${RUN_URL}
-          Hint: Resolve conflicts locally, then push a fix or re-run the workflow.
+          🔄 **Auto sync ${{ steps.resolve.outputs.up_ref }} → main** (${OP})
+          PR: ${PR_URL}
           EOF
           )
           curl -sS -X POST "$DISCORD_WEBHOOK" \
             -H 'Content-Type: application/json' \
             -d "$(jq -n --arg content "$MSG" '{content: $content}')"
 
-      - name: Fail job if merge failed
-        if: steps.merge.outputs.result == 'failed'
+      # ❌ 任一步驟失敗就通知：顯示 Action Run 的網址
+      - name: Notify Discord (run failed)
+        if: failure()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          REPO: ${{ github.repository }}
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          echo "Merge failed, marking job as failed."
-          exit 1
+          set -e
+          MSG=$(cat <<EOF
+          ❌ **Auto sync failed**
+          Repo: ${REPO}
+          Run: ${RUN_URL}
+          EOF
+          )
+          curl -sS -X POST "$DISCORD_WEBHOOK" \
+            -H 'Content-Type: application/json' \
+            -d "$(jq -n --arg content "$MSG" '{content: $content}')"
