@@ -22,7 +22,8 @@ permissions:
 
 jobs:
   sync-upstream:
-    if: github.actor != 'github-actions[bot]'  # 避免機器人互相觸發
+    # 避免 PR 事件的遞迴觸發；其他事件一律允許執行
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -39,26 +40,38 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      # 3) 新增 upstream 並抓取
+      # 3) 新增 upstream 並抓取（先移除以確保乾淨）
       - name: Add upstream and fetch
         run: |
           set -e
-          git remote add upstream https://github.com/runhey/OnmyojiAutoScript.git || true
-          git fetch --prune upstream
+          git remote remove upstream 2>/dev/null || true
+          git remote add upstream https://github.com/runhey/OnmyojiAutoScript.git
           git fetch --prune origin
+          git fetch --prune upstream
 
-      # 4) 沒有變更就提前結束（不發通知）
+      # 4) 沒有變更就提前結束（加上 tip 與 ahead/behind 除錯輸出）
       - name: Exit early if no changes from upstream
         id: earlycheck
+        shell: bash
         run: |
           set -e
-          if git rev-parse --verify upstream/dev >/dev/null 2>&1; then
-            if git diff --quiet origin/main..upstream/dev; then
-              echo "no_changes=true" >> $GITHUB_OUTPUT
-              exit 0
-            fi
+          UP_TIP="$(git rev-parse --short upstream/dev)"
+          ORI_TIP="$(git rev-parse --short origin/main)"
+          read BEHIND AHEAD < <(git rev-list --left-right --count origin/main...upstream/dev | awk '{print $1" "$2}')
+          echo "upstream_tip=$UP_TIP" >> $GITHUB_OUTPUT
+          echo "origin_tip=$ORI_TIP"  >> $GITHUB_OUTPUT
+          echo "ahead=$AHEAD"         >> $GITHUB_OUTPUT
+          echo "behind=$BEHIND"       >> $GITHUB_OUTPUT
+          echo "[LOG] origin/main tip:  $ORI_TIP"
+          echo "[LOG] upstream/dev tip: $UP_TIP"
+          echo "[LOG] AHEAD=$AHEAD, BEHIND=$BEHIND"
+          if git diff --quiet origin/main..upstream/dev; then
+            echo "no_changes=true" >> $GITHUB_OUTPUT
+            echo "[LOG] No changes detected. Exit."
+          else
+            echo "no_changes=false" >> $GITHUB_OUTPUT
+            echo "[LOG] Changes detected. Continue."
           fi
-          echo "no_changes=false" >> $GITHUB_OUTPUT
 
       # 5) 有變更才嘗試合併（先 fast-forward，失敗再一般 merge）
       - name: Prepare update branch and merge
@@ -69,24 +82,26 @@ jobs:
         run: |
           set -e
           git checkout -B "$PR_BRANCH" origin/main
-
           if git merge --ff-only upstream/dev; then
             echo "result=merged" >> $GITHUB_OUTPUT
             echo "detail=fast-forward" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-
-          set +e
-          git merge --no-edit upstream/dev
-          code=$?
-          set -e
-
-          if [ $code -eq 0 ]; then
-            echo "result=merged" >> $GITHUB_OUTPUT
-            echo "detail=merge-commit" >> $GITHUB_OUTPUT
           else
-            echo "result=failed" >> $GITHUB_OUTPUT
-            echo "detail=merge-conflict-or-error" >> $GITHUB_OUTPUT
+            echo "[LOG] FF not possible, try merge commit..."
+            set +e
+            git merge --no-edit upstream/dev
+            code=$?
+            set -e
+            if [ $code -eq 0 ]; then
+              echo "result=merged" >> $GITHUB_OUTPUT
+              echo "detail=merge-commit" >> $GITHUB_OUTPUT
+            else
+              echo "result=failed" >> $GITHUB_OUTPUT
+              echo "detail=merge-conflict-or-error" >> $GITHUB_OUTPUT
+            fi
+          fi
+          # ★ 把分支推上去，保留剛才的 FF/merge commit 歷史
+          if [ "$(grep -c '^result=merged$' $GITHUB_OUTPUT)" -gt 0 ]; then
+            git push --force origin "$PR_BRANCH"
           fi
 
       # 6) 合併成功才建立/更新 PR
@@ -96,11 +111,17 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           branch: auto-rebase/upstream-dev
+          base: main
           title: "Auto sync upstream/dev → main"
-          body: "Automated sync from upstream/dev."
+          body: |
+            Automated sync from **upstream/dev** to **main**.
+
+            - upstream/dev tip: `${{ steps.earlycheck.outputs.upstream_tip }}`
+            - origin/main  tip: `${{ steps.earlycheck.outputs.origin_tip }}`
+            - ahead:  `${{ steps.earlycheck.outputs.ahead }}`
+            - behind: `${{ steps.earlycheck.outputs.behind }}`
           labels: "chore,auto-sync"
           delete-branch: false
-          base: main
 
       # 7) Discord：成功建立/更新 PR（只在有變更且成功時發）
       - name: Notify Discord (PR created/updated)
@@ -123,21 +144,21 @@ jobs:
           Run: ${RUN_URL}
           EOF
           )
-                    curl -sS -X POST "$DISCORD_WEBHOOK" \
-                      -H 'Content-Type: application/json' \
-                      -d "$(jq -n --arg content "$SUMMARY" '{content: $content}')"
-          
-                # 8) Discord：合併失敗（有變更但失敗時發），並讓 job 失敗
-                - name: Notify Discord (merge failed)
-                  if: steps.merge.outputs.result == 'failed'
-                  env:
-                    DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-                    REPO: ${{ github.repository }}
-                    DETAIL: ${{ steps.merge.outputs.detail }}
-                    RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-                  run: |
-                    set -e
-                    MSG=$(cat <<EOF
+          curl -sS -X POST "$DISCORD_WEBHOOK" \
+            -H 'Content-Type: application/json' \
+            -d "$(jq -n --arg content "$SUMMARY" '{content: $content}')"
+
+      # 8) Discord：合併失敗（有變更但失敗時發），並讓 job 失敗
+      - name: Notify Discord (merge failed)
+        if: steps.merge.outputs.result == 'failed'
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          REPO: ${{ github.repository }}
+          DETAIL: ${{ steps.merge.outputs.detail }}
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -e
+          MSG=$(cat <<EOF
           ❌ **Auto sync upstream/dev → main failed (merge)**
           Repo: ${REPO}
           Reason: ${DETAIL}
@@ -145,12 +166,12 @@ jobs:
           Hint: Resolve conflicts locally, then push a fix or re-run the workflow.
           EOF
           )
-                    curl -sS -X POST "$DISCORD_WEBHOOK" \
-                      -H 'Content-Type: application/json' \
-                      -d "$(jq -n --arg content "$MSG" '{content: $content}')"
-          
-                - name: Fail job if merge failed
-                  if: steps.merge.outputs.result == 'failed'
-                  run: |
-                    echo "Merge failed, marking job as failed."
-                    exit 1
+          curl -sS -X POST "$DISCORD_WEBHOOK" \
+            -H 'Content-Type: application/json' \
+            -d "$(jq -n --arg content "$MSG" '{content: $content}')"
+
+      - name: Fail job if merge failed
+        if: steps.merge.outputs.result == 'failed'
+        run: |
+          echo "Merge failed, marking job as failed."
+          exit 1
