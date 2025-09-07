@@ -97,14 +97,20 @@ jobs:
         id: publish
         env:
           PR_BRANCH: auto-rebase/upstream-dev
+          GITHUB_TOKEN: ${{ github.token }}   # ★ 把 GitHub 提供的 token 放到 env
         shell: bash
         run: |
           set -e
           UP_REF="${{ steps.resolve.outputs.up_ref }}"
+      
+          # 這裡的 ${GITHUB_TOKEN} 就有值了
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git remote -v
-
+      
           git checkout -B "$PR_BRANCH" "${UP_REF}"
+          git push --force-with-lease origin "$PR_BRANCH"
+      
+          echo "result=published" >> $GITHUB_OUTPUT
 
           echo "[LOG] ${UP_REF} tip: $(git rev-parse --short "${UP_REF}")"
           echo "[LOG] ${PR_BRANCH} tip (local): $(git rev-parse --short HEAD)"
