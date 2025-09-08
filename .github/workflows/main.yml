@@ -2,7 +2,7 @@ name: Auto Rebase Upstream Dev
 
 on:
   schedule:
-    - cron: "*/5 * * * *"      # 每 5 分鐘
+    - cron: "0 * * * *"      # 每 5 分鐘
   workflow_dispatch: {}
   push:
     branches: [ main ]
@@ -95,29 +95,98 @@ jobs:
           fi
 
       # 用 archive 解壓覆寫工作樹（不 push，交給 CPR 建分支/PR）
-      - name: Materialize upstream ref via archive (no push)
+      - name: Materialize upstream ref via archive (no push; keep local on both-changed)
         if: steps.earlycheck.outputs.no_changes != 'true'
         shell: bash
         run: |
           set -e
           UP_REF="${{ steps.resolve.outputs.up_ref }}"
       
+          # ★ 一定停在 main（CPR 會 reset 到 origin/main）
           git checkout -B main origin/main
       
+          # 0) 算 merge-base（用來判斷雙方是否都有改）
+          BASE=$(git merge-base origin/main "${UP_REF}")
+          echo "[LOG] merge-base: ${BASE}"
+      
+          # 1) 乾淨工作樹
           git rm -r -q --cached . || true
           git clean -fdqx || true
       
-          echo "[LOG] Archiving ${UP_REF} → extracting into working tree (excluding .github)..."
-          git archive --format=tar "${UP_REF}" \
-            | tar -x -m --exclude=".github" --exclude="./.github"
+          # 2) 將上游內容展開到工作樹（排除 .github，避免 workflows 權限問題）
+          echo "[LOG] Archiving ${UP_REF} → extracting (excluding .github)..."
+          git archive --format=tar "${UP_REF}" | tar -x -m --exclude=".github" --exclude="./.github"
       
-          # 保險：確保使用自己的 .github（避免不小心覆蓋）
-          rm -rf .github || true
-          git checkout origin/main -- .github || true
+          # 3) 固定用本地（origin/main）的 .gitattributes（讓 eol/屬性在 add 時生效）
+          #    也把 .github 還原成本地（避免同步上游 workflows）
+          git checkout origin/main -- .gitattributes .github || true
       
+          # 4) 計算「雙方都有改」的檔案集合（相對 merge-base）
+          #    left = 本地改動 (BASE..origin/main)，right = 上游改動 (BASE..UP_REF)
+          #    我們只關心特定清單/型別，兩邊都有改才保留本地。
+          mapfile -t LEFT < <(git diff --name-only --diff-filter=ACMR "${BASE}..origin/main")
+          mapfile -t RIGHT < <(git diff --name-only --diff-filter=ACMR "${BASE}..${UP_REF}")
+      
+          # 你要「雙方都有改時保留本地」的清單（可自行增修）
+          PROTECT_LIST=(
+            ".gitattributes"
+            ".gitignore"
+            "README.md"
+          )
+          # 型別/目錄規則（glob），雙方都有改才保留本地
+          PROTECT_GLOBS=(
+            "assets/**"
+            "*.png"
+            "*.jpg"
+            "*.json"
+            "*.yaml"
+            "*.yml"
+            "*.ini"
+            "*.xml"
+            "*.txt"
+          )
+      
+          # 建立 right 的查表，加速比對
+          declare -A RIGHT_SET
+          for p in "${RIGHT[@]}"; do RIGHT_SET["$p"]=1; done
+      
+          keep_local=()
+      
+          # 先處理明確檔名
+          for p in "${PROTECT_LIST[@]}"; do
+            # 若此檔兩邊都有改，保留本地
+            if printf '%s\n' "${LEFT[@]}" | grep -Fxq "$p" && [[ -n "${RIGHT_SET[$p]}" ]]; then
+              keep_local+=("$p")
+            fi
+          done
+      
+          # 再處理型別/目錄規則（用 bash 的 [[ $f == glob ]]）
+          for f in "${LEFT[@]}"; do
+            [[ -z "${RIGHT_SET[$f]}" ]] && continue  # 右側無改動就跳過
+            for g in "${PROTECT_GLOBS[@]}"; do
+              if [[ "$f" == $g ]]; then
+                keep_local+=("$f")
+                break
+              fi
+            done
+          done
+      
+          # 5) 對於需要保留本地的檔案，把剛才解出的上游版本覆蓋回「本地版本」
+          #    也就是從 origin/main 還原這些檔案
+          if [[ ${#keep_local[@]} -gt 0 ]]; then
+            echo "[LOG] Keep-local (both changed) files:"
+            printf ' - %s\n' "${keep_local[@]}"
+            git checkout origin/main -- "${keep_local[@]}" || true
+          else
+            echo "[LOG] Keep-local set is empty."
+          fi
+      
+          # 6) 全量加入索引（.gitattributes 已是本地版，此時 EOL/文本屬性生效）
           git add -A
+      
           echo "[LOG] Staged summary (vs origin/main):"
           git --no-pager diff --cached --stat || true
+
 
 
       - name: Create / Update PR
