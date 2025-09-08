@@ -49,7 +49,7 @@ jobs:
           git fetch --prune origin
           git fetch --prune upstream
 
-      # 偵測要跟哪個來源同步：優先 upstream/dev，沒有就退回 origin/main
+      # 1) 來源解析（保留你原本的輸出；但多印 log 以便你確認有沒有 fallback）
       - name: Resolve upstream ref (dev or origin/main)
         id: resolve
         shell: bash
@@ -63,37 +63,28 @@ jobs:
             UP_REF="origin/main"
             REASON="fallback-origin-main"
           fi
-
-          UP_TIP=$(git rev-parse --short "${UP_REF}")
-          ORI_TIP=$(git rev-parse --short origin/main)
-          read BEHIND AHEAD < <(git rev-list --left-right --count origin/main..."${UP_REF}" | awk '{print $1" "$2}')
-
-          {
-            echo "up_ref=${UP_REF}"
-            echo "reason=${REASON}"
-            echo "upstream_tip=${UP_TIP}"
-            echo "origin_tip=${ORI_TIP}"
-            echo "ahead=${AHEAD}"
-            echo "behind=${BEHIND}"
-          } >> "$GITHUB_OUTPUT"
-
+          echo "up_ref=${UP_REF}"       >> "$GITHUB_OUTPUT"
+          echo "reason=${REASON}"       >> "$GITHUB_OUTPUT"
           echo "[LOG] Using upstream ref: ${UP_REF} (${REASON})"
-          echo "[LOG] origin/main tip:  ${ORI_TIP}"
-          echo "[LOG] ${UP_REF} tip:     ${UP_TIP}"
-          echo "[LOG] AHEAD=${AHEAD}, BEHIND=${BEHIND}"
-
-      - name: Exit early if no changes from upstream (exclude .github)
+          echo "[LOG] recent tips:"
+          git --no-pager log --oneline -n 3 origin/main || true
+          git --no-pager log --oneline -n 3 "${UP_REF}" || true
+      
+      # 2) 早退判斷：改用三點號計數；先不做任何 pathspec 過濾
+      - name: Exit early if no tip difference
         id: earlycheck
         shell: bash
         run: |
           set -euo pipefail
           UP_REF="${{ steps.resolve.outputs.up_ref }}"
-          if git diff --quiet origin/main.."${UP_REF}" -- . ":(exclude).github" ":(exclude).github/**"; then
+          read BEHIND AHEAD < <(git rev-list --left-right --count origin/main..."${UP_REF}" | awk '{print $1" "$2}')
+          echo "[LOG] rev-list(origin/main...${UP_REF})  BEHIND=${BEHIND}  AHEAD=${AHEAD}"
+          if [ "${BEHIND}" = "0" ] && [ "${AHEAD}" = "0" ]; then
             echo "no_changes=true" >> "$GITHUB_OUTPUT"
-            echo "[LOG] No changes outside .github between origin/main and ${UP_REF}."
+            echo "[LOG] Tips identical; skip."
           else
             echo "no_changes=false" >> "$GITHUB_OUTPUT"
-            echo "[LOG] Changes detected (excluding .github)."
+            echo "[LOG] Tips differ; continue to materialize."
           fi
 
       # 在暫存工作分支 materialize 上游內容（不推 main；交由 CPR 建分支/PR）
