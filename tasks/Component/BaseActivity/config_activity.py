@@ -65,7 +65,6 @@ class GeneralClimb(ConfigBase):
             return def_value
         return def_value
 
-    # 适用于活动爬塔仅有游戏体力的情况
-    # @field_validator('ap_mode', mode='after')
-    # def check_mode(cls, value):
-    #     return ApMode.AP_GAME
+    @field_validator('ap_mode', mode='after')
+    def check_mode(cls, value):
+        return ApMode.AP_GAME

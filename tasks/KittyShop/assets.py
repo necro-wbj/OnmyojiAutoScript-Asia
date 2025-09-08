@@ -68,6 +68,6 @@ class KittyShopAssets:
 
 	# Swipe Rule Assets
 	# description 
-	S_SELECTION = RuleSwipe(roi_front=(589,239,21,258), roi_back=(459,234,22,270), mode="default", name="selection")
+	S_SELECTION = RuleSwipe(roi_front=(720,241,21,258), roi_back=(459,234,22,270), mode="default", name="selection")
 
 

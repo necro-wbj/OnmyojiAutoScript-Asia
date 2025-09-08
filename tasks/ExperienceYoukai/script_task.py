@@ -18,7 +18,7 @@ from tasks.ExperienceYoukai.assets import ExperienceYoukaiAssets
 from tasks.ExperienceYoukai.config import ExperienceYoukaiConfig
 
 
-class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, SwitchSoul, ExperienceYoukaiAssets):
+class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, SwitchSoul, ExperienceYoukaiAssets, GoldYoukaiAssets):
 
     def run(self):
         # 切换御魂
