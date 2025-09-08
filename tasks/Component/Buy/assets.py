@@ -32,6 +32,6 @@ class BuyAssets:
 
 	# Ocr Rule Assets
 	# Ocr-description 
-	O_BUY_NUMBER = RuleOcr(roi=(578,416,52,82), area=(578,416,52,82), mode="Digit", method="Default", keyword="", name="buy_number")
+	O_BUY_NUMBER = RuleOcr(roi=(578,416,52,46), area=(578,416,52,46), mode="Digit", method="Default", keyword="", name="buy_number")
 
 

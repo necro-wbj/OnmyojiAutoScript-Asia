@@ -93,8 +93,8 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
         if not area:
             logger.warning('No gold 50 buff')
             return None
-        self.set_switch_area(area)
-
+        self.I_OPEN_YELLOW.roi_back = list(area)  # 动态设置roi
+        self.I_CLOSE_RED.roi_back = list(area)
         if is_open:
             while 1:
                 self.screenshot()
@@ -122,7 +122,8 @@ class GeneralBuff(BaseTask, GeneralBuffAssets):
         if not area:
             logger.warning('No gold 100 buff')
             return None
-        self.set_switch_area(area)
+        self.I_OPEN_YELLOW.roi_back = list(area)
+        self.I_CLOSE_RED.roi_back = list(area)
         if is_open:
             while 1:
                 self.screenshot()

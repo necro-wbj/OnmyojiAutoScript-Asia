@@ -68,7 +68,7 @@
     "roiFront": "978,234,87,45",
     "roiBack": "978,234,87,45",
     "method": "Template matching",
-    "threshold": 0.75,
+    "threshold": 0.8,
     "description": "description"
   },
   {
@@ -77,7 +77,7 @@
     "roiFront": "979,305,88,43",
     "roiBack": "979,305,88,43",
     "method": "Template matching",
-    "threshold": 0.75,
+    "threshold": 0.8,
     "description": "description"
   },
   {
@@ -86,7 +86,7 @@
     "roiFront": "979,373,88,47",
     "roiBack": "979,373,88,47",
     "method": "Template matching",
-    "threshold": 0.75,
+    "threshold": 0.8,
     "description": "description"
   },
   {
@@ -95,14 +95,14 @@
     "roiFront": "979,447,87,42",
     "roiBack": "979,447,87,42",
     "method": "Template matching",
-    "threshold": 0.75,
+    "threshold": 0.8,
     "description": "description"
   },
   {
     "itemName": "wq_check_task",
     "imageName": "wq_wq_check_task.png",
-    "roiFront": "110,188,21,77",
-    "roiBack": "110,188,41,459",
+    "roiFront": "110,154,21,125",
+    "roiBack": "73,122,69,459",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "判断是否还有任务"

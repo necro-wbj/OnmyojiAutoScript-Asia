@@ -2,10 +2,10 @@
   {
     "itemName": "reward",
     "imageName": "gb_reward.png",
-    "roiFront": "555,606,166,21",
-    "roiBack": "494,364,285,274",
+    "roiFront": "547,518,172,96",
+    "roiBack": "547,518,172,96",
     "method": "Template matching",
-    "threshold": 0.75,
+    "threshold": 0.8,
     "description": "奖励，就是那个魂"
   },
   {
@@ -236,8 +236,8 @@
   {
     "itemName": "de_win",
     "imageName": "gb_de_win.png",
-    "roiFront": "518,67,65,59",
-    "roiBack": "406,67,177,59",
+    "roiFront": "472,49,100,100",
+    "roiBack": "239,36,399,133",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "针对封魔的特殊"
@@ -259,15 +259,6 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "封魔的金币"
-  },
-  {
-    "itemName": "get_reward",
-    "imageName": "gb_get_reward.png",
-    "roiFront": "467,188,344,90",
-    "roiBack": "467,188,344,90",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "取得獎勵"
   },
   {
     "itemName": "green_marker",

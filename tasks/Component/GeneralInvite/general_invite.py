@@ -118,9 +118,6 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
 
             # 点击挑战
             if fire:
-                if is_first:
-                    # here wait member join and get is_in_room status
-                    sleep(10)
                 self.click_fire()
                 return True
 
@@ -164,8 +161,6 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
         """
         if is_screenshot:
             self.screenshot()
-        if self.appear(self.I_GI_TEAM):
-            return True
         if self.appear(self.I_GI_EMOJI_1):
             return True
         if self.appear(self.I_GI_EMOJI_2):
@@ -343,7 +338,6 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
         logger.info('Click add to invite friend')
         # 点击＋号
         while 1:
-            sleep(0.5)
             self.screenshot()
             if self.appear(self.I_LOAD_FRIEND):
                 break

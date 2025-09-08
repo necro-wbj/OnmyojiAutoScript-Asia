@@ -145,76 +145,31 @@ class Special(Buy, MallNavbar):
 
     def _special_check_remain(self, target: RuleImage):
         """
-        检查这个种类的剩余，要求必须这个出现在当前的页面
+        检查这个种类的剩余， 要求必须这个出现在当前的页面
         :param target:
         :return:
         """
-        # 以購買按鈕的 ROI 上中點為基準，動態定位數字 ROI
         upper_midpoint = target.roi_front[0] + target.roi_front[2] // 2, target.roi_front[1]
+        # 重设roi
         roi = self.O_SP_RES_NUMBER.roi
         self.O_SP_RES_NUMBER.roi[0] = upper_midpoint[0] - roi[2] // 2
         self.O_SP_RES_NUMBER.roi[1] = upper_midpoint[1] - roi[3]
-
-        # 讀 OCR 並做常見誤字修正
-        raw = self.O_SP_RES_NUMBER.ocr(self.device.image)
-        text = (raw or "")
-        # 常見誤識別的容錯：把相近字/符號改回合理字形
-        text = (text
-                .replace('？', '2')
-                .replace('?', '2')
-                .replace(':', '：')
-                .replace('：：', '：')
-                .replace('火', '次')
-                .replace('教', '数')
-                .replace('刺', '剩')
-                .replace('头', '买'))
-
-        # 依序嘗試多個模式（兩邊版本的邏輯都保留）
-        patterns = [
-            r'(?:本周)?(?:剩余)?购买次数[：:]\s*(\d+)',   # 例：剩余购买次数：12 / 购买次数：12 / 本周剩余购买次数：12
-            r'本周剩余数量[：:]\s*(\d+)',                # 例：本周剩余数量12
-            r'剩余[：:]\s*(\d+)',                        # 例：剩余：12
-            r'数量[：:]\s*(\d+)',                        # 例：数量：12
-            r'数[：:]\s*(\d+)',                          # 例：…数
-            r'数[：:]\s*(\d+)',                          # 例：…数：12
-        ]
-
-        result = None
-
-        # 1) 優先用精確樣式擷取
-        for pat in patterns:
-            m = re.search(pat, text)
-            if m:
-                result = m.group(1)
-                break
-
-        # 2) 退而求其次：若含有冒號，取冒號後第一段數字
-        if result is None and '：' in text:
-            right = text.split('：')[-1]
-            m = re.search(r'(\d+)', right)
-            if m:
-                result = m.group(1)
-
-        # 3) 再退一步：英文冒號
-        if result is None and ':' in text:
-            right = text.split(':')[-1]
-            m = re.search(r'(\d+)', right)
-            if m:
-                result = m.group(1)
-
-        # 4) 最終保底：整段找最後一個數字
-        if result is None:
-            m_all = re.findall(r'(\d+)', text)
-            if m_all:
-                result = m_all[-1]
-
+        # logger.info(f'图片的ROI是: {target.roi_front}')
+        # logger.info(f'上中点是：{upper_midpoint}')
+        # logger.info(f'数字的ROI是: {self.O_SP_RES_NUMBER.roi}')
+        result = self.O_SP_RES_NUMBER.ocr(self.device.image)
+        result = result.replace('？', '2').replace('?', '2').replace(':', '；').replace('火', '次').replace('教', '数').replace('刺', '剩').replace('头', '买')
         try:
-            value = int(result) if result is not None else 0
-        except Exception:
-            value = 0
-
-        logger.info(f"OCR raw: [{raw}] -> norm: [{text}] -> Remain [{value}]")
-        return value
+            if '：' in result:
+                result = re.findall(r'(?:剩余)?购买次数：(\d+)', result)[0]
+                result = int(result)
+            else:
+                result = re.findall(r'本周剩余数量(\d+)', result)[0]
+                result = int(result)
+        except:
+            result = 0
+        logger.info(f'Remain [{result}]')
+        return result
 
 
 if __name__ == '__main__':

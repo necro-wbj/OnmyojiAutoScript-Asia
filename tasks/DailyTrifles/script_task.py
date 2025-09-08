@@ -74,7 +74,6 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
         召唤结束后回到 召唤主界面
         :return:
         """
-        logger.info("run summon_recall")
         list = [self.O_SELECT_SM2, self.O_SELECT_SM3, self.O_SELECT_SM4]
         count = 0
         while True:
@@ -151,11 +150,9 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
             logger.info('Summon one success')
 
     def run_guild_wish(self):
-        logger.info("run run_guild_wish")
         pass
 
     def run_luck_msg(self):
-        logger.info("run run_luck_msg")
         self.ui_get_current_page()
         self.ui_goto(page_friends)
         while 1:
@@ -181,17 +178,13 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
                 break
             if check_timer.reached():
                 logger.warning('There is no any luck msg')
-                self.ui_click_until_disappear(self.I_CLOSE_BLESS)
                 break
 
         self.ui_click(self.I_UI_BACK_RED, self.I_CHECK_MAIN)
 
     def run_friend_love(self):
-        logger.info("run run_friend_love")
         self.ui_get_current_page()
         self.ui_goto(page_friends)
-        # TODO: handle friend level up need to close it
-        # TODO: ocr find "好友羈絆提升" click "I_UI_BACK_RED"
         while 1:
             self.screenshot()
             if self.appear(self.I_L_LOVE):
@@ -218,7 +211,6 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
         self.ui_click(self.I_UI_BACK_RED, self.I_CHECK_MAIN)
 
     def run_store(self):
-        logger.info("run run_store")
         self.ui_get_current_page()
         self.ui_goto(page_mall, confirm_wait=3)
 
@@ -232,42 +224,26 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
         self.ui_goto(page_main)
 
     def run_store_sign(self):
-        logger.info("run run_store_sign")
 
         while 1:
             self.screenshot()
             if self.appear(self.I_GIFT_RECOMMEND):
                 break
-            if self.appear(self.I_GIFT_DAILY):
-                break
             if self.appear_then_click(self.I_ROOM_GIFT, interval=1):
                 continue
         self.screenshot()
-        while 1:
-            if self.appear(self.I_GIFT_RECOMMEND):
-                self.appear_then_click(self.I_GIFT_RECOMMEND, interval=1)
-                break
-            if self.appear(self.I_GIFT_DAILY):
-                self.appear_then_click(self.I_GIFT_DAILY, interval=1)
-                break
+        self.appear_then_click(self.I_GIFT_RECOMMEND, interval=1)
         logger.info('Enter store sign')
-        wait_count = 0
-        while 1: #wait 5 sec
-            wait_count = wait_count + 1
-            sleep(1)  # 等个动画
-            self.screenshot()
-            if self.appear(self.I_GIFT_SIGN):
-                logger.warning('There is gift sign')
-                break
-            if wait_count > 5: # can not find gift sign for 5 sec
-                logger.warning('There is no gift sign')
-                return
+        sleep(1)  # 等个动画
+        self.screenshot()
+        if not self.appear(self.I_GIFT_SIGN):
+            logger.warning('There is no gift sign')
+            return
 
         if self.ui_get_reward(self.I_GIFT_SIGN, click_interval=2.5):
             logger.info('Get reward of gift sign')
 
     def run_buy_sushi(self):
-        logger.info("run run_buy_sushi")
 
         # 进入Special
         while 1:
