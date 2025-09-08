@@ -88,8 +88,8 @@ class WantedQuestsConfig(BaseModel):
     invite_friend_name: str = Field(default=str(""), description="invite_friend_name_help")
     cooperation_type: CooperationSelectMaskDescription = Field(default=CooperationSelectMaskDescription.Any,
                                                                description="cooperation_type_help")
-    # 找怪優先級  挑戰 > 秘聞 > 探索
-    battle_priority: str = Field(default='挑戰 > 秘聞 > 探索', description='battle_priority_help')
+    # 找怪优先级  挑战 > 秘闻 > 探索
+    battle_priority: str = Field(default='挑战 > 秘闻 > 探索', description='battle_priority_help')
     # 只完成协作任务
     cooperation_only: bool = Field(default=False, description="cooperation_only_help")
     # 忽略任务的任务目标名称（“酒吞童子”等）,多个用逗号“，,"分隔

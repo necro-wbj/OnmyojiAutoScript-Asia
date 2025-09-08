@@ -20,8 +20,8 @@
   {
     "itemName": "pet_happy",
     "imageName": "pet_pet_happy.png",
-    "roiFront": "955.3333333333333,614.6666666666666,67,70",
-    "roiBack": "955.3333333333333,614.6666666666666,67,70",
+    "roiFront": "853,614,67,70",
+    "roiBack": "853,614,67,70",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "其乐融融"
@@ -29,8 +29,8 @@
   {
     "itemName": "pet_feast",
     "imageName": "pet_pet_feast.png",
-    "roiFront": "855,619,69,61",
-    "roiBack": "855,619,69,61",
+    "roiFront": "747,619,69,61",
+    "roiBack": "747,619,69,61",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "大餐"
@@ -56,7 +56,7 @@
   {
     "itemName": "pet_skip",
     "imageName": "pet_pet_skip.png",
-    "roiFront": "1116,100,28,27",
+    "roiFront": "1089,119,72,41",
     "roiBack": "999,42,242,147",
     "method": "Template matching",
     "threshold": 0.65,

@@ -14,13 +14,6 @@
     "description": "筛选列表 手指向下滑动"
   },
   {
-    "itemName": "ab_floor_up",
-    "roiFront": "450,500,10,10",
-    "roiBack": "390,260,10,10",
-    "mode": "default",
-    "description": "极地鬼 层数列表 手指向上滑动"
-  },
-  {
     "itemName": "ab_floor_down",
     "roiFront": "390,260,10,10",
     "roiBack": "450,500,10,10",

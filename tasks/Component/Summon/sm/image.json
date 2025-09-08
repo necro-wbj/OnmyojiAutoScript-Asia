@@ -43,14 +43,5 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "抽到的时候出现的"
-  },
-  {
-    "itemName": "sm_event",
-    "imageName": "sm_sm_event.png",
-    "roiFront": "103,20,130,41",
-    "roiBack": "0,0,260,81",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "召喚活動"
   }
 ]
