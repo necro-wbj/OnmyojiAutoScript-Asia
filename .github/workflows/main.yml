@@ -86,16 +86,17 @@ jobs:
         run: |
           set -e
           UP_REF="${{ steps.resolve.outputs.up_ref }}"
-          if git diff --quiet origin/main.."${UP_REF}"; then
+          # 忽略 .github/** 的差異（workflow 權限問題不影響是否開 PR）
+          if git diff --quiet origin/main.."${UP_REF}" -- . ":(exclude).github" ":(exclude).github/**"; then
             echo "no_changes=true" >> $GITHUB_OUTPUT
-            echo "[LOG] No changes detected between origin/main and ${UP_REF}. Exit for PR creation."
+            echo "[LOG] No changes detected outside .github between origin/main and ${UP_REF}."
           else
             echo "no_changes=false" >> $GITHUB_OUTPUT
-            echo "[LOG] Changes detected from ${UP_REF}. PR will be created/updated."
+            echo "[LOG] Changes detected (excluding .github)."
           fi
 
       # 用 archive 解壓覆寫工作樹（不 push，交給 CPR 建分支/PR）
-      - name: Materialize upstream ref via archive (no push; keep local on both-changed)
+      - name: Materialize upstream ref via archive (preserve local rules)
         if: steps.earlycheck.outputs.no_changes != 'true'
         shell: bash
         run: |
@@ -105,65 +106,40 @@ jobs:
           # ★ 一定停在 main（CPR 會 reset 到 origin/main）
           git checkout -B main origin/main
       
-          # 0) 算 merge-base（用來判斷雙方是否都有改）
+          # === 0) 算 merge-base（用來判斷「雙方都有改」） ===
           BASE=$(git merge-base origin/main "${UP_REF}")
           echo "[LOG] merge-base: ${BASE}"
       
-          # 1) 乾淨工作樹
+          # === 1) 清理工作樹 ===
           git rm -r -q --cached . || true
           git clean -fdqx || true
       
-          # 2) 將上游內容展開到工作樹（排除 .github，避免 workflows 權限問題）
-          echo "[LOG] Archiving ${UP_REF} → extracting (excluding .github)..."
-          git archive --format=tar "${UP_REF}" | tar -x -m --exclude=".github" --exclude="./.github"
+          # === 2) 展開上游檔案（排除 .github/**）===
+          echo "[LOG] Archive ${UP_REF} → extract (excluding .github)..."
+          git archive --format=tar "${UP_REF}" \
+            | tar -x -m --exclude=".github" --exclude="./.github"
       
-          # 3) 固定用本地（origin/main）的 .gitattributes（讓 eol/屬性在 add 時生效）
-          #    也把 .github 還原成本地（避免同步上游 workflows）
-          git checkout origin/main -- .gitattributes .github || true
+          # === 3) 固定使用「本地」的 .gitattributes / .gitignore / README.md ===
+          git checkout origin/main -- .gitattributes .gitignore README.md || true
+          # 先把 .gitattributes 放進索引，後續 renormalize 才會套規則
+          git add .gitattributes 2>/dev/null || true
       
-          # 4) 計算「雙方都有改」的檔案集合（相對 merge-base）
-          #    left = 本地改動 (BASE..origin/main)，right = 上游改動 (BASE..UP_REF)
-          #    我們只關心特定清單/型別，兩邊都有改才保留本地。
-          mapfile -t LEFT < <(git diff --name-only --diff-filter=ACMR "${BASE}..origin/main")
+          # === 4) 計算雙方改動的檔案清單（相對 BASE）===
+          mapfile -t LEFT  < <(git diff --name-only --diff-filter=ACMR "${BASE}..origin/main")
           mapfile -t RIGHT < <(git diff --name-only --diff-filter=ACMR "${BASE}..${UP_REF}")
+          declare -A RIGHT_SET; for p in "${RIGHT[@]}"; do RIGHT_SET["$p"]=1; done
       
-          # 你要「雙方都有改時保留本地」的清單（可自行增修）
-          PROTECT_LIST=(
-            ".gitattributes"
-            ".gitignore"
-            "README.md"
-          )
-          # 型別/目錄規則（glob），雙方都有改才保留本地
-          PROTECT_GLOBS=(
-            "assets/**"
-            "*.png"
-            "*.jpg"
-            "*.json"
-            "*.yaml"
-            "*.yml"
-            "*.ini"
-            "*.xml"
-            "*.txt"
-          )
+          # 4a) 永遠保留本地（你指定的三檔；已在上面 checkout 過，這裡只做說明輸出）
+          PROTECT_ALWAYS=(".gitattributes" ".gitignore" "README.md")
+          echo "[LOG] Always-keep-local: ${PROTECT_ALWAYS[*]}"
       
-          # 建立 right 的查表，加速比對
-          declare -A RIGHT_SET
-          for p in "${RIGHT[@]}"; do RIGHT_SET["$p"]=1; done
+          # 4b) 僅在「雙方都有改」時保留本地的型別/目錄規則
+          PROTECT_BOTH_GLOBS=("assets/**" "*.png" "*.jpg" "*.json" "*.yaml" "*.yml" "*.ini" "*.xml" "*.txt")
       
           keep_local=()
-      
-          # 先處理明確檔名
-          for p in "${PROTECT_LIST[@]}"; do
-            # 若此檔兩邊都有改，保留本地
-            if printf '%s\n' "${LEFT[@]}" | grep -Fxq "$p" && [[ -n "${RIGHT_SET[$p]}" ]]; then
-              keep_local+=("$p")
-            fi
-          done
-      
-          # 再處理型別/目錄規則（用 bash 的 [[ $f == glob ]]）
           for f in "${LEFT[@]}"; do
-            [[ -z "${RIGHT_SET[$f]}" ]] && continue  # 右側無改動就跳過
-            for g in "${PROTECT_GLOBS[@]}"; do
+            [[ -z "${RIGHT_SET[$f]}" ]] && continue  # 上游沒改就跳過
+            for g in "${PROTECT_BOTH_GLOBS[@]}"; do
               if [[ "$f" == $g ]]; then
                 keep_local+=("$f")
                 break
@@ -171,23 +147,23 @@ jobs:
             done
           done
       
-          # 5) 對於需要保留本地的檔案，把剛才解出的上游版本覆蓋回「本地版本」
-          #    也就是從 origin/main 還原這些檔案
           if [[ ${#keep_local[@]} -gt 0 ]]; then
-            echo "[LOG] Keep-local (both changed) files:"
+            echo "[LOG] Keep-local on both-changed (assets/JSON etc):"
             printf ' - %s\n' "${keep_local[@]}"
             git checkout origin/main -- "${keep_local[@]}" || true
           else
-            echo "[LOG] Keep-local set is empty."
+            echo "[LOG] No both-changed files matching keep-local globs."
           fi
       
-          # 6) 全量加入索引（.gitattributes 已是本地版，此時 EOL/文本屬性生效）
-          git add -A
+          # === 5) 保證 .github/ 仍用本地 ===
+          rm -rf .github || true
+          git checkout origin/main -- .github || true
+      
+          # === 6) 全量加入；用 --renormalize 讓 .gitattributes 規則生效（EOL/文字屬性）===
+          git add --renormalize -A
       
           echo "[LOG] Staged summary (vs origin/main):"
           git --no-pager diff --cached --stat || true
-
-
 
       - name: Create / Update PR
         if: steps.earlycheck.outputs.no_changes != 'true'
