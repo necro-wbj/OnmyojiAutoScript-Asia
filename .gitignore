@@ -272,8 +272,3 @@ adb_port.ini
 *.zip
 console.bat
 .vscode/*
-
-# custom-ppocr-onnx
-!toolkit\Lib\site-packages\ppocronnx\rec\predict_rec.py
-!toolkit\Lib\site-packages\ppocronnx\model\ppocr_keys_v1.txt
-!toolkit\Lib\site-packages\ppocronnx\model\ch_PP-OCRv2_rec_infer.onnx
