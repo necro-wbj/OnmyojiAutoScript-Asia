@@ -29,7 +29,7 @@ class DelegationAssets:
 	# 再考虑下 
 	I_D_CANCEL = RuleImage(roi_front=(945,413,130,56), roi_back=(945,413,130,56), threshold=0.8, method="Template matching", file="./tasks/Delegation/d/d_d_cancel.png")
 	# 出发 
-	I_D_START = RuleImage(roi_front=(1110,549,111,94), roi_back=(1110,549,111,94), threshold=0.8, method="Template matching", file="./tasks/Delegation/d/d_d_start.png")
+	I_D_START = RuleImage(roi_front=(1101,534,120,129), roi_back=(1101,534,120,129), threshold=0.8, method="Template matching", file="./tasks/Delegation/d/d_d_start.png")
 	# 跳过 
 	I_D_SKIP = RuleImage(roi_front=(661,518,70,39), roi_back=(661,518,70,39), threshold=0.67, method="Template matching", file="./tasks/Delegation/d/d_d_skip.png")
 	# description 
@@ -48,7 +48,7 @@ class DelegationAssets:
 
 	# Ocr Rule Assets
 	# 委派的名字 
-	O_D_NAME = RuleOcr(roi=(766,127,509,529), area=(766,127,509,529), mode="Full", method="Default", keyword="彌助的畫", name="d_name")
+	O_D_NAME = RuleOcr(roi=(766,127,509,529), area=(766,127,509,529), mode="Full", method="Default", keyword="弥助的画", name="d_name")
 
 
 	# Image Rule Assets

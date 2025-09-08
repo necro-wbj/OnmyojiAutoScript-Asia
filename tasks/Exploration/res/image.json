@@ -23,14 +23,14 @@
     "roiFront": "104,649,153,44",
     "roiBack": "104,649,153,44",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.9,
     "description": "自动轮换开着"
   },
   {
     "itemName": "e_auto_rotate_off",
     "imageName": "res_e_auto_rotate_off.png",
-    "roiFront": "113,658,138,27",
-    "roiBack": "113,658,138,27",
+    "roiFront": "108,650,150,46",
+    "roiBack": "108,650,150,46",
     "method": "Template matching",
     "threshold": 0.85,
     "description": "自动轮换关闭"
@@ -38,8 +38,8 @@
   {
     "itemName": "e_open_settings",
     "imageName": "res_e_open_settings.png",
-    "roiFront": "480,121,114,29",
-    "roiBack": "480,121,114,29",
+    "roiFront": "466,110,170,50",
+    "roiBack": "466,110,170,50",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "成功打开设置"
@@ -104,7 +104,7 @@
     "roiFront": "636,263,42,39",
     "roiBack": "0,0,1279,719",
     "method": "Template matching",
-    "threshold": 0.75,
+    "threshold": 0.8,
     "description": "普通怪"
   },
   {
@@ -113,7 +113,7 @@
     "roiFront": "683,256,38,34",
     "roiBack": "0,0,1276,719",
     "method": "Template matching",
-    "threshold": 0.75,
+    "threshold": 0.8,
     "description": "boss"
   },
   {
@@ -137,7 +137,7 @@
   {
     "itemName": "battle_start",
     "imageName": "res_battle_start.png",
-    "roiFront": "555,688,39,27",
+    "roiFront": "555,688,39,27.5",
     "roiBack": "221,677,561,41",
     "method": "Template matching",
     "threshold": 0.8,

@@ -12,13 +12,13 @@ from module.logger import logger
 from module.exception import TaskEnd
 from module.base.timer import Timer
 
+from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_demon_encounter, page_shikigami_records
 from tasks.DemonEncounter.assets import DemonEncounterAssets
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 from tasks.DemonEncounter.data.answer import Answer
-from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 
 
 class LanternClass(Enum):
@@ -30,6 +30,7 @@ class LanternClass(Enum):
     MYSTERY = 5  # 神秘任务
     BOSS = 6  # 大鬼王
 
+
 class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
     best_boss_enable = False
 
@@ -37,7 +38,6 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         if not self.check_time():
             logger.warning('Time is not right')
             raise TaskEnd('DemonEncounter')
-
         self.ui_get_current_page()
         # 切换御魂
         soul_config = self.config.demon_encounter.demon_soul_config
@@ -84,67 +84,46 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
 
         # 极逢魔选择
         best_demon_boss_config = self.config.demon_encounter.best_demon_boss_config
-        
+
         group, team = None, None
-        # 周一 鬼灵歌姬
         if today == 0:
             # 获取group,team
             if best_soul_config.enable and best_demon_boss_config.best_demon_kiryou_select:
                 group, team = best_soul_config.best_demon_kiryou_utahime.split(",")
-                logger.info(f'Best demon boss kiryou group: {group}, team: {team}')
             else:
                 group, team = soul_config.demon_kiryou_utahime.split(",")
-                logger.info(f'Normal demon boss kiryou group: {group}, team: {team}')
-        # 周二 极蜃气楼
         elif today == 1:
             if best_soul_config.enable and best_demon_boss_config.best_demon_shinkirou_select:
                 group, team = best_soul_config.best_demon_shinkirou.split(",")
-                logger.info(f'Best demon boss shinkirou group: {group}, team: {team}')
             else:
                 group, team = soul_config.demon_shinkirou.split(",")
-                logger.info(f'Normal demon boss shinkirou group: {group}, team: {team}')
-        # 周三 土蜘蛛
         elif today == 2:
             if best_soul_config.enable and best_demon_boss_config.best_demon_tsuchigumo_select:
                 group, team = best_soul_config.best_demon_tsuchigumo.split(",")
-                logger.info(f'Best demon boss tsuchigumo group: {group}, team: {team}')
             else:
                 group, team = soul_config.demon_tsuchigumo.split(",")
-                logger.info(f'Normal demon boss tsuchigumo group: {group}, team: {team}')
-        # 周四 荒骷髅
         elif today == 3:
             if best_soul_config.enable and best_demon_boss_config.best_demon_gashadokuro_select:
                 group, team = best_soul_config.best_demon_gashadokuro.split(",")
-                logger.info(f'Best demon boss gashadokuro group: {group}, team: {team}')
             else:
                 group, team = soul_config.demon_gashadokuro.split(",")
-                logger.info(f'Normal demon boss gashadokuro group: {group}, team: {team}')
-        # 周五 地震鲇
         elif today == 4:
             if best_soul_config.enable and best_demon_boss_config.best_demon_namazu_select:
                 group, team = best_soul_config.best_demon_namazu.split(",")
-                logger.info(f'Best demon boss namazu group: {group}, team: {team}')
             else:
                 group, team = soul_config.demon_namazu.split(",")
-                logger.info(f'Normal demon boss namazu group: {group}, team: {team}')
-        # 周六 胧车
         elif today == 5:
             group, team = soul_config.demon_oboroguruma.split(",")
-            logger.info(f'Normal demon boss oboroguruma group: {group}, team: {team}')
-        # 周日 夜荒魂
         elif today == 6:
             group, team = soul_config.demon_nightly_aramitama.split(",")
-            logger.info(f'Normal demon boss nightly aramitama group: {group}, team: {team}')
         if group and team:
             self.run_switch_soul_by_name(group, team)
         if today == 0:
             # 获取group,team
             if best_soul_config.enable and best_demon_boss_config.best_demon_kiryou_select:
                 group, team = best_soul_config.best_demon_kiryou_utahime_supplementary.split(",")
-                logger.info(f'Best demon boss kiryou supplementary group: {group}, team: {team}')
             else:
                 group, team = soul_config.demon_kiryou_utahime_supplementary.split(",")
-                logger.info(f'Normal demon boss kiryou supplementary group: {group}, team: {team}')
             self.run_switch_soul_by_name(group, team)
 
     def execute_boss(self):
@@ -257,8 +236,8 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         # 等待挑战, 5秒也是等
         time.sleep(5)
         # 延长时间并在战斗结束后改回来
-        # 少人的極逢魔BOSS 會超過10分鐘
-        self.device.stuck_timer_long = Timer(900, count=900).start()
+        self.device.stuck_timer_long = Timer(480, count=480).start()
+        #
         config = self.con
         while True:
             self.screenshot()
@@ -322,7 +301,6 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         self.screenshot()
         if not self.appear(self.I_DE_AWARD):
             self.ui_get_reward(self.I_DE_RED_DHARMA)
-            logger.info('紅色達摩領取完畢')
         self.wait_until_appear(self.I_DE_AWARD)
         # 然后到四个灯笼
         match_click = {
@@ -450,7 +428,6 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             answer_1 = self.O_LETTER_ANSWER_1.detect_text(self.device.image)
             answer_2 = self.O_LETTER_ANSWER_2.detect_text(self.device.image)
             answer_3 = self.O_LETTER_ANSWER_3.detect_text(self.device.image)
-            options=[answer_1, answer_2, answer_3]
             if answer_1 == '其余选项皆对':
                 index = 1
             elif answer_2 == '其余选项皆对':
@@ -460,9 +437,8 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             if not index:
                 index = Answer().answer_one(question=question, options=[answer_1, answer_2, answer_3])
             if index is None:
-                logger.warning('No answer found, using default answer 1')
                 index = 1
-            logger.info(f'Question: {question}, Answer: {index}{options[index-1]}')
+            logger.info(f'Question: {question}, Answer: {index}')
             return click_match[index]
 
         while 1:
@@ -476,13 +452,8 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             # 还未测试题库无法识别的情况
             logger.hr(f'Answer {i}', 3)
             answer_click = answer()
-            # wait 10s
-            time.sleep(1)
-            self.click(answer_click, interval=1)
-            while_count = 10
-            while while_count:
-                while_count = while_count - 1
-                logger.info(f'Answer {i} while count {while_count}')
+            # self.ui_get_reward(answer())
+            while 1:
                 self.screenshot()
                 if self.ui_reward_appear_click():
                     time.sleep(0.5)
@@ -498,23 +469,18 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                     break
                 # 如果没有出现红色关闭按钮，说明答题结束
                 if not self.appear(self.I_LETTER_CLOSE):
-                    logger.info('no red close button exit Question answering')
                     time.sleep(1.8)
                     self.screenshot()
                     if not self.appear(self.I_LETTER_CLOSE):
                         logger.warning('Answer finish')
                         return
-                # every wwhile loop sleep 0.5s
-                time.sleep(0.5)
+
                 # 一直点击
                 self.click(answer_click, interval=1.5)
             time.sleep(0.5)
 
     def _battle(self, target_click):
         config = self.con
-        #if click more than 5 times, then return
-        click_count = 0
-        boss_find_count = 0
         while 1:
             self.screenshot()
             if not self.appear(self.I_DE_LOCATION):
@@ -530,54 +496,8 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                     if self.appear_then_click(self.I_DE_SMALL_FIRE, interval=1):
                         continue
                 break
-            # find best demon boss
-            if self.appear(self.I_BEST_BOSS_FIRE) or self.appear(self.I_BOSS_FIRE):
-                logger.info('lantern find best demon boss')
-                if self.appear_then_click(self.I_BEST_BOSS_FIRE, interval=3):
-                    boss_find_count = boss_find_count + 1
-                    logger.info(f'lantern find best demon boss click:{boss_find_count}')
-                if self.appear_then_click(self.I_BOSS_FIRE, interval=3):
-                    boss_find_count = boss_find_count + 1
-                    logger.info(f'lantern find normal Boss click:{boss_find_count}')
-                # 等待挑战, 5秒也是等
-                time.sleep(5)
-            # enter best demon boss
-            if self.appear(self.I_BOSS_GATHER):
-                logger.warning('Boss battle ENTER wait fight!!!')
-                # 延长时间并在战斗结束后改回来
-                # 少人的極逢魔BOSS 會超過10分鐘
-                self.device.stuck_timer_long = Timer(900, count=900).start()
-                self.device.stuck_record_add('BATTLE_STATUS_S')
-                self.wait_until_disappear(self.I_BOSS_GATHER)
-                logger.warning('Boss battle FIGHTING!!!')
-                self.device.stuck_record_clear()
-                self.device.stuck_record_add('BATTLE_STATUS_S')
-                config = self.con
-                self.run_general_battle(config)
-                self.device.stuck_timer_long = Timer(300, count=300).start()
-            
-                # 等待回到挑战boss主界面
-                self.wait_until_appear(self.I_BOSS_GATHER)
-                while 1:
-                    self.screenshot()
-                    if self.appear(self.I_DE_LOCATION):
-                        break
-                    if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
-                        continue
-                    if self.appear_then_click(self.I_BOSS_BACK_WHITE, interval=1):
-                        continue
-                # 返回到封魔主界面
-            if boss_find_count >= 4:
-                # the best demon boss maybe already done close it
-                logger.warning('best demon boss enter count over 4')
-                self.ui_click_until_disappear(self.I_UI_BACK_RED)
-                return
-            if click_count >= 5:
-                logger.warning('lantern Battle click count over 5')
-                self.ui_click_until_disappear(self.I_UI_BACK_RED)
-                return
+
             if self.click(target_click, interval=1):
-                click_count = click_count + 1
                 continue
         if self.run_general_battle(config):
             logger.info('Battle End')
@@ -628,10 +548,10 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         if now.hour < 17:
             # 17点之前，推迟到当天的17点半
             logger.info('Before 17:00, wait to 17:30')
-            next_run = datetime.combine(now.date(), self.config.demon_encounter.scheduler.server_update)
-            self.set_next_run(task="DemonEncounter", server=False, target=next_run)
+            target_time = datetime(now.year, now.month, now.day, 17, 30, 0)
+            self.set_next_run(task='DemonEncounter', success=False, finish=False, target=target_time)
             return False
-        elif now.hour >= 22:
+        elif now.hour >= 23:
             # 23点之后，推迟到第二天的17:30
             logger.info('After 23:00, wait to 17:30')
             target_time = datetime(now.year, now.month, now.day, 17, 30, 0) + timedelta(days=1)
@@ -660,7 +580,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                 check_timer = Timer(3)
                 check_timer.start()
                 continue
-            if self.appear_then_click(self.I_REWARD):
+            if self.appear(self.I_REWARD):
                 logger.info('Win battle')
                 self.ui_click_until_disappear(self.I_REWARD)
                 return True
@@ -679,10 +599,10 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
-    from memory_profiler import profile
 
     c = Config('du')
     d = Device(c)
     t = ScriptTask(c, d)
+
     t.run()
     # t.battle_wait(True)
