@@ -36,6 +36,14 @@ class CelebBanConfig(BaseModel):
                                      description='celeb_ban_rule_help')
 
 
+class DuelCelebConfig(ConfigBase):
+    # 是否开启名仕战斗
+    celeb_battle: bool = Field(default=False, description='是否开启名仕战斗')
+    # 填写第五手式神名称，如果阵容式神被办，第五手就会换式神，退出斗技
+    ban_name: str = Field(default='', description='填写第五手式神名称')
+    initial_score: int = Field(default=3800, description='设置初始斗技分值默认为8颗星之后每赢一场加100输一场减100')
+
+
 class Duel(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     duel_config: DuelConfig = Field(default_factory=DuelConfig)
