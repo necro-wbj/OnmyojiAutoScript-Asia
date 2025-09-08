@@ -1,8 +1,8 @@
-name: Auto Rebase Upstream Dev
+name: Auto Rebase Upstream Dev (safe PR-only)
 
 on:
   schedule:
-    - cron: "0 * * * *"      # 每 5 分鐘
+    - cron: "*/5 * * * *"   # 每 5 分鐘（原本 "0 * * * *" 是每小時 0 分）
   workflow_dispatch: {}
   push:
     branches: [ main ]
@@ -15,13 +15,14 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# 只給需要的權限：寫入內容 & 開 PR
 permissions:
   contents: write
   pull-requests: write
 
 jobs:
   sync-upstream:
-    if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -30,6 +31,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          # 建議：checkout 只需要 read 權限，其餘由 GITHUB_TOKEN 控制
+          # 參考 actions/checkout 建議權限說明。:contentReference[oaicite:1]{index=1}
 
       - name: Git setup (identity & safety)
         run: |
@@ -40,18 +43,18 @@ jobs:
 
       - name: Add upstream and fetch
         run: |
-          set -e
+          set -euo pipefail
           git remote remove upstream 2>/dev/null || true
           git remote add upstream https://github.com/runhey/OnmyojiAutoScript.git
           git fetch --prune origin
           git fetch --prune upstream
 
-      # 解析來源：有 upstream/dev 用它，否則回退到自己的 main
+      # 偵測要跟哪個來源同步：優先 upstream/dev，沒有就退回 origin/main
       - name: Resolve upstream ref (dev or origin/main)
         id: resolve
         shell: bash
         run: |
-          set -e
+          set -euo pipefail
           TARGET_BRANCH="dev"
           if git ls-remote --heads upstream "$TARGET_BRANCH" | grep -q "refs/heads/$TARGET_BRANCH"; then
             UP_REF="upstream/${TARGET_BRANCH}"
@@ -61,107 +64,68 @@ jobs:
             REASON="fallback-origin-main"
           fi
 
-          git fetch --prune origin
-          if [[ "$UP_REF" == upstream/* ]]; then git fetch --prune upstream; fi
-
           UP_TIP=$(git rev-parse --short "${UP_REF}")
           ORI_TIP=$(git rev-parse --short origin/main)
           read BEHIND AHEAD < <(git rev-list --left-right --count origin/main..."${UP_REF}" | awk '{print $1" "$2}')
 
-          echo "up_ref=${UP_REF}"           >> $GITHUB_OUTPUT
-          echo "reason=${REASON}"           >> $GITHUB_OUTPUT
-          echo "upstream_tip=${UP_TIP}"     >> $GITHUB_OUTPUT
-          echo "origin_tip=${ORI_TIP}"      >> $GITHUB_OUTPUT
-          echo "ahead=${AHEAD}"             >> $GITHUB_OUTPUT
-          echo "behind=${BEHIND}"           >> $GITHUB_OUTPUT
+          {
+            echo "up_ref=${UP_REF}"
+            echo "reason=${REASON}"
+            echo "upstream_tip=${UP_TIP}"
+            echo "origin_tip=${ORI_TIP}"
+            echo "ahead=${AHEAD}"
+            echo "behind=${BEHIND}"
+          } >> "$GITHUB_OUTPUT"
 
           echo "[LOG] Using upstream ref: ${UP_REF} (${REASON})"
           echo "[LOG] origin/main tip:  ${ORI_TIP}"
           echo "[LOG] ${UP_REF} tip:     ${UP_TIP}"
           echo "[LOG] AHEAD=${AHEAD}, BEHIND=${BEHIND}"
 
-      - name: Exit early if no changes from upstream
+      - name: Exit early if no changes from upstream (exclude .github)
         id: earlycheck
         shell: bash
         run: |
-          set -e
+          set -euo pipefail
           UP_REF="${{ steps.resolve.outputs.up_ref }}"
-          # 忽略 .github/** 的差異（workflow 權限問題不影響是否開 PR）
           if git diff --quiet origin/main.."${UP_REF}" -- . ":(exclude).github" ":(exclude).github/**"; then
-            echo "no_changes=true" >> $GITHUB_OUTPUT
-            echo "[LOG] No changes detected outside .github between origin/main and ${UP_REF}."
+            echo "no_changes=true" >> "$GITHUB_OUTPUT"
+            echo "[LOG] No changes outside .github between origin/main and ${UP_REF}."
           else
-            echo "no_changes=false" >> $GITHUB_OUTPUT
+            echo "no_changes=false" >> "$GITHUB_OUTPUT"
             echo "[LOG] Changes detected (excluding .github)."
           fi
 
-      # 用 archive 解壓覆寫工作樹（不 push，交給 CPR 建分支/PR）
-      - name: Materialize upstream ref via archive (preserve local rules)
+      # 在暫存工作分支 materialize 上游內容（不推 main；交由 CPR 建分支/PR）
+      - name: Materialize upstream ref into workspace (keep local rules)
         if: steps.earlycheck.outputs.no_changes != 'true'
         shell: bash
         run: |
-          set -e
+          set -euo pipefail
           UP_REF="${{ steps.resolve.outputs.up_ref }}"
-      
-          # ★ 一定停在 main（CPR 會 reset 到 origin/main）
-          git checkout -B main origin/main
-      
-          # === 0) 算 merge-base（用來判斷「雙方都有改」） ===
-          BASE=$(git merge-base origin/main "${UP_REF}")
-          echo "[LOG] merge-base: ${BASE}"
-      
-          # === 1) 清理工作樹 ===
+
+          # 以 origin/main 為基底建立 staging 分支；**不動 main**。
+          git switch -c sync-staging origin/main
+
+          # 清理後用 archive 解壓上游內容（排除 .github）
           git rm -r -q --cached . || true
           git clean -fdqx || true
-      
-          # === 2) 展開上游檔案（排除 .github/**）===
+
           echo "[LOG] Archive ${UP_REF} → extract (excluding .github)..."
           git archive --format=tar "${UP_REF}" \
             | tar -x -m --exclude=".github" --exclude="./.github"
-      
-          # === 3) 固定使用「本地」的 .gitattributes / .gitignore / README.md ===
+
+          # 固定使用本地的重要規則檔（避免上游覆蓋）
           git checkout origin/main -- .gitattributes .gitignore README.md || true
-          # 先把 .gitattributes 放進索引，後續 renormalize 才會套規則
           git add .gitattributes 2>/dev/null || true
-      
-          # === 4) 計算雙方改動的檔案清單（相對 BASE）===
-          mapfile -t LEFT  < <(git diff --name-only --diff-filter=ACMR "${BASE}..origin/main")
-          mapfile -t RIGHT < <(git diff --name-only --diff-filter=ACMR "${BASE}..${UP_REF}")
-          declare -A RIGHT_SET; for p in "${RIGHT[@]}"; do RIGHT_SET["$p"]=1; done
-      
-          # 4a) 永遠保留本地（你指定的三檔；已在上面 checkout 過，這裡只做說明輸出）
-          PROTECT_ALWAYS=(".gitattributes" ".gitignore" "README.md")
-          echo "[LOG] Always-keep-local: ${PROTECT_ALWAYS[*]}"
-      
-          # 4b) 僅在「雙方都有改」時保留本地的型別/目錄規則
-          PROTECT_BOTH_GLOBS=("assets/**" "*.png" "*.jpg" "*.json" "*.yaml" "*.yml" "*.ini" "*.xml" "*.txt")
-      
-          keep_local=()
-          for f in "${LEFT[@]}"; do
-            [[ -z "${RIGHT_SET[$f]}" ]] && continue  # 上游沒改就跳過
-            for g in "${PROTECT_BOTH_GLOBS[@]}"; do
-              if [[ "$f" == $g ]]; then
-                keep_local+=("$f")
-                break
-              fi
-            done
-          done
-      
-          if [[ ${#keep_local[@]} -gt 0 ]]; then
-            echo "[LOG] Keep-local on both-changed (assets/JSON etc):"
-            printf ' - %s\n' "${keep_local[@]}"
-            git checkout origin/main -- "${keep_local[@]}" || true
-          else
-            echo "[LOG] No both-changed files matching keep-local globs."
-          fi
-      
-          # === 5) 保證 .github/ 仍用本地 ===
+
+          # 總是用本地 .github/（避免 workflow 被上游改掉）
           rm -rf .github || true
           git checkout origin/main -- .github || true
-      
-          # === 6) 全量加入；用 --renormalize 讓 .gitattributes 規則生效（EOL/文字屬性）===
+
+          # 套用屬性正規化（行尾等）
           git add --renormalize -A
-      
+
           echo "[LOG] Staged summary (vs origin/main):"
           git --no-pager diff --cached --stat || true
 
@@ -169,39 +133,32 @@ jobs:
         id: diffcheck
         shell: bash
         run: |
+          set -euo pipefail
           git fetch origin main
-          git diff --quiet origin/main..HEAD
-          if [ $? -eq 0 ]; then
-            echo "no_diff=true" >> $GITHUB_OUTPUT
-            echo "[LOG] No real diff — skip PR."
-          else
-            echo "no_diff=false" >> $GITHUB_OUTPUT
-            echo "[LOG] Detected diff — will create/update PR."
-          fi
-      
+          git diff --quiet origin/main..HEAD || { echo "no_diff=false" >> "$GITHUB_OUTPUT"; exit 0; }
+          echo "no_diff=true" >> "$GITHUB_OUTPUT"
+          echo "[LOG] No real diff — skip PR."
+
       - name: Create / Update PR
         if: steps.diffcheck.outputs.no_diff == 'false'
         id: cpr
         uses: peter-evans/create-pull-request@v6
         with:
-          branch: sync/upstream-dev
+          branch: sync/upstream-dev            # PR 分支名稱（固定）
           base: main
-          title: >-
-            Auto sync ${{ steps.resolve.outputs.up_ref }} → main
-          commit-message: >-
-            chore(sync): mirror ${{ steps.resolve.outputs.up_ref }} into main
+          title: "Auto sync ${{ steps.resolve.outputs.up_ref }} → main"
+          commit-message: "chore(sync): materialize ${{ steps.resolve.outputs.up_ref }} into main (via PR)"
           body: |
-            Automated sync from **${{ steps.resolve.outputs.up_ref }}** to **main**.
-            - upstream ref: `${{ steps.resolve.outputs.up_ref }}`
-            - reason: `${{ steps.resolve.outputs.reason }}`  (found-branch / fallback-origin-main)
+            Automated sync from **${{ steps.resolve.outputs.up_ref }}** to **main** (PR-only).
+            - reason: `${{ steps.resolve.outputs.reason }}`
             - upstream tip: `${{ steps.resolve.outputs.upstream_tip }}`
             - origin tip:   `${{ steps.resolve.outputs.origin_tip }}`
             - ahead:  `${{ steps.resolve.outputs.ahead }}`
             - behind: `${{ steps.resolve.outputs.behind }}`
           labels: "chore,auto-sync"
           delete-branch: false
+          # 這個 Action 會自動偵測變更、建分支、commit、push、開 PR。:contentReference[oaicite:2]{index=2}
 
-      # 有 PR → 貼 PR 連結
       - name: Notify Discord (PR created/updated)
         if: steps.diffcheck.outputs.no_diff == 'false' && steps.cpr.outputs.pull-request-operation != 'none'
         env:
@@ -209,7 +166,7 @@ jobs:
           PR_URL: ${{ steps.cpr.outputs.pull-request-url }}
           OP: ${{ steps.cpr.outputs.pull-request-operation }}
         run: |
-          set -e
+          set -euo pipefail
           MSG=$(cat <<EOF
           🔄 **Auto sync ${{ steps.resolve.outputs.up_ref }} → main** (${OP})
           PR: ${PR_URL}
@@ -219,14 +176,13 @@ jobs:
             -H 'Content-Type: application/json' \
             -d "$(jq -n --arg content "$MSG" '{content: $content}')"
 
-      # 任一步驟失敗 → 貼 Run 連結
       - name: Notify Discord (run failed)
         if: failure()
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          set -e
+          set -euo pipefail
           MSG=$(cat <<EOF
           ❌ **Auto sync failed**
           Run: ${RUN_URL}
