@@ -102,21 +102,23 @@ jobs:
           set -e
           UP_REF="${{ steps.resolve.outputs.up_ref }}"
       
-          # ★ 關鍵：一定要停在 main（對應遠端 origin/main）
           git checkout -B main origin/main
       
-          # 清空工作樹，避免殘檔
           git rm -r -q --cached . || true
           git clean -fdqx || true
       
-          echo "[LOG] Archiving ${UP_REF} → extracting into working tree..."
-          git archive --format=tar "${UP_REF}" | tar -x -m
+          echo "[LOG] Archiving ${UP_REF} → extracting into working tree (excluding .github)..."
+          git archive --format=tar "${UP_REF}" \
+            | tar -x -m --exclude=".github" --exclude="./.github"
       
-          # 全量加入索引
+          # 保險：確保使用自己的 .github（避免不小心覆蓋）
+          rm -rf .github || true
+          git checkout origin/main -- .github || true
+      
           git add -A
-      
           echo "[LOG] Staged summary (vs origin/main):"
           git --no-pager diff --cached --stat || true
+
 
       - name: Create / Update PR
         if: steps.earlycheck.outputs.no_changes != 'true'
