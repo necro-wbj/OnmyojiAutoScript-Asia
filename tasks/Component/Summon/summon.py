@@ -83,34 +83,9 @@ class Summon(BaseTask, SummonAssets):
         :return:
         """
         logger.info('Summon one')
-        # TODO click "召喚活動"'s back
-        # TODO click "選擇卡池"'s "確定"
-        wait_time = 10
-        while wait_time:
-            wait_time = wait_time -1
-            #wait 1s
-            time.sleep(1)
-            self.screenshot()
-            if self.appear(self.I_BLUE_TICKET):
-                logger.info('Find I_BLUE_TICKET')
-                # break
-            if self.appear_then_click(self.I_SM_EVENT):
-                logger.info('Find summon event')
-                if self.appear_then_click(self.I_UI_BACK_YELLOW):
-                    logger.info('click back to exit summon event')
-                    continue
-            if self.appear_then_click(self.I_UI_BACK_RED):
-                logger.info('click back red for waht?')
-                continue
-            if self.appear_then_click(self.I_UI_CONFIRM_SAMLL):
-                logger.info('click confirm small')
-                continue
         self.wait_until_appear(self.I_BLUE_TICKET)
-        
-        logger.info('get I_BLUE_TICKET')
         while True:
             ticket_info = self.O_ONE_TICKET.ocr(self.device.image)
-            logger.info('ticket_info: %s' % ticket_info)
             # 处理 None 和空字符串
             if ticket_info is None or ticket_info == '':
                 ticket_info = 0
@@ -155,23 +130,6 @@ class Summon(BaseTask, SummonAssets):
                         self.summon_mystery_pattern()
                     else:
                         self.summon()
-                    continue
-            logger.info('Summon one success')
-            # 画一张票
-            time.sleep(0.5)
-            while 1:
-                self.screenshot()
-                if self.appear(self.I_SM_CONFIRM, interval=0.6):
-                    self.ui_click_until_disappear(self.I_SM_CONFIRM)
-                    break
-                if self.appear(self.I_SM_CONFIRM_2, interval=0.6):
-                    self.ui_click_until_disappear(self.I_SM_CONFIRM_2)
-                    break
-                if self.appear(self.I_ONE_TICKET, interval=1):
-                    # 某些时候会点击到 “语言召唤”
-                    if self.appear_then_click(self.I_UI_CANCEL, interval=0.8):
-                        continue
-                    self.summon()
                     continue
             logger.info('Summon one success')
 

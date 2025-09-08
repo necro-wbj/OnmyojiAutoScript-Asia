@@ -39,7 +39,7 @@ class BondlingFairylandAssets:
 	# 召唤契灵数量 
 	O_B_SUMMON_BALL_NUMBER = RuleOcr(roi=(546,540,100,45), area=(546,540,100,45), mode="Single", method="Default", keyword="", name="b_summon_ball_number")
 	# 抓捕契灵剩余数量 
-	O_B_BALL_NUMBER = RuleOcr(roi=(1181,532,79,30), area=(1181,532,79,30), mode="DigitCounter", method="Default", keyword="", name="b_ball_number")
+	O_B_BALL_NUMBER = RuleOcr(roi=(1190,532,70,30), area=(1190,532,70,30), mode="DigitCounter", method="Default", keyword="", name="b_ball_number")
 	# 好友邀请 
 	O_FRIEND = RuleOcr(roi=(357,89,100,54), area=(357,89,100,54), mode="Single", method="Default", keyword="", name="friend")
 	# 跨区邀请 

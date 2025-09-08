@@ -6,7 +6,7 @@
     "mode": "Digit",
     "method": "Default",
     "keyword": "",
-    "description": "挑戰券的數量"
+    "description": "挑战券的数量"
   },
   {
     "itemName": "wq_wanted",
@@ -15,30 +15,30 @@
     "mode": "Full",
     "method": "Default",
     "keyword": "",
-    "description": "懸賞封印"
+    "description": "悬赏封印"
   },
   {
     "itemName": "wq_text_1",
-    "roiFront": "18,232,101,33",
-    "roiBack": "18,232,101,33",
+    "roiFront": "67,233,52,32",
+    "roiBack": "67,233,52,32",
     "mode": "Single",
     "method": "Default",
-    "keyword": "懸.*印",
+    "keyword": "封印",
     "description": "Ocr-description"
   },
   {
     "itemName": "wq_text_2",
-    "roiFront": "19,377,99,32",
-    "roiBack": "19,377,99,32",
+    "roiFront": "66,377,52,32",
+    "roiBack": "66,377,52,32",
     "mode": "Single",
     "method": "Default",
-    "keyword": "懸.*印",
+    "keyword": "封印",
     "description": "Ocr-description"
   },
   {
     "itemName": "wq_num_1",
-    "roiFront": "41,260,54,27",
-    "roiBack": "41,260,54,27",
+    "roiFront": "32,260,72,27",
+    "roiBack": "32,260,72,27",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
@@ -46,8 +46,8 @@
   },
   {
     "itemName": "wq_num_2",
-    "roiFront": "39,406,56,26",
-    "roiBack": "39,406,56,26",
+    "roiFront": "34,406,65,24",
+    "roiBack": "34,406,65,24",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",

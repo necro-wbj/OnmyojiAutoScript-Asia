@@ -292,8 +292,6 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             if self.appear(self.I_U_ENTER_REALM):
                 break
             if self.appear_then_click(self.I_UTILIZE_ADD, interval=2):
-                #wait 5 sec for let it loading or 2nd click will close it
-                time.sleep(5)
                 continue
         logger.info('Enter utilize')
         return True
@@ -392,8 +390,10 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             logger.info('Current select card: %s', card_class)
 
             self.appear_then_click(target, interval=0.3)
+            # 验证这张卡 的等级是否一致
+            # while 1:
+            #     self.screenshot()
             return card_class
-
         def select_friend(friend_name: str) -> bool:
             """
             尝试在当前界面中识别并选择指定名称的好友
@@ -418,15 +418,18 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                 self.O_UTILIZE_F_LIST.filter = original_filter
 
         logger.hr('Start utilize')
-
-        # 只切換一次好友列表（避免重複切換）
         self.switch_friend_list(friend)
+        self.swipe(self.S_U_END, interval=3)
+        if friend == SelectFriendList.SAME_SERVER:
+            self.switch_friend_list(SelectFriendList.DIFFERENT_SERVER)
+            self.switch_friend_list(SelectFriendList.SAME_SERVER)
+        else:
+            self.switch_friend_list(SelectFriendList.SAME_SERVER)
+            self.switch_friend_list(SelectFriendList.DIFFERENT_SERVER)
 
         rule = self.config.kekkai_utilize.utilize_config.utilize_rule
-        friend_name = getattr(self.config.kekkai_utilize.utilize_config, 'utilize_friend', None)
-
-        # ——— 規則一：指定好友 ———
-        if rule == UtilizeRule.FRIEND and friend_name:
+        friend_name = self.config.kekkai_utilize.utilize_config.utilize_friend
+        if rule == UtilizeRule.FRIEND:
             swipe_count = 0
             while 1:
                 self.screenshot()
@@ -443,7 +446,6 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                 swipe_count += 1
                 time.sleep(3)
 
-        # ——— 規則二：按策略挑最佳結界卡 ———
         else:
             card_best = None
             swipe_count = 0
@@ -451,12 +453,10 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                 self.screenshot()
                 current_card = _current_select_best(card_best)
 
-                if current_card is not None:
+                if current_card is None:
+                    break
+                else:
                     card_best = current_card
-                    # 若已遇到排序中最佳（index 0），提前結束
-                    if self.order_cards.index(card_best) == 0:
-                        logger.info('Current card is the best card')
-                        break
 
                 # 超过十次就退出
                 if swipe_count > 10:
@@ -467,7 +467,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                 self.swipe(self.S_U_UP, interval=0.9)
                 swipe_count += 1
                 time.sleep(3)
-
+            # 最好的结界卡
             logger.info('End best card is %s', card_best)
 
         # 进入结界
@@ -477,7 +477,6 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             # 可能是滑动的时候出错
             logger.warning('The best reason is that the swipe is wrong')
             return False
-
         TIMEOUT_SEC = 120          # 超时时长（秒）
         start_time = time.time()   # 记录起始时间
         while 1:
@@ -521,79 +520,55 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         self.set_shikigami(shikigami_order, stop_image)
         return True
 
-    def filter(self, boxed_results: list[BoxedResult], keyword: str = None) -> list | None:
+    def filter(self, boxed_results: list[BoxedResult], keyword: str=None) -> list or None:
         """
-        使用 OCR 結果與 keyword 進行匹配，回傳匹配到的 index list。
-        匹配策略：
-        1) 先做整句匹配（若某一條 OCR 行內含 keyword，回傳該行索引）
-        2) 若失敗，再做竖排匹配（依序在後續行中尋找 keyword 的每個字）
-        3) 都失敗則回傳 None
+        使用ocr获取结果后和keyword进行匹配. 返回匹配的index list
+        :param keyword: 如果不指定默认适用对象的keyword
+        :param boxed_results:
+        :return:
         """
-        logger.info("重寫的 filter 方法")
-
-        # --- 基本健檢 ---
-        if not boxed_results:
-            logger.info("OCR 結果為空，無法匹配")
-            return None
-
-        strings = [br.ocr_text or "" for br in boxed_results]
+        # 首先先将所有的ocr的str顺序拼接起来, 然后再进行匹配
+        logger.info(f"重写的filter方法")
+        result = None
+        strings = [boxed_result.ocr_text for boxed_result in boxed_results]
+        concatenated_string = "".join(strings)
         if keyword is None:
-            keyword = getattr(self, "keyword", None)
-        if not keyword:
-            logger.info("keyword 為空，無法匹配")
+            keyword = self.keyword
+        if keyword in concatenated_string:
+            result = [index for index, word in enumerate(strings) if keyword in word]
+        else:
+            result = None
+
+        if result is not None:
+            # logger.info("Filter result: %s" % result)
+            return result
+        else:
             return None
 
-        # --- 策略 1：整句匹配（原本邏輯） ---
-        try:
-            concatenated = "".join(strings)
-            if keyword in concatenated:
-                indices = [i for i, w in enumerate(strings) if keyword in w]
-                if indices:
-                    logger.info("整句匹配成功，indices=%s", indices)
-                    return indices
-        except Exception as e:
-            logger.warning("整句匹配發生例外：%s", e)
-
-        # --- 策略 2：竖排匹配（逐字前向貪婪） ---
-        # 思路：維持字元順序，對於 keyword 的每個字，往後尋找第一個包含該字的行。
+        # 如果适用顺序拼接还是没有匹配到，那可能是竖排的，使用单个字节的keyword进行匹配
         indices = []
-        last_i = -1
+        # 对于keyword中的每一个字符，都要在strings中进行匹配
+        # 如果这个字符在strings中的某一个string中，那么就记录这个string的index
         max_index = len(strings) - 1
-
-        for ch in keyword:
-            found = False
-            # 僅在 last_i 之後尋找，確保順序
-            for i in range(last_i + 1, max_index + 1):
-                if ch in strings[i]:
+        for index, char in enumerate(keyword):
+            for i, string in enumerate(strings):
+                if char not in string:
+                    continue
+                if i <= max_index:
                     indices.append(i)
-                    last_i = i
-                    found = True
                     break
-            if not found:
-                # 任何一個字找不到就終止竖排匹配
-                indices = []
-                break
-
         if indices:
-            # 去重並保持順序
-            seen = set()
-            ordered_unique = []
-            for i in indices:
-                if i not in seen:
-                    seen.add(i)
-                    ordered_unique.append(i)
-            logger.info("竖排匹配成功，indices=%s", ordered_unique)
-            return ordered_unique
-
-        logger.info("未匹配到任何結果")
-        return None
+            # 剔除掉重复的index
+            indices = list(set(indices))
+            return indices
+        else:
+            return None
 
     def back_guild(self):
         """
         回到寮的界面
         :return:
         """
-        logger.info("回到寮的界面")
         while 1:
             self.screenshot()
 

@@ -78,7 +78,7 @@
     "roiBack": "79,1,110,74",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "鬥技"
+    "description": "description"
   },
   {
     "itemName": "check_demon_encounter",
@@ -110,8 +110,8 @@
   {
     "itemName": "check_draft_duel",
     "imageName": "page_check_draft_duel.png",
-    "roiFront": "96,10,121,39",
-    "roiBack": "96,10,121,39",
+    "roiFront": "1051,612,56,58",
+    "roiBack": "1029,594,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

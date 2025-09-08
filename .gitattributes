@@ -13,13 +13,3 @@
 *.yaml text eol=lf
 *.json text eol=lf
 *.html text eol=lf
-# 對所有資產或語言相關檔案，發生衝突時優先保留「自己的版本」
-assets/** merge=theirs
-*.png     merge=theirs
-*.jpg     merge=theirs
-*.json    merge=theirs
-*.txt     merge=theirs
-*.yaml    merge=theirs
-*.yml     merge=theirs
-*.ini     merge=theirs
-*.xml     merge=theirs
