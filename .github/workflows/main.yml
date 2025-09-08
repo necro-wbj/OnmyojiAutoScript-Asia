@@ -95,26 +95,26 @@ jobs:
           fi
 
       # 用 archive 解壓覆寫工作樹（不 push，交給 CPR 建分支/PR）
-      - name: Materialize upstream ref via archive
+      - name: Materialize upstream ref via archive (no push)
         if: steps.earlycheck.outputs.no_changes != 'true'
         shell: bash
         run: |
           set -e
           UP_REF="${{ steps.resolve.outputs.up_ref }}"
-        
-          # 以 main 為基底建立「本地工作基底分支」，名稱避開 PR 分支
-          git checkout -B base-for-sync origin/main
-        
-          # 清空工作樹（保持乾淨），避免殘檔影響
+      
+          # ★ 關鍵：一定要停在 main（對應遠端 origin/main）
+          git checkout -B main origin/main
+      
+          # 清空工作樹，避免殘檔
           git rm -r -q --cached . || true
           git clean -fdqx || true
-        
+      
           echo "[LOG] Archiving ${UP_REF} → extracting into working tree..."
           git archive --format=tar "${UP_REF}" | tar -x -m
-        
+      
           # 全量加入索引
           git add -A
-        
+      
           echo "[LOG] Staged summary (vs origin/main):"
           git --no-pager diff --cached --stat || true
 
@@ -123,7 +123,7 @@ jobs:
         id: cpr
         uses: peter-evans/create-pull-request@v6
         with:
-          branch: sync/upstream-dev      # ← PR 來源分支（CPR 會自動建立/更新）
+          branch: sync/upstream-dev
           base: main
           title: >-
             Auto sync ${{ steps.resolve.outputs.up_ref }} → main
