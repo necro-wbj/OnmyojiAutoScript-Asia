@@ -170,7 +170,7 @@ jobs:
         shell: bash
         run: |
           git fetch origin main
-          git diff --quiet origin/main…HEAD
+          git diff --quiet origin/main..HEAD
           if [ $? -eq 0 ]; then
             echo "no_diff=true" >> $GITHUB_OUTPUT
             echo "[LOG] No real diff — skip PR."
