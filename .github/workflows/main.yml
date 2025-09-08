@@ -96,22 +96,29 @@ jobs:
           echo "prev_tip=${PREV_TIP}" >> "$GITHUB_OUTPUT"
           echo "[LOG] previous recorded upstream_tip: ${PREV_TIP:-<none>}"
 
-      - name: Materialize upstream into staging
+      - name: Materialize upstream into main (keep base branch)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         shell: bash
         run: |
           set -euo pipefail
           UP_REF="${{ steps.resolve.outputs.up_ref }}"
-          git switch -c sync-staging origin/main
+      
+          # 確保我們在 main，且 main 指到 origin/main
+          git checkout -B main origin/main
+      
           git rm -r -q --cached . || true
           git clean -fdqx || true
+      
+          echo "[LOG] Archive ${UP_REF} → extract (excluding .github)..."
           git archive --format=tar "${UP_REF}" | tar -x -m --exclude=".github" --exclude="./.github"
+      
+          # 固定本地規則與 workflow
           git checkout origin/main -- .gitattributes .gitignore README.md || true
           rm -rf .github || true
           git checkout origin/main -- .github || true
+      
           git add --renormalize -A
-          echo "[LOG] Staged diff (INDEX vs origin/main, excluding .github):"
-          git --no-pager diff --cached --stat origin/main | head -n 50 || true
+
 
       # ★ 改成看 Index
       - name: Is there real diff outside .github?
