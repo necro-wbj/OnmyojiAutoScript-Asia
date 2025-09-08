@@ -2,7 +2,7 @@ name: Auto Rebase Upstream Dev (quiet PR-only)
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/5 * * * *"   # GitHub Actions 最短 5 分鐘一次
   workflow_dispatch: {}
   push:
     branches: [ main ]
@@ -96,32 +96,64 @@ jobs:
           echo "prev_tip=${PREV_TIP}" >> "$GITHUB_OUTPUT"
           echo "[LOG] previous recorded upstream_tip: ${PREV_TIP:-<none>}"
 
-      - name: Materialize upstream into main (keep base branch)
+      # ---------- 這裡開始：rebase 你的補丁到上游之上 ----------
+      - name: (Cache) Restore rerere decisions
+        uses: actions/cache@v4
+        with:
+          path: .git/rr-cache
+          key: rr-cache-${{ runner.os }}-${{ github.repository }}-${{ steps.resolve.outputs.upstream_tip }}
+          restore-keys: |
+            rr-cache-${{ runner.os }}-${{ github.repository }}-
+
+      - name: Rebase local commits (preserve patch stack; prefer our patches)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         shell: bash
         run: |
           set -euo pipefail
           UP_REF="${{ steps.resolve.outputs.up_ref }}"
-      
-          # 確保我們在 main，且 main 指到 origin/main
+
+          # 1) 以你目前 main 的狀態出發，開一條 rebase 分支
           git checkout -B main origin/main
-      
+          git switch -c rebase/upstream-dev
+
+          # 2) 開啟 rerere，記住衝突解法（之後會 cache）
+          git config rerere.enabled true
+
+          # 3) rebase 到上游 tip：
+          #    ⚠ 在 rebase 中，-X theirs = 優先採用你正在重放的「本地提交」內容
+          if ! git rebase -s ort -X theirs "${UP_REF}"; then
+            echo "::error::Rebase had conflicts that could not be auto-resolved."
+            exit 1
+          fi
+
+          echo "[LOG] Rebased branch tip:"
+          git --no-pager log --oneline -n 5
+
+      - name: (Cache) Save rerere decisions
+        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
+        uses: actions/cache/save@v4
+        with:
+          path: .git/rr-cache
+          key: rr-cache-${{ runner.os }}-${{ github.repository }}-${{ steps.resolve.outputs.upstream_tip }}
+
+      # 把 rebase 結果「投影」回 main 的 Index（PR 會從 Index 取變更）
+      - name: Materialize rebased tree onto main (INDEX)
+        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git checkout -B main origin/main
           git rm -r -q --cached . || true
           git clean -fdqx || true
-      
-          echo "[LOG] Archive ${UP_REF} → extract (excluding .github)..."
-          git archive --format=tar "${UP_REF}" | tar -x -m --exclude=".github" --exclude="./.github"
-      
-          # 固定本地規則與 workflow
-          git checkout origin/main -- .gitattributes .gitignore README.md || true
-          rm -rf .github || true
-          git checkout origin/main -- .github || true
-      
-          git add --renormalize -A
+          # 用 rebase 結果覆蓋工作樹與 Index（不 commit）
+          git restore --source rebase/upstream-dev --worktree --staged :/
 
+          echo "[LOG] Staged diff (INDEX vs origin/main) after rebase:"
+          git --no-pager diff --cached --stat origin/main | head -n 100 || true
+      # ---------- 這裡結束：rebase 流程 ----------
 
-      # ★ 改成看 Index
-      - name: Is there real diff outside .github?
+      # 只在 .github 以外有實質差異時才進 CPR（低噪音）
+      - name: Is there real diff outside .github? (INDEX)
         id: diffcheck
         shell: bash
         run: |
@@ -129,12 +161,13 @@ jobs:
           git update-index -q --refresh
           if git diff --cached --quiet origin/main -- . ":(exclude).github" ":(exclude).github/**"; then
             echo "real_diff=false" >> "$GITHUB_OUTPUT"
-            echo "[LOG] No real diff outside .github after materialize (INDEX vs origin/main)."
+            echo "[LOG] No real diff outside .github (INDEX vs origin/main)."
           else
             echo "real_diff=true"  >> "$GITHUB_OUTPUT"
-            echo "[LOG] Real diff detected outside .github (INDEX vs origin/main)."
+            echo "[LOG] Real diff detected (INDEX vs origin/main)."
           fi
 
+      # 若沒有實質差異但上游 tip 變了 → 只寫同步記錄避免每輪都動 PR
       - name: Write .sync meta only when needed (avoid churn)
         if: steps.diffcheck.outputs.real_diff == 'false'
         shell: bash
@@ -156,8 +189,8 @@ jobs:
             echo "[LOG] Same upstream tip as existing PR branch; skip meta write."
           fi
 
-      # ★ 改成看 Index
-      - name: Final diff gate (will we PR?)
+      # 最終 gate：Index 對 origin/main 有差異才開/更 PR
+      - name: Final diff gate (will we PR?) (INDEX)
         id: finalgate
         shell: bash
         run: |
@@ -178,16 +211,16 @@ jobs:
         with:
           branch: sync/upstream-dev
           base: main
-          title: "Auto sync ${{ steps.resolve.outputs.up_ref }} → main (tip=${{ steps.resolve.outputs.upstream_tip }})"
-          commit-message: "chore(sync): ${{ steps.resolve.outputs.up_ref }}@${{ steps.resolve.outputs.upstream_tip }}"
+          title: "Auto rebase ${{ steps.resolve.outputs.up_ref }} → main (tip=${{ steps.resolve.outputs.upstream_tip }})"
+          commit-message: "chore(sync): rebase onto ${{ steps.resolve.outputs.up_ref }}@${{ steps.resolve.outputs.upstream_tip }}"
           body: |
-            Automated sync from **${{ steps.resolve.outputs.up_ref }}** to **main** (quiet mode).
+            Automated **rebase** from **${{ steps.resolve.outputs.up_ref }}** to **main** (quiet mode).
             - reason: `${{ steps.resolve.outputs.reason }}`
             - upstream tip: `${{ steps.resolve.outputs.upstream_tip }}`
             - origin tip:   `${{ steps.resolve.outputs.origin_tip }}`
             - ahead:  `${{ steps.resolve.outputs.ahead }}`
             - behind: `${{ steps.resolve.outputs.behind }}`
-            - note: PR updates only when upstream tip changes or real diff exists.
+            - notes: Uses `git rebase -s ort -X theirs` to prefer our patches during rebase.
           labels: "chore,auto-sync"
           draft: true
           delete-branch: false
@@ -201,7 +234,7 @@ jobs:
         run: |
           set -euo pipefail
           MSG=$(cat <<EOF
-          🔄 **Auto sync ${{ steps.resolve.outputs.up_ref }} → main** (${OP})
+          🔄 **Auto rebase ${{ steps.resolve.outputs.up_ref }} → main** (${OP})
           PR: ${PR_URL}
           EOF
           )
@@ -216,7 +249,7 @@ jobs:
         run: |
           set -euo pipefail
           MSG=$(cat <<EOF
-          ❌ **Auto sync failed**
+          ❌ **Auto rebase failed**
           Run: ${RUN_URL}
           EOF
           )
