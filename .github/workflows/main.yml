@@ -165,8 +165,22 @@ jobs:
           echo "[LOG] Staged summary (vs origin/main):"
           git --no-pager diff --cached --stat || true
 
+      - name: Check for actual diff before PR
+        id: diffcheck
+        shell: bash
+        run: |
+          git fetch origin main
+          git diff --quiet origin/main…HEAD
+          if [ $? -eq 0 ]; then
+            echo "no_diff=true" >> $GITHUB_OUTPUT
+            echo "[LOG] No real diff — skip PR."
+          else
+            echo "no_diff=false" >> $GITHUB_OUTPUT
+            echo "[LOG] Detected diff — will create/update PR."
+          fi
+      
       - name: Create / Update PR
-        if: steps.earlycheck.outputs.no_changes != 'true'
+        if: steps.diffcheck.outputs.no_diff == 'false'
         id: cpr
         uses: peter-evans/create-pull-request@v6
         with:
@@ -189,7 +203,7 @@ jobs:
 
       # 有 PR → 貼 PR 連結
       - name: Notify Discord (PR created/updated)
-        if: steps.earlycheck.outputs.no_changes != 'true' && steps.cpr.outputs.pull-request-operation != 'none'
+        if: steps.diffcheck.outputs.no_diff == 'false' && steps.cpr.outputs.pull-request-operation != 'none'
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           PR_URL: ${{ steps.cpr.outputs.pull-request-url }}
