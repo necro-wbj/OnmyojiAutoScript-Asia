@@ -2,7 +2,7 @@ name: Auto Rebase Upstream Dev (quiet PR-only)
 
 on:
   schedule:
-    - cron: "*/5 * * * *"   # GitHub Actions 最短 5 分鐘一次
+    - cron: "*/5 * * * *"
   workflow_dispatch: {}
   push:
     branches: [ main ]
@@ -29,7 +29,7 @@ jobs:
       - name: Checkout (full)
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # 抓全歷史，避免比較不準確
+          fetch-depth: 0
 
       - name: Git setup
         run: |
@@ -43,11 +43,9 @@ jobs:
           set -euo pipefail
           git remote remove upstream 2>/dev/null || true
           git remote add upstream https://github.com/runhey/OnmyojiAutoScript.git
-          # 取回所有 heads（含 upstream/dev 的本地追蹤）
           git fetch --prune origin   +refs/heads/*:refs/remotes/origin/*
           git fetch --prune upstream +refs/heads/*:refs/remotes/upstream/*
 
-      # 以「本地是否有 refs/remotes/upstream/dev」為準，不再用 ls-remote（避免網路抖動）
       - name: Resolve upstream ref & tip-diff (robust)
         id: resolve
         shell: bash
@@ -60,11 +58,9 @@ jobs:
             UP_REF="origin/main"
             REASON="fallback-origin-main"
           fi
-
           UP_TIP=$(git rev-parse --short "${UP_REF}")
           ORI_TIP=$(git rev-parse --short origin/main)
           read BEHIND AHEAD < <(git rev-list --left-right --count origin/main..."${UP_REF}" | awk '{print $1" "$2}')
-
           {
             echo "up_ref=${UP_REF}"
             echo "reason=${REASON}"
@@ -73,24 +69,19 @@ jobs:
             echo "ahead=${AHEAD}"
             echo "behind=${BEHIND}"
           } >> "$GITHUB_OUTPUT"
-
           echo "[LOG] reason=${REASON}  up_ref=${UP_REF}  up_tip=${UP_TIP}  base_tip=${ORI_TIP}"
           echo "[LOG] rev-list(origin/main...${UP_REF}) BEHIND=${BEHIND} AHEAD=${AHEAD}"
 
-      # 早退 1：只有在「確實比到 upstream/dev」且 tips 完全相同時才靜默早退
       - name: Early exit if tips identical (only if comparing upstream/dev)
         if: steps.resolve.outputs.ahead == '0' && steps.resolve.outputs.behind == '0' && startsWith(steps.resolve.outputs.up_ref, 'upstream/')
         run: echo "[LOG] Tips identical to upstream/dev; skip run."
 
-      # 若發生 fallback（up_ref=origin/main）且 diff=0，直接失敗，避免「成功但沒動作」
       - name: Guard against silent fallback (origin/main...origin/main = 0/0)
         if: steps.resolve.outputs.ahead == '0' && steps.resolve.outputs.behind == '0' && !startsWith(steps.resolve.outputs.up_ref, 'upstream/')
         run: |
           echo "::error::UP_REF=${{ steps.resolve.outputs.up_ref }} equals origin/main (fallback). Refusing to skip silently."
-          echo "::error::This usually means upstream/dev was not fetched or not found. Check previous fetch logs."
           exit 2
 
-      # 取得既有 PR 分支（若有），讀取上次記錄的 upstream tip（降低通知噪音）
       - name: Fetch existing PR branch (if any)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         id: prev
@@ -105,45 +96,38 @@ jobs:
           echo "prev_tip=${PREV_TIP}" >> "$GITHUB_OUTPUT"
           echo "[LOG] previous recorded upstream_tip: ${PREV_TIP:-<none>}"
 
-      # Materialize：把 upstream 展開到 staging 分支，排除 .github，並保留本地規則檔
       - name: Materialize upstream into staging
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         shell: bash
         run: |
           set -euo pipefail
           UP_REF="${{ steps.resolve.outputs.up_ref }}"
-
           git switch -c sync-staging origin/main
           git rm -r -q --cached . || true
           git clean -fdqx || true
-
-          echo "[LOG] Archive ${UP_REF} → extract (excluding .github)..."
           git archive --format=tar "${UP_REF}" | tar -x -m --exclude=".github" --exclude="./.github"
-
-          # 固定用本地的規則檔與 workflow（避免被上游覆蓋）
           git checkout origin/main -- .gitattributes .gitignore README.md || true
           rm -rf .github || true
           git checkout origin/main -- .github || true
-
           git add --renormalize -A
-          echo "[LOG] Staged diff (excluding .github):"
-          git --no-pager diff --cached --stat || true
+          echo "[LOG] Staged diff (INDEX vs origin/main, excluding .github):"
+          git --no-pager diff --cached --stat origin/main | head -n 50 || true
 
-      # 判定 materialize 後是否還有「實質差異」
+      # ★ 改成看 Index
       - name: Is there real diff outside .github?
         id: diffcheck
         shell: bash
         run: |
           set -euo pipefail
-          if git diff --quiet origin/main..HEAD -- . ":(exclude).github" ":(exclude).github/**"; then
+          git update-index -q --refresh
+          if git diff --cached --quiet origin/main -- . ":(exclude).github" ":(exclude).github/**"; then
             echo "real_diff=false" >> "$GITHUB_OUTPUT"
-            echo "[LOG] No real diff outside .github after materialize."
+            echo "[LOG] No real diff outside .github after materialize (INDEX vs origin/main)."
           else
             echo "real_diff=true"  >> "$GITHUB_OUTPUT"
-            echo "[LOG] Real diff detected outside .github."
+            echo "[LOG] Real diff detected outside .github (INDEX vs origin/main)."
           fi
 
-      # 只有在「沒有實質差異」但上游 tip 變了且未曾記錄過時，才寫 .sync（避免每輪更新）
       - name: Write .sync meta only when needed (avoid churn)
         if: steps.diffcheck.outputs.real_diff == 'false'
         shell: bash
@@ -165,18 +149,19 @@ jobs:
             echo "[LOG] Same upstream tip as existing PR branch; skip meta write."
           fi
 
-      # 最終 gate：有任何差異（含 .sync 檔）才建/更 PR
+      # ★ 改成看 Index
       - name: Final diff gate (will we PR?)
         id: finalgate
         shell: bash
         run: |
           set -euo pipefail
-          if git diff --quiet origin/main..HEAD ; then
+          git update-index -q --refresh
+          if git diff --cached --quiet origin/main ; then
             echo "will_pr=false" >> "$GITHUB_OUTPUT"
-            echo "[LOG] Nothing to PR."
+            echo "[LOG] Nothing to PR (INDEX vs origin/main)."
           else
             echo "will_pr=true"  >> "$GITHUB_OUTPUT"
-            echo "[LOG] We will create/update PR."
+            echo "[LOG] We will create/update PR (INDEX vs origin/main has changes)."
           fi
 
       - name: Create / Update PR (quiet)
@@ -184,7 +169,7 @@ jobs:
         id: cpr
         uses: peter-evans/create-pull-request@v6
         with:
-          branch: sync/upstream-dev      # 固定分支 → 同一個 PR 會被更新，不會開很多個
+          branch: sync/upstream-dev
           base: main
           title: "Auto sync ${{ steps.resolve.outputs.up_ref }} → main (tip=${{ steps.resolve.outputs.upstream_tip }})"
           commit-message: "chore(sync): ${{ steps.resolve.outputs.up_ref }}@${{ steps.resolve.outputs.upstream_tip }}"
@@ -197,7 +182,7 @@ jobs:
             - behind: `${{ steps.resolve.outputs.behind }}`
             - note: PR updates only when upstream tip changes or real diff exists.
           labels: "chore,auto-sync"
-          draft: true             # 減少通知（可改 false）
+          draft: true
           delete-branch: false
 
       - name: Notify Discord (only on actual CPR operation)
@@ -213,8 +198,7 @@ jobs:
           PR: ${PR_URL}
           EOF
           )
-          curl -sS -X POST "$DISCORD_WEBHOOK" \
-            -H 'Content-Type: application/json' \
+          curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
             -d "$(jq -n --arg content "$MSG" '{content: $content}')"
 
       - name: Notify Discord (run failed)
@@ -229,6 +213,5 @@ jobs:
           Run: ${RUN_URL}
           EOF
           )
-          curl -sS -X POST "$DISCORD_WEBHOOK" \
-            -H 'Content-Type: application/json' \
+          curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
             -d "$(jq -n --arg content "$MSG" '{content: $content}')"
