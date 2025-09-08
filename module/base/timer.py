@@ -3,7 +3,7 @@
 import time
 from datetime import datetime, timedelta
 from functools import wraps
-from module.logger import logger
+
 
 def timer(function):
     """
@@ -123,11 +123,6 @@ class Timer:
             bool
         """
         self._reach_count += 1
-        if not self.started():
-            # logger.warn("timer has not been started yet")
-            # self.start()
-            # raise Exception("timer has not been started yet")
-            return True
         return time.time() - self._current > self.limit and self._reach_count > self.count
 
     def reset(self):

@@ -81,13 +81,6 @@ class Scrolls(BaseModel):
     scrolls_threshold: int = Field(title='突破票数量', default='25', description='scrolls_threshold_help')
 
 
-class Scrolls(BaseModel):
-    # 绘卷模式
-    scrolls_enable: bool = Field(title='绘卷模式', default=False, description='绘卷模式')
-    scrolls_cd: TimeDelta = Field(title='间隔时间', default=TimeDelta(hours=0, minutes=30, seconds=0), description='间隔时间')
-    scrolls_threshold: int = Field(title='突破票数量', default='25', description='突破票数量，超过打突破')
-
-
 class ExplorationConfig(BaseModel):
     buff_gold_50_click: bool = Field(default=False)
     buff_gold_100_click: bool = Field(default=False)
@@ -95,7 +88,7 @@ class ExplorationConfig(BaseModel):
     buff_exp_100_click: bool = Field(default=False)
 
     user_status: UserStatus = Field(default=UserStatus.ALONE, description='user_status_help_')
-    current_exploration_count: int = Field(title='探索次数', default='7', description='默认探索7次')
+    # current_exploration_count: int = Field(title='探索次数', default='7', description='默认探索7次')
     limit_time: Time = Field(default=Time(minute=30), description='limit_time_help')
     minions_cnt: int = Field(title='战斗次数', default='30', ge=0, description='minions_cnt_help')
 

@@ -2,8 +2,8 @@
   {
     "itemName": "n_battle",
     "imageName": "0110_n_battle.png",
-    "roiFront": "70,280,91,25",
-    "roiBack": "3,50,277,635",
+    "roiFront": "131,164,86,86",
+    "roiBack": "119,50,1075,635",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

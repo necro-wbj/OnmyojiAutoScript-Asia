@@ -42,7 +42,7 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
             if self.appear(self.I_WT_QR_CODE):
                 break
             if self.appear_then_click(wechat, interval=2.5):
-                break
+                continue
         logger.info('Click share')
         get_timer = Timer(7)
         get_timer.start()
@@ -76,14 +76,14 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
                 continue
         # 确认的是百鬼夜行图
         self.ui_click(self.I_WT_SCROLL_2, self.I_WT_SCROLL_1)
-        logger.info('Confirm the picture is 百鬼夜行圖')
+        logger.info('Confirm the picture is 百妖风物鉴')
         # 点击分享
         while 1:
             self.screenshot()
             if self.appear(self.I_WT_QR_CODE):
                 break
-            if self.appear_then_click(self.I_WT_COLLECT_TWITTER, interval=1):
-                break
+            if self.appear_then_click(self.I_WT_COLLECT_WECHAT, interval=1):
+                continue
             if self.appear_then_click(self.I_WT_COLLECT, interval=5):
                 continue
         logger.info('Click share')
@@ -149,7 +149,6 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
                 continue
             if self.appear_then_click(self.I_WT_SHARE_AB, interval=1):
                 continue
-        logger.info('find I_WT_AB_WECHAT gp share')
         # 再次检查一次这周有没有领取
         time.sleep(1)
         self.screenshot()
