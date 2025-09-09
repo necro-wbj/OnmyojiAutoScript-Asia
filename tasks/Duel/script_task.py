@@ -5,6 +5,10 @@ from time import sleep
 from datetime import time, datetime, timedelta
 import re
 
+import cv2
+import numpy as np
+from module.atom.ocr import RuleOcr
+
 from module.logger import logger
 from module.exception import TaskEnd, RequestHumanTakeover
 from module.base.timer import Timer
