@@ -91,30 +91,31 @@ jobs:
           # 1) 以 main 為父提交建立/更新 PR 分支
           git checkout -B "$PR_BRANCH" origin/main
       
-          # 2) 用 read-tree 把索引與工作樹「重置為 UP_REF 的樹狀」
+          # 2) 把索引/工作樹重置成 UP_REF 的檔案快照（不帶歷史）
           git read-tree --reset -u "$UP_REF"
       
-          # 3) 先把 snapshot 帶來的所有 workflows 移除（避免任何「新增/修改」）
-          git rm -r -q --ignore-unmatch .github/workflows || true
+          # 3) 先「強制」移除快照帶進來的所有 workflows（避免任何新增/修改）
+          #    這次一定要 -f，且不要用 "|| true" 吞錯！
+          git rm -r -q -f --ignore-unmatch .github/workflows
       
-          # 4) 如果 main 有 workflows，就還原 main 的版本
-          if git ls-tree -r --name-only origin/main .github/workflows >/dev/null 2>&1 \
-             && [ -n "$(git ls-tree -r --name-only origin/main .github/workflows || true)" ]; then
+          # 4) 若 main 有 workflows，再還原 main 的版本（可有可無）
+          if [ -n "$(git ls-tree -r --name-only origin/main .github/workflows || true)" ]; then
             git checkout origin/main -- .github/workflows
           fi
       
-          # 5) 檢查是否真的有差異；有就做一顆提交
+          # 5) 檢查是否有差異；有就提交
           git add -A
           if git diff --cached --quiet; then
             echo "[LOG] No content changes after snapshot; skip pushing PR branch."
             exit 0
           fi
       
-          git commit -m "chore(sync): snapshot of ${UP_REF}@${UP_TIP} (workflows removed or pinned to main)"
+          git commit -m "chore(sync): snapshot of ${UP_REF}@${UP_TIP} (workflows sanitized)"
       
-          # 6) 推上遠端（此次提交不含任何「新增/修改」workflow 檔案）
+          # 6) 推上遠端（這顆提交不包含任何「新增/修改」workflow）
           git push origin "+$PR_BRANCH:$PR_BRANCH"
           echo "[LOG] Pushed $PR_BRANCH at $(git rev-parse --short HEAD) (snapshot of ${UP_REF}@${UP_TIP}; workflows sanitized)"
+
 
       - name: Quick diff artifact (preview)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
