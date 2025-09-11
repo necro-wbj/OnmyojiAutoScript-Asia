@@ -2,7 +2,7 @@ name: Auto Sync Upstream Dev (PR-only, keep history & rerere)
 
 on:
   schedule:
-    - cron: "*/5 * * * *"   # 最短 5 分鐘
+    - cron: "*/5 * * * *"
   workflow_dispatch: {}
   push:
     branches: [ main ]
@@ -16,7 +16,7 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-# 用 GITHUB_TOKEN 讀，但推送改用 PAT
+# 我們用 PAT 來 push，GITHUB_TOKEN 只用來開/改 PR
 permissions:
   contents: read
   pull-requests: write
@@ -28,10 +28,11 @@ jobs:
     timeout-minutes: 20
 
     steps:
-      - name: Checkout (full)
+      - name: Checkout (full, no persisted credentials)
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: false   # ⬅️ 關鍵：不要把 GITHUB_TOKEN 寫進 git 設定
 
       - name: Git setup
         run: |
@@ -39,6 +40,8 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           git config core.autocrlf false
+          # ⬅️ 關鍵：移除 checkout 寫入的 extraheader（如果有）
+          git config --global --unset-all http.https://github.com/.extraheader || true
 
       - name: Add upstream & fetch all
         run: |
@@ -78,18 +81,26 @@ jobs:
         if: steps.resolve.outputs.ahead == '0' && steps.resolve.outputs.behind == '0'
         run: echo "[LOG] origin/main 與 upstream/dev 完全一致；跳過。"
 
-      # --- 用 PAT 來 push（解鎖 workflows 防護） ---
-      - name: Configure PAT push URL
+      # === 用 PAT 設定 push 認證（必要條件：已在 repo secrets 設 GH_PAT） ===
+      - name: Configure PAT for pushing
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
+        shell: bash
         run: |
           set -euo pipefail
-          test -n "$GH_PAT"
-          git remote set-url --push origin "https://${GITHUB_ACTOR}:${GH_PAT}@github.com/${GITHUB_REPOSITORY}.git"
-          echo "[LOG] origin push URL configured with PAT."
+          if [ -z "${GH_PAT:-}" ]; then
+            echo "::error::Secret GH_PAT is empty. Create a PAT with scopes: repo + workflow (or fine-grained with Workflows) and add it as GH_PAT."
+            exit 1
+          fi
+          # 確保沒有殘留的 GITHUB_TOKEN extraheader（雙保險）
+          git config --global --unset-all http.https://github.com/.extraheader || true
+          # 設定 push URL 使用 PAT（x-access-token 形式）
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git remote set-url --push origin "https://x-access-token:${GH_PAT}@github.com/${GITHUB_REPOSITORY}.git"
+          echo "[LOG] origin push URL configured to use GH_PAT."
 
-      # --- 模式 1：完整鏡像上游 → PR（保留上游完整歷史；PR 會顯示衝突） ---
+      # === 模式 1：完整鏡像上游 → PR（保留完整歷史；可能包含 workflows 的歷史提交） ===
       - name: Mirror upstream/dev to PR branch (history-preserving)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         shell: bash
@@ -97,6 +108,7 @@ jobs:
           set -euo pipefail
           PR_BRANCH="sync/upstream-dev"
           git checkout -B "$PR_BRANCH" "${{ steps.resolve.outputs.up_ref }}"
+          # 推送時會用剛剛設定的 PAT
           git push origin "+$PR_BRANCH:$PR_BRANCH"
           echo "[LOG] Pushed $PR_BRANCH at ${{ steps.resolve.outputs.upstream_tip }} (mirror of upstream/dev)"
 
@@ -131,7 +143,7 @@ jobs:
 
           TITLE="sync: upstream/dev → ${BASE_BRANCH} (manual conflict resolution)"
           BODY=$'This PR mirrors **upstream/dev** into **'"${BASE_BRANCH}"$'**.\n\n'
-          BODY+=$'- Uses PAT to allow workflow changes in upstream history.\n'
+          BODY+=$'- Uses a PAT to allow pushes that include workflow changes in upstream history.\n'
           BODY+=$'- CI does **not** auto-merge/rebase; please resolve conflicts in PR.\n'
           BODY+=$'\n'
           BODY+=$'- reason: `'"${{ steps.resolve.outputs.reason }}"'`\n'
@@ -152,7 +164,7 @@ jobs:
             echo "[LOG] Created draft PR: ${URL}"
           fi
 
-      # --- 模式 2（附帶）：rebase 預覽分支，保留你的補丁歷史並啟用 rerere（不強制成功） ---
+      # === 模式 2：rebase 預覽分支（啟用 rerere；不強迫成功） ===
       - name: (Cache) Restore rerere decisions
         uses: actions/cache@v4
         with:
@@ -173,13 +185,12 @@ jobs:
           git switch -c rebase/preview
           git config rerere.enabled true
 
-          # 不要強行解；失敗就讓它 fail，保留 rerere 記錄給下次重放
           if ! git rebase -s ort -X theirs "${UP_REF}"; then
-            echo "::warning::Rebase preview hit conflicts (expected for manual resolution)."
+            echo "::warning::Rebase preview hit conflicts (expected). Rerere decisions recorded."
           fi
 
-          # 用 PAT 推到遠端，僅作參考（不作自動合併）
-          git remote set-url --push origin "https://${GITHUB_ACTOR}:${GH_PAT}@github.com/${GITHUB_REPOSITORY}.git"
+          # 推 rebase/preview 也走 PAT
+          git remote set-url --push origin "https://x-access-token:${GH_PAT}@github.com/${GITHUB_REPOSITORY}.git"
           git push -f origin rebase/preview
 
       - name: (Cache) Save rerere decisions
