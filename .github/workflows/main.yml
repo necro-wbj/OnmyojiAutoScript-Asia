@@ -1,8 +1,8 @@
-name: Auto Sync Upstream Dev (PR-only, manual conflict resolution)
+name: Auto Sync Upstream Dev (PR-only, keep history & rerere)
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/5 * * * *"   # 最短 5 分鐘
   workflow_dispatch: {}
   push:
     branches: [ main ]
@@ -16,8 +16,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# 用 GITHUB_TOKEN 讀，但推送改用 PAT
 permissions:
-  contents: write
+  contents: read
   pull-requests: write
 
 jobs:
@@ -47,7 +48,7 @@ jobs:
           git fetch --prune origin   +refs/heads/*:refs/remotes/origin/*
           git fetch --prune upstream +refs/heads/*:refs/remotes/upstream/*
 
-      - name: Resolve upstream ref & tip-diff (robust)
+      - name: Resolve upstream ref & tip-diff
         id: resolve
         shell: bash
         run: |
@@ -56,7 +57,7 @@ jobs:
             UP_REF="upstream/dev"
             REASON="found-upstream-dev"
           else
-            echo "::error::No refs/remotes/upstream/dev found. Refusing to proceed."
+            echo "::error::No refs/remotes/upstream/dev found."
             exit 2
           fi
           UP_TIP=$(git rev-parse --short "${UP_REF}")
@@ -70,52 +71,34 @@ jobs:
             echo "ahead=${AHEAD}"
             echo "behind=${BEHIND}"
           } >> "$GITHUB_OUTPUT"
-          echo "[LOG] reason=${REASON}  up_ref=${UP_REF}  up_tip=${UP_TIP}  base_tip=${ORI_TIP}"
-          echo "[LOG] rev-list(origin/main...${UP_REF}) BEHIND=${BEHIND} AHEAD=${AHEAD}"
+          echo "[LOG] ${REASON}   up_ref=${UP_REF}   up_tip=${UP_TIP}   base_tip=${ORI_TIP}"
+          echo "[LOG] diff(origin/main...${UP_REF})   behind=${BEHIND}  ahead=${AHEAD}"
 
       - name: Early exit if tips identical
         if: steps.resolve.outputs.ahead == '0' && steps.resolve.outputs.behind == '0'
         run: echo "[LOG] origin/main 與 upstream/dev 完全一致；跳過。"
 
-      # 以「快照提交」產生 PR 分支：基於 main 建一顆新提交，內容=上游快照，
-      # 但把 .github/workflows 維持為 main 的版本，避免觸發 workflows 權限檢查。
-      - name: Build PR branch as a sanitized snapshot (exclude workflows from changes)
+      # --- 用 PAT 來 push（解鎖 workflows 防護） ---
+      - name: Configure PAT push URL
+        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          set -euo pipefail
+          test -n "$GH_PAT"
+          git remote set-url --push origin "https://${GITHUB_ACTOR}:${GH_PAT}@github.com/${GITHUB_REPOSITORY}.git"
+          echo "[LOG] origin push URL configured with PAT."
+
+      # --- 模式 1：完整鏡像上游 → PR（保留上游完整歷史；PR 會顯示衝突） ---
+      - name: Mirror upstream/dev to PR branch (history-preserving)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         shell: bash
         run: |
           set -euo pipefail
           PR_BRANCH="sync/upstream-dev"
-          UP_REF="${{ steps.resolve.outputs.up_ref }}"
-          UP_TIP="${{ steps.resolve.outputs.upstream_tip }}"
-      
-          # 1) 以 main 為父提交建立/更新 PR 分支
-          git checkout -B "$PR_BRANCH" origin/main
-      
-          # 2) 把索引/工作樹重置成 UP_REF 的檔案快照（不帶歷史）
-          git read-tree --reset -u "$UP_REF"
-      
-          # 3) 先「強制」移除快照帶進來的所有 workflows（避免任何新增/修改）
-          #    這次一定要 -f，且不要用 "|| true" 吞錯！
-          git rm -r -q -f --ignore-unmatch .github/workflows
-      
-          # 4) 若 main 有 workflows，再還原 main 的版本（可有可無）
-          if [ -n "$(git ls-tree -r --name-only origin/main .github/workflows || true)" ]; then
-            git checkout origin/main -- .github/workflows
-          fi
-      
-          # 5) 檢查是否有差異；有就提交
-          git add -A
-          if git diff --cached --quiet; then
-            echo "[LOG] No content changes after snapshot; skip pushing PR branch."
-            exit 0
-          fi
-      
-          git commit -m "chore(sync): snapshot of ${UP_REF}@${UP_TIP} (workflows sanitized)"
-      
-          # 6) 推上遠端（這顆提交不包含任何「新增/修改」workflow）
+          git checkout -B "$PR_BRANCH" "${{ steps.resolve.outputs.up_ref }}"
           git push origin "+$PR_BRANCH:$PR_BRANCH"
-          echo "[LOG] Pushed $PR_BRANCH at $(git rev-parse --short HEAD) (snapshot of ${UP_REF}@${UP_TIP}; workflows sanitized)"
-
+          echo "[LOG] Pushed $PR_BRANCH at ${{ steps.resolve.outputs.upstream_tip }} (mirror of upstream/dev)"
 
       - name: Quick diff artifact (preview)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
@@ -147,9 +130,9 @@ jobs:
           PR_BRANCH="sync/upstream-dev"
 
           TITLE="sync: upstream/dev → ${BASE_BRANCH} (manual conflict resolution)"
-          BODY=$'This PR mirrors the **file snapshot** of upstream/dev into **'"${BASE_BRANCH}"$'**.\n\n'
-          BODY+=$'- CI **does not** carry upstream history nor auto-rebase/merge.\n'
-          BODY+=$'- `.github/workflows/**` is pinned to `main` to avoid GitHub App workflows permission.\n'
+          BODY=$'This PR mirrors **upstream/dev** into **'"${BASE_BRANCH}"$'**.\n\n'
+          BODY+=$'- Uses PAT to allow workflow changes in upstream history.\n'
+          BODY+=$'- CI does **not** auto-merge/rebase; please resolve conflicts in PR.\n'
           BODY+=$'\n'
           BODY+=$'- reason: `'"${{ steps.resolve.outputs.reason }}"'`\n'
           BODY+=$'- upstream tip: `'"${{ steps.resolve.outputs.upstream_tip }}"'`\n'
@@ -169,22 +152,42 @@ jobs:
             echo "[LOG] Created draft PR: ${URL}"
           fi
 
-      - name: Notify Discord (only on PR create/update)
-        if: steps.ghpr.outputs.pull-request-operation && steps.ghpr.outputs.pull-request-operation != 'none'
+      # --- 模式 2（附帶）：rebase 預覽分支，保留你的補丁歷史並啟用 rerere（不強制成功） ---
+      - name: (Cache) Restore rerere decisions
+        uses: actions/cache@v4
+        with:
+          path: .git/rr-cache
+          key: rr-cache-${{ runner.os }}-${{ github.repository }}-${{ steps.resolve.outputs.upstream_tip }}
+          restore-keys: |
+            rr-cache-${{ runner.os }}-${{ github.repository }}-
+
+      - name: Rebase our local commits onto upstream (rerere; preview branch)
+        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
+        shell: bash
         env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-          PR_URL: ${{ steps.ghpr.outputs.pull-request-url }}
-          OP: ${{ steps.ghpr.outputs.pull-request-operation }}
+          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           set -euo pipefail
-          MSG=$(cat <<EOF
-          🔄 **Sync upstream/dev → main** (${OP})
-          PR: ${PR_URL}
-          - tip: ${{ steps.resolve.outputs.upstream_tip }}
-          EOF
-          )
-          curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
-            -d "$(jq -n --arg content "$MSG" '{content: $content}')"
+          UP_REF="${{ steps.resolve.outputs.up_ref }}"
+          git checkout -B main origin/main
+          git switch -c rebase/preview
+          git config rerere.enabled true
+
+          # 不要強行解；失敗就讓它 fail，保留 rerere 記錄給下次重放
+          if ! git rebase -s ort -X theirs "${UP_REF}"; then
+            echo "::warning::Rebase preview hit conflicts (expected for manual resolution)."
+          fi
+
+          # 用 PAT 推到遠端，僅作參考（不作自動合併）
+          git remote set-url --push origin "https://${GITHUB_ACTOR}:${GH_PAT}@github.com/${GITHUB_REPOSITORY}.git"
+          git push -f origin rebase/preview
+
+      - name: (Cache) Save rerere decisions
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .git/rr-cache
+          key: rr-cache-${{ runner.os }}-${{ github.repository }}-${{ steps.resolve.outputs.upstream_tip }}
 
       - name: Notify Discord (run failed)
         if: failure()
