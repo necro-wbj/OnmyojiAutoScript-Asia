@@ -1,7 +1,6 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
-import re
 import numpy as np
 
 from time import sleep
@@ -243,13 +242,12 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         :return:
         """
         self.wait_until_appear(target)
-        x,y = target.coord()
         if action is None:
-            self.device.click(x,y, control_name=target.name)
+            self.device.click(target.coord(), control_name=target.name)
         elif isinstance(action, RuleLongClick):
-            self.device.long_click(x,y, duration=action.duration / 1000, control_name=target.name)
+            self.device.long_click(target.coord(), duration=action.duration / 1000, control_name=target.name)
         elif isinstance(action, RuleClick):
-            self.device.click(x,y, control_name=target.name)
+            self.device.click(target.coord(), control_name=target.name)
 
     def wait_until_disappear(self, target: RuleImage) -> None:
         while 1:
@@ -422,10 +420,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             case OcrMode.FULL:  # 全匹配
                 appear = result != (0, 0, 0, 0)
             case OcrMode.SINGLE:
-                # 測試使用regex 保留原始邏輯
-                # appear = result == target.keyword
-                appear = re.match(target.keyword,result)
-                logger.info(f"Ocr appear {appear}")
+                appear = result == target.keyword
             case OcrMode.DIGIT:
                 appear = result == int(target.keyword)
             case OcrMode.DIGITCOUNTER:
@@ -566,8 +561,6 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                     # 一直点击
                     if self.ui_reward_appear_click():
                         continue
-                    #連續點擊會直接把獎勵點擊掉
-                    sleep(0.5)
                 break
             if _timer.reached():
                 logger.warning('Get reward timeout')

@@ -21,7 +21,7 @@ class UserStatus(str, Enum):
 class Layer(str, Enum):
     ONE = '壹层'
     TWO = '贰层'
-    THREE = '参层'
+    THREE = '叁层'
     FOUR = '肆层'
     FIVE = '伍层'
     SIX = '陆层'
@@ -30,7 +30,7 @@ class Layer(str, Enum):
     NINE = '玖层'
     TEN = '拾层'
     ELEVEN = '悲鸣'
-    TWELVE = '神蜀'
+    TWELVE = '神罚'
 
 class OrochiConfig(ConfigBase):
     # 身份

@@ -1,22 +1,29 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
-from typing import Any, Dict
-from pydantic import (BaseModel, 
-                      Field,
-                      model_validator,
-                      ValidationError,
-                      model_serializer,
-                      WithJsonSchema,
-                      SerializerFunctionWrapHandler,
-                      GetJsonSchemaHandler)
+from pydantic import BaseModel, Field
+from datetime import time
 
-from tasks.Component.config_base import MultiLine
 from tasks.Component.config_scheduler import Scheduler
 from tasks.Component.config_base import ConfigBase, Time
 from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType
+from enum import Enum
+from tasks.Component.SwitchSoul.switch_soul_config import SwitchSoulConfig
+
+
+class Onmyoji(str, Enum):
+    Ylg = '源赖光'
+    Qm = '晴明'
+    Sl = '神乐'
+    Yby = '源博雅'
+    Bbbqn = '八百比丘尼'
+
 
 class DuelConfig(ConfigBase):
+    # 是否切换阴阳师
+    switch_enabled: bool = Field(default=True, description='是否切换阴阳师')
+    # 切换阴阳师
+    switch_onmyoji: Onmyoji = Field(default=Onmyoji.Ylg, description='切换阴阳师')
     # 一键切换斗技御魂
     switch_all_soul: bool = Field(default=False, description='switch_all_soul_help')
     # 限制时间
@@ -30,11 +37,6 @@ class DuelConfig(ConfigBase):
     # 选哪一个绿标
     green_mark: GreenMarkType = Field(default=GreenMarkType.GREEN_LEFT1, description='green_mark_help')
 
-class CelebBanConfig(BaseModel):
-    celeb_got_ban_go_lose: bool = Field(default=False, description='celeb_got_ban_go_lose')
-    celeb_ban_rule: MultiLine = Field(default='神殷荒,神肽荒,言靈,心狩鬼女红童,心狩鬼女红查,不知火,统浪芜川之主',
-                                     description='celeb_ban_rule_help')
-
 
 class DuelCelebConfig(ConfigBase):
     # 是否开启名仕战斗
@@ -47,5 +49,5 @@ class DuelCelebConfig(ConfigBase):
 class Duel(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     duel_config: DuelConfig = Field(default_factory=DuelConfig)
-    celeb_ban_config: CelebBanConfig = Field(default_factory=CelebBanConfig)
-
+    duel_celeb_config: DuelCelebConfig = Field(default_factory=DuelCelebConfig)
+    switch_soul: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)

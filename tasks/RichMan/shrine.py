@@ -34,13 +34,10 @@ class Shrine(GameUi, RichManAssets):
         logger.info('Enter Shrine')
         time.sleep(0.5)
         if con.black_daruma:
-            logger.info('Start black daruma')
             self.shrine_black_daruma()
         if con.white_daruma_five:
-            logger.info('Start white five')
             self.shrine_white_five()
         if con.white_daruma_four:
-            logger.info('Start white four')
             self.shrine_white_four()
 
     def shrine_check_money(self, mix: int) -> bool:
@@ -123,9 +120,6 @@ class Shrine(GameUi, RichManAssets):
             self.ui_click_until_disappear(self.I_UI_BACK_RED)
             time.sleep(1)
             return
-        self.screenshot()
-        if self.appear_then_click(self.I_S_BUY_UP, threshold=0.9):
-            logger.info('Buy up')
         self.ui_click(self.I_S_BUY_WHITE_FOUR, self.I_S_CONFIRM_WHITE_FOUR)
         self.ui_get_reward(self.I_S_CONFIRM_WHITE_FOUR)
         self.ui_click_until_disappear(self.I_UI_BACK_RED)
