@@ -2,7 +2,7 @@ name: Auto Sync Upstream Dev (PR-only, manual conflict resolution)
 
 on:
   schedule:
-    - cron: "*/5 * * * *"   # GitHub Actions 最短 5 分鐘一次
+    - cron: "*/5 * * * *"
   workflow_dispatch: {}
   push:
     branches: [ main ]
@@ -10,7 +10,7 @@ on:
       - ".github/**"
       - "docs/**"
       - "README.md"
-      - ".sync/**"          # ⬅️ 避免純 .sync 變更觸發本 workflow
+      - ".sync/**"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -56,16 +56,12 @@ jobs:
             UP_REF="upstream/dev"
             REASON="found-upstream-dev"
           else
-            echo "::error::No refs/remotes/upstream/dev found. Refusing to fall back to origin/main (to avoid no-op)."
+            echo "::error::No refs/remotes/upstream/dev found. Refusing to proceed."
             exit 2
           fi
-
           UP_TIP=$(git rev-parse --short "${UP_REF}")
           ORI_TIP=$(git rev-parse --short origin/main)
-
-          # 方向：origin/main...UP_REF，左=origin/main，右=UP_REF
           read BEHIND AHEAD < <(git rev-list --left-right --count origin/main..."${UP_REF}" | awk '{print $1" "$2}')
-
           {
             echo "up_ref=${UP_REF}"
             echo "reason=${REASON}"
@@ -74,33 +70,41 @@ jobs:
             echo "ahead=${AHEAD}"
             echo "behind=${BEHIND}"
           } >> "$GITHUB_OUTPUT"
-
           echo "[LOG] reason=${REASON}  up_ref=${UP_REF}  up_tip=${UP_TIP}  base_tip=${ORI_TIP}"
           echo "[LOG] rev-list(origin/main...${UP_REF}) BEHIND=${BEHIND} AHEAD=${AHEAD}"
 
-      - name: Early exit if tips identical (no PR update needed)
+      - name: Early exit if tips identical
         if: steps.resolve.outputs.ahead == '0' && steps.resolve.outputs.behind == '0'
-        run: echo "[LOG] origin/main 與 upstream/dev 完全一致；跳過本次執行。"
+        run: echo "[LOG] origin/main 與 upstream/dev 完全一致；跳過。"
 
-      # --- 關鍵：用「鏡像快照」方式建立/更新 PR branch，不做 rebase/merge ---
-      - name: Mirror upstream/dev to PR branch (no auto-merge)
+      # 關鍵：鏡像上游 → 覆蓋 .github/workflows 為 main 版本 → 推上 PR 分支
+      - name: Mirror upstream/dev to PR branch (exclude workflows when pushing)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         shell: bash
         run: |
           set -euo pipefail
           PR_BRANCH="sync/upstream-dev"
-          git checkout -B "$PR_BRANCH" "${{ steps.resolve.outputs.up_ref }}"
-          # 強制更新遠端 PR branch 與 upstream/dev 完全一致
-          git push origin "+$PR_BRANCH:$PR_BRANCH"
-          echo "[LOG] Pushed $PR_BRANCH at ${{ steps.resolve.outputs.upstream_tip }} (mirror of ${{ steps.resolve.outputs.up_ref }})"
 
-      - name: Quick diff artifact (preview conflicts)
+          # 1) 先鏡像 upstream/dev
+          git checkout -B "$PR_BRANCH" "${{ steps.resolve.outputs.up_ref }}"
+
+          # 2) 用 main 的版本覆蓋工作流程，避免觸發「需要 workflows 權限」
+          git checkout origin/main -- .github/workflows || true
+          if ! git diff --quiet; then
+            git add -A
+            git commit -m "chore(sync): pin .github/workflows to main to avoid workflows permission"
+          fi
+
+          # 3) 推上遠端
+          git push origin "+$PR_BRANCH:$PR_BRANCH"
+          echo "[LOG] Pushed $PR_BRANCH at $(git rev-parse --short HEAD) (mirror of ${{ steps.resolve.outputs.up_ref }}; workflows pinned to main)"
+
+      - name: Quick diff artifact (preview)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p ci-diff
-          # 雙點省略語法：比較兩邊共祖先後的差異；幫助在 PR 前先概覽
           git diff --name-status origin/main..."${{ steps.resolve.outputs.up_ref }}" > ci-diff/name-status.txt || true
           git diff --stat        origin/main..."${{ steps.resolve.outputs.up_ref }}" > ci-diff/stat.txt || true
           tar czf ci-diff.tgz ci-diff
@@ -112,7 +116,6 @@ jobs:
           path: ci-diff.tgz
           retention-days: 7
 
-      # --- 透過 gh CLI 建立/更新 PR（不產生額外 commit） ---
       - name: Create / Update PR (PR-only; manual resolution)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         id: ghpr
@@ -127,40 +130,22 @@ jobs:
 
           TITLE="sync: upstream/dev → ${BASE_BRANCH} (manual conflict resolution)"
           BODY=$'This PR mirrors **upstream/dev** into **'"${BASE_BRANCH}"$'**.\n\n'
-          BODY+=$'- No auto-rebase/merge performed by CI.\n'
-          BODY+=$'- If conflicts appear, please resolve them manually.\n'
+          BODY+=$'- CI does **not** auto-rebase/merge.\n'
+          BODY+=$'- Workflow files are pinned to `main` to avoid GitHub App workflows permission.\n'
           BODY+=$'\n'
           BODY+=$'- reason: `'"${{ steps.resolve.outputs.reason }}"'`\n'
           BODY+=$'- upstream tip: `'"${{ steps.resolve.outputs.upstream_tip }}"'`\n'
           BODY+=$'- origin tip:   `'"${{ steps.resolve.outputs.origin_tip }}"'`\n'
-          BODY+=$'- ahead/from main: `'"${{ steps.resolve.outputs.ahead }}"'`, behind: `'"${{ steps.resolve.outputs.behind }}"'`\n'
+          BODY+=$'- ahead(from main): `'"${{ steps.resolve.outputs.ahead }}"'`, behind: `'"${{ steps.resolve.outputs.behind }}"'`\n'
 
-          # 檢查是否已有同向開啟中的 PR
-          EXISTING_PR_NUMBER=$(gh pr list \
-            --repo "$REPO" \
-            --head "$PR_BRANCH" \
-            --base "$BASE_BRANCH" \
-            --state open \
-            --json number \
-            --jq '.[0].number // empty' || true)
-
+          EXISTING_PR_NUMBER=$(gh pr list --repo "$REPO" --head "$PR_BRANCH" --base "$BASE_BRANCH" --state open --json number --jq '.[0].number // empty' || true)
           if [[ -n "${EXISTING_PR_NUMBER:-}" ]]; then
-            gh pr edit "${EXISTING_PR_NUMBER}" --repo "$REPO" \
-              --title "$TITLE" --body "$BODY" --add-label "chore,auto-sync"
-            echo "pull-request-number=${EXISTING_PR_NUMBER}" >> "$GITHUB_OUTPUT"
+            gh pr edit "${EXISTING_PR_NUMBER}" --repo "$REPO" --title "$TITLE" --body "$BODY" --add-label "chore,auto-sync"
             echo "pull-request-url=$(gh pr view ${EXISTING_PR_NUMBER} --repo "$REPO" --json url --jq .url)" >> "$GITHUB_OUTPUT"
             echo "pull-request-operation=updated" >> "$GITHUB_OUTPUT"
             echo "[LOG] Updated existing PR #${EXISTING_PR_NUMBER}"
           else
-            # 建立 Draft PR（你也可把 --draft 拿掉）
-            URL=$(gh pr create \
-              --repo "$REPO" \
-              --base "$BASE_BRANCH" \
-              --head "$PR_BRANCH" \
-              --title "$TITLE" \
-              --body "$BODY" \
-              --draft \
-              --label "chore,auto-sync")
+            URL=$(gh pr create --repo "$REPO" --base "$BASE_BRANCH" --head "$PR_BRANCH" --title "$TITLE" --body "$BODY" --draft --label "chore,auto-sync")
             echo "pull-request-url=${URL}" >> "$GITHUB_OUTPUT"
             echo "pull-request-operation=created" >> "$GITHUB_OUTPUT"
             echo "[LOG] Created draft PR: ${URL}"
