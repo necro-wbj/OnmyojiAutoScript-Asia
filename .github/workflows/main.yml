@@ -77,27 +77,39 @@ jobs:
         if: steps.resolve.outputs.ahead == '0' && steps.resolve.outputs.behind == '0'
         run: echo "[LOG] origin/main 與 upstream/dev 完全一致；跳過。"
 
-      # 關鍵：鏡像上游 → 覆蓋 .github/workflows 為 main 版本 → 推上 PR 分支
-      - name: Mirror upstream/dev to PR branch (exclude workflows when pushing)
+      # 以「快照提交」產生 PR 分支：基於 main 建一顆新提交，內容=上游快照，
+      # 但把 .github/workflows 維持為 main 的版本，避免觸發 workflows 權限檢查。
+      - name: Build PR branch as a sanitized snapshot (exclude workflows from changes)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         shell: bash
         run: |
           set -euo pipefail
           PR_BRANCH="sync/upstream-dev"
+          UP_REF="${{ steps.resolve.outputs.up_ref }}"
+          UP_TIP="${{ steps.resolve.outputs.upstream_tip }}"
 
-          # 1) 先鏡像 upstream/dev
-          git checkout -B "$PR_BRANCH" "${{ steps.resolve.outputs.up_ref }}"
+          # 1) 以 main 為父提交建立/更新 PR 分支
+          git checkout -B "$PR_BRANCH" origin/main
 
-          # 2) 用 main 的版本覆蓋工作流程，避免觸發「需要 workflows 權限」
+          # 2) 用 read-tree 把索引與工作樹「重置為 UP_REF 的樹狀」
+          #    這會只變更檔案內容，不會帶入上游的「歷史」。
+          git read-tree --reset -u "$UP_REF"
+
+          # 3) 把 workflow 路徑固定回 main 的版本（因此此次提交不含任何 workflows 變更）
           git checkout origin/main -- .github/workflows || true
-          if ! git diff --quiet; then
-            git add -A
-            git commit -m "chore(sync): pin .github/workflows to main to avoid workflows permission"
+
+          # 4) 檢查是否真的有差異；有就做一顆提交
+          git add -A
+          if git diff --cached --quiet; then
+            echo "[LOG] No content changes after snapshot; skip pushing PR branch."
+            exit 0
           fi
 
-          # 3) 推上遠端
+          git commit -m "chore(sync): snapshot of ${UP_REF}@${UP_TIP} (workflows pinned to main)"
+
+          # 5) 推上遠端（這次 push 只有「一顆新的快照提交」，不含任何 workflow 變更 → 不會被拒）
           git push origin "+$PR_BRANCH:$PR_BRANCH"
-          echo "[LOG] Pushed $PR_BRANCH at $(git rev-parse --short HEAD) (mirror of ${{ steps.resolve.outputs.up_ref }}; workflows pinned to main)"
+          echo "[LOG] Pushed $PR_BRANCH at $(git rev-parse --short HEAD) (snapshot of ${UP_REF}@${UP_TIP}; workflows pinned to main)"
 
       - name: Quick diff artifact (preview)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
@@ -129,9 +141,9 @@ jobs:
           PR_BRANCH="sync/upstream-dev"
 
           TITLE="sync: upstream/dev → ${BASE_BRANCH} (manual conflict resolution)"
-          BODY=$'This PR mirrors **upstream/dev** into **'"${BASE_BRANCH}"$'**.\n\n'
-          BODY+=$'- CI does **not** auto-rebase/merge.\n'
-          BODY+=$'- Workflow files are pinned to `main` to avoid GitHub App workflows permission.\n'
+          BODY=$'This PR mirrors the **file snapshot** of upstream/dev into **'"${BASE_BRANCH}"$'**.\n\n'
+          BODY+=$'- CI **does not** carry upstream history nor auto-rebase/merge.\n'
+          BODY+=$'- `.github/workflows/**` is pinned to `main` to avoid GitHub App workflows permission.\n'
           BODY+=$'\n'
           BODY+=$'- reason: `'"${{ steps.resolve.outputs.reason }}"'`\n'
           BODY+=$'- upstream tip: `'"${{ steps.resolve.outputs.upstream_tip }}"'`\n'
