@@ -1,4 +1,4 @@
-name: Auto Rebase Upstream Dev (quiet PR-only)
+name: Auto Sync Upstream Dev (PR-only, manual conflict resolution)
 
 on:
   schedule:
@@ -54,14 +54,18 @@ jobs:
           set -euo pipefail
           if git show-ref --verify --quiet refs/remotes/upstream/dev; then
             UP_REF="upstream/dev"
-            REASON="found-branch-local"
+            REASON="found-upstream-dev"
           else
-            UP_REF="origin/main"
-            REASON="fallback-origin-main"
+            echo "::error::No refs/remotes/upstream/dev found. Refusing to fall back to origin/main (to avoid no-op)."
+            exit 2
           fi
+
           UP_TIP=$(git rev-parse --short "${UP_REF}")
           ORI_TIP=$(git rev-parse --short origin/main)
+
+          # 方向：origin/main...UP_REF，左=origin/main，右=UP_REF
           read BEHIND AHEAD < <(git rev-list --left-right --count origin/main..."${UP_REF}" | awk '{print $1" "$2}')
+
           {
             echo "up_ref=${UP_REF}"
             echo "reason=${REASON}"
@@ -70,168 +74,110 @@ jobs:
             echo "ahead=${AHEAD}"
             echo "behind=${BEHIND}"
           } >> "$GITHUB_OUTPUT"
+
           echo "[LOG] reason=${REASON}  up_ref=${UP_REF}  up_tip=${UP_TIP}  base_tip=${ORI_TIP}"
           echo "[LOG] rev-list(origin/main...${UP_REF}) BEHIND=${BEHIND} AHEAD=${AHEAD}"
 
-      - name: Early exit if tips identical (only if comparing upstream/dev)
-        if: steps.resolve.outputs.ahead == '0' && steps.resolve.outputs.behind == '0' && startsWith(steps.resolve.outputs.up_ref, 'upstream/')
-        run: echo "[LOG] Tips identical to upstream/dev; skip run."
+      - name: Early exit if tips identical (no PR update needed)
+        if: steps.resolve.outputs.ahead == '0' && steps.resolve.outputs.behind == '0'
+        run: echo "[LOG] origin/main 與 upstream/dev 完全一致；跳過本次執行。"
 
-      - name: Guard against silent fallback (origin/main...origin/main = 0/0)
-        if: steps.resolve.outputs.ahead == '0' && steps.resolve.outputs.behind == '0' && !startsWith(steps.resolve.outputs.up_ref, 'upstream/')
-        run: |
-          echo "::error::UP_REF=${{ steps.resolve.outputs.up_ref }} equals origin/main (fallback). Refusing to skip silently."
-          exit 2
-
-      - name: Fetch existing PR branch (if any)
+      # --- 關鍵：用「鏡像快照」方式建立/更新 PR branch，不做 rebase/merge ---
+      - name: Mirror upstream/dev to PR branch (no auto-merge)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
-        id: prev
         shell: bash
         run: |
           set -euo pipefail
-          git fetch --prune origin refs/heads/sync/upstream-dev:refs/remotes/origin/sync/upstream-dev || true
-          PREV_TIP=""
-          if git show origin/sync/upstream-dev:.sync/upstream-tip.txt >/dev/null 2>&1; then
-            PREV_TIP=$(git show origin/sync/upstream-dev:.sync/upstream-tip.txt | sed -n 's/^upstream_tip=//p' | head -n1)
-          fi
-          echo "prev_tip=${PREV_TIP}" >> "$GITHUB_OUTPUT"
-          echo "[LOG] previous recorded upstream_tip: ${PREV_TIP:-<none>}"
+          PR_BRANCH="sync/upstream-dev"
+          git checkout -B "$PR_BRANCH" "${{ steps.resolve.outputs.up_ref }}"
+          # 強制更新遠端 PR branch 與 upstream/dev 完全一致
+          git push origin "+$PR_BRANCH:$PR_BRANCH"
+          echo "[LOG] Pushed $PR_BRANCH at ${{ steps.resolve.outputs.upstream_tip }} (mirror of ${{ steps.resolve.outputs.up_ref }})"
 
-      # ---------- rebase：保留補丁（rerere） ----------
-      - name: (Cache) Restore rerere decisions
-        uses: actions/cache@v4
+      - name: Quick diff artifact (preview conflicts)
+        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p ci-diff
+          # 雙點省略語法：比較兩邊共祖先後的差異；幫助在 PR 前先概覽
+          git diff --name-status origin/main..."${{ steps.resolve.outputs.up_ref }}" > ci-diff/name-status.txt || true
+          git diff --stat        origin/main..."${{ steps.resolve.outputs.up_ref }}" > ci-diff/stat.txt || true
+          tar czf ci-diff.tgz ci-diff
+      - name: Upload diff artifact
+        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
+        uses: actions/upload-artifact@v4
         with:
-          path: .git/rr-cache
-          key: rr-cache-${{ runner.os }}-${{ github.repository }}-${{ steps.resolve.outputs.upstream_tip }}
-          restore-keys: |
-            rr-cache-${{ runner.os }}-${{ github.repository }}-
+          name: upstream-vs-main-diff
+          path: ci-diff.tgz
+          retention-days: 7
 
-      - name: Rebase local commits (preserve patch stack; prefer our patches)
+      # --- 透過 gh CLI 建立/更新 PR（不產生額外 commit） ---
+      - name: Create / Update PR (PR-only; manual resolution)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
+        id: ghpr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
-          UP_REF="${{ steps.resolve.outputs.up_ref }}"
+          REPO="${GITHUB_REPOSITORY}"
+          BASE_BRANCH="main"
+          PR_BRANCH="sync/upstream-dev"
 
-          git checkout -B main origin/main
-          git switch -c rebase/upstream-dev
+          TITLE="sync: upstream/dev → ${BASE_BRANCH} (manual conflict resolution)"
+          BODY=$'This PR mirrors **upstream/dev** into **'"${BASE_BRANCH}"$'**.\n\n'
+          BODY+=$'- No auto-rebase/merge performed by CI.\n'
+          BODY+=$'- If conflicts appear, please resolve them manually.\n'
+          BODY+=$'\n'
+          BODY+=$'- reason: `'"${{ steps.resolve.outputs.reason }}"'`\n'
+          BODY+=$'- upstream tip: `'"${{ steps.resolve.outputs.upstream_tip }}"'`\n'
+          BODY+=$'- origin tip:   `'"${{ steps.resolve.outputs.origin_tip }}"'`\n'
+          BODY+=$'- ahead/from main: `'"${{ steps.resolve.outputs.ahead }}"'`, behind: `'"${{ steps.resolve.outputs.behind }}"'`\n'
 
-          git config rerere.enabled true
+          # 檢查是否已有同向開啟中的 PR
+          EXISTING_PR_NUMBER=$(gh pr list \
+            --repo "$REPO" \
+            --head "$PR_BRANCH" \
+            --base "$BASE_BRANCH" \
+            --state open \
+            --json number \
+            --jq '.[0].number // empty' || true)
 
-          if ! git rebase -s ort -X theirs "${UP_REF}"; then
-            echo "::error::Rebase had conflicts that could not be auto-resolved."
-            exit 1
-          fi
-
-          echo "[LOG] Rebased branch tip:"
-          git --no-pager log --oneline -n 5
-
-      - name: (Cache) Save rerere decisions
-        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
-        uses: actions/cache/save@v4
-        with:
-          path: .git/rr-cache
-          key: rr-cache-${{ runner.os }}-${{ github.repository }}-${{ steps.resolve.outputs.upstream_tip }}
-
-      # 把 rebase 結果投影回 main 的 INDEX（不立即 commit）
-      - name: Materialize rebased tree onto main (INDEX)
-        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
-        shell: bash
-        run: |
-          set -euo pipefail
-          git checkout -B main origin/main
-          git rm -r -q --cached . || true
-          git clean -fdqx || true
-          git restore --source rebase/upstream-dev --worktree --staged :/
-
-          echo "[LOG] Staged diff (INDEX vs origin/main) after rebase:"
-          git --no-pager diff --cached --stat origin/main | head -n 100 || true
-
-      # --- ❶ 總是更新 .sync 檔，讓它能與「實際程式碼變更」同批進 PR ---
-      - name: Write .sync meta (always stage; commit with code changes)
-        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p .sync
-          {
-            echo "up_ref=${{ steps.resolve.outputs.up_ref }}"
-            echo "upstream_tip=${{ steps.resolve.outputs.upstream_tip }}"
-            # 以 rebase 結果分支的 tip 表示「本地即將提交的狀態」
-            echo "origin_tip=$(git rev-parse --short rebase/upstream-dev)"
-            echo "generated_at=$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
-          } > .sync/upstream-tip.txt
-          git add .sync/upstream-tip.txt
-          echo "[LOG] Staged .sync/upstream-tip.txt"
-
-      # --- ❷ 檢查是否有「實質程式碼變更」（排除 .github 與 .sync） ---
-      - name: Is there real diff outside .github & .sync? (INDEX)
-        id: diffcheck
-        shell: bash
-        run: |
-          set -euo pipefail
-          git update-index -q --refresh
-          if git diff --cached --quiet origin/main -- . \
-               ":(exclude).github" ":(exclude).github/**" \
-               ":(exclude).sync"   ":(exclude).sync/**"
-          then
-            echo "real_diff=false" >> "$GITHUB_OUTPUT"
-            echo "[LOG] No real code diff (excluding .github & .sync)."
+          if [[ -n "${EXISTING_PR_NUMBER:-}" ]]; then
+            gh pr edit "${EXISTING_PR_NUMBER}" --repo "$REPO" \
+              --title "$TITLE" --body "$BODY" --add-label "chore,auto-sync"
+            echo "pull-request-number=${EXISTING_PR_NUMBER}" >> "$GITHUB_OUTPUT"
+            echo "pull-request-url=$(gh pr view ${EXISTING_PR_NUMBER} --repo "$REPO" --json url --jq .url)" >> "$GITHUB_OUTPUT"
+            echo "pull-request-operation=updated" >> "$GITHUB_OUTPUT"
+            echo "[LOG] Updated existing PR #${EXISTING_PR_NUMBER}"
           else
-            echo "real_diff=true"  >> "$GITHUB_OUTPUT"
-            echo "[LOG] Real code diff detected."
+            # 建立 Draft PR（你也可把 --draft 拿掉）
+            URL=$(gh pr create \
+              --repo "$REPO" \
+              --base "$BASE_BRANCH" \
+              --head "$PR_BRANCH" \
+              --title "$TITLE" \
+              --body "$BODY" \
+              --draft \
+              --label "chore,auto-sync")
+            echo "pull-request-url=${URL}" >> "$GITHUB_OUTPUT"
+            echo "pull-request-operation=created" >> "$GITHUB_OUTPUT"
+            echo "[LOG] Created draft PR: ${URL}"
           fi
 
-      # --- ❸ 最終 gate：只有有「實質變更」才開/更新 PR（.sync-only 不開 PR） ---
-      - name: Final diff gate (will we PR?) (INDEX)
-        id: finalgate
-        shell: bash
-        run: |
-          set -euo pipefail
-          if [ "${{ steps.diffcheck.outputs.real_diff }}" = "true" ]; then
-            echo "will_pr=true"  >> "$GITHUB_OUTPUT"
-            echo "[LOG] We will create/update PR (real code diff exists)."
-          else
-            echo "will_pr=false" >> "$GITHUB_OUTPUT"
-            echo "[LOG] Only .sync (or nothing) changed; skip PR."
-          fi
-
-      - name: Create / Update PR (quiet)
-        if: steps.finalgate.outputs.will_pr == 'true'
-        id: cpr
-        uses: peter-evans/create-pull-request@v6
-        with:
-          branch: sync/upstream-dev
-          base: main
-          title: "Auto rebase ${{ steps.resolve.outputs.up_ref }} → main (tip=${{ steps.resolve.outputs.upstream_tip }})"
-          commit-message: |
-            chore(sync): rebase onto ${{ steps.resolve.outputs.up_ref }}@${{ steps.resolve.outputs.upstream_tip }}
-            [skip ci]
-            [no-discord]
-          body: |
-            Automated **rebase** from **${{ steps.resolve.outputs.up_ref }}** to **main** (quiet mode).
-            - reason: `${{ steps.resolve.outputs.reason }}`
-            - upstream tip: `${{ steps.resolve.outputs.upstream_tip }}`
-            - origin tip:   `${{ steps.resolve.outputs.origin_tip }}`
-            - ahead:  `${{ steps.resolve.outputs.ahead }}`
-            - behind: `${{ steps.resolve.outputs.behind }}`
-            - notes: Uses `git rebase -s ort -X theirs` to prefer our patches during rebase.
-            - meta: `.sync/upstream-tip.txt` is included in this PR to avoid extra pushes after merge.
-          labels: "chore,auto-sync"
-          draft: true
-          delete-branch: false
-
-      - name: Notify Discord (only on actual CPR operation)
-        if: steps.cpr.outputs.pull-request-operation && steps.cpr.outputs.pull-request-operation != 'none'
+      - name: Notify Discord (only on PR create/update)
+        if: steps.ghpr.outputs.pull-request-operation && steps.ghpr.outputs.pull-request-operation != 'none'
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-          PR_URL: ${{ steps.cpr.outputs.pull-request-url }}
-          OP: ${{ steps.cpr.outputs.pull-request-operation }}
+          PR_URL: ${{ steps.ghpr.outputs.pull-request-url }}
+          OP: ${{ steps.ghpr.outputs.pull-request-operation }}
         run: |
           set -euo pipefail
           MSG=$(cat <<EOF
-          🔄 **Auto rebase ${{ steps.resolve.outputs.up_ref }} → main** (${OP})
+          🔄 **Sync upstream/dev → main** (${OP})
           PR: ${PR_URL}
+          - tip: ${{ steps.resolve.outputs.upstream_tip }}
           EOF
           )
           curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
@@ -245,7 +191,7 @@ jobs:
         run: |
           set -euo pipefail
           MSG=$(cat <<EOF
-          ❌ **Auto rebase failed**
+          ❌ **Upstream sync failed**
           Run: ${RUN_URL}
           EOF
           )
