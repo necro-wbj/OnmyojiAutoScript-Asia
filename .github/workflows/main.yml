@@ -87,29 +87,34 @@ jobs:
           PR_BRANCH="sync/upstream-dev"
           UP_REF="${{ steps.resolve.outputs.up_ref }}"
           UP_TIP="${{ steps.resolve.outputs.upstream_tip }}"
-
+      
           # 1) 以 main 為父提交建立/更新 PR 分支
           git checkout -B "$PR_BRANCH" origin/main
-
+      
           # 2) 用 read-tree 把索引與工作樹「重置為 UP_REF 的樹狀」
-          #    這會只變更檔案內容，不會帶入上游的「歷史」。
           git read-tree --reset -u "$UP_REF"
-
-          # 3) 把 workflow 路徑固定回 main 的版本（因此此次提交不含任何 workflows 變更）
-          git checkout origin/main -- .github/workflows || true
-
-          # 4) 檢查是否真的有差異；有就做一顆提交
+      
+          # 3) 先把 snapshot 帶來的所有 workflows 移除（避免任何「新增/修改」）
+          git rm -r -q --ignore-unmatch .github/workflows || true
+      
+          # 4) 如果 main 有 workflows，就還原 main 的版本
+          if git ls-tree -r --name-only origin/main .github/workflows >/dev/null 2>&1 \
+             && [ -n "$(git ls-tree -r --name-only origin/main .github/workflows || true)" ]; then
+            git checkout origin/main -- .github/workflows
+          fi
+      
+          # 5) 檢查是否真的有差異；有就做一顆提交
           git add -A
           if git diff --cached --quiet; then
             echo "[LOG] No content changes after snapshot; skip pushing PR branch."
             exit 0
           fi
-
-          git commit -m "chore(sync): snapshot of ${UP_REF}@${UP_TIP} (workflows pinned to main)"
-
-          # 5) 推上遠端（這次 push 只有「一顆新的快照提交」，不含任何 workflow 變更 → 不會被拒）
+      
+          git commit -m "chore(sync): snapshot of ${UP_REF}@${UP_TIP} (workflows removed or pinned to main)"
+      
+          # 6) 推上遠端（此次提交不含任何「新增/修改」workflow 檔案）
           git push origin "+$PR_BRANCH:$PR_BRANCH"
-          echo "[LOG] Pushed $PR_BRANCH at $(git rev-parse --short HEAD) (snapshot of ${UP_REF}@${UP_TIP}; workflows pinned to main)"
+          echo "[LOG] Pushed $PR_BRANCH at $(git rev-parse --short HEAD) (snapshot of ${UP_REF}@${UP_TIP}; workflows sanitized)"
 
       - name: Quick diff artifact (preview)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
