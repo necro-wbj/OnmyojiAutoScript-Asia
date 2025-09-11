@@ -163,7 +163,35 @@ jobs:
             echo "pull-request-operation=created" >> "$GITHUB_OUTPUT"
             echo "[LOG] Created draft PR: ${URL}"
           fi
+      - name: Notify Discord (PR created & has conflicts)
+        if: steps.ghpr.outputs['pull-request-operation'] == 'created'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          PR_URL: ${{ steps.ghpr.outputs['pull-request-url'] }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          # 讀取 PR 的合併狀態
+          STATE=$(gh pr view "$PR_URL" --json mergeStateStatus --jq '.mergeStateStatus' || echo "UNKNOWN")
+          echo "[LOG] mergeStateStatus=$STATE"
 
+          # 只有「有衝突」才通知；避免每次排程都發
+          case "$STATE" in
+            CONFLICTING|BLOCKED)
+              MSG=$(cat <<EOF
+              ⚠️ **Sync PR has conflicts**
+              PR: ${PR_URL}
+              請手動解衝突後再合併。
+              EOF
+              )
+              curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
+                -d "$(jq -n --arg content "$MSG" '{content: $content}')"
+              ;;
+            *)
+              echo "[LOG] No conflicts (mergeStateStatus=$STATE). Skip Discord notify."
+              ;;
+          esac
       # === 模式 2：rebase 預覽分支（啟用 rerere；不強迫成功） ===
       - name: (Cache) Restore rerere decisions
         uses: actions/cache@v4
