@@ -53,7 +53,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          persist-credentials: false   # 不要把 GITHUB_TOKEN 寫進 git 設定
+          persist-credentials: false
 
       - name: Git setup
         run: |
@@ -151,7 +151,6 @@ jobs:
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         id: ghpr
         env:
-          # 優先用 PAT；沒有就退回 GITHUB_TOKEN（若用 GITHUB_TOKEN，需在 Settings→Actions→General 開啟「Allow GitHub Actions to create and approve pull requests」）
           GH_TOKEN: ${{ secrets.GH_PAT != '' && secrets.GH_PAT || secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
@@ -211,9 +210,9 @@ jobs:
             echo "pull-request-operation=created" >> "$GITHUB_OUTPUT"
           fi
 
-      # === 合併「PR 狀態」單一步驟（含輪詢、GraphQL+REST 交叉判斷） ===
+      # === 合併為單一步驟的 PR 狀態通知（輪詢、GraphQL+REST 交叉判斷；含 null/空字串保護） ===
       - name: Notify Discord (PR status)
-        if: steps.ghpr.outputs.pull-request-url != ''
+        if: ${{ steps.ghpr.outputs['pull-request-url'] != '' && steps.ghpr.outputs['pull-request-url'] != null }}
         env:
           GH_TOKEN: ${{ secrets.GH_PAT != '' && secrets.GH_PAT || secrets.GITHUB_TOKEN }}
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
@@ -221,6 +220,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          if [[ -z "${PR_URL:-}" || "${PR_URL}" == "null" ]]; then
+            echo "[LOG] No PR URL, skip Discord status."; exit 0
+          fi
           PR="$PR_URL"
           NUM="$(gh pr view "$PR" --json number --jq .number)"
 
