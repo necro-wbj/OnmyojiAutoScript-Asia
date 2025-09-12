@@ -3,6 +3,11 @@
 # github https://github.com/runhey
 from time import sleep
 from datetime import time, datetime, timedelta
+import re
+
+import cv2
+import numpy as np
+from module.atom.ocr import RuleOcr
 
 import cv2
 import numpy as np
@@ -88,6 +93,9 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
         duel_week_over = False
         while 1:
             self.screenshot()
+            if self.appear(self.I_BATTLE_WITH_TRAIN, interval=1):
+                logger.info('Not Duel time')
+                break
             if self.appear_then_click(self.I_REWARD, interval=0.6):
                 continue
             if not self.duel_main():
@@ -144,6 +152,37 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
         self.set_next_run(task='TalismanPass', target=datetime.now())
         raise TaskEnd('Duel')
 
+    def is_time_in_range(self, celeb: bool = False) -> bool:
+        now_time = datetime.now().time()
+        if celeb:
+            morning_start = time(11, 0)
+            morning_end = time(13, 0)
+            evening_start = time(18, 0)
+            evening_end = time(21, 0)
+        else:
+            morning_start = time(11, 0)
+            morning_end = time(14, 0)
+            evening_start = time(17, 0)
+            evening_end = time(22, 0)
+
+        if morning_start <= now_time <= morning_end or evening_start <= now_time <= evening_end:
+            return True
+        return False
+
+    def set_next_schedule(self):
+        now = datetime.now()
+        next_schedule = None
+        if now.hour < 11:
+            next_schedule = now.replace(hour=11, minute=0, second=0, microsecond=0)
+        elif 14 <= now.hour < 17:
+            next_schedule = now.replace(hour=17, minute=0, second=0, microsecond=0)
+        elif now.hour >= 22:
+            next_schedule = (now + timedelta(days=1)).replace(hour=11, minute=0, second=0, microsecond=0)
+        else:
+            # 當前時間在指定範圍內，不需要重新計劃
+            next_schedule = None
+        self.set_next_run(task='Duel', success=True, finish=False,target=next_schedule)
+        
     def duel_main(self, screenshot=False) -> bool:
         """
         判断是否斗技主界面
@@ -159,11 +198,14 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
         :return:
         """
         click_count = 0  # 计数
+        logger.info('Souls Switch start')
         while 1:
             self.screenshot()
+            logger.info(f"click_count: {click_count}")
             if click_count >= 4:
                 break
-
+            if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
+                continue
             if self.appear_then_click(self.I_D_TEAM, interval=1):
                 continue
             if self.appear_then_click(self.I_UI_CONFIRM, interval=0.6):
@@ -171,6 +213,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
             if self.appear_then_click(self.I_D_TEAM_SWTICH, interval=1):
                 click_count += 1
                 continue
+            logger.info('Souls Switch no find nothing')
         logger.info('Souls Switch is complete')
         self.ui_click(self.I_UI_BACK_YELLOW, self.I_D_TEAM)
 
@@ -252,6 +295,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
         :param target: 目标分数
         :return:
         """
+        logger.info(f'Check score: {target}')
         while 1:
             self.screenshot()
             if self.appear(self.I_D_CELEB_STAR) or self.appear(self.I_D_CELEB_HONOR):
@@ -314,6 +358,41 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
 
         # 点击斗技 开始匹配对手
         logger.hr('Duel start match')
+        battle_GO_LOSE = False
+        if current_score == 3000:
+            self.wait_until_appear(self.I_D_CELEB_BATTLE_BAN, wait_time=60)
+            self.screenshot()
+            while self.appear(self.I_D_CELEB_BATTLE_BAN):
+                self.screenshot()
+                if self.appear(self.I_D_CELEB_BAN_LOCK):
+                    if self.celeb_ban_card(): 
+                        # my team be banned current no change card rule so just go lose
+                        logger.info('My team is banned')
+                        battle_GO_LOSE = True
+                        break
+                    else:
+                        logger.info('My team no banned go fight.')
+                        battle_GO_LOSE = False
+                        break
+        if battle_GO_LOSE:
+            while 1:
+                self.screenshot()
+                if self.appear_then_click(self.I_EXIT_ENSURE):
+                    continue
+                if self.appear(self.I_FALSE):
+                    # 打输了
+                    logger.info('Duel battle lose')
+                    self.ui_click_until_disappear(self.I_FALSE)
+                    battle_win = False
+                    return battle_win
+                if self.appear(self.I_D_FAIL):
+                    # 输了
+                    logger.info('Duel battle lose')
+                    self.ui_click_until_disappear(self.I_D_FAIL)
+                    battle_win = False
+                    return battle_win
+                if self.appear_then_click(self.I_EXIT):
+                    continue
         while 1:
             self.screenshot()
             # 出现自动上阵

@@ -1,0 +1,334 @@
+name: Auto Sync Upstream Dev (PR-only, keep history & rerere)
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch: {}
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - ".github/**"
+      - "docs/**"
+      - "README.md"
+      - ".sync/**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# 用 PAT 來 push；PR 操作優先用 PAT（若無則退回 GITHUB_TOKEN）
+permissions:
+  contents: read
+  pull-requests: write
+
+env:
+  UPSTREAM_REPO: runhey/OnmyojiAutoScript     # 上游 repo
+  UPSTREAM_BRANCH: dev                        # 上游分支（dev）
+  BASE_BRANCH: main                           # 本地分支（main）
+  PR_BRANCH: sync/upstream-dev                # 合併用 PR 分支
+  # 資產檔（衝突時保留我方版本；rebase 中用 --theirs，見下方註解）
+  ASSET_GLOBS: |
+    assets/**
+    **/*.png
+    **/*.jpg
+    **/*.jpeg
+    **/*.gif
+    **/*.webp
+    **/*.mp3
+    **/*.wav
+    **/*.mp4
+    **/*.mov
+    **/*.ico
+    **/*.ttf
+    **/*.otf
+
+jobs:
+  sync-upstream:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout (full, no persisted credentials)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Git setup
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git config core.autocrlf false
+          git config --global --unset-all http.https://github.com/.extraheader || true
+
+      - name: Add upstream & fetch all
+        run: |
+          set -euo pipefail
+          git remote remove upstream 2>/dev/null || true
+          git remote add upstream "https://github.com/${UPSTREAM_REPO}.git"
+          git fetch --prune origin   +refs/heads/*:refs/remotes/origin/*
+          git fetch --prune upstream +refs/heads/*:refs/remotes/upstream/*
+
+      - name: Resolve upstream ref & tip-diff
+        id: resolve
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git show-ref --verify --quiet "refs/remotes/upstream/${UPSTREAM_BRANCH}"; then
+            UP_REF="upstream/${UPSTREAM_BRANCH}"
+            REASON="found-upstream-${UPSTREAM_BRANCH}"
+          else
+            echo "::error::No refs/remotes/upstream/${UPSTREAM_BRANCH} found."
+            exit 2
+          fi
+          UP_TIP=$(git rev-parse --short "${UP_REF}")
+          ORI_TIP=$(git rev-parse --short origin/${{ env.BASE_BRANCH }})
+          read BEHIND AHEAD < <(git rev-list --left-right --count origin/${{ env.BASE_BRANCH }}..."${UP_REF}" | awk '{print $1" "$2}')
+          {
+            echo "up_ref=${UP_REF}"
+            echo "reason=${REASON}"
+            echo "upstream_tip=${UP_TIP}"
+            echo "origin_tip=${ORI_TIP}"
+            echo "ahead=${AHEAD}"
+            echo "behind=${BEHIND}"
+          } >> "$GITHUB_OUTPUT"
+          echo "[LOG] ${REASON}   up_ref=${UP_REF}   up_tip=${UP_TIP}   base_tip=${ORI_TIP}"
+          echo "[LOG] diff(origin/${{ env.BASE_BRANCH }}...${UP_REF})   behind=${BEHIND}  ahead=${AHEAD}"
+
+      - name: Early exit if tips identical
+        if: steps.resolve.outputs.ahead == '0' && steps.resolve.outputs.behind == '0'
+        run: echo "[LOG] origin/${{ env.BASE_BRANCH }} 與 upstream/${{ env.UPSTREAM_BRANCH }} 完全一致；跳過。"
+
+      # 用 PAT 設定 push（需在 repo secrets 設 GH_PAT，scopes: repo + workflow）
+      - name: Configure PAT for pushing
+        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${GH_PAT:-}" ]; then
+            echo "::error::Secret GH_PAT is empty. Create a PAT with scopes: repo + workflow and add it as GH_PAT."
+            exit 1
+          fi
+          git config --global --unset-all http.https://github.com/.extraheader || true
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git remote set-url --push origin "https://x-access-token:${GH_PAT}@github.com/${GITHUB_REPOSITORY}.git"
+          echo "[LOG] origin push URL configured to use GH_PAT."
+
+      # === 模式 1：鏡像上游到 PR 分支（保留歷史） ===
+      - name: Mirror upstream/${{ env.UPSTREAM_BRANCH }} to PR branch (history-preserving)
+        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git checkout -B "${{ env.PR_BRANCH }}" "${{ steps.resolve.outputs.up_ref }}"
+          git push origin "+${{ env.PR_BRANCH }}:${{ env.PR_BRANCH }}"
+          echo "[LOG] Pushed ${{ env.PR_BRANCH }} at ${{ steps.resolve.outputs.upstream_tip }} (mirror of upstream/${{ env.UPSTREAM_BRANCH }})"
+
+      - name: Quick diff artifact (preview)
+        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p ci-diff
+          git diff --name-status origin/${{ env.BASE_BRANCH }}..."${{ steps.resolve.outputs.up_ref }}" > ci-diff/name-status.txt || true
+          git diff --stat        origin/${{ env.BASE_BRANCH }}..."${{ steps.resolve.outputs.up_ref }}" > ci-diff/stat.txt || true
+          tar czf ci-diff.tgz ci-diff
+
+      - name: Upload diff artifact
+        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
+        uses: actions/upload-artifact@v4
+        with:
+          name: upstream-vs-main-diff
+          path: ci-diff.tgz
+          retention-days: 7
+
+      # === 建立 / 更新 PR：採 --body-file；失敗重試；最後 REST 後備 ===
+      - name: Create / Update PR (robust; retry & REST fallback)
+        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
+        id: ghpr
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT != '' && secrets.GH_PAT || secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          REPO="${GITHUB_REPOSITORY}"
+          TITLE="sync: upstream/${{ env.UPSTREAM_BRANCH }} → ${{ env.BASE_BRANCH }} (manual conflict resolution)"
+
+          BODY_FILE="$(mktemp)"
+          {
+            printf 'This PR mirrors **upstream/%s** into **%s**.\n\n' "$UPSTREAM_BRANCH" "$BASE_BRANCH"
+            printf -- '- Uses a PAT to allow pushes that include workflow changes in upstream history.\n'
+            printf -- '- CI does **not** auto-merge/rebase; please resolve conflicts in PR.\n\n'
+            printf -- '- reason: `%s`\n' "${{ steps.resolve.outputs.reason }}"
+            printf -- '- upstream tip: `%s`\n' "${{ steps.resolve.outputs.upstream_tip }}"
+            printf -- '- origin tip:   `%s`\n' "${{ steps.resolve.outputs.origin_tip }}"
+            printf -- '- ahead(from %s): `%s`, behind: `%s`\n' "$BASE_BRANCH" "${{ steps.resolve.outputs.ahead }}" "${{ steps.resolve.outputs.behind }}"
+          } > "$BODY_FILE"
+
+          # 是否已有開啟中的 PR
+          EXISTING="$(gh pr list --repo "$REPO" \
+            --head "${{ env.PR_BRANCH }}" --base "${{ env.BASE_BRANCH }}" \
+            --state open --json number --jq '.[0].number // empty' || true)"
+
+          if [[ -n "${EXISTING:-}" ]]; then
+            gh pr edit "${EXISTING}" --repo "$REPO" --title "$TITLE" --body-file "$BODY_FILE" --add-label chore --add-label auto-sync
+            gh pr view "${EXISTING}" --repo "$REPO" --json url --jq .url | tee /tmp/pr_url
+            echo "pull-request-url=$(cat /tmp/pr_url)" >> "$GITHUB_OUTPUT"
+            echo "pull-request-operation=updated" >> "$GITHUB_OUTPUT"
+          else
+            # GraphQL → 失敗重試 → 最後走 REST 後備
+            ATTEMPTS=0
+            SUCCESS=""
+            while [[ $ATTEMPTS -lt 3 ]]; do
+              if gh pr create --repo "$REPO" --base "${{ env.BASE_BRANCH }}" --head "${{ env.PR_BRANCH }}" \
+                   --title "$TITLE" --body-file "$BODY_FILE" --draft --label chore --label auto-sync | tee /tmp/pr_url; then
+                SUCCESS="1"; break
+              fi
+              ATTEMPTS=$((ATTEMPTS+1))
+              echo "[WARN] gh pr create failed (attempt $ATTEMPTS). Retrying..."
+              sleep $((ATTEMPTS * 5))
+            done
+            if [[ -z "$SUCCESS" ]]; then
+              echo "[WARN] GraphQL still failing. Falling back to REST..."
+              JSON="$(gh api -X POST "repos/$REPO/pulls" \
+                      -f base="${{ env.BASE_BRANCH }}" -f head="${{ env.PR_BRANCH }}" \
+                      -f title="$TITLE" -f body="$(cat "$BODY_FILE")" \
+                      --jq '{url:.html_url, number:.number}' || true)"
+              if [[ -z "$JSON" ]]; then
+                echo "::error::Failed to create PR via GraphQL & REST."
+                exit 1
+              fi
+              echo "$JSON" | jq -r .url | tee /tmp/pr_url
+              NUM="$(echo "$JSON" | jq -r .number)"
+              gh pr edit "$NUM" --repo "$REPO" --add-label chore --add-label auto-sync || true
+            fi
+            echo "pull-request-url=$(cat /tmp/pr_url)" >> "$GITHUB_OUTPUT"
+            echo "pull-request-operation=created" >> "$GITHUB_OUTPUT"
+          fi
+
+      # === 合併為單一步驟的 PR 狀態通知（輪詢、GraphQL+REST 交叉判斷；含 null/空字串保護） ===
+      - name: Notify Discord (PR status)
+        if: ${{ steps.ghpr.outputs['pull-request-url'] != '' && steps.ghpr.outputs['pull-request-url'] != null }}
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT != '' && secrets.GH_PAT || secrets.GITHUB_TOKEN }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          PR_URL: ${{ steps.ghpr.outputs['pull-request-url'] }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -z "${PR_URL:-}" || "${PR_URL}" == "null" ]]; then
+            echo "[LOG] No PR URL, skip Discord status."; exit 0
+          fi
+          PR="$PR_URL"
+          NUM="$(gh pr view "$PR" --json number --jq .number)"
+
+          GQL=""
+          REST=""
+          for i in 2 3 4 5 6 7 8 9; do
+            GQL="$(gh pr view "$PR" --json mergeStateStatus --jq '.mergeStateStatus' || echo '')"
+            REST="$(gh api repos/${GITHUB_REPOSITORY}/pulls/$NUM --jq '.mergeable_state' || echo '')"
+            if [[ -n "$GQL" && "$GQL" != "UNKNOWN" ]] || [[ -n "$REST" && "$REST" != "unknown" ]]; then
+              break
+            fi
+            echo "[LOG] mergeStateStatus=$GQL  mergeable_state=$REST ; retry in ${i}s..."
+            sleep "$i"
+          done
+          echo "[LOG] final: mergeStateStatus=${GQL:-EMPTY}, mergeable_state=${REST:-EMPTY}"
+
+          STATUS="ok"
+          if [[ "$GQL" == "CONFLICTING" || "$REST" == "dirty" ]]; then
+            STATUS="conflict"
+          elif [[ "$GQL" == "BLOCKED" || "$REST" == "blocked" ]]; then
+            STATUS="blocked"
+          elif [[ "$GQL" == "UNKNOWN" || "$REST" == "unknown" || -z "$GQL$REST" ]]; then
+            STATUS="pending"
+          fi
+
+          if [[ "$STATUS" == "conflict" ]]; then
+            printf -v MSG '⚠️ **Sync PR has conflicts**\nPR: %s\n已建立 rebase/preview 與 rerere 決策；請手動解衝突後合併。\n' "$PR"
+          elif [[ "$STATUS" == "blocked" ]]; then
+            printf -v MSG '⛔ **Sync PR is blocked**\nPR: %s\n請檢查保護規則／審查或檢查狀態。\n' "$PR"
+          elif [[ "$STATUS" == "pending" ]]; then
+            printf -v MSG '⏳ **Sync PR status pending**\nPR: %s\nGitHub 尚在計算合併性；稍後再試。\n' "$PR"
+          else
+            printf -v MSG '✅ **Upstream sync prepared**\nPR: %s\n（若顯示可自動合併，代表目前無衝突）\n' "$PR"
+          fi
+
+          curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
+            -d "$(jq -n --arg content "$MSG" '{content: $content}')"
+
+      # === 模式 2：rebase 預覽分支（rerere；資產衝突優先採我方） ===
+      - name: (Cache) Restore rerere decisions
+        uses: actions/cache@v4
+        with:
+          path: .git/rr-cache
+          key: rr-cache-${{ runner.os }}-${{ github.repository }}-${{ steps.resolve.outputs.upstream_tip }}
+          restore-keys: |
+            rr-cache-${{ runner.os }}-${{ github.repository }}-
+
+      - name: Rebase our local commits onto upstream (rerere; preview branch)
+        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
+        shell: bash
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          set -euo pipefail
+          UP_REF="${{ steps.resolve.outputs.up_ref }}"
+          git checkout -B "${{ env.BASE_BRANCH }}" origin/${{ env.BASE_BRANCH }}
+          git switch -c rebase/preview || git checkout -B rebase/preview
+          git config rerere.enabled true
+
+          # 先以上游優先（程式碼為主）
+          if ! git rebase -s ort -X theirs "${UP_REF}"; then
+            echo "::warning::Rebase hit conflicts; applying asset-prefer-ours policy…"
+            CONFLICTS=$(git diff --name-only --diff-filter=U || true)
+
+            # ⚠️ 在 rebase 狀態下，ours/theirs 定義互換；要保留「我方（重放中的本地補丁）」需用 --theirs
+            while IFS= read -r f; do
+              [[ -z "$f" ]] && continue
+              while IFS= read -r g; do
+                [[ -z "$g" ]] && continue
+                case "$f" in
+                  $g)
+                    git checkout --theirs -- "$f" || true
+                    git add -- "$f" || true
+                    echo "[RERERE] asset resolved (prefer ours): $f"
+                    ;;
+                esac
+              done <<<"${{ env.ASSET_GLOBS }}"
+            done <<<"$CONFLICTS"
+
+            # 記住決策並嘗試繼續
+            git rebase --continue || true
+          fi
+
+          # 推 rebase/preview（走 PAT）
+          git remote set-url --push origin "https://x-access-token:${GH_PAT}@github.com/${GITHUB_REPOSITORY}.git"
+          git push -f origin rebase/preview
+
+      - name: (Cache) Save rerere decisions
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .git/rr-cache
+          key: rr-cache-${{ runner.os }}-${{ github.repository }}-${{ steps.resolve.outputs.upstream_tip }}
+
+      # 任何步驟失敗 → 通知 Discord（附 runner 連結）
+      - name: Notify Discord (run failed)
+        if: failure()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          MSG=$(cat <<EOF
+          ❌ **Upstream sync failed**
+          Run: ${RUN_URL}
+          EOF
+          )
+          curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
+            -d "$(jq -n --arg content "$MSG" '{content: $content}')"

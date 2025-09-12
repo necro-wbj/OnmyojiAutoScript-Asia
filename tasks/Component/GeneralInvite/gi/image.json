@@ -128,8 +128,8 @@
   {
     "itemName": "add_5_4",
     "imageName": "gi_add_5_4.png",
-    "roiFront": "1118,228,100,100",
-    "roiBack": "1118,228,100,100",
+    "roiFront": "591,206.33333333333331,100,100",
+    "roiBack": "591,206.33333333333331,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -245,8 +245,8 @@
   {
     "itemName": "add_sea",
     "imageName": "gi_add_sea.png",
-    "roiFront": "836,231,100,100",
-    "roiBack": "836,231,100,100",
+    "roiFront": "836,269,100,62",
+    "roiBack": "836,269,100,62",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "永生之海添加好友"
@@ -308,8 +308,8 @@
   {
     "itemName": "i_no_default",
     "imageName": "gi_i_no_default.png",
-    "roiFront": "542,343,36,35",
-    "roiBack": "542,343,36,35",
+    "roiFront": "510.66666666666663,342,36,35",
+    "roiBack": "510.66666666666663,342,36,35",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "不勾选 默认邀请"
@@ -317,8 +317,8 @@
   {
     "itemName": "i_default",
     "imageName": "gi_i_default.png",
-    "roiFront": "541,342,41,39",
-    "roiBack": "541,342,41,39",
+    "roiFront": "507,340.66666666666663,41,39",
+    "roiBack": "507,340.66666666666663,41,39",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "勾选 默认邀请"
