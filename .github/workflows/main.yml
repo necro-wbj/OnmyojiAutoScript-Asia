@@ -238,18 +238,29 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          STATE=$(gh pr view "$PR_URL" --json mergeStateStatus --jq '.mergeStateStatus' || echo "UNKNOWN")
-          echo "[LOG] mergeStateStatus=$STATE"
+          PR="$PR_URL"
+
+          # 避免 GitHub 尚未計算出可合併性（UNKNOWN），做幾次重試
+          STATE=""
+          for i in {1..6}; do
+            STATE="$(gh pr view "$PR" --json mergeStateStatus --jq '.mergeStateStatus' || echo "")"
+            if [[ -n "$STATE" && "$STATE" != "UNKNOWN" ]]; then
+              break
+            fi
+            echo "[LOG] mergeStateStatus=${STATE:-EMPTY}; retry in $((i*2))s..."
+            sleep $((i*2))
+          done
+          echo "[LOG] final mergeStateStatus=${STATE:-EMPTY}"
+
           case "$STATE" in
             CONFLICTING|BLOCKED)
-              MSG=$(cat <<EOF
-              ⚠️ **Sync PR has conflicts**
-              PR: ${PR_URL}
-              已建立 rebase 預覽與 rerere 決策；請手動檢查後合併。
-              EOF
-              )
+              # 用 printf -v 組裝多行訊息，避開 heredoc 易踩坑
+              printf -v MSG '⚠️ **Sync PR has conflicts**\nPR: %s\n已建立 rebase 預覽與 rerere 決策；請手動檢查後合併。\n' "$PR"
               curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
                 -d "$(jq -n --arg content "$MSG" '{content: $content}')"
+              ;;
+            *)
+              echo "[LOG] No conflicts (mergeStateStatus=${STATE:-UNKNOWN})."
               ;;
           esac
 
