@@ -54,6 +54,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
 
         # 选择是游戏的体力还是活动的体力
         current_ap = config.general_climb.ap_mode
+        current_ap = ApMode.AP_ACTIVITY
         self.switch(current_ap)
 
         # 设定是否锁定阵容

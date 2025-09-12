@@ -69,7 +69,7 @@ class SwitchSoulAssets:
 
 
 	# Ocr Rule Assets
-	# 队伍预设分组 
+	# 隊伍預設分組 
 	O_SS_GROUP_NAME = RuleOcr(roi=(1087,91,155,566), area=(1110,94,116,533), mode="Full", method="Default", keyword="", name="ss_group_name")
 	# 阵容匹配 
 	O_SS_TEAM_NAME = RuleOcr(roi=(573,140,277,481), area=(667,144,32,475), mode="Full", method="Default", keyword="", name="ss_team_name")
