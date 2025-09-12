@@ -146,7 +146,7 @@ jobs:
           path: ci-diff.tgz
           retention-days: 7
 
-      # === 建立 / 更新 PR：採 --body-file；失敗重試；最後 REST 後備；成功與衝突都通知 ===
+      # === 建立 / 更新 PR：採 --body-file；失敗重試；最後 REST 後備 ===
       - name: Create / Update PR (robust; retry & REST fallback)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         id: ghpr
@@ -160,17 +160,15 @@ jobs:
           TITLE="sync: upstream/${{ env.UPSTREAM_BRANCH }} → ${{ env.BASE_BRANCH }} (manual conflict resolution)"
 
           BODY_FILE="$(mktemp)"
-          cat > "$BODY_FILE" <<EOF
-          This PR mirrors **upstream/${{ env.UPSTREAM_BRANCH }}** into **${{ env.BASE_BRANCH }}**.
-          
-          - Uses a PAT to allow pushes that include workflow changes in upstream history.
-          - CI does **not** auto-merge/rebase; please resolve conflicts in PR.
-          
-          - reason: `${{ steps.resolve.outputs.reason }}`
-          - upstream tip: `${{ steps.resolve.outputs.upstream_tip }}`
-          - origin tip:   `${{ steps.resolve.outputs.origin_tip }}`
-          - ahead(from main): `${{ steps.resolve.outputs.ahead }}`, behind: `${{ steps.resolve.outputs.behind }}`
-          EOF
+          {
+            printf 'This PR mirrors **upstream/%s** into **%s**.\n\n' "$UPSTREAM_BRANCH" "$BASE_BRANCH"
+            printf -- '- Uses a PAT to allow pushes that include workflow changes in upstream history.\n'
+            printf -- '- CI does **not** auto-merge/rebase; please resolve conflicts in PR.\n\n'
+            printf -- '- reason: `%s`\n' "${{ steps.resolve.outputs.reason }}"
+            printf -- '- upstream tip: `%s`\n' "${{ steps.resolve.outputs.upstream_tip }}"
+            printf -- '- origin tip:   `%s`\n' "${{ steps.resolve.outputs.origin_tip }}"
+            printf -- '- ahead(from %s): `%s`, behind: `%s`\n' "$BASE_BRANCH" "${{ steps.resolve.outputs.ahead }}" "${{ steps.resolve.outputs.behind }}"
+          } > "$BODY_FILE"
 
           # 是否已有開啟中的 PR
           EXISTING="$(gh pr list --repo "$REPO" \
@@ -213,23 +211,8 @@ jobs:
             echo "pull-request-operation=created" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Notify Discord (PR ready)
-        if: steps.ghpr.outputs.pull-request-url != ''
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-          PR_URL: ${{ steps.ghpr.outputs['pull-request-url'] }}
-        run: |
-          set -euo pipefail
-          MSG=$(cat <<EOF
-          ✅ **Upstream sync prepared**
-          PR: ${PR_URL}
-          （若顯示可自動合併，代表目前無衝突）
-          EOF
-          )
-          curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
-            -d "$(jq -n --arg content "$MSG" '{content: $content}')"
-
-      - name: Notify Discord (PR has conflicts)
+      # === 合併「PR 狀態」單一步驟（含輪詢、GraphQL+REST 交叉判斷） ===
+      - name: Notify Discord (PR status)
         if: steps.ghpr.outputs.pull-request-url != ''
         env:
           GH_TOKEN: ${{ secrets.GH_PAT != '' && secrets.GH_PAT || secrets.GITHUB_TOKEN }}
@@ -239,30 +222,42 @@ jobs:
         run: |
           set -euo pipefail
           PR="$PR_URL"
+          NUM="$(gh pr view "$PR" --json number --jq .number)"
 
-          # 避免 GitHub 尚未計算出可合併性（UNKNOWN），做幾次重試
-          STATE=""
-          for i in {1..6}; do
-            STATE="$(gh pr view "$PR" --json mergeStateStatus --jq '.mergeStateStatus' || echo "")"
-            if [[ -n "$STATE" && "$STATE" != "UNKNOWN" ]]; then
+          GQL=""
+          REST=""
+          for i in 2 3 4 5 6 7 8 9; do
+            GQL="$(gh pr view "$PR" --json mergeStateStatus --jq '.mergeStateStatus' || echo '')"
+            REST="$(gh api repos/${GITHUB_REPOSITORY}/pulls/$NUM --jq '.mergeable_state' || echo '')"
+            if [[ -n "$GQL" && "$GQL" != "UNKNOWN" ]] || [[ -n "$REST" && "$REST" != "unknown" ]]; then
               break
             fi
-            echo "[LOG] mergeStateStatus=${STATE:-EMPTY}; retry in $((i*2))s..."
-            sleep $((i*2))
+            echo "[LOG] mergeStateStatus=$GQL  mergeable_state=$REST ; retry in ${i}s..."
+            sleep "$i"
           done
-          echo "[LOG] final mergeStateStatus=${STATE:-EMPTY}"
+          echo "[LOG] final: mergeStateStatus=${GQL:-EMPTY}, mergeable_state=${REST:-EMPTY}"
 
-          case "$STATE" in
-            CONFLICTING|BLOCKED)
-              # 用 printf -v 組裝多行訊息，避開 heredoc 易踩坑
-              printf -v MSG '⚠️ **Sync PR has conflicts**\nPR: %s\n已建立 rebase 預覽與 rerere 決策；請手動檢查後合併。\n' "$PR"
-              curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
-                -d "$(jq -n --arg content "$MSG" '{content: $content}')"
-              ;;
-            *)
-              echo "[LOG] No conflicts (mergeStateStatus=${STATE:-UNKNOWN})."
-              ;;
-          esac
+          STATUS="ok"
+          if [[ "$GQL" == "CONFLICTING" || "$REST" == "dirty" ]]; then
+            STATUS="conflict"
+          elif [[ "$GQL" == "BLOCKED" || "$REST" == "blocked" ]]; then
+            STATUS="blocked"
+          elif [[ "$GQL" == "UNKNOWN" || "$REST" == "unknown" || -z "$GQL$REST" ]]; then
+            STATUS="pending"
+          fi
+
+          if [[ "$STATUS" == "conflict" ]]; then
+            printf -v MSG '⚠️ **Sync PR has conflicts**\nPR: %s\n已建立 rebase/preview 與 rerere 決策；請手動解衝突後合併。\n' "$PR"
+          elif [[ "$STATUS" == "blocked" ]]; then
+            printf -v MSG '⛔ **Sync PR is blocked**\nPR: %s\n請檢查保護規則／審查或檢查狀態。\n' "$PR"
+          elif [[ "$STATUS" == "pending" ]]; then
+            printf -v MSG '⏳ **Sync PR status pending**\nPR: %s\nGitHub 尚在計算合併性；稍後再試。\n' "$PR"
+          else
+            printf -v MSG '✅ **Upstream sync prepared**\nPR: %s\n（若顯示可自動合併，代表目前無衝突）\n' "$PR"
+          fi
+
+          curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
+            -d "$(jq -n --arg content "$MSG" '{content: $content}')"
 
       # === 模式 2：rebase 預覽分支（rerere；資產衝突優先採我方） ===
       - name: (Cache) Restore rerere decisions
