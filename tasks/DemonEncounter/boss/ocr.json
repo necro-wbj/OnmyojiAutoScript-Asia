@@ -9,7 +9,7 @@
     "description": "人數"
   },
   {
-    "itemName": "de_sboss_people",
+    "itemName": "de_best_boss_people",
     "roiFront": "900,565,100,35",
     "roiBack": "900,565,100,35",
     "mode": "DigitCounter",

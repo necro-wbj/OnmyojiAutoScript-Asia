@@ -12,13 +12,13 @@ from module.logger import logger
 from module.exception import TaskEnd
 from module.base.timer import Timer
 
+from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_demon_encounter, page_shikigami_records
 from tasks.DemonEncounter.assets import DemonEncounterAssets
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 from tasks.DemonEncounter.data.answer import Answer
-from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 
 
 class LanternClass(Enum):
@@ -57,6 +57,8 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         if today == 0:
             # 鬼灵歌姬
             self.best_boss_enable = self.config.model.demon_encounter.best_demon_boss_config.best_demon_kiryou_select
+            # 亞服還沒有極逢魔鬼靈歌姬
+            self.best_boss_enable = False
         elif today == 1:
             # 蜃气楼
             self.best_boss_enable = self.config.model.demon_encounter.best_demon_boss_config.best_demon_shinkirou_select
@@ -84,7 +86,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
 
         # 极逢魔选择
         best_demon_boss_config = self.config.demon_encounter.best_demon_boss_config
-        
+
         group, team = None, None
         # 周一 鬼灵歌姬
         if today == 0:
@@ -137,6 +139,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             logger.info(f'Normal demon boss nightly aramitama group: {group}, team: {team}')
         if group and team:
             self.run_switch_soul_by_name(group, team)
+        # 周一 鬼灵歌姬 補充
         if today == 0:
             # 获取group,team
             if best_soul_config.enable and best_demon_boss_config.best_demon_kiryou_select:
@@ -259,6 +262,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         # 延长时间并在战斗结束后改回来
         # 少人的極逢魔BOSS 會超過10分鐘
         self.device.stuck_timer_long = Timer(900, count=900).start()
+        #
         config = self.con
         while True:
             self.screenshot()
@@ -450,7 +454,6 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             answer_1 = self.O_LETTER_ANSWER_1.detect_text(self.device.image)
             answer_2 = self.O_LETTER_ANSWER_2.detect_text(self.device.image)
             answer_3 = self.O_LETTER_ANSWER_3.detect_text(self.device.image)
-            options=[answer_1, answer_2, answer_3]
             if answer_1 == '其余选项皆对':
                 index = 1
             elif answer_2 == '其余选项皆对':
@@ -462,6 +465,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             if index is None:
                 logger.warning('No answer found, using default answer 1')
                 index = 1
+            options=[answer_1, answer_2, answer_3]
             logger.info(f'Question: {question}, Answer: {index}{options[index-1]}')
             return click_match[index]
 
@@ -479,14 +483,12 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             # wait 10s
             time.sleep(1)
             self.click(answer_click, interval=1)
-            while_count = 10
-            while while_count:
-                while_count = while_count - 1
-                logger.info(f'Answer {i} while count {while_count}')
+            for count in range(10):
+                logger.info(f'Answer {i} while count {count}')
                 self.screenshot()
                 if self.ui_reward_appear_click():
                     time.sleep(0.5)
-                    while 1:
+                    while True:
                         self.screenshot()
                         # 等待动画结束
                         if not self.appear(self.I_UI_REWARD, threshold=0.6):
@@ -499,14 +501,12 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                 # 如果没有出现红色关闭按钮，说明答题结束
                 if not self.appear(self.I_LETTER_CLOSE):
                     logger.info('no red close button exit Question answering')
-                    time.sleep(1.8)
+                    time.sleep(2)
                     self.screenshot()
                     if not self.appear(self.I_LETTER_CLOSE):
                         logger.warning('Answer finish')
                         return
-                # every wwhile loop sleep 0.5s
                 time.sleep(0.5)
-                # 一直点击
                 self.click(answer_click, interval=1.5)
             time.sleep(0.5)
 
@@ -679,10 +679,10 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
-    from memory_profiler import profile
 
     c = Config('du')
     d = Device(c)
     t = ScriptTask(c, d)
+
     t.run()
     # t.battle_wait(True)

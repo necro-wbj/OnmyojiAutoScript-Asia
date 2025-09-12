@@ -56,7 +56,7 @@ class DemonEncounterAssets:
 	# 人數 
 	O_DE_BOSS_PEOPLE = RuleOcr(roi=(880,591,100,35), area=(880,591,100,35), mode="DigitCounter", method="Default", keyword="", name="de_boss_people")
 	# 極逢魔人數 
-	O_DE_SBOSS_PEOPLE = RuleOcr(roi=(900,565,100,35), area=(900,565,100,35), mode="DigitCounter", method="Default", keyword="", name="de_sboss_people")
+	O_DE_BEST_BOSS_PEOPLE = RuleOcr(roi=(900,565,100,35), area=(900,565,100,35), mode="DigitCounter", method="Default", keyword="", name="de_sboss_people")
 
 
 	# Click Rule Assets
