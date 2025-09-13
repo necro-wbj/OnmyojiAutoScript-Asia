@@ -221,24 +221,31 @@ jobs:
         run: |
           set -euo pipefail
           if [[ -z "${PR_URL:-}" || "${PR_URL}" == "null" ]]; then
-            echo "[LOG] No PR URL, skip Discord status."; exit 0
+            echo "[LOG] No PR URL, skip."; exit 0
           fi
+
           PR="$PR_URL"
           NUM="$(gh pr view "$PR" --json number --jq .number)"
 
-          GQL=""
-          REST=""
+          # 先抓標籤，作為去重旗標
+          LABELS="$(gh pr view "$PR" --json labels --jq '.labels[].name' || true)"
+          HAS_FLAG=0
+          grep -qx 'sync-conflict-notified' <<<"$LABELS" && HAS_FLAG=1
+
+          # 取合併狀態（GraphQL + REST 交叉判斷；避免 UNKNOWN）
+          GQL=""; REST=""
           for i in 2 3 4 5 6 7 8 9; do
             GQL="$(gh pr view "$PR" --json mergeStateStatus --jq '.mergeStateStatus' || echo '')"
             REST="$(gh api repos/${GITHUB_REPOSITORY}/pulls/$NUM --jq '.mergeable_state' || echo '')"
             if [[ -n "$GQL" && "$GQL" != "UNKNOWN" ]] || [[ -n "$REST" && "$REST" != "unknown" ]]; then
               break
             fi
-            echo "[LOG] mergeStateStatus=$GQL  mergeable_state=$REST ; retry in ${i}s..."
+            echo "[LOG] mergeStateStatus=$GQL mergeable_state=$REST ; retry in ${i}s..."
             sleep "$i"
           done
           echo "[LOG] final: mergeStateStatus=${GQL:-EMPTY}, mergeable_state=${REST:-EMPTY}"
 
+          # 轉換成四種狀態
           STATUS="ok"
           if [[ "$GQL" == "CONFLICTING" || "$REST" == "dirty" ]]; then
             STATUS="conflict"
@@ -248,18 +255,39 @@ jobs:
             STATUS="pending"
           fi
 
-          if [[ "$STATUS" == "conflict" ]]; then
-            printf -v MSG '⚠️ **Sync PR has conflicts**\nPR: %s\n已建立 rebase/preview 與 rerere 決策；請手動解衝突後合併。\n' "$PR"
-          elif [[ "$STATUS" == "blocked" ]]; then
-            printf -v MSG '⛔ **Sync PR is blocked**\nPR: %s\n請檢查保護規則／審查或檢查狀態。\n' "$PR"
-          elif [[ "$STATUS" == "pending" ]]; then
-            printf -v MSG '⏳ **Sync PR status pending**\nPR: %s\nGitHub 尚在計算合併性；稍後再試。\n' "$PR"
-          else
-            printf -v MSG '✅ **Upstream sync prepared**\nPR: %s\n（若顯示可自動合併，代表目前無衝突）\n' "$PR"
-          fi
-
-          curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
-            -d "$(jq -n --arg content "$MSG" '{content: $content}')"
+          # 根據狀態與是否已通知來決定是否發訊息 + 維護標籤
+          case "$STATUS" in
+            conflict)
+              if [[ $HAS_FLAG -eq 0 ]]; then
+                printf -v MSG '⚠️ **Sync PR has conflicts**\nPR: %s\n已建立 rebase/preview 與 rerere 決策；請手動解衝突後合併。\n' "$PR"
+                curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
+                  -d "$(jq -n --arg content "$MSG" '{content: $content}')"
+                # 加上「已通知」旗標
+                gh pr edit "$NUM" --add-label sync-conflict-notified
+              else
+                echo "[LOG] conflict still present, but already notified; skip."
+              fi
+              ;;
+            blocked)
+              printf -v MSG '⛔ **Sync PR is blocked**\nPR: %s\n請檢查保護規則／審查或檢查狀態。\n' "$PR"
+              curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
+                -d "$(jq -n --arg content "$MSG" '{content: $content}')"
+              ;;
+            pending)
+              echo "[LOG] pending mergeability; skip noisy notify."
+              ;;
+            *)
+              # 已可合併：如先前有衝突通知旗標 → 移除並告知已恢復（可選）
+              if [[ $HAS_FLAG -eq 1 ]]; then
+                gh pr edit "$NUM" --remove-label sync-conflict-notified
+                printf -v MSG '✅ **Upstream sync prepared**\nPR: %s\n狀態已恢復可合併。\n' "$PR"
+                curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
+                  -d "$(jq -n --arg content "$MSG" '{content: $content}')"
+              else
+                echo "[LOG] mergeable and no prior flag; skip notify."
+              fi
+              ;;
+          esac
 
       # === 模式 2：rebase 預覽分支（rerere；資產衝突優先採我方） ===
       - name: (Cache) Restore rerere decisions
