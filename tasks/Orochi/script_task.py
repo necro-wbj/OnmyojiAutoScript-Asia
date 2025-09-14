@@ -94,6 +94,39 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             self.device.click(x=pos[0], y=pos[1])
             return True
 
+    # 使用原版check_lock
+    # def check_lock(self, lock: bool = True) -> bool:
+    #     """
+    #     检查是否锁定阵容, 要求在八岐大蛇界面
+    #     :param lock:
+    #     :return:
+    #     """
+    #     logger.info('Check lock: %s', lock)
+    #     if lock:
+    #         while 1:
+    #             self.screenshot()
+    #             if self.appear(self.I_OROCHI_LOCK):
+    #                 return True
+    #             if self.appear_then_click(self.I_OROCHI_UNLOCK, interval=1):
+    #                 continue
+    #     else:
+    #         while 1:
+    #             self.screenshot()
+    #             if self.appear(self.I_OROCHI_UNLOCK):
+    #                 return True
+    #             if self.appear_then_click(self.I_OROCHI_LOCK, interval=1):
+    #                 continue
+
+
+
+
+
+
+
+
+
+
+
     def run_leader(self):
         logger.info('Start run leader')
         self.ui_get_current_page()
@@ -141,6 +174,18 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             if self.appear_then_click(self.I_PET_PRESENT, action=self.C_WIN_3, interval=1):
                 continue
 
+            if self.current_count >= self.limit_count:
+                if self.is_in_room():
+                    logger.info('Orochi count limit out')
+                    break
+
+            if datetime.now() - self.start_time >= self.limit_time:
+                if self.is_in_room():
+                    logger.info('Orochi time limit out')
+                    break
+
+
+
             # 如果没有进入房间那就不需要后面的邀请
             if not self.is_in_room():
                 if self.is_room_dead():
@@ -148,7 +193,6 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                     success = False
                     break
                 continue
-
 
             # 点击挑战
             if not is_first:
@@ -495,6 +539,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         if not orochi_switch_soul.auto_switch_soul:
             return
 
+        group_team: str = None
         layer = self.config.orochi.orochi_config.layer
         match layer:
             case Layer.TEN:
@@ -504,22 +549,10 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             case Layer.TWELVE:
                 group_team = orochi_switch_soul.twelve_switch
 
-        # 使用字典映射來替代 match-case 語句
-        layer_to_group_team = {
-            Layer.ELEVEN: orochi_switch_soul.eleven_switch,
-            Layer.TWELVE: orochi_switch_soul.twelve_switch,
-        }
-
-        # 根據 layer 設置 group_team
-        group_team = layer_to_group_team.get(layer)
-
-        # 如果 auto_switch_soul 開啟且 layer 是 ELEVEN 或 TWELVE，則進行切換御魂操作
-        if group_team:
+        if orochi_switch_soul.auto_switch_soul:
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
             self.run_switch_soul(group_team)
-        else:
-            logger.info('layer is not ELEVEN or TWELVE, no need to switch soul')
 
 
 if __name__ == '__main__':
