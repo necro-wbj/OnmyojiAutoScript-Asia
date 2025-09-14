@@ -40,8 +40,10 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
     def run(self):
 
         current_time = datetime.now().time()
-        if not (time(12, 00) <= current_time < time(23, 00)):
-            self.set_next_run(task='Duel', success=True, finish=False)
+        # Asia duel time 11:00-14:00 17:00-22:00
+        # 检查是否在斗技时间段
+        if not (time(11, 0) <= current_time < time(14, 0) or time(17, 0) <= current_time < time(22, 0)):
+            self.set_next_schedule()
             raise TaskEnd('Duel')
 
         con = self.config.duel
@@ -152,23 +154,6 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
         self.set_next_run(task='TalismanPass', target=datetime.now())
         raise TaskEnd('Duel')
 
-    def is_time_in_range(self, celeb: bool = False) -> bool:
-        now_time = datetime.now().time()
-        if celeb:
-            morning_start = time(11, 0)
-            morning_end = time(13, 0)
-            evening_start = time(18, 0)
-            evening_end = time(21, 0)
-        else:
-            morning_start = time(11, 0)
-            morning_end = time(14, 0)
-            evening_start = time(17, 0)
-            evening_end = time(22, 0)
-
-        if morning_start <= now_time <= morning_end or evening_start <= now_time <= evening_end:
-            return True
-        return False
-
     def set_next_schedule(self):
         now = datetime.now()
         next_schedule = None
@@ -205,6 +190,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
             if click_count >= 4:
                 break
             if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
+                logger.info('Click I_D_TEAM too fast meet lock member msg')
                 continue
             if self.appear_then_click(self.I_D_TEAM, interval=1):
                 continue
@@ -295,7 +281,6 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
         :param target: 目标分数
         :return:
         """
-        logger.info(f'Check score: {target}')
         while 1:
             self.screenshot()
             if self.appear(self.I_D_CELEB_STAR) or self.appear(self.I_D_CELEB_HONOR):
@@ -358,41 +343,41 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
 
         # 点击斗技 开始匹配对手
         logger.hr('Duel start match')
-        battle_GO_LOSE = False
-        if current_score == 3000:
-            self.wait_until_appear(self.I_D_CELEB_BATTLE_BAN, wait_time=60)
-            self.screenshot()
-            while self.appear(self.I_D_CELEB_BATTLE_BAN):
-                self.screenshot()
-                if self.appear(self.I_D_CELEB_BAN_LOCK):
-                    if self.celeb_ban_card(): 
-                        # my team be banned current no change card rule so just go lose
-                        logger.info('My team is banned')
-                        battle_GO_LOSE = True
-                        break
-                    else:
-                        logger.info('My team no banned go fight.')
-                        battle_GO_LOSE = False
-                        break
-        if battle_GO_LOSE:
-            while 1:
-                self.screenshot()
-                if self.appear_then_click(self.I_EXIT_ENSURE):
-                    continue
-                if self.appear(self.I_FALSE):
-                    # 打输了
-                    logger.info('Duel battle lose')
-                    self.ui_click_until_disappear(self.I_FALSE)
-                    battle_win = False
-                    return battle_win
-                if self.appear(self.I_D_FAIL):
-                    # 输了
-                    logger.info('Duel battle lose')
-                    self.ui_click_until_disappear(self.I_D_FAIL)
-                    battle_win = False
-                    return battle_win
-                if self.appear_then_click(self.I_EXIT):
-                    continue
+        # battle_GO_LOSE = False
+        # if current_score == 3000:
+        #     self.wait_until_appear(self.I_D_CELEB_BATTLE_BAN, wait_time=60)
+        #     self.screenshot()
+        #     while self.appear(self.I_D_CELEB_BATTLE_BAN):
+        #         self.screenshot()
+        #         if self.appear(self.I_D_CELEB_BAN_LOCK):
+        #             if self.celeb_ban_card(): 
+        #                 # my team be banned current no change card rule so just go lose
+        #                 logger.info('My team is banned')
+        #                 battle_GO_LOSE = True
+        #                 break
+        #             else:
+        #                 logger.info('My team no banned go fight.')
+        #                 battle_GO_LOSE = False
+        #                 break
+        # if battle_GO_LOSE:
+        #     while 1:
+        #         self.screenshot()
+        #         if self.appear_then_click(self.I_EXIT_ENSURE):
+        #             continue
+        #         if self.appear(self.I_FALSE):
+        #             # 打输了
+        #             logger.info('Duel battle lose')
+        #             self.ui_click_until_disappear(self.I_FALSE)
+        #             battle_win = False
+        #             return battle_win
+        #         if self.appear(self.I_D_FAIL):
+        #             # 输了
+        #             logger.info('Duel battle lose')
+        #             self.ui_click_until_disappear(self.I_D_FAIL)
+        #             battle_win = False
+        #             return battle_win
+        #         if self.appear_then_click(self.I_EXIT):
+        #             continue
         while 1:
             self.screenshot()
             # 出现自动上阵
@@ -416,9 +401,14 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
                             self.battle_win_count += 1
                             return
                         ocr_ban_name = self.O_D_BAN_NAME.ocr(self.device.image)
+                        # in OCR get english remove it
+                        ocr_ban_name = re.sub(r'[A-Za-z]', '', ocr_ban_name)
+                        ocr_ban_name = ocr_ban_name.replace(' ', '').replace(' ', '')
+                        logger.info(f'Ban name: {ocr_ban_name}')
                         if ocr_ban_name == '':
                             continue
                         if any(char in ocr_ban_name for char in ban_name):
+                            logger.info('The opponent banned my shikigami')
                             ban_check_success = True
                             break
                         else:
@@ -426,6 +416,8 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
 
                 # 处理检查结果
                 if not ban_check_success:
+                    # 禁选了我方式神，直接退赛
+                    logger.info('The opponent banned my shikigami, exit the battle')
                     self.duel_exit_battle()
                     if self.appear(self.I_D_FAIL):
                         # 输了

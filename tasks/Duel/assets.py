@@ -23,25 +23,25 @@ class DuelAssets:
 
 	# Image Rule Assets
 	# 进入阴阳术 
-	I_YINYANGSHU = RuleImage(roi_front=(970,633,100,49), roi_back=(970,633,100,49), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/Screenshots_yinyangshu.png")
+	I_YINYANGSHU = RuleImage(roi_front=(970,633,100,49), roi_back=(970,633,100,49), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/changeyys_yinyangshu.png")
 	# 进入阴阳术成功 
-	I_YINYANGSHUOK = RuleImage(roi_front=(98,3,100,38), roi_back=(98,3,100,38), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/Screenshots_yinyangshuok.png")
+	I_YINYANGSHUOK = RuleImage(roi_front=(98,3,100,38), roi_back=(98,3,100,38), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/changeyys_yinyangshuok.png")
 	# 点击阴阳师 
-	I_YINYANGSHI = RuleImage(roi_front=(80,615,58,67), roi_back=(80,615,58,67), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/Screenshots_yinyangshi.png")
+	I_YINYANGSHI = RuleImage(roi_front=(80,615,58,67), roi_back=(80,615,58,67), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/changeyys_yinyangshi.png")
 	# 点击英杰 
-	I_YINGJIE = RuleImage(roi_front=(80,615,58,67), roi_back=(80,615,58,67), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/Screenshots_yingjie.png")
+	I_YINGJIE = RuleImage(roi_front=(80,615,58,67), roi_back=(80,615,58,67), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/changeyys_yingjie.png")
 	# 交替 
-	I_JIAOTI = RuleImage(roi_front=(32,380,52,42), roi_back=(32,380,52,42), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/Screenshots_jiaoti.png")
+	I_JIAOTI = RuleImage(roi_front=(32,380,52,42), roi_back=(32,380,52,42), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/changeyys_jiaoti.png")
 	# 进入阴阳师交换页面 
-	I_YYSJIOAHUAN = RuleImage(roi_front=(89,13,176,42), roi_back=(89,13,176,42), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/Screenshots_yysjioahuan.png")
+	I_YYSJIOAHUAN = RuleImage(roi_front=(89,13,176,42), roi_back=(89,13,176,42), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/changeyys_yysjioahuan.png")
 	# 清明（出战） 
-	I_QM_ZHAN = RuleImage(roi_front=(263,435,60,75), roi_back=(263,435,60,75), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/qm_zhan.png")
+	I_QM_ZHAN = RuleImage(roi_front=(263,435,60,75), roi_back=(263,435,60,75), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/changeyys_qm_zhan.png")
 	# 神乐（出战） 
-	I_SL_ZHAN = RuleImage(roi_front=(520,434,60,75), roi_back=(520,434,60,75), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/sl_zhan.png")
+	I_SL_ZHAN = RuleImage(roi_front=(520,434,60,75), roi_back=(520,434,60,75), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/changeyys_sl_zhan.png")
 	# 源博雅（出战） 
-	I_YBY_ZHAN = RuleImage(roi_front=(775,435,60,75), roi_back=(775,435,60,75), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/yby_zhan.png")
+	I_YBY_ZHAN = RuleImage(roi_front=(775,435,60,75), roi_back=(775,435,60,75), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/changeyys_yby_zhan.png")
 	# 八百比丘尼（出战） 
-	I_BBBQN_ZHAN = RuleImage(roi_front=(1030,437,60,75), roi_back=(1030,437,60,75), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/bbbqn_zhan.png")
+	I_BBBQN_ZHAN = RuleImage(roi_front=(1030,437,60,75), roi_back=(1030,437,60,75), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/changeyys_bbbqn_zhan.png")
 
 
 	# Click Rule Assets
