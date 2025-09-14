@@ -42,6 +42,7 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
             if self.appear(self.I_WT_QR_CODE):
                 break
             if self.appear_then_click(wechat, interval=2.5):
+                # ASIA no QR code add wechat as break condition
                 break
         logger.info('Click share')
         get_timer = Timer(7)
@@ -76,13 +77,14 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
                 continue
         # 确认的是百鬼夜行图
         self.ui_click(self.I_WT_SCROLL_2, self.I_WT_SCROLL_1)
-        logger.info('Confirm the picture is 百鬼夜行圖')
+        logger.info('Confirm the picture is 百妖风物鉴')
         # 点击分享
         while 1:
             self.screenshot()
             if self.appear(self.I_WT_QR_CODE):
                 break
-            if self.appear_then_click(self.I_WT_COLLECT_TWITTER, interval=1):
+            if self.appear_then_click(self.I_WT_COLLECT_WECHAT, interval=1):
+                # ASIA no QR code add wechat as break condition
                 break
             if self.appear_then_click(self.I_WT_COLLECT, interval=5):
                 continue
@@ -149,7 +151,6 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
                 continue
             if self.appear_then_click(self.I_WT_SHARE_AB, interval=1):
                 continue
-        logger.info('find I_WT_AB_WECHAT gp share')
         # 再次检查一次这周有没有领取
         time.sleep(1)
         self.screenshot()
@@ -202,7 +203,22 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
         if not obtained:
             self.click_share(self.I_WT_SE_WECHAT)
         # 返回
-        self.ui_click(self.I_UI_BACK_BLUE, self.I_CHECK_MAIN)
+        # self.ui_click(self.I_UI_BACK_BLUE, self.I_CHECK_MAIN)
+        # 因分享畫面過黑造成找不到返回，因此使用多個判斷的返回
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_CHECK_MAIN):
+                logger.info('Back to main')
+                break
+            if self.appear_then_click(self.I_UI_BACK_RED, interval=1):
+                continue
+            if self.appear_then_click(self.I_UI_BACK_BLUE, interval=1):
+                continue
+            if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=1):
+                continue
+            if self.appear_then_click(self.I_WT_SE_SHARE, interval=1):
+                # 再次點擊分享按鈕，以避免分享畫面過黑找不到返回
+                continue
 
     def _broken_amulet(self, num: int):
         """

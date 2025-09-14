@@ -25,7 +25,7 @@ class WeeklyTriflesAssets:
 	# 分享勾玉 
 	I_WT_AB_JADE = RuleImage(roi_front=(977,552,44,47), roi_back=(977,552,44,47), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_ab_jade.png")
 	# 微信分享 
-	I_WT_AB_WECHAT = RuleImage(roi_front=(845,643,50,41), roi_back=(845,643,50,41), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_ab_wechat.png")
+	I_WT_AB_WECHAT = RuleImage(roi_front=(1116,643,50,41), roi_back=(926,643,266,41), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_ab_wechat.png")
 
 
 	# Image Rule Assets
@@ -60,8 +60,8 @@ class WeeklyTriflesAssets:
 	I_WT_SCROLL_1 = RuleImage(roi_front=(1180,27,28,121), roi_back=(1159,12,65,152), threshold=0.7, method="Template matching", file="./tasks/WeeklyTrifles/collect/collect_wt_scroll_1.png")
 	# 百妖风物鉴 
 	I_WT_SCROLL_2 = RuleImage(roi_front=(1182,24,24,122), roi_back=(1163,12,63,155), threshold=0.7, method="Template matching", file="./tasks/WeeklyTrifles/collect/collect_wt_scroll_2.png")
-	# Twitter 
-	I_WT_COLLECT_TWITTER = RuleImage(roi_front=(1062,618,70,63), roi_back=(1062,618,70,63), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/collect/collect_wt_collect_twitter.png")
+	# 微信分享 
+	I_WT_COLLECT_WECHAT = RuleImage(roi_front=(1062,618,70,63), roi_back=(900,618,200,63), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/collect/collect_wt_collect_twitter.png")
 	# 二维码 
 	I_WT_QR_CODE = RuleImage(roi_front=(300,229,186,45), roi_back=(300,229,186,45), threshold=0.65, method="Template matching", file="./tasks/WeeklyTrifles/collect/collect_wt_qr_code.png")
 
@@ -72,7 +72,7 @@ class WeeklyTriflesAssets:
 	# 秘闻分享 
 	I_WT_SE_SHARE = RuleImage(roi_front=(911,570,46,43), roi_back=(886,547,92,95), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/secret/secret_wt_se_share.png")
 	# 微信 
-	I_WT_SE_WECHAT = RuleImage(roi_front=(786,627,45,37), roi_back=(786,627,45,37), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/secret/secret_wt_se_wechat.png")
+	I_WT_SE_WECHAT = RuleImage(roi_front=(1124,627,45,37), roi_back=(900,627,300,37), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/secret/secret_wt_se_wechat.png")
 	# 勾玉 
 	I_WT_SE_JADE = RuleImage(roi_front=(1126,533,35,39), roi_back=(1118,525,50,55), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/secret/secret_wt_se_jade.png")
 	# 排行 
