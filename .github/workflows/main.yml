@@ -212,7 +212,7 @@ jobs:
             echo "pull-request-operation=created" >> "$GITHUB_OUTPUT"
           fi
 
-      # === PR 狀態通知（輪詢、GraphQL+REST 交叉判斷；含 null/空字串保護＋去重標籤） ===
+      # === PR 狀態通知（含 Draft/Behind/Unstable；GraphQL+REST 交叉判斷＋去重標籤） ===
       - name: Notify Discord (PR status)
         if: ${{ steps.ghpr.outputs['pull-request-url'] != '' && steps.ghpr.outputs['pull-request-url'] != null }}
         env:
@@ -242,7 +242,7 @@ jobs:
           HAS_FLAG=0
           grep -qx 'sync-conflict-notified' <<<"$LABELS" && HAS_FLAG=1
 
-          # 交叉判斷（避免 UNKNOWN/unknown）
+          # 交叉判斷（避免 UNKNOWN/unknown；同時處理 Draft/Behind/Unstable）
           GQL=""; REST=""
           for i in 2 3 4 5 6 7 8 9; do
             GQL="$(gh pr view "$PR" -R "$REPO" --json mergeStateStatus --jq '.mergeStateStatus' || echo '')"
@@ -255,12 +255,18 @@ jobs:
           done
           echo "[LOG] final: mergeStateStatus=${GQL:-EMPTY}, mergeable_state=${REST:-EMPTY}"
 
-          # 統一成四種狀態（DIRTY/dirty 視為衝突）
+          # 狀態歸類
+          # GraphQL: CLEAN/DIRTY/BLOCKED/DRAFT/BEHIND/UNSTABLE/UNKNOWN ...
+          # REST:    clean/dirty/blocked/unstable/unknown/behind ...
           STATUS="ok"
           if [[ "$GQL" == "DIRTY" || "$REST" == "dirty" ]]; then
             STATUS="conflict"
-          elif [[ "$GQL" == "BLOCKED" || "$REST" == "blocked" ]]; then
+          elif [[ "$GQL" == "BLOCKED" || "$GQL" == "DRAFT" || "$REST" == "blocked" ]]; then
             STATUS="blocked"
+          elif [[ "$GQL" == "BEHIND" || "$REST" == "behind" ]]; then
+            STATUS="behind"
+          elif [[ "$GQL" == "UNSTABLE" || "$REST" == "unstable" ]]; then
+            STATUS="unstable"
           elif [[ "$GQL" == "UNKNOWN" || "$REST" == "unknown" || -z "$GQL$REST" ]]; then
             STATUS="pending"
           fi
@@ -277,7 +283,17 @@ jobs:
               fi
               ;;
             blocked)
-              printf -v MSG '⛔ **Sync PR is blocked**\nPR: %s\n請檢查保護規則／審查或檢查狀態。\n' "$PR"
+              printf -v MSG '⛔ **Sync PR is blocked**\nPR: %s\n（Draft / 規則限制 / 必要檢查未通過 等）\n' "$PR"
+              curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
+                -d "$(jq -n --arg content "$MSG" '{content: $content}')"
+              ;;
+            behind)
+              printf -v MSG '↩️ **Sync PR head is behind base**\nPR: %s\n請把 head 或 base 更新到最新再檢查可合併性。\n' "$PR"
+              curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
+                -d "$(jq -n --arg content "$MSG" '{content: $content}')"
+              ;;
+            unstable)
+              printf -v MSG '🟡 **Sync PR has failing/pending checks**\nPR: %s\n非必要檢查未通過或仍在執行，稍後再試。\n' "$PR"
               curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
                 -d "$(jq -n --arg content "$MSG" '{content: $content}')"
               ;;
