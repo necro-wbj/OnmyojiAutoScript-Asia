@@ -13,10 +13,10 @@
     <img alt="platform" src="https://img.shields.io/badge/platform-Windows-blueviolet">
 </div>
 <div>
-    <img alt="license" src="https://img.shields.io/github/license/runhey/OnmyojiAutoScript">
-    <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/runhey/OnmyojiAutoScript">
-    <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/runhey/OnmyojiAutoScript/total">
-    <img alt="stars" src="https://img.shields.io/github/stars/runhey/OnmyojiAutoScript?style=social">
+    <img alt="license" src="https://img.shields.io/github/license/necro-wbj/OnmyojiAutoScript-Asia">
+    <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/necro-wbj/OnmyojiAutoScript-Asia">
+    <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/necro-wbj/OnmyojiAutoScript-Asia/total">
+    <img alt="stars" src="https://img.shields.io/github/stars/necro-wbj/OnmyojiAutoScript-Asia?style=social">
 </div>
 <br>
 
