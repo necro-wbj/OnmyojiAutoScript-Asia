@@ -135,7 +135,7 @@ jobs:
           python-version: "3.10"
           cache: pip
 
-            - name: Generate assets.py (run assets_extract.py on PR branch)
+      - name: Generate assets.py (run assets_extract.py on PR branch)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         shell: bash
         env:
@@ -146,7 +146,7 @@ jobs:
           python -m pip install --upgrade pip
           # 安裝 assets_extract.py 需要的最小依賴
           python -m pip install "numpy==1.24.3" "tqdm==4.66.1" "rich==13.7.1"
-
+  
           # 在 PR 分支上找到腳本；若上游分支沒有，從 base 分支取用
           if [[ -f ./assets_extract.py ]]; then
             SRC="./assets_extract.py"
@@ -155,10 +155,10 @@ jobs:
             git show "origin/${{ env.BASE_BRANCH }}:assets_extract.py" > ./assets_extract.py
             SRC="./assets_extract.py"
           fi
-
+  
           # 執行產生 assets.py
           python "$SRC"
-
+  
           # 僅提交變更的 tasks/**/assets.py
           CHANGED=$(git ls-files -m "tasks/**/assets.py" || true)
           if [[ -n "$CHANGED" ]]; then
