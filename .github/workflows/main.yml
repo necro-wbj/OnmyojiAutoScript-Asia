@@ -16,17 +16,19 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# 用 PAT 來 push；PR 操作優先用 PAT（若無則退回 GITHUB_TOKEN）
 permissions:
   contents: read
   pull-requests: write
-  issues: write
-  repository-projects: read
+  issues: write               # 新增/移除標籤
+  repository-projects: read   # 避免 gh pr edit 的讀取錯誤
 
 env:
-  UPSTREAM_REPO: runhey/OnmyojiAutoScript
-  UPSTREAM_BRANCH: dev
-  BASE_BRANCH: main
-  PR_BRANCH: sync/upstream-dev
+  UPSTREAM_REPO: runhey/OnmyojiAutoScript     # 上游 repo
+  UPSTREAM_BRANCH: dev                        # 上游分支（dev）
+  BASE_BRANCH: main                           # 本地分支（main）
+  PR_BRANCH: sync/upstream-dev                # 合併用 PR 分支
+  # 資產檔（衝突時保留我方版本；rebase 中用 --theirs）
   ASSET_GLOBS: |
     assets/**
     **/*.png
@@ -46,14 +48,14 @@ jobs:
   sync-upstream:
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
 
     steps:
       - name: Checkout (full, no persisted credentials)
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          persist-credentials: false
+          persist-credentials: false  # 不要把 GITHUB_TOKEN 寫進 git 設定
 
       - name: Git setup
         run: |
@@ -101,6 +103,7 @@ jobs:
         if: steps.resolve.outputs.ahead == '0' && steps.resolve.outputs.behind == '0'
         run: echo "[LOG] origin/${{ env.BASE_BRANCH }} 與 upstream/${{ env.UPSTREAM_BRANCH }} 完全一致；跳過。"
 
+      # 用 PAT 設定 push（需在 repo secrets 設 GH_PAT，scopes: repo + workflow）
       - name: Configure PAT for pushing
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         env:
@@ -117,24 +120,57 @@ jobs:
           git remote set-url --push origin "https://x-access-token:${GH_PAT}@github.com/${GITHUB_REPOSITORY}.git"
           echo "[LOG] origin push URL configured to use GH_PAT."
 
-      # Mirror upstream/dev 到 PR 分支
-      - name: Mirror upstream/${{ env.UPSTREAM_BRANCH }} to PR branch (history-preserving)
+      # === 先建立 PR 分支（鏡像上游）→ 再在 PR 分支上跑 assets 生成 ===
+      - name: Create/Reset PR branch from upstream (history-preserving)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
-        shell: bash
         run: |
           set -euo pipefail
           git checkout -B "${{ env.PR_BRANCH }}" "${{ steps.resolve.outputs.up_ref }}"
           git push origin "+${{ env.PR_BRANCH }}:${{ env.PR_BRANCH }}"
-          echo "[LOG] Pushed ${{ env.PR_BRANCH }} at ${{ steps.resolve.outputs.upstream_tip }} (mirror of upstream/${{ env.UPSTREAM_BRANCH }})"
+          echo "[LOG] Pushed ${{ env.PR_BRANCH }} at ${{ steps.resolve.outputs.upstream_tip }}"
 
-      - name: Quick diff artifact (preview)
+      # Python 3.10 + 最小依賴（只為了執行 assets_extract.py）
+      - name: Setup Python 3.10
+        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'   # 啟用 pip 快取（setup-python 支援） :contentReference[oaicite:1]{index=1}
+
+      - name: Install minimal deps for generator
+        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
+        run: |
+          python -VV
+          python -m pip install --upgrade pip
+          python -m pip install "numpy==1.24.3" "tqdm==4.66.1"
+
+      - name: Run assets_extract.py on PR branch and commit changes (if any)
+        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f ./assets_extract.py || { echo "::error::assets_extract.py not found at repo root"; exit 1; }
+          python ./assets_extract.py
+          # 僅提交 tasks/**/assets.py 變更
+          CHANGED=$(git ls-files -m "tasks/**/assets.py" || true)
+          if [[ -n "$CHANGED" ]]; then
+            echo "[LOG] assets changed:"
+            echo "$CHANGED"
+            git add $CHANGED
+            git commit -m "chore(assets): regen by assets_extract.py [ci skip]"
+            git push origin "+${{ env.PR_BRANCH }}:${{ env.PR_BRANCH }}"
+          else
+            echo "[LOG] no assets changes to commit."
+          fi
+
+      - name: Quick diff artifact (origin/main vs PR branch)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p ci-diff
-          git diff --name-status origin/${{ env.BASE_BRANCH }}..."${{ steps.resolve.outputs.up_ref }}" > ci-diff/name-status.txt || true
-          git diff --stat        origin/${{ env.BASE_BRANCH }}..."${{ steps.resolve.outputs.up_ref }}" > ci-diff/stat.txt || true
+          git diff --name-status origin/${{ env.BASE_BRANCH }}...${{ env.PR_BRANCH }} > ci-diff/name-status.txt || true
+          git diff --stat        origin/${{ env.BASE_BRANCH }}...${{ env.PR_BRANCH }} > ci-diff/stat.txt || true
           tar czf ci-diff.tgz ci-diff
 
       - name: Upload diff artifact
@@ -145,72 +181,7 @@ jobs:
           path: ci-diff.tgz
           retention-days: 7
 
-      # === 在建立 PR 之前：生成 assets.py（取你 repo 的 main 版本的生成器） ===
-      - name: Setup Python 3.10 (for asset extractor)
-        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      - name: Get asset generator from fork main
-        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
-        run: |
-          set -euo pipefail
-          mkdir -p .sync
-          curl -fsSL -o .sync/assets_extract.py \
-            "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/assets_extract.py"
-
-      - name: Install minimal deps for asset generator
-        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
-        run: |
-          python -m pip install --upgrade pip
-          pip install "numpy==1.24.3" "tqdm>=4.66,<5" "logzero==1.7.0" "coloredlogs==15.0.1"
-
-      - name: Generate assets.py (and push if changed)
-        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
-        shell: bash
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
-        run: |
-          set -euo pipefail
-          git checkout "${{ env.PR_BRANCH }}"
-
-          # 產生一個 wrapper：若 module.logger 不存在就先打 stub，確保生成器可跑
-          cat > .sync/run_assets.py <<'PY'
-          import os, sys, types, runpy
-          sys.path.insert(0, os.getcwd())  # repo root on sys.path
-          try:
-              import module.logger  # noqa
-          except Exception:
-              m = types.ModuleType('module')
-              ml = types.ModuleType('module.logger')
-              class _L:
-                  def info(self, *a, **k): pass
-                  def error(self, *a, **k): print("[assets_extract] ERROR:", *a, file=sys.stderr)
-              ml.logger = _L()
-              sys.modules['module'] = m
-              sys.modules['module.logger'] = ml
-          runpy.run_path('.sync/assets_extract.py', run_name='__main__')
-          PY
-
-          PYTHONUTF8=1 PYTHONPATH="$PWD" python .sync/run_assets.py
-
-          # 有變更就 commit & push 到 PR 分支
-          if ! git diff --quiet; then
-            CHANGED=$(git status --porcelain | awk '/^([AM]|\?\?) / && $2 ~ /tasks\/.*\/assets\.py$/ {print $2}')
-            if [ -n "$CHANGED" ]; then
-              git add $CHANGED
-              git commit -m "ci: regenerate tasks/*/assets.py via assets_extract.py"
-              git push origin "${{ env.PR_BRANCH }}"
-              echo "[LOG] assets.py regenerated and pushed."
-            else
-              echo "[LOG] No assets.py changes detected."
-            fi
-          else
-            echo "[LOG] Working tree clean; assets are up to date."
-          fi
-
-      # === 建立 / 更新 PR（與之前相同） ===
+      # === 建立 / 更新 PR：採 --body-file；失敗重試；最後 REST 後備 ===
       - name: Create / Update PR (robust; retry & REST fallback)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         id: ghpr
@@ -221,7 +192,6 @@ jobs:
           set -euo pipefail
           REPO="${GITHUB_REPOSITORY}"
           TITLE="sync: upstream/${{ env.UPSTREAM_BRANCH }} → ${{ env.BASE_BRANCH }} (manual conflict resolution)"
-
           BODY_FILE="$(mktemp)"
           {
             printf 'This PR mirrors **upstream/%s** into **%s**.\n\n' "$UPSTREAM_BRANCH" "$BASE_BRANCH"
@@ -233,6 +203,7 @@ jobs:
             printf -- '- ahead(from %s): `%s`, behind: `%s`\n' "$BASE_BRANCH" "${{ steps.resolve.outputs.ahead }}" "${{ steps.resolve.outputs.behind }}"
           } > "$BODY_FILE"
 
+          # 是否已有開啟中的 PR
           EXISTING="$(gh pr list --repo "$REPO" \
             --head "${{ env.PR_BRANCH }}" --base "${{ env.BASE_BRANCH }}" \
             --state open --json number --jq '.[0].number // empty' || true)"
@@ -243,6 +214,7 @@ jobs:
             echo "pull-request-url=$(cat /tmp/pr_url)" >> "$GITHUB_OUTPUT"
             echo "pull-request-operation=updated" >> "$GITHUB_OUTPUT"
           else
+            # GraphQL → 失敗重試 → 最後走 REST 後備
             ATTEMPTS=0
             SUCCESS=""
             while [[ $ATTEMPTS -lt 3 ]]; do
@@ -272,14 +244,9 @@ jobs:
             echo "pull-request-operation=created" >> "$GITHUB_OUTPUT"
           fi
 
-      # === PR 狀態通知（避免 UNKNOWN；只在本次 run 有 PR 時才跑） ===
+      # === PR 狀態通知（輪詢、GraphQL+REST 交叉判斷；含 null/空字串保護＋去重標籤） ===
       - name: Notify Discord (PR status)
-        if: >-
-          ${{
-            steps.ghpr.conclusion == 'success' &&
-            steps.ghpr.outputs['pull-request-url'] != '' &&
-            steps.ghpr.outputs['pull-request-url'] != 'null'
-          }}
+        if: ${{ steps.ghpr.outputs['pull-request-url'] != '' && steps.ghpr.outputs['pull-request-url'] != null }}
         env:
           GH_TOKEN: ${{ secrets.GH_PAT != '' && secrets.GH_PAT || secrets.GITHUB_TOKEN }}
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
@@ -287,37 +254,25 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          if [[ -z "${PR_URL:-}" || "${PR_URL}" == "null" ]]; then
+            echo "[LOG] No PR URL, skip."; exit 0
+          fi
           REPO="${GITHUB_REPOSITORY}"
-          PR_URL="${PR_URL:-}"
-          
-          # A) env 進來可能是空或字串 "null" → 先處理
-          if [[ -z "$PR_URL" || "$PR_URL" == "null" ]]; then
-            # 用分支去找現有 PR（若存在）
-            PR_URL="$(gh pr list -R "$REPO" \
-                        --head "${PR_BRANCH}" --base "${BASE_BRANCH}" --state open \
-                        --json url --jq '.[0].url' || true)"
-          fi
-          
-          # 還是拿不到 → 直接安靜退出（不要報錯）
-          if [[ -z "$PR_URL" || "$PR_URL" == "null" ]]; then
-            echo "[LOG] No PR URL available; skip notify."
-            exit 0
-          fi
-          
           PR="$PR_URL"
           NUM="$(gh pr view "$PR" -R "$REPO" --json number --jq .number)"
-          
-          # 確保標籤存在（用於去重）
+
+          # 確保「已通知」標籤存在（無則建立）
           gh label create sync-conflict-notified \
             -R "$REPO" --force \
             --description "Conflict notified by sync workflow" \
             --color B60205 >/dev/null 2>&1 || true
-          
+
+          # 讀標籤，作去重判斷
           LABELS="$(gh pr view "$PR" -R "$REPO" --json labels --jq '.labels[].name' || true)"
           HAS_FLAG=0
           grep -qx 'sync-conflict-notified' <<<"$LABELS" && HAS_FLAG=1
-          
-          # 交叉判斷合併狀態（避免 UNKNOWN/unknown）
+
+          # 交叉判斷（避免 UNKNOWN/unknown）
           GQL=""; REST=""
           for i in 2 3 4 5 6 7 8 9; do
             GQL="$(gh pr view "$PR" -R "$REPO" --json mergeStateStatus --jq '.mergeStateStatus' || echo '')"
@@ -329,13 +284,17 @@ jobs:
             sleep "$i"
           done
           echo "[LOG] final: mergeStateStatus=${GQL:-EMPTY}, mergeable_state=${REST:-EMPTY}"
-          
+
+          # 統一成四種狀態（DIRTY/dirty 視為衝突）
           STATUS="ok"
-          if   [[ "$GQL" == "DIRTY"   || "$REST" == "dirty"   ]]; then STATUS="conflict"
-          elif [[ "$GQL" == "BLOCKED" || "$REST" == "blocked" ]]; then STATUS="blocked"
-          elif [[ "$GQL" == "UNKNOWN" || "$REST" == "unknown" || -z "$GQL$REST" ]]; then STATUS="pending"
+          if [[ "$GQL" == "DIRTY" || "$REST" == "dirty" ]]; then
+            STATUS="conflict"
+          elif [[ "$GQL" == "BLOCKED" || "$REST" == "blocked" ]]; then
+            STATUS="blocked"
+          elif [[ "$GQL" == "UNKNOWN" || "$REST" == "unknown" || -z "$GQL$REST" ]]; then
+            STATUS="pending"
           fi
-          
+
           case "$STATUS" in
             conflict)
               if [[ $HAS_FLAG -eq 0 ]]; then
@@ -367,8 +326,7 @@ jobs:
               ;;
           esac
 
-
-      # === 模式 2：rebase 預覽（rerere；資產衝突優先採我方） ===
+      # === 模式 2：rebase 預覽分支（rerere；資產衝突優先採我方） ===
       - name: (Cache) Restore rerere decisions
         uses: actions/cache@v4
         with:
@@ -389,9 +347,12 @@ jobs:
           git switch -c rebase/preview || git checkout -B rebase/preview
           git config rerere.enabled true
 
+          # 先以上游優先（程式碼為主）
           if ! git rebase -s ort -X theirs "${UP_REF}"; then
             echo "::warning::Rebase hit conflicts; applying asset-prefer-ours policy…"
             CONFLICTS=$(git diff --name-only --diff-filter=U || true)
+
+            # ⚠️ 在 rebase 狀態下，ours/theirs 定義互換；要保留「我方（重放中的本地補丁）」需用 --theirs
             while IFS= read -r f; do
               [[ -z "$f" ]] && continue
               while IFS= read -r g; do
@@ -405,9 +366,12 @@ jobs:
                 esac
               done <<<"${{ env.ASSET_GLOBS }}"
             done <<<"$CONFLICTS"
+
+            # 記住決策並嘗試繼續
             git rebase --continue || true
           fi
 
+          # 推 rebase/preview（走 PAT）
           git remote set-url --push origin "https://x-access-token:${GH_PAT}@github.com/${GITHUB_REPOSITORY}.git"
           git push -f origin rebase/preview
 
@@ -418,6 +382,7 @@ jobs:
           path: .git/rr-cache
           key: rr-cache-${{ runner.os }}-${{ github.repository }}-${{ steps.resolve.outputs.upstream_tip }}
 
+      # 任何步驟失敗 → 通知 Discord（附 runner 連結）
       - name: Notify Discord (run failed)
         if: failure()
         env:
