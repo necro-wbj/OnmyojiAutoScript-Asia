@@ -135,38 +135,38 @@ jobs:
           python-version: "3.10"
           cache: pip
 
-      - name: Generate assets.py on PR branch
+            - name: Generate assets.py (run assets_extract.py on PR branch)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
-        env:
-          BASE_BRANCH: ${{ env.BASE_BRANCH }}
-          PR_BRANCH: ${{ env.PR_BRANCH }}
         shell: bash
+        env:
+          PYTHONPATH: ${{ github.workspace }}   # 讓 `module/*` 可被 import
         run: |
           set -euo pipefail
           python -VV
           python -m pip install --upgrade pip
-          python -m pip install "numpy==1.24.3" "tqdm==4.66.1"
+          # 安裝 assets_extract.py 需要的最小依賴
+          python -m pip install "numpy==1.24.3" "tqdm==4.66.1" "rich==13.7.1"
 
-          # 若當前樹沒有腳本，從 origin/main 抓取同名檔案
-          if [[ ! -f ./assets_extract.py ]]; then
-            echo "[LOG] assets_extract.py not found in ${PR_BRANCH}; fetching from origin/${BASE_BRANCH}…"
-            git show "origin/${BASE_BRANCH}:assets_extract.py" > assets_extract.py
+          # 在 PR 分支上找到腳本；若上游分支沒有，從 base 分支取用
+          if [[ -f ./assets_extract.py ]]; then
+            SRC="./assets_extract.py"
+          else
+            echo "[LOG] assets_extract.py not found in ${{ env.PR_BRANCH }}; fetching from origin/${{ env.BASE_BRANCH }}…"
+            git show "origin/${{ env.BASE_BRANCH }}:assets_extract.py" > ./assets_extract.py
+            SRC="./assets_extract.py"
           fi
 
-          # 執行產生
-          python ./assets_extract.py
+          # 執行產生 assets.py
+          python "$SRC"
 
-          # 僅提交 tasks/**/assets.py 的變更（含未追蹤）
-          MODIFIED="$(git ls-files -m -- 'tasks/**/assets.py' || true)"
-          UNTRACKED="$(git ls-files --others --exclude-standard -- 'tasks/**/assets.py' || true)"
-          CHANGED="$(printf "%s\n%s\n" "$MODIFIED" "$UNTRACKED" | awk 'NF' | sort -u)"
-
+          # 僅提交變更的 tasks/**/assets.py
+          CHANGED=$(git ls-files -m "tasks/**/assets.py" || true)
           if [[ -n "$CHANGED" ]]; then
             echo "[LOG] assets changed:"
             echo "$CHANGED"
             git add $CHANGED
-            git commit -m "chore(assets): regen by assets_extract.py [ci skip]"
-            git push origin "+${PR_BRANCH}:${PR_BRANCH}"
+            git commit -m "chore(assets): regen by assets_extract.py [skip ci]" || true
+            git push origin "+${{ env.PR_BRANCH }}:${{ env.PR_BRANCH }}"
           else
             echo "[LOG] no assets changes to commit."
           fi
