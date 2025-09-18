@@ -10,39 +10,6 @@ from module.atom.list import RuleList
 class ActivityShikigamiAssets: 
 
 
-	# Click Rule Assets
-	# description 
-	C_CLICK1 = RuleClick(roi_front=(120,138,130,75), roi_back=(120,138,130,75), name="click1")
-	# description 
-	C_CLICK2 = RuleClick(roi_front=(121,234,125,81), roi_back=(121,234,125,81), name="click2")
-	# description 
-	C_CLICK3 = RuleClick(roi_front=(126,337,118,77), roi_back=(126,337,118,77), name="click3")
-	# description 
-	C_CLICK4 = RuleClick(roi_front=(124,438,126,77), roi_back=(124,438,126,77), name="click4")
-
-
-	# Image Rule Assets
-	# description 
-	I_N_BATTLE = RuleImage(roi_front=(131,164,86,86), roi_back=(119,50,1075,635), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/0110/0110_n_battle.png")
-	# description 
-	I_N_CONFIRM = RuleImage(roi_front=(670,402,176,63), roi_back=(670,402,176,63), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/0110/0110_n_confirm.png")
-	# description 
-	I_C_CONFIRM1 = RuleImage(roi_front=(560,341,37,38), roi_back=(560,341,37,38), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/0110/0110_c_confirm1.png")
-
-
-	# Click Rule Assets
-	# description 
-	C_RANDOM_LEFT = RuleClick(roi_front=(21,23,237,599), roi_back=(21,23,237,599), name="random_left")
-	# description 
-	C_RANDOM_RIGHT = RuleClick(roi_front=(1047,55,218,638), roi_back=(1047,55,218,638), name="random_right")
-	# description 
-	C_RANDOM_TOP = RuleClick(roi_front=(85,46,1159,101), roi_back=(85,46,1159,101), name="random_top")
-	# description 
-	C_RANDOM_BOTTOM = RuleClick(roi_front=(182,539,1063,100), roi_back=(182,539,1063,100), name="random_bottom")
-	# description 
-	C_RANDOM_ALL = RuleClick(roi_front=(42,94,1207,543), roi_back=(42,94,1207,543), name="random_all")
-
-
 	# Image Rule Assets
 	# 进入活动 
 	I_SHI = RuleImage(roi_front=(1183,319,47,38), roi_back=(1164,134,83,318), threshold=0.7, method="Template matching", file="./tasks/ActivityShikigami/as/as_shi.png")
@@ -89,5 +56,38 @@ class ActivityShikigamiAssets:
 	O_REMAIN_AP_ACTIVITY2 = RuleOcr(roi=(558,18,47,29), area=(558,18,47,29), mode="Digit", method="Default", keyword="", name="remain_ap_activity2")
 	# 从左侧进入战斗 
 	O_ENTRY_ACTIVITY = RuleOcr(roi=(70,103,98,32), area=(70,103,98,32), mode="Single", method="Default", keyword="驻守平安", name="entry_activity")
+
+
+	# Click Rule Assets
+	# description 
+	C_RANDOM_LEFT = RuleClick(roi_front=(21,23,237,599), roi_back=(21,23,237,599), name="random_left")
+	# description 
+	C_RANDOM_RIGHT = RuleClick(roi_front=(1047,55,218,638), roi_back=(1047,55,218,638), name="random_right")
+	# description 
+	C_RANDOM_TOP = RuleClick(roi_front=(85,46,1159,101), roi_back=(85,46,1159,101), name="random_top")
+	# description 
+	C_RANDOM_BOTTOM = RuleClick(roi_front=(182,539,1063,100), roi_back=(182,539,1063,100), name="random_bottom")
+	# description 
+	C_RANDOM_ALL = RuleClick(roi_front=(42,94,1207,543), roi_back=(42,94,1207,543), name="random_all")
+
+
+	# Image Rule Assets
+	# description 
+	I_N_BATTLE = RuleImage(roi_front=(131,164,86,86), roi_back=(119,50,1075,635), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/0110/0110_n_battle.png")
+	# description 
+	I_N_CONFIRM = RuleImage(roi_front=(670,402,176,63), roi_back=(670,402,176,63), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/0110/0110_n_confirm.png")
+	# description 
+	I_C_CONFIRM1 = RuleImage(roi_front=(560,341,37,38), roi_back=(560,341,37,38), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/0110/0110_c_confirm1.png")
+
+
+	# Click Rule Assets
+	# description 
+	C_CLICK1 = RuleClick(roi_front=(120,138,130,75), roi_back=(120,138,130,75), name="click1")
+	# description 
+	C_CLICK2 = RuleClick(roi_front=(121,234,125,81), roi_back=(121,234,125,81), name="click2")
+	# description 
+	C_CLICK3 = RuleClick(roi_front=(126,337,118,77), roi_back=(126,337,118,77), name="click3")
+	# description 
+	C_CLICK4 = RuleClick(roi_front=(124,438,126,77), roi_back=(124,438,126,77), name="click4")
 
 

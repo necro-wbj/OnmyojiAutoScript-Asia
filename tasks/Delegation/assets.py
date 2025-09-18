@@ -10,19 +10,6 @@ from module.atom.list import RuleList
 class DelegationAssets: 
 
 
-	# Click Rule Assets
-	# description 
-	C_D_1 = RuleClick(roi_front=(162,496,100,166), roi_back=(162,496,100,166), name="d_1")
-	# description 
-	C_D_2 = RuleClick(roi_front=(293,493,100,170), roi_back=(293,493,100,170), name="d_2")
-	# description 
-	C_D_3 = RuleClick(roi_front=(427,492,100,170), roi_back=(427,492,100,170), name="d_3")
-	# description 
-	C_D_4 = RuleClick(roi_front=(563,493,100,174), roi_back=(563,493,100,174), name="d_4")
-	# description 
-	C_D_5 = RuleClick(roi_front=(695,491,100,178), roi_back=(695,491,100,178), name="d_5")
-
-
 	# Image Rule Assets
 	# 委派式神 
 	I_D_CONFIRM = RuleImage(roi_front=(979,302,152,62), roi_back=(979,302,152,62), threshold=0.8, method="Template matching", file="./tasks/Delegation/d/d_d_confirm.png")
@@ -49,6 +36,19 @@ class DelegationAssets:
 	# Ocr Rule Assets
 	# 委派的名字 
 	O_D_NAME = RuleOcr(roi=(766,127,509,529), area=(766,127,509,529), mode="Full", method="Default", keyword="弥助的画", name="d_name")
+
+
+	# Click Rule Assets
+	# description 
+	C_D_1 = RuleClick(roi_front=(162,496,100,166), roi_back=(162,496,100,166), name="d_1")
+	# description 
+	C_D_2 = RuleClick(roi_front=(293,493,100,170), roi_back=(293,493,100,170), name="d_2")
+	# description 
+	C_D_3 = RuleClick(roi_front=(427,492,100,170), roi_back=(427,492,100,170), name="d_3")
+	# description 
+	C_D_4 = RuleClick(roi_front=(563,493,100,174), roi_back=(563,493,100,174), name="d_4")
+	# description 
+	C_D_5 = RuleClick(roi_front=(695,491,100,178), roi_back=(695,491,100,178), name="d_5")
 
 
 	# Image Rule Assets
