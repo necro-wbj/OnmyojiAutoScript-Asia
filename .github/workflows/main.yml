@@ -16,19 +16,17 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-# 用 PAT 來 push；PR 操作優先用 PAT（若無則退回 GITHUB_TOKEN）
 permissions:
   contents: read
   pull-requests: write
-  issues: write               # for adding/removing labels
-  repository-projects: read   # avoid gh pr edit project read errors
+  issues: write
+  repository-projects: read
 
 env:
-  UPSTREAM_REPO: runhey/OnmyojiAutoScript     # 上游 repo
-  UPSTREAM_BRANCH: dev                        # 上游分支（dev）
-  BASE_BRANCH: main                           # 本地分支（main）
-  PR_BRANCH: sync/upstream-dev                # 合併用 PR 分支
-  # 資產檔（衝突時保留我方版本；rebase 中用 --theirs，見下方註解）
+  UPSTREAM_REPO: runhey/OnmyojiAutoScript
+  UPSTREAM_BRANCH: dev
+  BASE_BRANCH: main
+  PR_BRANCH: sync/upstream-dev
   ASSET_GLOBS: |
     assets/**
     **/*.png
@@ -130,14 +128,50 @@ jobs:
           git push origin "+${{ env.PR_BRANCH }}:${{ env.PR_BRANCH }}"
           echo "[LOG] Pushed ${{ env.PR_BRANCH }} at ${{ steps.resolve.outputs.upstream_tip }} (mirror of upstream/${{ env.UPSTREAM_BRANCH }})"
 
+      # === 這裡開始：在 PR 分支上重生 assets.py，若有變更就 commit + push ===
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'  # cache pip deps (官方支援) 
+      - name: Install deps for assets_extract.py
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          else
+            pip install numpy tqdm
+          fi
+      - name: Regenerate assets.py on PR branch
+        shell: bash
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          set -euo pipefail
+          # 目前就在 $PR_BRANCH
+          python assets_extract.py
+          if ! git diff --quiet --exit-code; then
+            git add -A
+            git commit -m "chore(assets): auto-regenerate assets.py via assets_extract.py"
+            # push 用 PAT
+            git remote set-url --push origin "https://x-access-token:${GH_PAT}@github.com/${GITHUB_REPOSITORY}.git"
+            git push origin HEAD:${{ env.PR_BRANCH }}
+            echo "[LOG] assets.py updated & pushed to ${{ env.PR_BRANCH }}"
+          else
+            echo "[LOG] assets.py up-to-date; no commit."
+          fi
+
+      # 產生比較 artifact（用 PR 分支，讓 diff 含 assets 重生）
       - name: Quick diff artifact (preview)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p ci-diff
-          git diff --name-status origin/${{ env.BASE_BRANCH }}..."${{ steps.resolve.outputs.up_ref }}" > ci-diff/name-status.txt || true
-          git diff --stat        origin/${{ env.BASE_BRANCH }}..."${{ steps.resolve.outputs.up_ref }}" > ci-diff/stat.txt || true
+          git diff --name-status origin/${{ env.BASE_BRANCH }}...${{ env.PR_BRANCH }} > ci-diff/name-status.txt || true
+          git diff --stat        origin/${{ env.BASE_BRANCH }}...${{ env.PR_BRANCH }} > ci-diff/stat.txt || true
           tar czf ci-diff.tgz ci-diff
 
       - name: Upload diff artifact
@@ -171,7 +205,6 @@ jobs:
             printf -- '- ahead(from %s): `%s`, behind: `%s`\n' "$BASE_BRANCH" "${{ steps.resolve.outputs.ahead }}" "${{ steps.resolve.outputs.behind }}"
           } > "$BODY_FILE"
 
-          # 是否已有開啟中的 PR
           EXISTING="$(gh pr list --repo "$REPO" \
             --head "${{ env.PR_BRANCH }}" --base "${{ env.BASE_BRANCH }}" \
             --state open --json number --jq '.[0].number // empty' || true)"
@@ -182,7 +215,6 @@ jobs:
             echo "pull-request-url=$(cat /tmp/pr_url)" >> "$GITHUB_OUTPUT"
             echo "pull-request-operation=updated" >> "$GITHUB_OUTPUT"
           else
-            # GraphQL → 失敗重試 → 最後走 REST 後備
             ATTEMPTS=0
             SUCCESS=""
             while [[ $ATTEMPTS -lt 3 ]]; do
