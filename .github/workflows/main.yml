@@ -118,58 +118,57 @@ jobs:
           echo "[LOG] origin push URL configured to use GH_PAT."
 
       # === 模式 1：鏡像上游到 PR 分支（保留歷史） ===
-      - name: Mirror upstream/${{ env.UPSTREAM_BRANCH }} to PR branch (history-preserving)
-        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
-        shell: bash
-        run: |
-          set -euo pipefail
-          git checkout -B "${{ env.PR_BRANCH }}" "${{ steps.resolve.outputs.up_ref }}"
-          git push origin "+${{ env.PR_BRANCH }}:${{ env.PR_BRANCH }}"
-          echo "[LOG] Pushed ${{ env.PR_BRANCH }} at ${{ steps.resolve.outputs.upstream_tip }}"
-
-      # === 生成 assets.py（在 PR 分支上），必要時從 main 取回腳本 ===
-      - name: Setup Python (minimal deps for generator)
-        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-          cache: pip
-
-      - name: Generate assets.py (run assets_extract.py on PR branch)
+      - name: Generate assets.py from JSON (temp script, auto-clean)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         shell: bash
         env:
-          PYTHONPATH: ${{ github.workspace }}   # 讓 `module/*` 可被 import
+          BASE_BRANCH: ${{ env.BASE_BRANCH }}
         run: |
           set -euo pipefail
+      
+          # 1) Python 依賴（assets_extract.py 用到）
           python -VV
           python -m pip install --upgrade pip
-          # 安裝 assets_extract.py 需要的最小依賴
           python -m pip install "numpy==1.24.3" "tqdm==4.66.1" "rich==13.7.1"
-  
-          # 在 PR 分支上找到腳本；若上游分支沒有，從 base 分支取用
-          if [[ -f ./assets_extract.py ]]; then
-            SRC="./assets_extract.py"
+      
+          # 2) 準備臨時腳本路徑（放在 .sync/ 目錄，並且確保會被清理）
+          mkdir -p .sync
+          SRC_PATH=".sync/assets_extract.py"
+          TEMP_SCRIPT=0
+      
+          if [[ -f "./assets_extract.py" ]]; then
+            # repo 根目錄本來就有；用原檔
+            SRC_PATH="./assets_extract.py"
           else
-            echo "[LOG] assets_extract.py not found in ${{ env.PR_BRANCH }}; fetching from origin/${{ env.BASE_BRANCH }}…"
-            git show "origin/${{ env.BASE_BRANCH }}:assets_extract.py" > ./assets_extract.py
-            SRC="./assets_extract.py"
+            # PR 分支沒有：從 origin/main 取出來當臨時檔
+            echo "[LOG] assets_extract.py not found in current branch; fetching from origin/${BASE_BRANCH}…"
+            git show "origin/${BASE_BRANCH}:assets_extract.py" > "$SRC_PATH"
+            TEMP_SCRIPT=1
           fi
-  
-          # 執行產生 assets.py
-          python "$SRC"
-  
-          # 僅提交變更的 tasks/**/assets.py
-          CHANGED=$(git ls-files -m "tasks/**/assets.py" || true)
+      
+          # 確保無論成功/失敗都把臨時檔清掉（只有當它是臨時檔時）
+          cleanup() {
+            if [[ "$TEMP_SCRIPT" -eq 1 ]]; then
+              rm -f "$SRC_PATH" || true
+            fi
+          }
+          trap cleanup EXIT
+      
+          # 3) 執行產生 assets.py
+          python "$SRC_PATH"
+      
+          # 4) 僅提交 tasks/**/assets.py 的變更（推到 sync/upstream-dev）
+          CHANGED="$(git ls-files -m "tasks/**/assets.py" || true)"
           if [[ -n "$CHANGED" ]]; then
             echo "[LOG] assets changed:"
             echo "$CHANGED"
             git add $CHANGED
-            git commit -m "chore(assets): regen by assets_extract.py [skip ci]" || true
+            git commit -m "chore(assets): regen by assets_extract.py [ci skip]"
             git push origin "+${{ env.PR_BRANCH }}:${{ env.PR_BRANCH }}"
           else
             echo "[LOG] no assets changes to commit."
           fi
+
 
       - name: Quick diff artifact (preview)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
