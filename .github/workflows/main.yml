@@ -27,6 +27,7 @@ env:
   UPSTREAM_BRANCH: dev
   BASE_BRANCH: main
   PR_BRANCH: sync/upstream-dev
+  # 影像/音訊等資產（rebase 衝突時偏向保留我方）
   ASSET_GLOBS: |
     assets/**
     **/*.png
@@ -43,8 +44,12 @@ env:
     **/*.otf
 
 jobs:
+  # ------------------------------------------------------------
+  # A) 做 upstream 同步 → 推到 PR 分支 → PR 狀態通知
+  # 只在 schedule / 手動觸發時跑；push(main) 不跑這個 job
+  # ------------------------------------------------------------
   sync-upstream:
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    if: github.event_name != 'push' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -117,7 +122,6 @@ jobs:
           git remote set-url --push origin "https://x-access-token:${GH_PAT}@github.com/${GITHUB_REPOSITORY}.git"
           echo "[LOG] origin push URL configured to use GH_PAT."
 
-      # === Mirror upstream/dev -> PR branch (keep history) ===
       - name: Mirror upstream/${{ env.UPSTREAM_BRANCH }} to PR branch
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         shell: bash
@@ -127,16 +131,15 @@ jobs:
           git push origin "+${{ env.PR_BRANCH }}:${{ env.PR_BRANCH }}"
           echo "[LOG] Pushed ${{ env.PR_BRANCH }} at ${{ steps.resolve.outputs.upstream_tip }}"
 
-      # === Prepare Python (3.10) for assets generation ===
-      - name: Setup Python 3.10
+      # ---- 產生 assets.py（在 PR 分支上），以生成結果為準 ----
+      - name: Setup Python 3.10 (for generator)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
-          cache: "pip"
+          cache: pip
 
-      # === Generate tasks/**/assets.py from JSON ===
-      - name: Generate assets.py from JSON (temp script, auto-clean; PYTHONPATH fixed)
+      - name: Regenerate assets.py on PR branch (canonical)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         shell: bash
         env:
@@ -145,55 +148,36 @@ jobs:
           set -euo pipefail
           python -VV
           python -m pip install --upgrade pip
+          # 最少依賴即可：numpy / tqdm / rich（assets_extract 會用到）
           python -m pip install "numpy==1.24.3" "tqdm==4.66.1" "rich==13.7.1"
 
-          mkdir -p .sync
-          SRC_PATH=".sync/assets_extract.py"
-          TEMP_SCRIPT=0
-
-          if [[ -f "./assets_extract.py" ]]; then
-            SRC_PATH="./assets_extract.py"
-          else
+          # 取出產生器：PR 分支沒有就從 origin/main 抓一份到 repo root
+          SRC="./assets_extract.py"
+          TEMP=0
+          if [[ ! -f "$SRC" ]]; then
             echo "[LOG] assets_extract.py not found in current branch; fetching from origin/${BASE_BRANCH}…"
-            git show "origin/${BASE_BRANCH}:assets_extract.py" > "$SRC_PATH"
-            TEMP_SCRIPT=1
+            git show "origin/${BASE_BRANCH}:assets_extract.py" > ./assets_extract_temp.py
+            SRC="./assets_extract_temp.py"
+            TEMP=1
           fi
 
-          cleanup() { [[ "$TEMP_SCRIPT" -eq 1 ]] && rm -f "$SRC_PATH" || true; }
-          trap cleanup EXIT
+          # 讓 `from module.xxx import ...` 可找到 repo 根目錄
+          PYTHONPATH="$PWD" python "$SRC"
 
-          # 👉 關鍵：讓 .sync 以外的 repo 根目錄也在 import 路徑
-          export PYTHONPATH="$GITHUB_WORKSPACE${PYTHONPATH:+:$PYTHONPATH}"
+          # 清除臨時檔，避免之後切分支報「untracked would be overwritten」
+          [[ $TEMP -eq 1 ]] && rm -f ./assets_extract_temp.py || true
 
-          python "$SRC_PATH"
-
-          CHANGED="$(git ls-files -m "tasks/**/assets.py" || true)"
+          # 只提交 assets.py 的變更到 PR 分支
+          CHANGED="$(git ls-files -m 'tasks/**/assets.py' || true)"
           if [[ -n "$CHANGED" ]]; then
-            echo "[LOG] assets changed:"; echo "$CHANGED"
+            echo "[LOG] assets changed:"
+            echo "$CHANGED"
             git add $CHANGED
-            git commit -m "chore(assets): regen by assets_extract.py [ci skip]"
+            git commit -m "chore(assets): regenerate by assets_extract.py [ci skip]"
             git push origin "+${{ env.PR_BRANCH }}:${{ env.PR_BRANCH }}"
           else
             echo "[LOG] no assets changes to commit."
           fi
-
-      - name: Quick diff artifact (preview)
-        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p ci-diff
-          git diff --name-status origin/${{ env.BASE_BRANCH }}..."${{ steps.resolve.outputs.up_ref }}" > ci-diff/name-status.txt || true
-          git diff --stat        origin/${{ env.BASE_BRANCH }}..."${{ steps.resolve.outputs.up_ref }}" > ci-diff/stat.txt || true
-          tar czf ci-diff.tgz ci-diff
-
-      - name: Upload diff artifact
-        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
-        uses: actions/upload-artifact@v4
-        with:
-          name: upstream-vs-main-diff
-          path: ci-diff.tgz
-          retention-days: 7
 
       - name: Create / Update PR (robust; retry & REST fallback)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
@@ -217,16 +201,20 @@ jobs:
             printf -- '- ahead(from %s): `%s`, behind: `%s`\n' "$BASE_BRANCH" "${{ steps.resolve.outputs.ahead }}" "${{ steps.resolve.outputs.behind }}"
           } > "$BODY_FILE"
 
-          EXISTING="$(gh pr list --repo "$REPO" --head "${{ env.PR_BRANCH }}" --base "${{ env.BASE_BRANCH }}" --state open --json number --jq '.[0].number // empty' || true)"
+          EXISTING="$(gh pr list -R "$REPO" --head "${{ env.PR_BRANCH }}" --base "${{ env.BASE_BRANCH }}" \
+                     --state open --json number --jq '.[0].number // empty' || true)"
+
           if [[ -n "${EXISTING:-}" ]]; then
-            gh pr edit "${EXISTING}" --repo "$REPO" --title "$TITLE" --body-file "$BODY_FILE" --add-label chore --add-label auto-sync
-            gh pr view "${EXISTING}" --repo "$REPO" --json url --jq .url | tee /tmp/pr_url
+            gh pr edit "${EXISTING}" -R "$REPO" --title "$TITLE" --body-file "$BODY_FILE" \
+              --add-label chore --add-label auto-sync
+            gh pr view "${EXISTING}" -R "$REPO" --json url --jq .url | tee /tmp/pr_url
             echo "pull-request-url=$(cat /tmp/pr_url)" >> "$GITHUB_OUTPUT"
             echo "pull-request-operation=updated" >> "$GITHUB_OUTPUT"
           else
-            ATTEMPTS=0; SUCCESS=""
+            ATTEMPTS=0
+            SUCCESS=""
             while [[ $ATTEMPTS -lt 3 ]]; do
-              if gh pr create --repo "$REPO" --base "${{ env.BASE_BRANCH }}" --head "${{ env.PR_BRANCH }}" \
+              if gh pr create -R "$REPO" --base "${{ env.BASE_BRANCH }}" --head "${{ env.PR_BRANCH }}" \
                    --title "$TITLE" --body-file "$BODY_FILE" --draft --label chore --label auto-sync | tee /tmp/pr_url; then
                 SUCCESS="1"; break
               fi
@@ -246,7 +234,7 @@ jobs:
               fi
               echo "$JSON" | jq -r .url | tee /tmp/pr_url
               NUM="$(echo "$JSON" | jq -r .number)"
-              gh pr edit "$NUM" --repo "$REPO" --add-label chore --add-label auto-sync || true
+              gh pr edit "$NUM" -R "$REPO" --add-label chore --add-label auto-sync || true
             fi
             echo "pull-request-url=$(cat /tmp/pr_url)" >> "$GITHUB_OUTPUT"
             echo "pull-request-operation=created" >> "$GITHUB_OUTPUT"
@@ -263,16 +251,10 @@ jobs:
           set -euo pipefail
           REPO="${GITHUB_REPOSITORY}"
           PR="$PR_URL"
-          if [[ -z "${PR:-}" || "${PR}" == "null" ]]; then
-            echo "[LOG] No PR URL, skip."; exit 0
-          fi
-
           NUM="$(gh pr view "$PR" -R "$REPO" --json number --jq .number)"
 
-          gh label create sync-conflict-notified \
-            -R "$REPO" --force \
-            --description "Conflict notified by sync workflow" \
-            --color B60205 >/dev/null 2>&1 || true
+          gh label create sync-conflict-notified -R "$REPO" --force \
+            --description "Conflict notified by sync workflow" --color B60205 >/dev/null 2>&1 || true
 
           LABELS="$(gh pr view "$PR" -R "$REPO" --json labels --jq '.labels[].name' || true)"
           HAS_FLAG=0
@@ -330,7 +312,7 @@ jobs:
               ;;
           esac
 
-      # === Rebase preview (rerere; prefer ours for assets) ===
+      # （可選）rebase 預覽分支，讓你在 repo 看到自動解的效果
       - name: (Cache) Restore rerere decisions
         uses: actions/cache@v4
         with:
@@ -350,7 +332,6 @@ jobs:
           git checkout -B "${{ env.BASE_BRANCH }}" origin/${{ env.BASE_BRANCH }}
           git switch -c rebase/preview || git checkout -B rebase/preview
           git config rerere.enabled true
-
           if ! git rebase -s ort -X theirs "${UP_REF}"; then
             echo "::warning::Rebase hit conflicts; applying asset-prefer-ours policy…"
             CONFLICTS=$(git diff --name-only --diff-filter=U || true)
@@ -369,7 +350,6 @@ jobs:
             done <<<"$CONFLICTS"
             git rebase --continue || true
           fi
-
           git remote set-url --push origin "https://x-access-token:${GH_PAT}@github.com/${GITHUB_REPOSITORY}.git"
           git push -f origin rebase/preview
 
@@ -394,3 +374,60 @@ jobs:
           )
           curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
             -d "$(jq -n --arg content "$MSG" '{content: $content}')"
+
+  # ------------------------------------------------------------
+  # B) 只在「push 到 main」時：在 main 分支重生 assets.py 並直接提交
+  #   （配合 .gitattributes 的 merge=ours，PR 不會顯示衝突，
+  #    合併後由這個 job 把 assets.py 生對）
+  # ------------------------------------------------------------
+  regen-assets-on-main:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout (full, no persisted credentials)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Configure PAT push
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          set -euo pipefail
+          if [ -z "${GH_PAT:-}" ]; then
+            echo "::error::Secret GH_PAT is empty. Create a PAT with scopes: repo + workflow and add it as GH_PAT."
+            exit 1
+          fi
+          git remote set-url --push origin "https://x-access-token:${GH_PAT}@github.com/${GITHUB_REPOSITORY}.git"
+
+      - name: Setup Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: pip
+
+      - name: Re-generate assets.py (on main) and push
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -VV
+          python -m pip install --upgrade pip
+          python -m pip install "numpy==1.24.3" "tqdm==4.66.1" "rich==13.7.1"
+
+          SRC="./assets_extract.py"
+          if [[ ! -f "$SRC" ]]; then
+            echo "::error::assets_extract.py not found on main"
+            exit 1
+          fi
+          PYTHONPATH="$PWD" python "$SRC"
+
+          CHANGED="$(git ls-files -m 'tasks/**/assets.py' || true)"
+          if [[ -n "$CHANGED" ]]; then
+            git add $CHANGED
+            git commit -m "chore(assets): regenerate on main [ci skip]"
+            git push
+          else
+            echo "[LOG] no assets changes to commit on main."
+          fi
