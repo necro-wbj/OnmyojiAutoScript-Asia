@@ -16,17 +16,19 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# 用 PAT 來 push；PR 操作優先用 PAT（若無則退回 GITHUB_TOKEN）
 permissions:
   contents: read
   pull-requests: write
-  issues: write
-  repository-projects: read
+  issues: write               # for adding/removing labels
+  repository-projects: read   # avoid gh pr edit project read errors
 
 env:
-  UPSTREAM_REPO: runhey/OnmyojiAutoScript
-  UPSTREAM_BRANCH: dev
-  BASE_BRANCH: main
-  PR_BRANCH: sync/upstream-dev
+  UPSTREAM_REPO: runhey/OnmyojiAutoScript     # 上游 repo
+  UPSTREAM_BRANCH: dev                        # 上游分支（dev）
+  BASE_BRANCH: main                           # 本地分支（main）
+  PR_BRANCH: sync/upstream-dev                # 合併用 PR 分支
+  # 資產檔（衝突時保留我方版本；rebase 中用 --theirs，見下方註解）
   ASSET_GLOBS: |
     assets/**
     **/*.png
@@ -128,50 +130,50 @@ jobs:
           git push origin "+${{ env.PR_BRANCH }}:${{ env.PR_BRANCH }}"
           echo "[LOG] Pushed ${{ env.PR_BRANCH }} at ${{ steps.resolve.outputs.upstream_tip }} (mirror of upstream/${{ env.UPSTREAM_BRANCH }})"
 
-      # === 這裡開始：在 PR 分支上重生 assets.py，若有變更就 commit + push ===
-      - name: Setup Python
+      # === 在建立/更新 PR 前，先自動產生 assets.py 並提交到 PR 分支 ===
+      - name: Set up Python 3.10 (for assets extractor)
+        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-          cache: 'pip'  # cache pip deps (官方支援) 
-      - name: Install deps for assets_extract.py
+          python-version: '3.10'   # 與較舊套件相容度較高
+          cache: 'pip'
+
+      - name: Install minimal deps for asset generator
+        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
+        run: |
+          python -m pip install -U pip
+          # 只裝 assets_extract.py 需要的套件，避開 Windows 專用套件
+          python -m pip install "numpy==1.24.3" "tqdm>=4.64,<5" "logzero>=1.7.0"
+
+      - name: Run assets_extract.py and commit if changed
+        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         shell: bash
         run: |
           set -euo pipefail
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then
-            pip install -r requirements.txt
-          else
-            pip install numpy tqdm
-          fi
-      - name: Regenerate assets.py on PR branch
-        shell: bash
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
-        run: |
-          set -euo pipefail
-          # 目前就在 $PR_BRANCH
+          python --version
           python assets_extract.py
-          if ! git diff --quiet --exit-code; then
-            git add -A
-            git commit -m "chore(assets): auto-regenerate assets.py via assets_extract.py"
-            # push 用 PAT
-            git remote set-url --push origin "https://x-access-token:${GH_PAT}@github.com/${GITHUB_REPOSITORY}.git"
-            git push origin HEAD:${{ env.PR_BRANCH }}
-            echo "[LOG] assets.py updated & pushed to ${{ env.PR_BRANCH }}"
+
+          # 找出有變動的 assets.py
+          CHANGED=$(git status --porcelain | awk '/assets\.py$/ {print $2}')
+          if [[ -n "$CHANGED" ]]; then
+            echo "[LOG] assets changed:"
+            echo "$CHANGED"
+            git add $CHANGED
+            git commit -m "ci: regenerate assets.py via assets_extract.py"
+            # 這時仍在 PR_BRANCH；直接推上去
+            git push origin "${{ env.PR_BRANCH }}"
           else
-            echo "[LOG] assets.py up-to-date; no commit."
+            echo "[LOG] No assets.py changes."
           fi
 
-      # 產生比較 artifact（用 PR 分支，讓 diff 含 assets 重生）
       - name: Quick diff artifact (preview)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p ci-diff
-          git diff --name-status origin/${{ env.BASE_BRANCH }}...${{ env.PR_BRANCH }} > ci-diff/name-status.txt || true
-          git diff --stat        origin/${{ env.BASE_BRANCH }}...${{ env.PR_BRANCH }} > ci-diff/stat.txt || true
+          git diff --name-status origin/${{ env.BASE_BRANCH }}..."${{ steps.resolve.outputs.up_ref }}" > ci-diff/name-status.txt || true
+          git diff --stat        origin/${{ env.BASE_BRANCH }}..."${{ steps.resolve.outputs.up_ref }}" > ci-diff/stat.txt || true
           tar czf ci-diff.tgz ci-diff
 
       - name: Upload diff artifact
@@ -205,6 +207,7 @@ jobs:
             printf -- '- ahead(from %s): `%s`, behind: `%s`\n' "$BASE_BRANCH" "${{ steps.resolve.outputs.ahead }}" "${{ steps.resolve.outputs.behind }}"
           } > "$BODY_FILE"
 
+          # 是否已有開啟中的 PR
           EXISTING="$(gh pr list --repo "$REPO" \
             --head "${{ env.PR_BRANCH }}" --base "${{ env.BASE_BRANCH }}" \
             --state open --json number --jq '.[0].number // empty' || true)"
@@ -215,6 +218,7 @@ jobs:
             echo "pull-request-url=$(cat /tmp/pr_url)" >> "$GITHUB_OUTPUT"
             echo "pull-request-operation=updated" >> "$GITHUB_OUTPUT"
           else
+            # GraphQL → 失敗重試 → 最後走 REST 後備
             ATTEMPTS=0
             SUCCESS=""
             while [[ $ATTEMPTS -lt 3 ]]; do
@@ -244,7 +248,7 @@ jobs:
             echo "pull-request-operation=created" >> "$GITHUB_OUTPUT"
           fi
 
-      # === PR 狀態通知（含 Draft/Behind/Unstable；GraphQL+REST 交叉判斷＋去重標籤） ===
+      # === PR 狀態通知（輪詢、GraphQL+REST 交叉判斷；含 null/空字串保護＋去重標籤） ===
       - name: Notify Discord (PR status)
         if: ${{ steps.ghpr.outputs['pull-request-url'] != '' && steps.ghpr.outputs['pull-request-url'] != null }}
         env:
@@ -274,7 +278,7 @@ jobs:
           HAS_FLAG=0
           grep -qx 'sync-conflict-notified' <<<"$LABELS" && HAS_FLAG=1
 
-          # 交叉判斷（避免 UNKNOWN/unknown；同時處理 Draft/Behind/Unstable）
+          # 交叉判斷（避免 UNKNOWN/unknown）
           GQL=""; REST=""
           for i in 2 3 4 5 6 7 8 9; do
             GQL="$(gh pr view "$PR" -R "$REPO" --json mergeStateStatus --jq '.mergeStateStatus' || echo '')"
@@ -287,18 +291,12 @@ jobs:
           done
           echo "[LOG] final: mergeStateStatus=${GQL:-EMPTY}, mergeable_state=${REST:-EMPTY}"
 
-          # 狀態歸類
-          # GraphQL: CLEAN/DIRTY/BLOCKED/DRAFT/BEHIND/UNSTABLE/UNKNOWN ...
-          # REST:    clean/dirty/blocked/unstable/unknown/behind ...
+          # 統一成四種狀態（DIRTY/dirty 視為衝突）
           STATUS="ok"
           if [[ "$GQL" == "DIRTY" || "$REST" == "dirty" ]]; then
             STATUS="conflict"
-          elif [[ "$GQL" == "BLOCKED" || "$GQL" == "DRAFT" || "$REST" == "blocked" ]]; then
+          elif [[ "$GQL" == "BLOCKED" || "$REST" == "blocked" ]]; then
             STATUS="blocked"
-          elif [[ "$GQL" == "BEHIND" || "$REST" == "behind" ]]; then
-            STATUS="behind"
-          elif [[ "$GQL" == "UNSTABLE" || "$REST" == "unstable" ]]; then
-            STATUS="unstable"
           elif [[ "$GQL" == "UNKNOWN" || "$REST" == "unknown" || -z "$GQL$REST" ]]; then
             STATUS="pending"
           fi
@@ -315,17 +313,7 @@ jobs:
               fi
               ;;
             blocked)
-              printf -v MSG '⛔ **Sync PR is blocked**\nPR: %s\n（Draft / 規則限制 / 必要檢查未通過 等）\n' "$PR"
-              curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
-                -d "$(jq -n --arg content "$MSG" '{content: $content}')"
-              ;;
-            behind)
-              printf -v MSG '↩️ **Sync PR head is behind base**\nPR: %s\n請把 head 或 base 更新到最新再檢查可合併性。\n' "$PR"
-              curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
-                -d "$(jq -n --arg content "$MSG" '{content: $content}')"
-              ;;
-            unstable)
-              printf -v MSG '🟡 **Sync PR has failing/pending checks**\nPR: %s\n非必要檢查未通過或仍在執行，稍後再試。\n' "$PR"
+              printf -v MSG '⛔ **Sync PR is blocked**\nPR: %s\n請檢查保護規則／審查或檢查狀態。\n' "$PR"
               curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
                 -d "$(jq -n --arg content "$MSG" '{content: $content}')"
               ;;
