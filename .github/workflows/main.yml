@@ -274,7 +274,12 @@ jobs:
 
       # === PR 狀態通知（避免 UNKNOWN；只在本次 run 有 PR 時才跑） ===
       - name: Notify Discord (PR status)
-        if: ${{ steps.ghpr.outputs['pull-request-url'] != '' && steps.ghpr.outputs['pull-request-url'] != null }}
+        if: >-
+          ${{
+            steps.ghpr.conclusion == 'success' &&
+            steps.ghpr.outputs['pull-request-url'] != '' &&
+            steps.ghpr.outputs['pull-request-url'] != 'null'
+          }}
         env:
           GH_TOKEN: ${{ secrets.GH_PAT != '' && secrets.GH_PAT || secrets.GITHUB_TOKEN }}
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
@@ -283,18 +288,36 @@ jobs:
         run: |
           set -euo pipefail
           REPO="${GITHUB_REPOSITORY}"
+          PR_URL="${PR_URL:-}"
+          
+          # A) env 進來可能是空或字串 "null" → 先處理
+          if [[ -z "$PR_URL" || "$PR_URL" == "null" ]]; then
+            # 用分支去找現有 PR（若存在）
+            PR_URL="$(gh pr list -R "$REPO" \
+                        --head "${PR_BRANCH}" --base "${BASE_BRANCH}" --state open \
+                        --json url --jq '.[0].url' || true)"
+          fi
+          
+          # 還是拿不到 → 直接安靜退出（不要報錯）
+          if [[ -z "$PR_URL" || "$PR_URL" == "null" ]]; then
+            echo "[LOG] No PR URL available; skip notify."
+            exit 0
+          fi
+          
           PR="$PR_URL"
           NUM="$(gh pr view "$PR" -R "$REPO" --json number --jq .number)"
-
+          
+          # 確保標籤存在（用於去重）
           gh label create sync-conflict-notified \
             -R "$REPO" --force \
             --description "Conflict notified by sync workflow" \
             --color B60205 >/dev/null 2>&1 || true
-
+          
           LABELS="$(gh pr view "$PR" -R "$REPO" --json labels --jq '.labels[].name' || true)"
           HAS_FLAG=0
           grep -qx 'sync-conflict-notified' <<<"$LABELS" && HAS_FLAG=1
-
+          
+          # 交叉判斷合併狀態（避免 UNKNOWN/unknown）
           GQL=""; REST=""
           for i in 2 3 4 5 6 7 8 9; do
             GQL="$(gh pr view "$PR" -R "$REPO" --json mergeStateStatus --jq '.mergeStateStatus' || echo '')"
@@ -306,16 +329,13 @@ jobs:
             sleep "$i"
           done
           echo "[LOG] final: mergeStateStatus=${GQL:-EMPTY}, mergeable_state=${REST:-EMPTY}"
-
+          
           STATUS="ok"
-          if [[ "$GQL" == "DIRTY" || "$REST" == "dirty" ]]; then
-            STATUS="conflict"
-          elif [[ "$GQL" == "BLOCKED" || "$REST" == "blocked" ]]; then
-            STATUS="blocked"
-          elif [[ "$GQL" == "UNKNOWN" || "$REST" == "unknown" || -z "$GQL$REST" ]]; then
-            STATUS="pending"
+          if   [[ "$GQL" == "DIRTY"   || "$REST" == "dirty"   ]]; then STATUS="conflict"
+          elif [[ "$GQL" == "BLOCKED" || "$REST" == "blocked" ]]; then STATUS="blocked"
+          elif [[ "$GQL" == "UNKNOWN" || "$REST" == "unknown" || -z "$GQL$REST" ]]; then STATUS="pending"
           fi
-
+          
           case "$STATUS" in
             conflict)
               if [[ $HAS_FLAG -eq 0 ]]; then
@@ -346,6 +366,7 @@ jobs:
               fi
               ;;
           esac
+
 
       # === 模式 2：rebase 預覽（rerere；資產衝突優先採我方） ===
       - name: (Cache) Restore rerere decisions
