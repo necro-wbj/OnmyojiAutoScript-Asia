@@ -30,9 +30,9 @@ class PetsAssets:
 
 
 	# Ocr Rule Assets
-	# 投喂的体力 
+	# 投餵的體力 
 	O_PET_FEED_AP = RuleOcr(roi=(730,527,57,33), area=(730,527,57,33), mode="Digit", method="Default", keyword="", name="pet_feed_ap")
-	# 玩耍的体力 
+	# 玩耍的體力 
 	O_PET_PLAY_GOLD = RuleOcr(roi=(681,524,74,40), area=(681,524,74,40), mode="Digit", method="Default", keyword="", name="pet_play_gold")
 
 
