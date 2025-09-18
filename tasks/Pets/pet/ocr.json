@@ -6,7 +6,7 @@
     "mode": "Digit",
     "method": "Default",
     "keyword": "",
-    "description": "投喂的体力"
+    "description": "投餵的體力"
   },
   {
     "itemName": "pet_play_gold",
@@ -15,6 +15,6 @@
     "mode": "Digit",
     "method": "Default",
     "keyword": "",
-    "description": "玩耍的体力"
+    "description": "玩耍的體力"
   }
 ]

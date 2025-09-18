@@ -17,18 +17,22 @@ class HuntAssets:
 
 	# Image Rule Assets
 	# 神社 
-	I_HUNT_SHRINE = RuleImage(roi_front=(870,624,65,61), roi_back=(870,624,65,61), threshold=0.8, method="Template matching", file="./tasks/Hunt/hunt/hunt_hunt_shrine.png")
+	I_HUNT_SHRINE = RuleImage(roi_front=(472.66666666666663,141,51.66666666666663,61), roi_back=(472.66666666666663,141,51.66666666666663,61), threshold=0.8, method="Template matching", file="./tasks/Hunt/hunt/hunt_hunt_shrine.png")
 	# 狩猎战 
 	I_HUNT_HUNT = RuleImage(roi_front=(157,414,215,166), roi_back=(157,414,215,166), threshold=0.8, method="Template matching", file="./tasks/Hunt/hunt/hunt_hunt_hunt.png")
+	# description 
+	I_HUNT_CLOSE = RuleImage(roi_front=(1150,43,69,67), roi_back=(1150,43,69,67), threshold=0.8, method="Template matching", file="./tasks/Hunt/hunt/hunt_hunt_close.png")
 
 
 	# Image Rule Assets
 	# 麒麟的挑战 
-	I_KIRIN_CHALLAGE = RuleImage(roi_front=(1134,597,90,54), roi_back=(1134,597,90,54), threshold=0.8, method="Template matching", file="./tasks/Hunt/kirin/kirin_kirin_challage.png")
+	I_KIRIN_CHALLAGE = RuleImage(roi_front=(1072,577,93,46), roi_back=(1072,577,117,83), threshold=0.8, method="Template matching", file="./tasks/Hunt/kirin/kirin_kirin_challage.png")
 	# 集合 
 	I_KIRIN_GATHER = RuleImage(roi_front=(28,480,75,64), roi_back=(28,480,75,64), threshold=0.8, method="Template matching", file="./tasks/Hunt/kirin/kirin_kirin_gather.png")
-	# 麒麟已挑战 
-	I_KIRIN_END = RuleImage(roi_front=(1126,601,104,44), roi_back=(1126,601,104,44), threshold=0.8, method="Template matching", file="./tasks/Hunt/kirin/kirin_kirin_end.png")
+	# 已结束 
+	I_KIRIN_END = RuleImage(roi_front=(1058,587,132,50), roi_back=(1058,587,132,50), threshold=0.8, method="Template matching", file="./tasks/Hunt/kirin/kirin_kirin_end.png")
+	# 麒麟加成 
+	I_KIRIN_WINE = RuleImage(roi_front=(398,407,58,50), roi_back=(124,313,873,238), threshold=0.8, method="Template matching", file="./tasks/Hunt/kirin/kirin_kirin_wine.png")
 
 
 	# Image Rule Assets

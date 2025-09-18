@@ -27,6 +27,11 @@ class KekkaiActivationAssets:
 	S_CARDS_SWIPE = RuleSwipe(roi_front=(178,401,23,23), roi_back=(176,168,29,24), mode="default", name="cards_swipe")
 
 
+	# Click Rule Assets
+	# 收穫結界卡 
+	C_A_HARVEST_CARD = RuleClick(roi_front=(892,152,57,56), roi_back=(892,152,57,56), name="a_harvest_card")
+
+
 	# Image Rule Assets
 	# 斗鱼收获奖励4星 
 	I_A_HARVEST_FISH4 = RuleImage(roi_front=(897,159,48,40), roi_back=(872,128,154,174), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_harvest_fish4.png")
@@ -35,33 +40,33 @@ class KekkaiActivationAssets:
 	# "结界卡" 
 	I_A_CARDS_REALM = RuleImage(roi_front=(0,0,100,100), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_cards_realm.png")
 	# description 
-	I_A_CARD_ALL = RuleImage(roi_front=(357,175,167,59), roi_back=(357,175,167,59), threshold=0.9, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_card_all.png")
+	I_A_CARD_ALL = RuleImage(roi_front=(372.66666666666663,173.33333333333331,134,59), roi_back=(372.66666666666663,173.33333333333331,134,59), threshold=0.9, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_card_all.png")
 	# description 
-	I_A_CARD_KAIKO = RuleImage(roi_front=(355,237,169,62), roi_back=(355,237,169,62), threshold=0.9, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_card_kaiko.png")
+	I_A_CARD_KAIKO = RuleImage(roi_front=(361,240.33333333333331,162,54), roi_back=(361,240.33333333333331,162,54), threshold=0.9, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_card_kaiko.png")
 	# description 
-	I_A_CARD_FISH = RuleImage(roi_front=(352,303,173,62), roi_back=(352,303,173,62), threshold=0.9, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_card_fish.png")
+	I_A_CARD_FISH = RuleImage(roi_front=(359,307.66666666666663,164,54), roi_back=(359,307.66666666666663,164,54), threshold=0.9, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_card_fish.png")
 	# description 
-	I_A_CARD_ROOM = RuleImage(roi_front=(355,370,167,59), roi_back=(355,370,167,59), threshold=0.9, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_card_room.png")
+	I_A_CARD_ROOM = RuleImage(roi_front=(356.33333333333326,369.66666666666663,167,59), roi_back=(356.33333333333326,369.66666666666663,167,59), threshold=0.9, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_card_room.png")
 	# description 
-	I_A_CARD_MOON = RuleImage(roi_front=(354,439,171,59), roi_back=(354,439,171,59), threshold=0.9, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_card_moon.png")
+	I_A_CARD_MOON = RuleImage(roi_front=(358.33333333333326,437,162,59), roi_back=(358.33333333333326,437,162,59), threshold=0.9, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_card_moon.png")
 	# 其他变异 
-	I_A_CARD_OTHER = RuleImage(roi_front=(353,502,173,61), roi_back=(353,502,173,61), threshold=0.9, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_card_other.png")
+	I_A_CARD_OTHER = RuleImage(roi_front=(358.66666666666663,507,166,54), roi_back=(358.66666666666663,507,166,54), threshold=0.9, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_card_other.png")
 	# 邀请 
-	I_A_INVITE = RuleImage(roi_front=(1045,559,100,100), roi_back=(1014,538,182,162), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_invite.png")
+	I_A_INVITE = RuleImage(roi_front=(1049,561,99,101), roi_back=(1014,538,182,162), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_invite.png")
 	# 自动邀请 
-	I_A_AUTO_INVITE = RuleImage(roi_front=(1071,456,53,51), roi_back=(1071,456,53,51), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_auto_invite.png")
+	I_A_AUTO_INVITE = RuleImage(roi_front=(1071,459,44,48), roi_back=(1071,459,44,48), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_auto_invite.png")
 	# description 
-	I_A_FRIEND_1 = RuleImage(roi_front=(590,573,64,73), roi_back=(590,573,64,73), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_friend_1.png")
+	I_A_FRIEND_1 = RuleImage(roi_front=(1071,456,48,46), roi_back=(590,573,64,73), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_friend_1.png")
 	# 位置2，空人的 
-	I_A_FRIEND_2 = RuleImage(roi_front=(741,572,70,69), roi_back=(741,572,70,69), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_friend_2.png")
+	I_A_FRIEND_2 = RuleImage(roi_front=(598,586.5,59,69), roi_back=(741,572,70,69), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_friend_2.png")
 	# 激活, 黄色的可以激活 
-	I_A_ACTIVATE_YELLOW = RuleImage(roi_front=(1047,560,100,100), roi_back=(1047,560,100,100), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_activate_yellow.png")
+	I_A_ACTIVATE_YELLOW = RuleImage(roi_front=(746.5,572,65,64), roi_back=(1047,560,100,100), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_activate_yellow.png")
 	# 激活, 灰色不可激活 
-	I_A_ACTIVATE_GRAY = RuleImage(roi_front=(1046,556,100,100), roi_back=(1046,556,100,100), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_activate_gray.png")
+	I_A_ACTIVATE_GRAY = RuleImage(roi_front=(1064.5,578,100,100), roi_back=(1046,556,100,100), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_activate_gray.png")
 	# 空着的表示没有卡在里面 
 	I_A_EMPTY = RuleImage(roi_front=(677,255,353,128), roi_back=(677,255,353,128), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_empty.png")
 	# description 
-	I_A_CHECK_CARD = RuleImage(roi_front=(513,32,260,49), roi_back=(513,32,260,49), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_check_card.png")
+	I_A_CHECK_CARD = RuleImage(roi_front=(806,271,260,49), roi_back=(513,32,260,49), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_check_card.png")
 	# 太鼓4 
 	I_A_HARVEST_KAIKO_4 = RuleImage(roi_front=(894,164,48,41), roi_back=(867,132,154,174), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_harvest_kaiko_4.png")
 	# description 
@@ -73,7 +78,7 @@ class KekkaiActivationAssets:
 	# 太阴3 
 	I_A_HARVEST_MOON_3 = RuleImage(roi_front=(897,159,46,40), roi_back=(869,127,154,174), threshold=0.7, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_harvest_moon_3.png")
 	# 卸下 
-	I_A_DEMOUNT = RuleImage(roi_front=(939,575,55,47), roi_back=(903,551,107,91), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_demount.png")
+	I_A_DEMOUNT = RuleImage(roi_front=(903,551,107,91), roi_back=(903,551,107,91), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_demount.png")
 	# 斗鱼3 
 	I_A_HARVEST_FISH_3 = RuleImage(roi_front=(891,165,57,39), roi_back=(854,128,154,174), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_harvest_fish_3.png")
 	# 胧车  

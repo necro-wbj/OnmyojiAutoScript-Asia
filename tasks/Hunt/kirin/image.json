@@ -2,8 +2,8 @@
   {
     "itemName": "kirin_challage",
     "imageName": "kirin_kirin_challage.png",
-    "roiFront": "1134,597,90,54",
-    "roiBack": "1134,597,90,54",
+    "roiFront": "1072,577,93,46",
+    "roiBack": "1072,577,117,83",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "麒麟的挑战"
@@ -20,10 +20,19 @@
   {
     "itemName": "kirin_end",
     "imageName": "kirin_kirin_end.png",
-    "roiFront": "1126,601,104,44",
-    "roiBack": "1126,601,104,44",
+    "roiFront": "1058,587,132,50",
+    "roiBack": "1058,587,132,50",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "麒麟已挑战"
+    "description": "已结束"
+  },
+  {
+    "itemName": "kirin_wine",
+    "imageName": "kirin_kirin_wine.png",
+    "roiFront": "398,407,58,50",
+    "roiBack": "124,313,873,238",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "麒麟加成"
   }
 ]

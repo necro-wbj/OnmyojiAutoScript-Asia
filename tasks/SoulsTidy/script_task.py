@@ -35,9 +35,10 @@ class ScriptTask(GameUi, SoulsTidyAssets):
         """
         while 1:
             self.screenshot()
+            if self.appear_then_click(self.I_ST_OVERFLOW, interval=1):
+                continue
             if self.appear(self.I_ST_GREED) and self.appear(self.I_ST_TIDY):
                 break
-
             if self.appear_then_click(self.I_ST_REPLACE, interval=1):
                 continue
             if self.appear_then_click(self.I_ST_SOULS, interval=1):
@@ -46,6 +47,7 @@ class ScriptTask(GameUi, SoulsTidyAssets):
                 continue
         # 御魂超过上限的提示
         self.ocr_appear_click(self.O_ST_OVERFLOW)
+        self.appear_then_click(self.I_ST_OVERFLOW, interval=1)
         logger.info('Enter souls page')
 
     def back_records(self):
@@ -62,7 +64,16 @@ class ScriptTask(GameUi, SoulsTidyAssets):
         """
         # 先是贪吃鬼
         logger.hr('Greed Ghost')
-        self.ui_click(self.I_ST_GREED, self.I_ST_GREED_HABIT)
+        while 1:
+            self.screenshot()
+            if self.appear_then_click(self.I_ST_OVERFLOW, interval=1):
+                logger.info('greed_maneki I_ST_OVERFLOW')
+                continue
+            if self.appear(self.I_ST_GREED_HABIT):
+                break
+            if self.appear_then_click(self.I_ST_GREED):
+                continue
+        # self.ui_click(self.I_ST_GREED, self.I_ST_GREED_HABIT)
         self.ui_click(self.I_ST_GREED_HABIT, self.I_ST_FEED_NOW)
         logger.info('Feed greed ghost')
         feed_count = 0
@@ -79,6 +90,7 @@ class ScriptTask(GameUi, SoulsTidyAssets):
                 feed_count += 1
                 continue
         logger.info('Feed greed ghost done')
+        self.click(self.C_ST_DETAIL)
         # 关闭贪吃鬼, 进入奉纳
         while 1:
             self.screenshot()
@@ -98,6 +110,10 @@ class ScriptTask(GameUi, SoulsTidyAssets):
             if self.appear_then_click(self.I_ST_BONGNA, interval=1, threshold=0.6):
                 continue
         logger.hr('Enter bongna')
+        #click abandon, sometime it will show BONGNA-ALL
+        self.screenshot()
+        self.appear_then_click(self.I_ST_ABANDON, interval=1, threshold=0.6)
+        logger.hr('click abandon')
         # 进入已弃置界面
         """
         现在默认进入就是已弃置界面,所以不需要点击
@@ -127,14 +143,36 @@ class ScriptTask(GameUi, SoulsTidyAssets):
             firvel = self.O_ST_FIRSET_LEVEL.ocr(self.device.image)
             if firvel is None or firvel == '':
                 logger.info('ocr result is Null')
-                continue
-            if firvel != '古':
-                # 问就是 把 +0 识别成了 古
+                # continue
+            if not self.appear(self.I_ST_FIRSET_LEVEL):
                 logger.info('No zero level, bongna done')
                 break
 
             # !!!!!!  这里没有检查金币是否足够
             # 长按
+            count_donate = 10
+            logger.info('Click and hold')
+            while count_donate:
+                count_donate -= 1
+                sleep(1)
+                self.screenshot()
+                self.click(self.L_ONE, interval=2.5)
+                gold_amount = self.O_ST_GOLD.ocr(self.device.image)
+                if not isinstance(gold_amount, int):
+                    logger.warning('Gold amount not int, skip')
+                    continue
+                if gold_amount > 0:
+                    logger.warning('Gold Get')
+                    break
+            self.click(self.L_ONE, interval=2.5)
+            self.screenshot()
+            gold_amount = self.O_ST_GOLD.ocr(self.device.image)
+            if not isinstance(gold_amount, int):
+                logger.warning('Gold amount not int, skip')
+                continue
+            if gold_amount == 0:
+                continue
+
             self.click(self.L_ONE, interval=2.5)
             self.screenshot()
             gold_amount = self.O_ST_GOLD.ocr(self.device.image)
@@ -149,7 +187,9 @@ class ScriptTask(GameUi, SoulsTidyAssets):
                 logger.warning('Donate button not appear, skip')
                 continue
             # 点击奉纳 及收取奖励
-            while 1:
+            count_donate = 10
+            while count_donate:
+                count_donate -= 1
                 self.screenshot()
                 if self.appear_then_click(self.I_UI_CONFIRM, interval=0.5):
                     continue

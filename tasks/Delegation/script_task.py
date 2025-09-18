@@ -22,17 +22,17 @@ class ScriptTask(GameUi, DelegationAssets):
         self.check_reward()
         con: DelegationConfig = self.config.delegation.delegation_config
         if con.miyoshino_painting:
-            self.delegate_one('画')
+            self.delegate_one('畫')
         if con.bird_feather:
-            self.delegate_one('鸟羽')
+            self.delegate_one('鳥羽')
         if con.find_earring:
-            self.delegate_one('寻找耳环')
+            self.delegate_one('尋找耳環')
         if con.cat_boss:
-            self.delegate_one('猫老大')
+            self.delegate_one('貓老大')
         if con.miyoshino:
             self.delegate_one('接送')
         if con.strange_trace:
-            self.delegate_one('痕迹')
+            self.delegate_one('痕跡')
 
 
         self.set_next_run(task='Delegation', success=True, finish=True)
