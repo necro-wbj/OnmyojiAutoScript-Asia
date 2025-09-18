@@ -117,34 +117,32 @@ jobs:
           git remote set-url --push origin "https://x-access-token:${GH_PAT}@github.com/${GITHUB_REPOSITORY}.git"
           echo "[LOG] origin push URL configured to use GH_PAT."
 
-      # === 1) 先鏡像 upstream/dev 到 PR 分支（保留歷史） ===
-      - name: Mirror upstream/${{ env.UPSTREAM_BRANCH }} to PR branch (history-preserving)
+      # === Mirror upstream/dev -> PR branch (keep history) ===
+      - name: Mirror upstream/${{ env.UPSTREAM_BRANCH }} to PR branch
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         shell: bash
         run: |
           set -euo pipefail
           git checkout -B "${{ env.PR_BRANCH }}" "${{ steps.resolve.outputs.up_ref }}"
           git push origin "+${{ env.PR_BRANCH }}:${{ env.PR_BRANCH }}"
-          echo "[LOG] Pushed ${{ env.PR_BRANCH }} at ${{ steps.resolve.outputs.upstream_tip }} (mirror of upstream/${{ env.UPSTREAM_BRANCH }})"
+          echo "[LOG] Pushed ${{ env.PR_BRANCH }} at ${{ steps.resolve.outputs.upstream_tip }}"
 
-      # === 2) 在 PR 分支上先跑 assets 產生器（避免 PR 內 assets 不一致） ===
-      - name: Setup Python 3.10 for asset generator
+      # === Prepare Python (3.10) for assets generation ===
+      - name: Setup Python 3.10
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         uses: actions/setup-python@v5
         with:
-          python-version: "3.10"   # 鎖 3.10，確保 numpy 1.24.3 可用
-        # 參考 setup-python 官方說明：用 python-version 指定版本
-        # https://github.com/actions/setup-python
-        # （Marketplace/README 範例） 
+          python-version: "3.10"
+          cache: "pip"
 
-      - name: Generate assets.py from JSON (temp script, auto-clean)
+      # === Generate tasks/**/assets.py from JSON ===
+      - name: Generate assets.py from JSON (temp script, auto-clean; PYTHONPATH fixed)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         shell: bash
         env:
           BASE_BRANCH: ${{ env.BASE_BRANCH }}
         run: |
           set -euo pipefail
-
           python -VV
           python -m pip install --upgrade pip
           python -m pip install "numpy==1.24.3" "tqdm==4.66.1" "rich==13.7.1"
@@ -153,7 +151,6 @@ jobs:
           SRC_PATH=".sync/assets_extract.py"
           TEMP_SCRIPT=0
 
-          # PR 分支上找不到就從 origin/main 抓一份臨時腳本
           if [[ -f "./assets_extract.py" ]]; then
             SRC_PATH="./assets_extract.py"
           else
@@ -162,21 +159,17 @@ jobs:
             TEMP_SCRIPT=1
           fi
 
-          cleanup() {
-            if [[ "$TEMP_SCRIPT" -eq 1 ]]; then
-              rm -f "$SRC_PATH" || true
-            fi
-          }
+          cleanup() { [[ "$TEMP_SCRIPT" -eq 1 ]] && rm -f "$SRC_PATH" || true; }
           trap cleanup EXIT
 
-          # 跑產生器
+          # 👉 關鍵：讓 .sync 以外的 repo 根目錄也在 import 路徑
+          export PYTHONPATH="$GITHUB_WORKSPACE${PYTHONPATH:+:$PYTHONPATH}"
+
           python "$SRC_PATH"
 
-          # 只提交 tasks/**/assets.py
           CHANGED="$(git ls-files -m "tasks/**/assets.py" || true)"
           if [[ -n "$CHANGED" ]]; then
-            echo "[LOG] assets changed:"
-            echo "$CHANGED"
+            echo "[LOG] assets changed:"; echo "$CHANGED"
             git add $CHANGED
             git commit -m "chore(assets): regen by assets_extract.py [ci skip]"
             git push origin "+${{ env.PR_BRANCH }}:${{ env.PR_BRANCH }}"
@@ -202,7 +195,6 @@ jobs:
           path: ci-diff.tgz
           retention-days: 7
 
-      # === 3) 建立 / 更新 PR（assets 已在 PR 分支就緒） ===
       - name: Create / Update PR (robust; retry & REST fallback)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         id: ghpr
@@ -225,18 +217,14 @@ jobs:
             printf -- '- ahead(from %s): `%s`, behind: `%s`\n' "$BASE_BRANCH" "${{ steps.resolve.outputs.ahead }}" "${{ steps.resolve.outputs.behind }}"
           } > "$BODY_FILE"
 
-          EXISTING="$(gh pr list --repo "$REPO" \
-            --head "${{ env.PR_BRANCH }}" --base "${{ env.BASE_BRANCH }}" \
-            --state open --json number --jq '.[0].number // empty' || true)"
-
+          EXISTING="$(gh pr list --repo "$REPO" --head "${{ env.PR_BRANCH }}" --base "${{ env.BASE_BRANCH }}" --state open --json number --jq '.[0].number // empty' || true)"
           if [[ -n "${EXISTING:-}" ]]; then
             gh pr edit "${EXISTING}" --repo "$REPO" --title "$TITLE" --body-file "$BODY_FILE" --add-label chore --add-label auto-sync
             gh pr view "${EXISTING}" --repo "$REPO" --json url --jq .url | tee /tmp/pr_url
             echo "pull-request-url=$(cat /tmp/pr_url)" >> "$GITHUB_OUTPUT"
             echo "pull-request-operation=updated" >> "$GITHUB_OUTPUT"
           else
-            ATTEMPTS=0
-            SUCCESS=""
+            ATTEMPTS=0; SUCCESS=""
             while [[ $ATTEMPTS -lt 3 ]]; do
               if gh pr create --repo "$REPO" --base "${{ env.BASE_BRANCH }}" --head "${{ env.PR_BRANCH }}" \
                    --title "$TITLE" --body-file "$BODY_FILE" --draft --label chore --label auto-sync | tee /tmp/pr_url; then
@@ -264,7 +252,6 @@ jobs:
             echo "pull-request-operation=created" >> "$GITHUB_OUTPUT"
           fi
 
-      # === 4) PR 狀態通知（GraphQL mergeStateStatus + REST mergeable_state 去重） ===
       - name: Notify Discord (PR status)
         if: ${{ steps.ghpr.outputs['pull-request-url'] != '' && steps.ghpr.outputs['pull-request-url'] != null }}
         env:
@@ -274,11 +261,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [[ -z "${PR_URL:-}" || "${PR_URL}" == "null" ]]; then
-            echo "[LOG] No PR URL, skip."; exit 0
-          fi
           REPO="${GITHUB_REPOSITORY}"
           PR="$PR_URL"
+          if [[ -z "${PR:-}" || "${PR}" == "null" ]]; then
+            echo "[LOG] No PR URL, skip."; exit 0
+          fi
 
           NUM="$(gh pr view "$PR" -R "$REPO" --json number --jq .number)"
 
@@ -343,7 +330,7 @@ jobs:
               ;;
           esac
 
-      # === 5) rebase 預覽（rerere；資產衝突優先採我方） ===
+      # === Rebase preview (rerere; prefer ours for assets) ===
       - name: (Cache) Restore rerere decisions
         uses: actions/cache@v4
         with:
@@ -393,7 +380,6 @@ jobs:
           path: .git/rr-cache
           key: rr-cache-${{ runner.os }}-${{ github.repository }}-${{ steps.resolve.outputs.upstream_tip }}
 
-      # === 6) 任一步驟失敗 → 通知 Discord ===
       - name: Notify Discord (run failed)
         if: failure()
         env:
