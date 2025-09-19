@@ -10,27 +10,9 @@ from module.atom.list import RuleList
 class DokanAssets: 
 
 
-	# Click Rule Assets
-	# 道馆随机点击安全区域 
-	C_DOKAN_RANDOM_CLICK_AREA = RuleClick(roi_front=(142,294,107,150), roi_back=(142,294,107,150), name="dokan_random_click_area")
-	# 道馆随机点击安全区域1：竂友突破信息 
-	C_DOKAN_RANDOM_CLICK_AREA1 = RuleClick(roi_front=(42,594,10,30), roi_back=(42,594,10,30), name="dokan_random_click_area1")
-	# 道馆随机点击安全区域2：切换查看队伍模式。初步测试下来这个地方最安全，除了庭院、町中、逢魔外其他各场景都可用。 
-	C_DOKAN_RANDOM_CLICK_AREA2 = RuleClick(roi_front=(1122,360,10,40), roi_back=(1122,360,10,40), name="dokan_random_click_area2")
-	# 道馆随机点击安全区域3 
-	C_DOKAN_RANDOM_CLICK_AREA3 = RuleClick(roi_front=(333,44,107,20), roi_back=(333,44,107,20), name="dokan_random_click_area3")
-	# 道馆突破排名弹出时,点击此区域关闭 
-	C_DOKAN_TOPPA_RANK_CLOSE_AREA = RuleClick(roi_front=(1150,380,100,150), roi_back=(1150,380,100,150), name="dokan_toppa_rank_close_area")
-	# 准备战斗 
-	C_DOKAN_READY_FOR_BATTLE = RuleClick(roi_front=(42,94,1207,543), roi_back=(42,94,1207,543), name="dokan_ready_for_battle")
-	# 查找道馆时 点击此区域 隐藏道馆详情(显示防守人数,馆主等级等的卡片) 
-	C_DOKAN_CANCEL_SELECT_DOKAN = RuleClick(roi_front=(1070,610,30,90), roi_back=(1070,610,30,90), name="dokan_cancel_select_dokan")
-	# ruleanimate 用作检测选择道馆时,确定地图区域稳定无动作 
-	C_DOKAN_CANCEL_SELECT_DOKAN_CHECK_ANIMATE = RuleClick(roi_front=(600,330,80,60), roi_back=(600,330,80,60), name="dokan_cancel_select_dokan_check_animate")
-	# 查找道馆时 刷新道馆列表 
-	C_DOKAN_REFRESH = RuleClick(roi_front=(1140,630,40,30), roi_back=(1140,630,40,30), name="dokan_refresh")
-	# 道馆战斗时,左上角 退出按钮区域 
-	C_DOKAN_BATTLE_QUIT_AREA = RuleClick(roi_front=(10,36,50,14), roi_back=(10,36,50,14), name="dokan_battle_quit_area")
+	# Swipe Rule Assets
+	# 道馆选择界面 右侧侧边栏 手指向上滑动 
+	S_DOKAN_LIST_UP = RuleSwipe(roi_front=(1100,420,30,21), roi_back=(1240,240,30,21), mode="default", name="dokan_list_up")
 
 
 	# Image Rule Assets
@@ -152,12 +134,6 @@ class DokanAssets:
 	I_RYOU_DOKAN_SPOILS_OF_DOKAN = RuleImage(roi_front=(480,400,400,100), roi_back=(480,400,400,100), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_spoils_of_dokan.png")
 
 
-	# List Rule Assets
-	# 这个是当前活跃的竂活动列表界面 
-	L_RYOU_ACTIVITY_LIST = RuleList(folder="./tasks/Dokan/res", direction="vertical", mode="ocr", roi_back=(20,150,170,400), size=(42, 27), 
-					 array=["道馆", "首领", "狭间"])
-
-
 	# Ocr Rule Assets
 	# 道馆地图里找文字：万 
 	O_DOKAN_MAP = RuleOcr(roi=(270,130,740,460), area=(270,130,740,460), mode="Full", method="Default", keyword="万", name="dokan_map")
@@ -173,8 +149,32 @@ class DokanAssets:
 	O_DOKAN_CENTER_PEOPLE_NUMBER = RuleOcr(roi=(0,0,0,0), area=(0,0,0,0), mode="Full", method="Default", keyword="", name="dokan_center_people_number")
 
 
-	# Swipe Rule Assets
-	# 道馆选择界面 右侧侧边栏 手指向上滑动 
-	S_DOKAN_LIST_UP = RuleSwipe(roi_front=(1100,420,30,21), roi_back=(1240,240,30,21), mode="default", name="dokan_list_up")
+	# List Rule Assets
+	# 这个是当前活跃的竂活动列表界面 
+	L_RYOU_ACTIVITY_LIST = RuleList(folder="./tasks/Dokan/res", direction="vertical", mode="ocr", roi_back=(20,150,170,400), size=(42, 27), 
+					 array=["道馆", "首领", "狭间"])
+
+
+	# Click Rule Assets
+	# 道馆随机点击安全区域 
+	C_DOKAN_RANDOM_CLICK_AREA = RuleClick(roi_front=(142,294,107,150), roi_back=(142,294,107,150), name="dokan_random_click_area")
+	# 道馆随机点击安全区域1：竂友突破信息 
+	C_DOKAN_RANDOM_CLICK_AREA1 = RuleClick(roi_front=(42,594,10,30), roi_back=(42,594,10,30), name="dokan_random_click_area1")
+	# 道馆随机点击安全区域2：切换查看队伍模式。初步测试下来这个地方最安全，除了庭院、町中、逢魔外其他各场景都可用。 
+	C_DOKAN_RANDOM_CLICK_AREA2 = RuleClick(roi_front=(1122,360,10,40), roi_back=(1122,360,10,40), name="dokan_random_click_area2")
+	# 道馆随机点击安全区域3 
+	C_DOKAN_RANDOM_CLICK_AREA3 = RuleClick(roi_front=(333,44,107,20), roi_back=(333,44,107,20), name="dokan_random_click_area3")
+	# 道馆突破排名弹出时,点击此区域关闭 
+	C_DOKAN_TOPPA_RANK_CLOSE_AREA = RuleClick(roi_front=(1150,380,100,150), roi_back=(1150,380,100,150), name="dokan_toppa_rank_close_area")
+	# 准备战斗 
+	C_DOKAN_READY_FOR_BATTLE = RuleClick(roi_front=(42,94,1207,543), roi_back=(42,94,1207,543), name="dokan_ready_for_battle")
+	# 查找道馆时 点击此区域 隐藏道馆详情(显示防守人数,馆主等级等的卡片) 
+	C_DOKAN_CANCEL_SELECT_DOKAN = RuleClick(roi_front=(1070,610,30,90), roi_back=(1070,610,30,90), name="dokan_cancel_select_dokan")
+	# ruleanimate 用作检测选择道馆时,确定地图区域稳定无动作 
+	C_DOKAN_CANCEL_SELECT_DOKAN_CHECK_ANIMATE = RuleClick(roi_front=(600,330,80,60), roi_back=(600,330,80,60), name="dokan_cancel_select_dokan_check_animate")
+	# 查找道馆时 刷新道馆列表 
+	C_DOKAN_REFRESH = RuleClick(roi_front=(1140,630,40,30), roi_back=(1140,630,40,30), name="dokan_refresh")
+	# 道馆战斗时,左上角 退出按钮区域 
+	C_DOKAN_BATTLE_QUIT_AREA = RuleClick(roi_front=(10,36,50,14), roi_back=(10,36,50,14), name="dokan_battle_quit_area")
 
 
