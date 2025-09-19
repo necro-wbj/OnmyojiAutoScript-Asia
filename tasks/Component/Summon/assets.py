@@ -10,6 +10,17 @@ from module.atom.list import RuleList
 class SummonAssets: 
 
 
+	# Swipe Rule Assets
+	# description 
+	S_RANDOM_SWIPE_1 = RuleSwipe(roi_front=(459,136,369,100), roi_back=(456,448,400,100), mode="default", name="random_swipe_1")
+	# description 
+	S_RANDOM_SWIPE_2 = RuleSwipe(roi_front=(433,451,447,100), roi_back=(411,122,479,100), mode="default", name="random_swipe_2")
+	# description 
+	S_RANDOM_SWIPE_3 = RuleSwipe(roi_front=(401,123,100,440), roi_back=(762,122,100,434), mode="default", name="random_swipe_3")
+	# description 
+	S_RANDOM_SWIPE_4 = RuleSwipe(roi_front=(777,128,100,412), roi_back=(431,120,100,444), mode="default", name="random_swipe_4")
+
+
 	# Image Rule Assets
 	# 点击蓝票 
 	I_BLUE_TICKET = RuleImage(roi_front=(595,586,65,76), roi_back=(523,563,211,111), threshold=0.8, method="Template matching", file="./tasks/Component/Summon/sm/sm_blue_ticket.png")
@@ -26,16 +37,5 @@ class SummonAssets:
 	# Ocr Rule Assets
 	# Ocr-description 
 	O_ONE_TICKET = RuleOcr(roi=(574,681,100,32), area=(574,681,100,32), mode="Single", method="Default", keyword="", name="one_ticket")
-
-
-	# Swipe Rule Assets
-	# description 
-	S_RANDOM_SWIPE_1 = RuleSwipe(roi_front=(459,136,369,100), roi_back=(456,448,400,100), mode="default", name="random_swipe_1")
-	# description 
-	S_RANDOM_SWIPE_2 = RuleSwipe(roi_front=(433,451,447,100), roi_back=(411,122,479,100), mode="default", name="random_swipe_2")
-	# description 
-	S_RANDOM_SWIPE_3 = RuleSwipe(roi_front=(401,123,100,440), roi_back=(762,122,100,434), mode="default", name="random_swipe_3")
-	# description 
-	S_RANDOM_SWIPE_4 = RuleSwipe(roi_front=(777,128,100,412), roi_back=(431,120,100,444), mode="default", name="random_swipe_4")
 
 

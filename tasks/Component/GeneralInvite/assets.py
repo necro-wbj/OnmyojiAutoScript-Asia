@@ -95,17 +95,6 @@ class GeneralInviteAssets:
 	I_BACK_YELLOW_SEA = RuleImage(roi_front=(31,16,42,42), roi_back=(31,16,42,42), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_back_yellow_sea.png")
 
 
-	# Image Rule Assets
-	# description 
-	I_GI_EMOJI_1 = RuleImage(roi_front=(27,526,55,51), roi_back=(27,526,55,51), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_emoji_1.png")
-	# description 
-	I_GI_EMOJI_2 = RuleImage(roi_front=(27,622,55,51), roi_back=(27,622,55,51), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_emoji_1.png")
-	# 判断是不是在庭院界面 
-	I_GI_HOME = RuleImage(roi_front=(361,34,34,46), roi_back=(361,34,34,46), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_home.png")
-	# 判断是不是在探索界面 
-	I_GI_EXPLORE = RuleImage(roi_front=(1138,119,41,48), roi_back=(1138,119,41,48), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_explore.png")
-
-
 	# Ocr Rule Assets
 	# Ocr-description 
 	O_TIME_1 = RuleOcr(roi=(541,12,96,33), area=(541,12,96,33), mode="Single", method="Default", keyword="", name="time_1")
@@ -125,5 +114,16 @@ class GeneralInviteAssets:
 	O_FRIEND_NAME_2 = RuleOcr(roi=(729,184,196,346), area=(729,184,196,346), mode="Full", method="Default", keyword="", name="friend_name_2")
 	# Ocr-description 
 	O_ONLINE = RuleOcr(roi=(790,102,124,42), area=(0,0,100,100), mode="Single", method="Default", keyword="", name="online")
+
+
+	# Image Rule Assets
+	# description 
+	I_GI_EMOJI_1 = RuleImage(roi_front=(27,526,55,51), roi_back=(27,526,55,51), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_emoji_1.png")
+	# description 
+	I_GI_EMOJI_2 = RuleImage(roi_front=(27,622,55,51), roi_back=(27,622,55,51), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_emoji_1.png")
+	# 判断是不是在庭院界面 
+	I_GI_HOME = RuleImage(roi_front=(361,34,34,46), roi_back=(361,34,34,46), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_home.png")
+	# 判断是不是在探索界面 
+	I_GI_EXPLORE = RuleImage(roi_front=(1138,119,41,48), roi_back=(1138,119,41,48), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_explore.png")
 
 

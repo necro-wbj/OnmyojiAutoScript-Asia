@@ -10,9 +10,13 @@ from module.atom.list import RuleList
 class HuntAssets: 
 
 
-	# Click Rule Assets
-	# description 
-	C_HUNT_ENTER = RuleClick(roi_front=(1090,597,94,59), roi_back=(1090,597,94,59), name="hunt_enter")
+	# Image Rule Assets
+	# 麒麟的挑战 
+	I_KIRIN_CHALLAGE = RuleImage(roi_front=(1134,597,90,54), roi_back=(1134,597,90,54), threshold=0.8, method="Template matching", file="./tasks/Hunt/kirin/kirin_kirin_challage.png")
+	# 集合 
+	I_KIRIN_GATHER = RuleImage(roi_front=(28,480,75,64), roi_back=(28,480,75,64), threshold=0.8, method="Template matching", file="./tasks/Hunt/kirin/kirin_kirin_gather.png")
+	# 麒麟已挑战 
+	I_KIRIN_END = RuleImage(roi_front=(1126,601,104,44), roi_back=(1126,601,104,44), threshold=0.8, method="Template matching", file="./tasks/Hunt/kirin/kirin_kirin_end.png")
 
 
 	# Image Rule Assets
@@ -22,13 +26,9 @@ class HuntAssets:
 	I_HUNT_HUNT = RuleImage(roi_front=(157,414,215,166), roi_back=(157,414,215,166), threshold=0.8, method="Template matching", file="./tasks/Hunt/hunt/hunt_hunt_hunt.png")
 
 
-	# Image Rule Assets
-	# 麒麟的挑战 
-	I_KIRIN_CHALLAGE = RuleImage(roi_front=(1134,597,90,54), roi_back=(1134,597,90,54), threshold=0.8, method="Template matching", file="./tasks/Hunt/kirin/kirin_kirin_challage.png")
-	# 集合 
-	I_KIRIN_GATHER = RuleImage(roi_front=(28,480,75,64), roi_back=(28,480,75,64), threshold=0.8, method="Template matching", file="./tasks/Hunt/kirin/kirin_kirin_gather.png")
-	# 麒麟已挑战 
-	I_KIRIN_END = RuleImage(roi_front=(1126,601,104,44), roi_back=(1126,601,104,44), threshold=0.8, method="Template matching", file="./tasks/Hunt/kirin/kirin_kirin_end.png")
+	# Click Rule Assets
+	# description 
+	C_HUNT_ENTER = RuleClick(roi_front=(1090,597,94,59), roi_back=(1090,597,94,59), name="hunt_enter")
 
 
 	# Image Rule Assets
