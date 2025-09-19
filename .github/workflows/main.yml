@@ -258,7 +258,8 @@ jobs:
           GQL=""; REST=""
           for i in 2 3 4 5 6 7 8 9; do
             GQL="$(gh pr view "$PR" -R "$REPO" --json mergeStateStatus --jq '.mergeStateStatus' || echo '')"
-            REST="$(gh api -R "$REPO" repos/${REPO}/pulls/$NUM --jq '.mergeable_state' || echo '')"
+            # 修正：gh api 不支援 -R 旗標
+            REST="$(gh api repos/${REPO}/pulls/$NUM --jq '.mergeable_state' || echo '')"
             if [[ -n "$GQL" && "$GQL" != "UNKNOWN" ]] || [[ -n "$REST" && "$REST" != "unknown" ]]; then
               break
             fi
@@ -340,13 +341,13 @@ jobs:
           if ! git rebase -s ort -X theirs "${UP_REF}"; then
             echo "::warning::Rebase hit conflicts; applying asset-prefer-ours policy…"
             CONFLICTS=$(git diff --name-only --diff-filter=U || true)
+            # 先處理資產檔：偏向保留我方
             while IFS= read -r f; do
               [[ -z "$f" ]] && continue
               while IFS= read -r g; do
                 [[ -z "$g" ]] && continue
                 case "$f" in
                   $g)
-                    # 資產檔偏向保留我方
                     git checkout --ours -- "$f" || true
                     git add -- "$f" || true
                     echo "[RERERE] asset resolved (prefer ours): $f"
@@ -354,6 +355,20 @@ jobs:
                 esac
               done <<<"${{ env.ASSET_GLOBS }}"
             done <<<"$CONFLICTS"
+
+            # 再處理 dev/test/docs：偏向上游（theirs），含 modify/delete 的 rm 後備
+            UNMERGED=$(git diff --name-only --diff-filter=U || true)
+            while IFS= read -r f; do
+              [[ -z "$f" ]] && continue
+              case "$f" in
+                dev_tools/*|tests/*|docs/*)
+                  git checkout --theirs -- "$f" 2>/dev/null || git rm -f -- "$f" || true
+                  git add -- "$f" 2>/dev/null || true
+                  echo "[RERERE] dev/test/docs resolved (prefer upstream): $f"
+                  ;;
+              esac
+            done <<<"$UNMERGED"
+
             git rebase --continue || true
           fi
           git remote set-url --push origin "https://x-access-token:${GH_PAT}@github.com/${GITHUB_REPOSITORY}.git"
