@@ -10,19 +10,64 @@ from module.atom.list import RuleList
 class ExplorationAssets: 
 
 
-	# Swipe Rule Assets
-	# 向上滑动章节 
-	S_SWIPE_LEVEL_UP = RuleSwipe(roi_front=(1142,328,21,21), roi_back=(1143,444,21,21), mode="default", name="swipe_level_up")
-	# 向下滑动章节 
-	S_SWIPE_LEVEL_DOWN = RuleSwipe(roi_front=(1143,486,21,21), roi_back=(1143,367,21,23), mode="default", name="swipe_level_down")
-	# 往左滑动 
-	S_SWIPE_BACKGROUND_RIGHT = RuleSwipe(roi_front=(1093,148,21,21), roi_back=(397,140,21,21), mode="default", name="swipe_background_right")
-	# 往右滑动 
-	S_SWIPE_BACKGROUND_LEFT = RuleSwipe(roi_front=(420,142,21,21), roi_back=(1183,146,21,21), mode="default", name="swipe_background_left")
-	# 滑动狗粮选择界面 
-	S_SWIPE_SHIKI_TO_LEFT = RuleSwipe(roi_front=(890,587,21,21), roi_back=(351,584,21,21), mode="default", name="swipe_shiki_to_left")
-	# 滑动一个式神的宽度 
-	S_SWIPE_SHIKI_TO_LEFT_ONE = RuleSwipe(roi_front=(977,582,21,21), roi_back=(889,584,21,22), mode="default", name="swipe_shiki_to_left_one")
+	# Image Rule Assets
+	# description 
+	I_LIGHTTEST = RuleImage(roi_front=(550,288,85,82), roi_back=(97,182,1130,409), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_lighttest.png")
+	# description 
+	I_LIGHT1 = RuleImage(roi_front=(498,297,86,87), roi_back=(97,182,1130,409), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light1.png")
+	# description 
+	I_LIGHT2 = RuleImage(roi_front=(497,300,86,82), roi_back=(97,182,1130,409), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light2.png")
+	# description 
+	I_LIGHT3 = RuleImage(roi_front=(495,301,85,77), roi_back=(97,182,1130,409), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light3.png")
+	# description 
+	I_LIGHT4 = RuleImage(roi_front=(496,296,85,85), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light4.png")
+	# description 
+	I_LIGHT5 = RuleImage(roi_front=(494,296,82,86), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light5.png")
+	# description 
+	I_LIGHT6 = RuleImage(roi_front=(490,295,83,85), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light6.png")
+	# description 
+	I_LIGHT7 = RuleImage(roi_front=(486,295,84,87), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light7.png")
+	# description 
+	I_LIGHT8 = RuleImage(roi_front=(485,298,84,81), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light8.png")
+	# description 
+	I_LIGHT9 = RuleImage(roi_front=(484,295,85,84), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light9.png")
+	# description 
+	I_LIGHT10 = RuleImage(roi_front=(479,297,84,78), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light10.png")
+	# description 
+	I_LIGHT11 = RuleImage(roi_front=(479,296,83,82), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light11.png")
+	# description 
+	I_LIGHT12 = RuleImage(roi_front=(477,290,85,90), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light12.png")
+	# description 
+	I_LIGHT13 = RuleImage(roi_front=(478,293,82,87), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light13.png")
+	# description 
+	I_LIGHT14 = RuleImage(roi_front=(474,290,82,87), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light14.png")
+	# 经验怪 
+	I_UP_EXP = RuleImage(roi_front=(471,518,74,71), roi_back=(1,225,1278,410), threshold=0.8, method="Sift Flann", file="./tasks/Exploration/highlight/highlight_up_exp.png")
+	# 金币怪 
+	I_UP_COIN = RuleImage(roi_front=(330,529,74,74), roi_back=(1,317,1278,316), threshold=0.8, method="Sift Flann", file="./tasks/Exploration/highlight/highlight_up_coin.png")
+	# 达摩怪 
+	I_UP_DARUMA = RuleImage(roi_front=(1146,510,80,80), roi_back=(1,265,1278,369), threshold=0.8, method="Sift Flann", file="./tasks/Exploration/highlight/highlight_up_daruma.png")
+
+
+	# Click Rule Assets
+	# 点击设置按钮 
+	C_CLICK_SETTINGS = RuleClick(roi_front=(55,662,21,21), roi_back=(55,662,21,21), name="click_settings")
+	# 选中候补出战 
+	C_CLICK_STANDBY_TEAM = RuleClick(roi_front=(545,222,506,100), roi_back=(545,222,506,100), name="click_standby_team")
+	# 点击全部式神按钮 
+	C_CLICK_ALL_SHIKI = RuleClick(roi_front=(31,623,65,58), roi_back=(31,623,65,58), name="click_all_shiki")
+	# 选中n阶式神 
+	C_CLICK_N_SHIKI = RuleClick(roi_front=(146,301,45,54), roi_back=(146,301,45,54), name="click_n_shiki")
+	# 位置1 
+	C_CLICK_ROTATE_1 = RuleClick(roi_front=(516,582,22,21), roi_back=(516,582,22,21), name="click_rotate_1")
+	# 位置2 
+	C_CLICK_ROTATE_2 = RuleClick(roi_front=(650,587,21,21), roi_back=(650,587,21,21), name="click_rotate_2")
+	# 位置3 
+	C_CLICK_ROTATE_3 = RuleClick(roi_front=(785,587,21,21), roi_back=(785,587,21,21), name="click_rotate_3")
+	# 位置4 
+	C_CLICK_ROTATE_4 = RuleClick(roi_front=(921,590,21,21), roi_back=(921,590,21,21), name="click_rotate_4")
+	# 随机点 
+	C_SAFE_RANDOM = RuleClick(roi_front=(0,0,111,12), roi_back=(0,0,111,12), name="safe_random")
 
 
 	# Image Rule Assets
@@ -76,17 +121,6 @@ class ExplorationAssets:
 	I_EXP_CREATE_ENSURE = RuleImage(roi_front=(534,486,218,59), roi_back=(516,475,244,85), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_exp_create_ensure.png")
 
 
-	# Ocr Rule Assets
-	# 识别当前显示的章节 
-	O_E_EXPLORATION_LEVEL_NUMBER = RuleOcr(roi=(1079,193,147,467), area=(1079,193,147,467), mode="Full", method="Default", keyword="", name="e_exploration_level_number")
-	# 候补出战的数量 
-	O_E_ALTERNATE_NUMBER = RuleOcr(roi=(1092,122,69,32), area=(1092,122,69,32), mode="DigitCounter", method="Default", keyword="", name="e_alternate_number")
-	# 探索右上角 突破卷的数量 
-	O_REALM_RAID_NUMBER = RuleOcr(roi=(739,11,78,37), area=(739,11,78,37), mode="DigitCounter", method="Default", keyword="", name="realm_raid_number")
-	# （点出困难28时候）探索右上角 突破卷的数量 
-	O_REALM_RAID_NUMBER1 = RuleOcr(roi=(936,10,82,36), area=(936,10,82,36), mode="DigitCounter", method="Default", keyword="", name="realm_raid_number1")
-
-
 	# Long Click Rule Assets
 	# description 
 	L_ROTATE_1 = RuleLongClick(roi_front=(516,582,22,21), roi_back=(516,582,22,21), duration=1500, name="rotate_1")
@@ -98,63 +132,29 @@ class ExplorationAssets:
 	L_ROTATE_4 = RuleLongClick(roi_front=(921,590,21,21), roi_back=(921,590,21,21), duration=1500, name="rotate_4")
 
 
-	# Click Rule Assets
-	# 点击设置按钮 
-	C_CLICK_SETTINGS = RuleClick(roi_front=(55,662,21,21), roi_back=(55,662,21,21), name="click_settings")
-	# 选中候补出战 
-	C_CLICK_STANDBY_TEAM = RuleClick(roi_front=(545,222,506,100), roi_back=(545,222,506,100), name="click_standby_team")
-	# 点击全部式神按钮 
-	C_CLICK_ALL_SHIKI = RuleClick(roi_front=(31,623,65,58), roi_back=(31,623,65,58), name="click_all_shiki")
-	# 选中n阶式神 
-	C_CLICK_N_SHIKI = RuleClick(roi_front=(146,301,45,54), roi_back=(146,301,45,54), name="click_n_shiki")
-	# 位置1 
-	C_CLICK_ROTATE_1 = RuleClick(roi_front=(516,582,22,21), roi_back=(516,582,22,21), name="click_rotate_1")
-	# 位置2 
-	C_CLICK_ROTATE_2 = RuleClick(roi_front=(650,587,21,21), roi_back=(650,587,21,21), name="click_rotate_2")
-	# 位置3 
-	C_CLICK_ROTATE_3 = RuleClick(roi_front=(785,587,21,21), roi_back=(785,587,21,21), name="click_rotate_3")
-	# 位置4 
-	C_CLICK_ROTATE_4 = RuleClick(roi_front=(921,590,21,21), roi_back=(921,590,21,21), name="click_rotate_4")
-	# 随机点 
-	C_SAFE_RANDOM = RuleClick(roi_front=(0,0,111,12), roi_back=(0,0,111,12), name="safe_random")
+	# Ocr Rule Assets
+	# 识别当前显示的章节 
+	O_E_EXPLORATION_LEVEL_NUMBER = RuleOcr(roi=(1079,193,147,467), area=(1079,193,147,467), mode="Full", method="Default", keyword="", name="e_exploration_level_number")
+	# 候补出战的数量 
+	O_E_ALTERNATE_NUMBER = RuleOcr(roi=(1092,122,69,32), area=(1092,122,69,32), mode="DigitCounter", method="Default", keyword="", name="e_alternate_number")
+	# 探索右上角 突破卷的数量 
+	O_REALM_RAID_NUMBER = RuleOcr(roi=(739,11,78,37), area=(739,11,78,37), mode="DigitCounter", method="Default", keyword="", name="realm_raid_number")
+	# （点出困难28时候）探索右上角 突破卷的数量 
+	O_REALM_RAID_NUMBER1 = RuleOcr(roi=(936,10,82,36), area=(936,10,82,36), mode="DigitCounter", method="Default", keyword="", name="realm_raid_number1")
 
 
-	# Image Rule Assets
-	# description 
-	I_LIGHTTEST = RuleImage(roi_front=(550,288,85,82), roi_back=(97,182,1130,409), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_lighttest.png")
-	# description 
-	I_LIGHT1 = RuleImage(roi_front=(498,297,86,87), roi_back=(97,182,1130,409), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light1.png")
-	# description 
-	I_LIGHT2 = RuleImage(roi_front=(497,300,86,82), roi_back=(97,182,1130,409), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light2.png")
-	# description 
-	I_LIGHT3 = RuleImage(roi_front=(495,301,85,77), roi_back=(97,182,1130,409), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light3.png")
-	# description 
-	I_LIGHT4 = RuleImage(roi_front=(496,296,85,85), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light4.png")
-	# description 
-	I_LIGHT5 = RuleImage(roi_front=(494,296,82,86), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light5.png")
-	# description 
-	I_LIGHT6 = RuleImage(roi_front=(490,295,83,85), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light6.png")
-	# description 
-	I_LIGHT7 = RuleImage(roi_front=(486,295,84,87), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light7.png")
-	# description 
-	I_LIGHT8 = RuleImage(roi_front=(485,298,84,81), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light8.png")
-	# description 
-	I_LIGHT9 = RuleImage(roi_front=(484,295,85,84), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light9.png")
-	# description 
-	I_LIGHT10 = RuleImage(roi_front=(479,297,84,78), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light10.png")
-	# description 
-	I_LIGHT11 = RuleImage(roi_front=(479,296,83,82), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light11.png")
-	# description 
-	I_LIGHT12 = RuleImage(roi_front=(477,290,85,90), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light12.png")
-	# description 
-	I_LIGHT13 = RuleImage(roi_front=(478,293,82,87), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light13.png")
-	# description 
-	I_LIGHT14 = RuleImage(roi_front=(474,290,82,87), roi_back=(0,0,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/highlight/highlight_light14.png")
-	# 经验怪 
-	I_UP_EXP = RuleImage(roi_front=(471,518,74,71), roi_back=(1,225,1278,410), threshold=0.8, method="Sift Flann", file="./tasks/Exploration/highlight/highlight_up_exp.png")
-	# 金币怪 
-	I_UP_COIN = RuleImage(roi_front=(330,529,74,74), roi_back=(1,317,1278,316), threshold=0.8, method="Sift Flann", file="./tasks/Exploration/highlight/highlight_up_coin.png")
-	# 达摩怪 
-	I_UP_DARUMA = RuleImage(roi_front=(1146,510,80,80), roi_back=(1,265,1278,369), threshold=0.8, method="Sift Flann", file="./tasks/Exploration/highlight/highlight_up_daruma.png")
+	# Swipe Rule Assets
+	# 向上滑动章节 
+	S_SWIPE_LEVEL_UP = RuleSwipe(roi_front=(1142,328,21,21), roi_back=(1143,444,21,21), mode="default", name="swipe_level_up")
+	# 向下滑动章节 
+	S_SWIPE_LEVEL_DOWN = RuleSwipe(roi_front=(1143,486,21,21), roi_back=(1143,367,21,23), mode="default", name="swipe_level_down")
+	# 往左滑动 
+	S_SWIPE_BACKGROUND_RIGHT = RuleSwipe(roi_front=(1093,148,21,21), roi_back=(397,140,21,21), mode="default", name="swipe_background_right")
+	# 往右滑动 
+	S_SWIPE_BACKGROUND_LEFT = RuleSwipe(roi_front=(420,142,21,21), roi_back=(1183,146,21,21), mode="default", name="swipe_background_left")
+	# 滑动狗粮选择界面 
+	S_SWIPE_SHIKI_TO_LEFT = RuleSwipe(roi_front=(890,587,21,21), roi_back=(351,584,21,21), mode="default", name="swipe_shiki_to_left")
+	# 滑动一个式神的宽度 
+	S_SWIPE_SHIKI_TO_LEFT_ONE = RuleSwipe(roi_front=(977,582,21,21), roi_back=(889,584,21,22), mode="default", name="swipe_shiki_to_left_one")
 
 

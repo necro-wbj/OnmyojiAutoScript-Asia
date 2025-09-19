@@ -10,15 +10,15 @@ from module.atom.list import RuleList
 class GeneralRoomAssets: 
 
 
-	# Ocr Rule Assets
-	# 副本名字 
-	O_GR_ZONES_NAME = RuleOcr(roi=(415,127,160,53), area=(415,127,160,53), mode="Single", method="Default", keyword="", name="gr_zones_name")
-
-
 	# List Rule Assets
 	# description 
 	L_TEAM_LIST = RuleList(folder="./tasks/Component/GeneralRoom", direction="vertical", mode="ocr", roi_back=(26,106,360,549), size=(216, 61), 
 					 array=["全部", "探索（困難）", "覺醒業火輪", "覺醒風轉符", "覺醒火靈鯉", "覺醒天雷鼓", "御魂", "日輪之隕", "永生之海", "妖氣封印", "經驗妖怪", "金常妖怪", "金妖怪", "年獸", "石距", "憤怒的石距", "...石距", "結界突破", "真‧八岐大蛇", "對弈社", "鬥町", "連攜式召喚", "契靈之境"])
+
+
+	# Ocr Rule Assets
+	# 副本名字 
+	O_GR_ZONES_NAME = RuleOcr(roi=(415,127,160,53), area=(415,127,160,53), mode="Single", method="Default", keyword="", name="gr_zones_name")
 
 
 	# Image Rule Assets

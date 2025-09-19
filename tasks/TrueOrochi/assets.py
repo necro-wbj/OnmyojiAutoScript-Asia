@@ -10,6 +10,25 @@ from module.atom.list import RuleList
 class TrueOrochiAssets: 
 
 
+	# Click Rule Assets
+	# description 
+	C_ST_GREEN_1 = RuleClick(roi_front=(210,395,46,66), roi_back=(210,395,46,66), name="st_green_1")
+	# description 
+	C_ST_GREEN_2 = RuleClick(roi_front=(291,481,46,63), roi_back=(291,481,46,63), name="st_green_2")
+	# description 
+	C_ST_GREEN_3 = RuleClick(roi_front=(459,426,53,59), roi_back=(459,426,53,59), name="st_green_3")
+	# description 
+	C_ST_GREEN_4 = RuleClick(roi_front=(687,391,43,57), roi_back=(687,391,43,57), name="st_green_4")
+	# description 
+	C_ST_GREEN_5 = RuleClick(roi_front=(814,490,41,60), roi_back=(814,490,41,60), name="st_green_5")
+	# description 
+	C_ST_GREEN_6 = RuleClick(roi_front=(921,386,48,59), roi_back=(921,386,48,59), name="st_green_6")
+	# description 
+	C_ST_GREEN_7 = RuleClick(roi_front=(0,0,100,100), roi_back=(0,0,100,100), name="st_green_7")
+	# description 
+	C_ST_GREEN_MAIN = RuleClick(roi_front=(611,541,40,66), roi_back=(611,541,40,66), name="st_green_main")
+
+
 	# Image Rule Assets
 	# 出现真蛇 
 	I_FIND_TS = RuleImage(roi_front=(1,613,100,93), roi_back=(1,613,100,93), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_find_ts.png")
@@ -44,24 +63,5 @@ class TrueOrochiAssets:
 	# Ocr Rule Assets
 	# 真蛇剩餘次數 
 	O_TRUE_OROCHI_REMAIN = RuleOcr(roi=(454,387,50,26), area=(454,387,50,26), mode="DigitCounter", method="Default", keyword="", name="true_orochi_remain")
-
-
-	# Click Rule Assets
-	# description 
-	C_ST_GREEN_1 = RuleClick(roi_front=(210,395,46,66), roi_back=(210,395,46,66), name="st_green_1")
-	# description 
-	C_ST_GREEN_2 = RuleClick(roi_front=(291,481,46,63), roi_back=(291,481,46,63), name="st_green_2")
-	# description 
-	C_ST_GREEN_3 = RuleClick(roi_front=(459,426,53,59), roi_back=(459,426,53,59), name="st_green_3")
-	# description 
-	C_ST_GREEN_4 = RuleClick(roi_front=(687,391,43,57), roi_back=(687,391,43,57), name="st_green_4")
-	# description 
-	C_ST_GREEN_5 = RuleClick(roi_front=(814,490,41,60), roi_back=(814,490,41,60), name="st_green_5")
-	# description 
-	C_ST_GREEN_6 = RuleClick(roi_front=(921,386,48,59), roi_back=(921,386,48,59), name="st_green_6")
-	# description 
-	C_ST_GREEN_7 = RuleClick(roi_front=(0,0,100,100), roi_back=(0,0,100,100), name="st_green_7")
-	# description 
-	C_ST_GREEN_MAIN = RuleClick(roi_front=(611,541,40,66), roi_back=(611,541,40,66), name="st_green_main")
 
 

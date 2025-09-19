@@ -141,7 +141,6 @@
     "roiBack": "1169,146,73,403",
     "method": "Template matching",
     "threshold": 0.8,
-<<<<<<<
     "description": "description"
   },
   {
@@ -242,8 +241,5 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "爬塔活动buff页"
-=======
-    "description": "點擊螢幕繼續"
->>>>>>>
   }
 ]

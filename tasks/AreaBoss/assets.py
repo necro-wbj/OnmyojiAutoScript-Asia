@@ -10,17 +10,6 @@ from module.atom.list import RuleList
 class AreaBossAssets: 
 
 
-	# Swipe Rule Assets
-	# 筛选列表 手指向上滑动 
-	S_AB_FILTER_UP = RuleSwipe(roi_front=(920,680,10,10), roi_back=(1130,230,10,10), mode="default", name="ab_filter_up")
-	# 筛选列表 手指向下滑动 
-	S_AB_FILTER_DOWN = RuleSwipe(roi_front=(1130,230,10,10), roi_back=(920,680,10,10), mode="default", name="ab_filter_down")
-	# 极地鬼 层数列表 手指向下滑动  
-	S_AB_FLOOR_DOWN = RuleSwipe(roi_front=(390,260,10,10), roi_back=(450,500,10,10), mode="default", name="ab_floor_down")
-	# 普通地鬼 等级滑轨 手指向右滑动  
-	S_AB_LEVEL_RIGHT = RuleSwipe(roi_front=(0,0,10,10), roi_back=(570,270,10,10), mode="default", name="ab_level_right")
-
-
 	# Click Rule Assets
 	# 悬赏按钮 
 	C_AB_REWARD_BTN = RuleClick(roi_front=(1190,100,50,120), roi_back=(1190,100,50,120), name="ab_reward_btn")
@@ -56,8 +45,6 @@ class AreaBossAssets:
 	C_AB_JI_FLOOR_SELECTED = RuleClick(roi_front=(380,120,70,30), roi_back=(380,120,70,30), name="ab_ji_floor_selected")
 
 
-<<<<<<<
-=======
 	# Swipe Rule Assets
 	# 筛选列表 手指向上滑动 
 	S_AB_FILTER_UP = RuleSwipe(roi_front=(920,680,10,10), roi_back=(1130,230,10,10), mode="default", name="ab_filter_up")
@@ -71,7 +58,6 @@ class AreaBossAssets:
 	S_AB_LEVEL_RIGHT = RuleSwipe(roi_front=(0,0,10,10), roi_back=(570,270,10,10), mode="default", name="ab_level_right")
 
 
->>>>>>>
 	# Image Rule Assets
 	# 探索图标 
 	I_EXPLORE = RuleImage(roi_front=(758,122,66,77), roi_back=(339,104,836,120), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_explore.png")

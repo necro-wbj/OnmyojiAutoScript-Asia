@@ -10,9 +10,9 @@ from module.atom.list import RuleList
 class SecretAssets: 
 
 
-	# Swipe Rule Assets
-	# 向下滑动 
-	S_SE_DOWN_SEIPE = RuleSwipe(roi_front=(229,520,124,27), roi_back=(217,390,145,35), mode="default", name="se_down_seipe")
+	# Click Rule Assets
+	# description 
+	C_SE_CLICK_LAYER = RuleClick(roi_front=(434,155,100,100), roi_back=(434,155,100,100), name="se_click_layer")
 
 
 	# Image Rule Assets
@@ -53,8 +53,8 @@ class SecretAssets:
 	O_SE_TOTAL_TIME = RuleOcr(roi=(289,650,149,38), area=(289,650,149,38), mode="Single", method="Default", keyword="", name="se_total_time")
 
 
-	# Click Rule Assets
-	# description 
-	C_SE_CLICK_LAYER = RuleClick(roi_front=(434,155,100,100), roi_back=(434,155,100,100), name="se_click_layer")
+	# Swipe Rule Assets
+	# 向下滑动 
+	S_SE_DOWN_SEIPE = RuleSwipe(roi_front=(229,520,124,27), roi_back=(217,390,145,35), mode="default", name="se_down_seipe")
 
 

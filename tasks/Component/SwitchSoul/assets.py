@@ -10,15 +10,23 @@ from module.atom.list import RuleList
 class SwitchSoulAssets: 
 
 
-	# Swipe Rule Assets
-	# 列表的向上滑动 
-	S_SS_GROUP_SWIPE_UP = RuleSwipe(roi_front=(1154,180,90,21), roi_back=(1153,322,86,21), mode="default", name="ss_group_swipe_up")
-	# 列表的向下滑动 
-	S_SS_GROUP_SWIPE_DOWN = RuleSwipe(roi_front=(1155,388,21,22), roi_back=(1152,177,22,24), mode="default", name="ss_group_swipe_down")
-	# 阵容向上滑动 
-	S_SS_TEAM_SWIPE_UP = RuleSwipe(roi_front=(720,439,21,21), roi_back=(717,308,21,21), mode="default", name="ss_team_swipe_up")
-	# 阵容向上滑动 
-	S_SS_TEAM_SWIPE_DOWN = RuleSwipe(roi_front=(709,308,21,21), roi_back=(709,449,21,21), mode="default", name="ss_team_swipe_down")
+	# Click Rule Assets
+	# description 
+	C_SOU_GROUP_1 = RuleClick(roi_front=(1086,85,158,67), roi_back=(1086,85,158,67), name="sou_group_1")
+	# description 
+	C_SOU_GROUP_2 = RuleClick(roi_front=(1087,155,162,62), roi_back=(1087,155,162,62), name="sou_group_2")
+	# description 
+	C_SOU_GROUP_3 = RuleClick(roi_front=(1088,226,154,61), roi_back=(1088,226,154,61), name="sou_group_3")
+	# description 
+	C_SOU_GROUP_4 = RuleClick(roi_front=(1087,297,157,59), roi_back=(1087,297,157,59), name="sou_group_4")
+	# description 
+	C_SOU_GROUP_5 = RuleClick(roi_front=(1087,365,154,62), roi_back=(1087,365,154,62), name="sou_group_5")
+	# description 
+	C_SOU_GROUP_6 = RuleClick(roi_front=(1088,437,156,57), roi_back=(1088,437,156,57), name="sou_group_6")
+	# description 
+	C_SOU_GROUP_7 = RuleClick(roi_front=(1090,505,156,62), roi_back=(1090,505,156,62), name="sou_group_7")
+	# 阵容选择按钮位置 
+	C_SOU_TEAM_SELECT = RuleClick(roi_front=(977,157,21,21), roi_back=(977,157,21,21), name="sou_team_select")
 
 
 	# Image Rule Assets
@@ -67,22 +75,14 @@ class SwitchSoulAssets:
 	O_SS_TEAM_NAME = RuleOcr(roi=(573,140,277,481), area=(667,144,32,475), mode="Full", method="Default", keyword="", name="ss_team_name")
 
 
-	# Click Rule Assets
-	# description 
-	C_SOU_GROUP_1 = RuleClick(roi_front=(1086,85,158,67), roi_back=(1086,85,158,67), name="sou_group_1")
-	# description 
-	C_SOU_GROUP_2 = RuleClick(roi_front=(1087,155,162,62), roi_back=(1087,155,162,62), name="sou_group_2")
-	# description 
-	C_SOU_GROUP_3 = RuleClick(roi_front=(1088,226,154,61), roi_back=(1088,226,154,61), name="sou_group_3")
-	# description 
-	C_SOU_GROUP_4 = RuleClick(roi_front=(1087,297,157,59), roi_back=(1087,297,157,59), name="sou_group_4")
-	# description 
-	C_SOU_GROUP_5 = RuleClick(roi_front=(1087,365,154,62), roi_back=(1087,365,154,62), name="sou_group_5")
-	# description 
-	C_SOU_GROUP_6 = RuleClick(roi_front=(1088,437,156,57), roi_back=(1088,437,156,57), name="sou_group_6")
-	# description 
-	C_SOU_GROUP_7 = RuleClick(roi_front=(1090,505,156,62), roi_back=(1090,505,156,62), name="sou_group_7")
-	# 阵容选择按钮位置 
-	C_SOU_TEAM_SELECT = RuleClick(roi_front=(977,157,21,21), roi_back=(977,157,21,21), name="sou_team_select")
+	# Swipe Rule Assets
+	# 列表的向上滑动 
+	S_SS_GROUP_SWIPE_UP = RuleSwipe(roi_front=(1154,180,90,21), roi_back=(1153,322,86,21), mode="default", name="ss_group_swipe_up")
+	# 列表的向下滑动 
+	S_SS_GROUP_SWIPE_DOWN = RuleSwipe(roi_front=(1155,388,21,22), roi_back=(1152,177,22,24), mode="default", name="ss_group_swipe_down")
+	# 阵容向上滑动 
+	S_SS_TEAM_SWIPE_UP = RuleSwipe(roi_front=(720,439,21,21), roi_back=(717,308,21,21), mode="default", name="ss_team_swipe_up")
+	# 阵容向上滑动 
+	S_SS_TEAM_SWIPE_DOWN = RuleSwipe(roi_front=(709,308,21,21), roi_back=(709,449,21,21), mode="default", name="ss_team_swipe_down")
 
 
