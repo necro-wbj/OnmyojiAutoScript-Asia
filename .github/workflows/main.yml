@@ -131,7 +131,7 @@ jobs:
           git push origin "+${{ env.PR_BRANCH }}:${{ env.PR_BRANCH }}"
           echo "[LOG] Pushed ${{ env.PR_BRANCH }} at ${{ steps.resolve.outputs.upstream_tip }}"
 
-      # ---- 生成 assets.py（不提交；只提供 diff artifact 讓你預覽）----
+      # ---- 產生 assets.py（在 PR 分支上），以生成結果為準 ----
       - name: Setup Python 3.10 (for generator)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         uses: actions/setup-python@v5
@@ -139,7 +139,7 @@ jobs:
           python-version: "3.10"
           cache: pip
 
-      - name: Generate assets.py (check only; no commit on PR branch)
+      - name: Regenerate assets.py on PR branch (canonical)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         shell: bash
         env:
@@ -153,27 +153,26 @@ jobs:
           SRC="./assets_extract.py"
           TEMP=0
           if [[ ! -f "$SRC" ]]; then
-            echo "[LOG] assets_extract.py not found; fetching from origin/${BASE_BRANCH}…"
+            echo "[LOG] assets_extract.py not found in current branch; fetching from origin/${BASE_BRANCH}…"
             git show "origin/${BASE_BRANCH}:assets_extract.py" > ./assets_extract_temp.py
-            SRC="./assets_extract_temp.py"; TEMP=1
+            SRC="./assets_extract_temp.py"
+            TEMP=1
           fi
 
-          # 讓 from module.xxx import ... 能找到 repo root
-          PYTHONPATH="$PWD" python "$SRC" || true
+          PYTHONPATH="$PWD" python "$SRC"
 
           [[ $TEMP -eq 1 ]] && rm -f ./assets_extract_temp.py || true
 
-          mkdir -p ci-diff
-          git diff --name-status | tee ci-diff/assets-changes.txt || true
-          tar czf ci-diff-assets.tgz ci-diff
-
-      - name: Upload assets diff artifact
-        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
-        uses: actions/upload-artifact@v4
-        with:
-          name: assets-diff
-          path: ci-diff-assets.tgz
-          retention-days: 7
+          CHANGED="$(git ls-files -m 'tasks/**/assets.py' || true)"
+          if [[ -n "$CHANGED" ]]; then
+            echo "[LOG] assets changed:"
+            echo "$CHANGED"
+            git add $CHANGED
+            git commit -m "chore(assets): regenerate by assets_extract.py [ci skip]"
+            git push origin "+${{ env.PR_BRANCH }}:${{ env.PR_BRANCH }}"
+          else
+            echo "[LOG] no assets changes to commit."
+          fi
 
       - name: Create / Update PR (robust; retry & REST fallback)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
@@ -259,7 +258,7 @@ jobs:
           GQL=""; REST=""
           for i in 2 3 4 5 6 7 8 9; do
             GQL="$(gh pr view "$PR" -R "$REPO" --json mergeStateStatus --jq '.mergeStateStatus' || echo '')"
-            REST="$(gh api "repos/$REPO/pulls/$NUM" --jq '.mergeable_state' || echo '')"
+            REST="$(gh api -R "$REPO" repos/${REPO}/pulls/$NUM --jq '.mergeable_state' || echo '')"
             if [[ -n "$GQL" && "$GQL" != "UNKNOWN" ]] || [[ -n "$REST" && "$REST" != "unknown" ]]; then
               break
             fi
@@ -308,6 +307,16 @@ jobs:
               ;;
           esac
 
+      # ✅ 新增：rebase 預覽前，清乾淨工作區，避免「local changes would be overwritten」
+      - name: Clean working tree before rebase (discard generated assets)
+        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git reset --hard
+          git clean -fdx
+          echo "[LOG] working tree cleaned."
+
       # （可選）rebase 預覽分支，讓你在 repo 看到自動解的效果
       - name: (Cache) Restore rerere decisions
         uses: actions/cache@v4
@@ -337,7 +346,7 @@ jobs:
                 [[ -z "$g" ]] && continue
                 case "$f" in
                   $g)
-                    # 對資產檔採用「ours」
+                    # 資產檔偏向保留我方
                     git checkout --ours -- "$f" || true
                     git add -- "$f" || true
                     echo "[RERERE] asset resolved (prefer ours): $f"
