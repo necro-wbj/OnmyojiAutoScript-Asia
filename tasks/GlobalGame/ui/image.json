@@ -29,8 +29,8 @@
   {
     "itemName": "ui_back_red",
     "imageName": "ui_ui_back_red.png",
-    "roiFront": "1164.3333333333333,97.66666666666666,34,38",
-    "roiBack": "834,15,427,200",
+    "roiFront": "1041,111,34,38",
+    "roiBack": "877,15,383,254",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "description"

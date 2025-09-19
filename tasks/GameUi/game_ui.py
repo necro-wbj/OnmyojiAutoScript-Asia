@@ -9,13 +9,11 @@ from module.atom.image import RuleImage
 from module.atom.ocr import RuleOcr
 from module.base.decorator import run_once
 from module.base.timer import Timer
-from module.exception import (GameNotRunningError, GamePageUnknownError)
 from module.logger import logger
 from tasks.GameUi.assets import GameUiAssets
 from tasks.GameUi.page import *
 from tasks.Restart.assets import RestartAssets
 from tasks.SixRealms.assets import SixRealmsAssets
-from module.logger import logger
 from module.exception import (GameNotRunningError, GamePageUnknownError, RequestHumanTakeover)
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.base_task import BaseTask
