@@ -131,7 +131,7 @@ jobs:
           git push origin "+${{ env.PR_BRANCH }}:${{ env.PR_BRANCH }}"
           echo "[LOG] Pushed ${{ env.PR_BRANCH }} at ${{ steps.resolve.outputs.upstream_tip }}"
 
-      # ---- 產生 assets.py（在 PR 分支上），以生成結果為準 ----
+      # ---- 生成 assets.py（不提交；只提供 diff artifact 讓你預覽）----
       - name: Setup Python 3.10 (for generator)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         uses: actions/setup-python@v5
@@ -139,7 +139,7 @@ jobs:
           python-version: "3.10"
           cache: pip
 
-      - name: Regenerate assets.py on PR branch (canonical)
+      - name: Generate assets.py (check only; no commit on PR branch)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
         shell: bash
         env:
@@ -148,36 +148,32 @@ jobs:
           set -euo pipefail
           python -VV
           python -m pip install --upgrade pip
-          # 最少依賴即可：numpy / tqdm / rich（assets_extract 會用到）
           python -m pip install "numpy==1.24.3" "tqdm==4.66.1" "rich==13.7.1"
 
-          # 取出產生器：PR 分支沒有就從 origin/main 抓一份到 repo root
           SRC="./assets_extract.py"
           TEMP=0
           if [[ ! -f "$SRC" ]]; then
-            echo "[LOG] assets_extract.py not found in current branch; fetching from origin/${BASE_BRANCH}…"
+            echo "[LOG] assets_extract.py not found; fetching from origin/${BASE_BRANCH}…"
             git show "origin/${BASE_BRANCH}:assets_extract.py" > ./assets_extract_temp.py
-            SRC="./assets_extract_temp.py"
-            TEMP=1
+            SRC="./assets_extract_temp.py"; TEMP=1
           fi
 
-          # 讓 `from module.xxx import ...` 可找到 repo 根目錄
-          PYTHONPATH="$PWD" python "$SRC"
+          # 讓 from module.xxx import ... 能找到 repo root
+          PYTHONPATH="$PWD" python "$SRC" || true
 
-          # 清除臨時檔，避免之後切分支報「untracked would be overwritten」
           [[ $TEMP -eq 1 ]] && rm -f ./assets_extract_temp.py || true
 
-          # 只提交 assets.py 的變更到 PR 分支
-          CHANGED="$(git ls-files -m 'tasks/**/assets.py' || true)"
-          if [[ -n "$CHANGED" ]]; then
-            echo "[LOG] assets changed:"
-            echo "$CHANGED"
-            git add $CHANGED
-            git commit -m "chore(assets): regenerate by assets_extract.py [ci skip]"
-            git push origin "+${{ env.PR_BRANCH }}:${{ env.PR_BRANCH }}"
-          else
-            echo "[LOG] no assets changes to commit."
-          fi
+          mkdir -p ci-diff
+          git diff --name-status | tee ci-diff/assets-changes.txt || true
+          tar czf ci-diff-assets.tgz ci-diff
+
+      - name: Upload assets diff artifact
+        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
+        uses: actions/upload-artifact@v4
+        with:
+          name: assets-diff
+          path: ci-diff-assets.tgz
+          retention-days: 7
 
       - name: Create / Update PR (robust; retry & REST fallback)
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
@@ -263,7 +259,7 @@ jobs:
           GQL=""; REST=""
           for i in 2 3 4 5 6 7 8 9; do
             GQL="$(gh pr view "$PR" -R "$REPO" --json mergeStateStatus --jq '.mergeStateStatus' || echo '')"
-            REST="$(gh api -R "$REPO" repos/${REPO}/pulls/$NUM --jq '.mergeable_state' || echo '')"
+            REST="$(gh api "repos/$REPO/pulls/$NUM" --jq '.mergeable_state' || echo '')"
             if [[ -n "$GQL" && "$GQL" != "UNKNOWN" ]] || [[ -n "$REST" && "$REST" != "unknown" ]]; then
               break
             fi
@@ -341,7 +337,8 @@ jobs:
                 [[ -z "$g" ]] && continue
                 case "$f" in
                   $g)
-                    git checkout --theirs -- "$f" || true
+                    # 對資產檔採用「ours」
+                    git checkout --ours -- "$f" || true
                     git add -- "$f" || true
                     echo "[RERERE] asset resolved (prefer ours): $f"
                     ;;
