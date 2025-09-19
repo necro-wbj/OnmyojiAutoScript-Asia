@@ -9,11 +9,9 @@ import cv2
 
 from module.base.utils import get_color, color_similar
 from tasks.base_task import BaseTask
-from tasks.Component.GeneralBattle.config_general_battle import (
-    GreenMarkType,
-    GeneralBattleConfig,
-)
+from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType, GeneralBattleConfig
 from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
+from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType, GeneralBattleConfig
 from tasks.Component.GeneralBuff.config_buff import BuffClass
 from tasks.Component.GeneralBuff.general_buff import GeneralBuff
 
@@ -436,12 +434,11 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
         """
         if is_screenshot:
             self.screenshot()
-        if (
-            self.appear(self.I_FRIENDS)
-            or self.appear(self.I_WIN)
-            or self.appear(self.I_FALSE)
-            or self.appear(self.I_REWARD)
-        ):
+        if self.appear(self.I_BATTLE_INFO) or \
+                self.appear(self.I_FRIENDS) or \
+                self.appear(self.I_WIN) or \
+                self.appear(self.I_FALSE) or \
+                self.appear(self.I_REWARD):
             return True
         else:
             return False
