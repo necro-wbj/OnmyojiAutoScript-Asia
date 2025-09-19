@@ -335,13 +335,22 @@ jobs:
         run: |
           set -euo pipefail
           UP_REF="${{ steps.resolve.outputs.up_ref }}"
+          
           git checkout -B "${{ env.BASE_BRANCH }}" origin/${{ env.BASE_BRANCH }}
           git switch -c rebase/preview || git checkout -B rebase/preview
+          
+          # 重要：避免任何互動式編輯器
+          export GIT_EDITOR=true
+          export GIT_SEQUENCE_EDITOR=:
           git config rerere.enabled true
-          if ! git rebase -s ort -X theirs "${UP_REF}"; then
-            echo "::warning::Rebase hit conflicts; applying asset-prefer-ours policy…"
+          
+          # 用 non-interactive 的 editor 設定跑 rebase
+          if ! git -c core.editor=true rebase -s ort -X theirs "${UP_REF}"; then
+            echo "::warning::Rebase hit conflicts; applying asset-prefer-ours / prefer-theirs policies…"
+          
             CONFLICTS=$(git diff --name-only --diff-filter=U || true)
-            # 先處理資產檔：偏向保留我方
+          
+            # 先處理資產檔：偏向我方（ours）
             while IFS= read -r f; do
               [[ -z "$f" ]] && continue
               while IFS= read -r g; do
@@ -355,7 +364,7 @@ jobs:
                 esac
               done <<<"${{ env.ASSET_GLOBS }}"
             done <<<"$CONFLICTS"
-
+          
             # 再處理 dev/test/docs：偏向上游（theirs），含 modify/delete 的 rm 後備
             UNMERGED=$(git diff --name-only --diff-filter=U || true)
             while IFS= read -r f; do
@@ -368,9 +377,16 @@ jobs:
                   ;;
               esac
             done <<<"$UNMERGED"
-
-            git rebase --continue || true
+          
+            # 重點：若解完沒東西可提交 → 跳過這個 commit；否則繼續
+            if git diff --cached --quiet; then
+              echo "[RERERE] nothing to commit after resolution; skipping commit."
+              git rebase --skip || true
+            else
+              git -c core.editor=true rebase --continue || true
+            fi
           fi
+          
           git remote set-url --push origin "https://x-access-token:${GH_PAT}@github.com/${GITHUB_REPOSITORY}.git"
           git push -f origin rebase/preview
 
