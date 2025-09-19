@@ -20,3 +20,5 @@
 # 這些是自動生成檔；PR 合併時強制保留「ours」（= base/main）
 tasks/**/assets.py merge=ours
 tasks/**/*.json merge=ours
+tasks/**/*.png merge=ours
+tasks/**/*.jpg merge=ours
