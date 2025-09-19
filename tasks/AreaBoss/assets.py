@@ -27,7 +27,7 @@ class AreaBossAssets:
 	# 热门按钮 
 	C_AB_FAMOUS_BTN = RuleClick(roi_front=(1190,220,50,120), roi_back=(1190,220,50,120), name="ab_famous_btn")
 	# 收藏按钮 
-	C_AB_COLLECTION_BTN = RuleClick(roi_front=(1190,580,50,120), roi_back=(1190,580,50,120), name="ab_collection_btn")
+	C_AB_COLLECTION_BTN = RuleClick(roi_front=(1190,593,43,107), roi_back=(1190,593,43,107), name="ab_collection_btn")
 	# 筛选中 除悬赏外 第一个boss的头像位置 
 	C_AB_BOSS_PHOTO_1 = RuleClick(roi_front=(940,210,95,70), roi_back=(940,210,95,70), name="ab_boss_photo_1")
 	# 筛选中 除悬赏外 第二个boss的头像位置 
@@ -56,6 +56,22 @@ class AreaBossAssets:
 	C_AB_JI_FLOOR_SELECTED = RuleClick(roi_front=(380,120,70,30), roi_back=(380,120,70,30), name="ab_ji_floor_selected")
 
 
+<<<<<<<
+=======
+	# Swipe Rule Assets
+	# 筛选列表 手指向上滑动 
+	S_AB_FILTER_UP = RuleSwipe(roi_front=(920,680,10,10), roi_back=(1130,230,10,10), mode="default", name="ab_filter_up")
+	# 筛选列表 手指向下滑动 
+	S_AB_FILTER_DOWN = RuleSwipe(roi_front=(1130,230,10,10), roi_back=(920,680,10,10), mode="default", name="ab_filter_down")
+	# 极地鬼 层数列表 手指向上滑动 
+	S_AB_FLOOR_UP = RuleSwipe(roi_front=(450,500,10,10), roi_back=(390,260,10,10), mode="default", name="ab_floor_up")
+	# 极地鬼 层数列表 手指向下滑动  
+	S_AB_FLOOR_DOWN = RuleSwipe(roi_front=(390,260,10,10), roi_back=(450,500,10,10), mode="default", name="ab_floor_down")
+	# 普通地鬼 等级滑轨 手指向右滑动  
+	S_AB_LEVEL_RIGHT = RuleSwipe(roi_front=(0,0,10,10), roi_back=(570,270,10,10), mode="default", name="ab_level_right")
+
+
+>>>>>>>
 	# Image Rule Assets
 	# 探索图标 
 	I_EXPLORE = RuleImage(roi_front=(758,122,66,77), roi_back=(339,104,836,120), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_explore.png")
@@ -66,11 +82,11 @@ class AreaBossAssets:
 	# 右上边选中鬼王的 
 	I_FILTER = RuleImage(roi_front=(1116,33,35,31), roi_back=(1076,19,98,78), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_filter.png")
 	# 除悬赏外 选中第一个鬼王的 
-	I_BATTLE_1 = RuleImage(roi_front=(1083,235,65,54), roi_back=(1083,235,65,54), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_battle_1.png")
+	I_BATTLE_1 = RuleImage(roi_front=(1088,241,58,58), roi_back=(1066,210,100,100), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_battle_1.png")
 	# 除悬赏外 选中第二个鬼王的 
-	I_BATTLE_2 = RuleImage(roi_front=(1086,390,56,53), roi_back=(1086,390,56,53), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_battle_2.png")
+	I_BATTLE_2 = RuleImage(roi_front=(1086,391,61,63), roi_back=(1068,364,100,100), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_battle_2.png")
 	# 除悬赏外 选中第三个鬼王的 
-	I_BATTLE_3 = RuleImage(roi_front=(1083,545,66,53), roi_back=(1083,545,66,53), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_battle_3.png")
+	I_BATTLE_3 = RuleImage(roi_front=(1085,545,63,63), roi_back=(1071,521,100,100), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_battle_3.png")
 	# 点击挑战 
 	I_FIRE = RuleImage(roi_front=(1109,490,100,73), roi_back=(1075,463,150,158), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_fire.png")
 	# 跟buff冲突弃用 
@@ -78,13 +94,13 @@ class AreaBossAssets:
 	# 红色关闭 
 	I_AB_CLOSE_RED = RuleImage(roi_front=(1194,24,38,37), roi_back=(1194,24,38,37), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_ab_close_red.png")
 	# 筛选中 选中悬赏标识 
-	I_AB_FILTER_TITLE_REWARD = RuleImage(roi_front=(920,110,190,70), roi_back=(920,110,190,70), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_filter_title_reward.png")
+	I_AB_FILTER_TITLE_REWARD = RuleImage(roi_front=(920,110,190,70), roi_back=(920,110,190,70), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_ab_filter_title_reward.png")
 	# 筛选中 选中热门标识 
-	I_AB_FILTER_TITLE_FAMOUS = RuleImage(roi_front=(920,110,190,70), roi_back=(920,110,190,70), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_filter_title_famous.png")
+	I_AB_FILTER_TITLE_FAMOUS = RuleImage(roi_front=(920,110,190,70), roi_back=(920,110,190,70), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_ab_filter_title_famous.png")
 	# 筛选中 选中收藏标识 
-	I_AB_FILTER_TITLE_COLLECTION = RuleImage(roi_front=(920,110,190,70), roi_back=(920,110,190,70), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_filter_title_collection.png")
+	I_AB_FILTER_TITLE_COLLECTION = RuleImage(roi_front=(920,110,190,70), roi_back=(920,110,190,70), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_ab_filter_title_collection.png")
 	# 筛选界面打开标识 
-	I_AB_FILTER_OPENED = RuleImage(roi_front=(840,110,130,70), roi_back=(840,110,130,70), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_filter_opened.png")
+	I_AB_FILTER_OPENED = RuleImage(roi_front=(851,110,84,70), roi_back=(851,110,84,70), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_ab_filter_opened.png")
 	# 极地鬼标识 出现此图片表明 是 极地鬼 
 	I_AB_DIFFICULTY_JI = RuleImage(roi_front=(260,100,70,70), roi_back=(260,100,70,70), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_difficulty_ji.png")
 	# 极地鬼标识 出现此图片表明 是 普通地鬼 
@@ -96,22 +112,22 @@ class AreaBossAssets:
 	# 极地鬼 层数列表打开 标志 
 	I_AB_JI_FLOOR_LIST_CHECK = RuleImage(roi_front=(390,150,60,290), roi_back=(390,150,60,290), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_ji_floor_list_check.png")
 	# 极地鬼 一层 
-	I_AB_JI_FLOOR_ONE = RuleImage(roi_front=(390,150,60,290), roi_back=(390,150,60,290), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_ji_floor_one.png")
+	I_AB_JI_FLOOR_ONE = RuleImage(roi_front=(390,160,60,32), roi_back=(390,150,60,290), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_ab_ji_floor_one.png")
 	# 极地鬼 十层 
-	I_AB_JI_FLOOR_TEN = RuleImage(roi_front=(390,370,60,40), roi_back=(390,370,60,40), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_ji_floor_ten.png")
+	I_AB_JI_FLOOR_TEN = RuleImage(roi_front=(390,370,60,40), roi_back=(390,370,60,40), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_ab_ji_floor_ten.png")
 	# 小组内未取得名次 
-	I_AB_GROUP_RANK_NONE = RuleImage(roi_front=(890,415,95,85), roi_back=(890,415,95,85), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_rank_none.png")
-	# 挑战数进度条 
-	I_AB_NUM_CHALLENGE_RAIL = RuleImage(roi_front=(895,639,14,27), roi_back=(895,639,14,27), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/ab_num_challenge_rail.png")
+	I_AB_GROUP_RANK_NONE = RuleImage(roi_front=(903,432,42,40), roi_back=(903,432,42,40), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_ab_group_rank_none.png")
+	# description 
+	I_TIMEOUT = RuleImage(roi_front=(468,224,55,32), roi_back=(468,224,55,32), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_timeout.png")
 
 
 	# Ocr Rule Assets
-	# 击杀最多 
-	O_AB_KILL_BEST = RuleOcr(roi=(942,123,157,52), area=(942,123,157,52), mode="Single", method="Default", keyword="击杀最多", name="ab_kill_best")
+	# 急殺數最多 
+	O_AB_KILL_BEST = RuleOcr(roi=(942,123,157,52), area=(942,123,157,52), mode="Single", method="Default", keyword="数最多", name="ab_kill_best")
 	# 我的收藏 
 	O_AB_MY_COLLECT = RuleOcr(roi=(949,124,129,53), area=(949,124,129,53), mode="Single", method="Default", keyword="我的收藏", name="ab_my_collect")
-	# 热门 
-	O_AB_FAMOUS = RuleOcr(roi=(1190,220,50,120), area=(1190,220,50,120), mode="Single", method="Default", keyword="热门", name="ab_famous")
+	# 熱門 
+	O_AB_FAMOUS = RuleOcr(roi=(1190,220,50,120), area=(1190,220,50,120), mode="Single", method="Default", keyword="熱門", name="ab_famous")
 	# 收藏 
 	O_AB_COLLECTING = RuleOcr(roi=(1190,580,50,120), area=(1190,580,50,120), mode="Single", method="Default", keyword="收藏", name="ab_collecting")
 	# 挑战人数 

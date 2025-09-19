@@ -108,8 +108,59 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         if isinstance(self.limit_time, time):
             self.limit_time = timedelta(hours=self.limit_time.hour, minutes=self.limit_time.minute,
                                         seconds=self.limit_time.second)
-        # 初始化爬塔类型
-        self.climb_type = get_run_order_list(config.general_climb)[0]
+        self.limit_count = config.general_climb.limit_count
+
+        if config.switch_soul_config.enable:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul(config.switch_soul_config.switch_group_team)
+        if config.switch_soul_config.enable_switch_by_name:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul_by_name(
+                config.switch_soul_config.group_name,
+                config.switch_soul_config.team_name
+            )
+
+        self.ui_get_current_page()
+        self.ui_goto(page_main)
+
+        # 某些活动需要开启御魂加成
+        # self.open_buff()
+        # self.soul(is_open=True)
+        # self.close_buff()
+
+        self.home_main()
+
+        # 选择是游戏的体力还是活动的体力
+        current_ap = config.general_climb.ap_mode
+        current_ap = ApMode.AP_ACTIVITY
+        self.switch(current_ap)
+
+        # 设定是否锁定阵容
+
+        if config.general_battle.lock_team_enable:
+            logger.info("Lock team")
+            while 1:
+                self.screenshot()
+                if self.appear_then_click(self.I_UNLOCK, interval=1):
+                    continue
+                if self.appear(self.I_LOCK):
+                    break
+        else:
+            logger.info("Unlock team")
+            while 1:
+                self.screenshot()
+                if self.appear_then_click(self.I_LOCK, interval=1):
+                    continue
+                if self.appear(self.I_UNLOCK):
+                    break
+
+        # 流程应该是 在页面处：
+        # 1. 判定计数是否超了，时间是否超了
+        # 2. 如果是消耗活动体力，判定活动体力是否足够 如果是消耗一般的体力，判定一般体力是否足够
+        # 3. 如果开启买体力，就买体力
+        # 4. 如果开启了切换到游戏体力，就切换
         while 1:
             # 切换御魂
             self.switch_soul(config.switch_soul_config)

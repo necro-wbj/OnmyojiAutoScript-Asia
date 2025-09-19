@@ -1,15 +1,24 @@
-* text=auto
-*.jpg -text
-*.png -text
-*.bat text eol=crlf
-*.txt text eol=lf
-*.sh text eol=lf
-*.js text eol=lf
-*.ts text eol=lf
-*.py  eol=lf
-*.vue text eol=lf
-*.css text eol=lf
-*.yml text eol=lf
-*.yaml text eol=lf
-*.json text eol=lf
-*.html text eol=lf
+# Normalize text files
+*               text=auto
+*.bat           text eol=crlf
+*.txt           text eol=lf
+*.sh            text eol=lf
+*.js            text eol=lf
+*.ts            text eol=lf
+*.py            text eol=lf
+*.vue           text eol=lf
+*.css           text eol=lf
+*.yml           text eol=lf
+*.yaml          text eol=lf
+*.json          text eol=lf
+*.html          text eol=lf
+
+# Binary / images (不要做行尾轉換、不要嘗試三方合併)
+*.png           binary
+*.jpg           binary
+
+# 這些是自動生成檔；PR 合併時強制保留「ours」（= base/main）
+tasks/**/assets.py merge=ours
+tasks/**/*.json merge=ours
+tasks/**/*.png merge=ours
+tasks/**/*.jpg merge=ours

@@ -52,6 +52,7 @@ class KittyShopAssets:
 
 	# Click Rule Assets
 	# description 
+<<<<<<<
 	C_SELECT_1 = RuleClick(roi_front=(225,215,242,303), roi_back=(225,215,242,303), name="select_1")
 	# description 
 	C_SELECT_2 = RuleClick(roi_front=(471,216,250,300), roi_back=(471,216,250,300), name="select_2")
@@ -69,5 +70,8 @@ class KittyShopAssets:
 	C_RUN_4 = RuleClick(roi_front=(731,572,170,142), roi_back=(731,572,170,142), name="run_4")
 	# description 
 	C_RUN_5 = RuleClick(roi_front=(900,571,165,136), roi_back=(900,571,165,136), name="run_5")
+=======
+	S_SELECTION = RuleSwipe(roi_front=(720,241,21,258), roi_back=(459,234,22,270), mode="default", name="selection")
+>>>>>>>
 
 
