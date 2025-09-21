@@ -382,6 +382,8 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
             self.screenshot()
             # 出现自动上阵
             if self.appear(self.I_D_AUTO_ENTRY):
+                # Workaround: OCR 常回傳亂碼而非空字串，需等待畫面穩定再判斷 ban name
+                self.wait_until_stable(self.I_D_AUTO_ENTRY)
                 ban_check_success = True
                 if celeb_status:
                     # 检查禁选式神
