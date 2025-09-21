@@ -74,12 +74,6 @@ class InviteConfig(BaseModel):
     wait_time: Time = Field(default=Time(minute=2), description='wait_time_help')
 
 
-class Scrolls(BaseModel):
-    # 绘卷模式
-    scrolls_enable: bool = Field(title='绘卷模式', default=False, description='scrolls_enable_help')
-    scrolls_cd: TimeDelta = Field(title='间隔时间', default=TimeDelta(hours=0, minutes=30, seconds=0), description='scrolls_cd_help')
-    scrolls_threshold: int = Field(title='突破票数量', default='25', description='scrolls_threshold_help')
-
 
 class Scrolls(BaseModel):
     # 绘卷模式
