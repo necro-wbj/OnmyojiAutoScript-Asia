@@ -54,24 +54,17 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             # 无法完成预处理 很有可能你已经完成了悬赏任务
             logger.warning('Cannot pre-work')
             logger.warning('You may have completed the reward task')
-            # self.set_next_run(task='WantedQuests', success=True, finish=True)
             self.next_run()
             raise TaskEnd('WantedQuests')
 
         self.screenshot()
         number_challenge = self.O_WQ_NUMBER.ocr(self.device.image)
-        logger.info(f'Number of challenge tickets: {number_challenge}')
         error_count = 0
-
         while 1:
             self.screenshot()
-
-            # 沒任務了
             if not self.is_wq_remained():
                 logger.info("no more wq remained")
                 break
-
-            # 拿箱子之類的獎勵
             if self.appear(self.I_WQ_BOX):
                 logger.info("get reward")
                 self.ui_get_reward(self.I_WQ_BOX)
@@ -80,38 +73,96 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                 logger.info("get treasure")
                 self.ui_get_reward(self.I_TREASURE_BOX_CLICK)
                 continue
-
-            # 妖氣封印 / 年獸阻擋，等待 4 分鐘
-            if self.appear(self.I_WQ_D1111) or self.appear(self.I_WQ_NIAN):
-                logger.warning('Tiger is in the way, wait for 4 minutes')
-                logger.info('Time to wait for 4 minutes')
-                self.set_next_run('WantedQuests', target=datetime.now() + timedelta(minutes=4))
-                raise TaskEnd('WantedQuests')
-
-            # 應該仍在任務檢視面板
-            if self.appear(self.I_WQ_CHECK_TASK):
-                logger.info('find I_WQ_CHECK_TASK')
-                # 視畫面刷新情況，可留可去
-                # continue
-
-            # 用新版偵測抽出 (cu, re, total, area)
+            if error_count > 3:
+                logger.warning('failed too many times, exit')
+                break
             cu, re, total, area = self.find_wq(self.device.image)
             if re == -1:
                 error_count += 1
-                if error_count > 3:
-                    logger.warning('failed too many times, exit')
-                    break
-                # 沒找到，嘗試上滑
+                # 没找到任务 尝试上滑
                 self.swipe(self.S_WQ_LIST_UP, interval=1)
                 sleep(1)
                 continue
-
-            # 找到任務，執行
-            error_count = 0
+            # 找到任务,执行
+            error_count=0
             self.O_WQ_TEXT_ALL.area = area
-            # total - cu = 還需要擊敗的數量；execute_mission 內會算需要打幾輪
             self.execute_mission(self.O_WQ_TEXT_ALL, total - cu, number_challenge)
             sleep(1.5)
+
+
+
+        # region 旧代码
+        # # 第一个位置
+        # wq_1_done = False
+        # wq_2_done = False
+        # while 1:
+        #     self.screenshot()
+        #     if self.appear(self.I_WQ_BOX):
+        #         self.ui_get_reward(self.I_WQ_BOX)
+        #         continue
+        #     if self.appear(self.I_TREASURE_BOX_CLICK):
+        #         self.ui_get_reward(self.I_TREASURE_BOX_CLICK)
+        #         continue
+        #     if ocr_error_count > 10:
+        #         logger.warning('OCR failed too many times, exit')
+        #         break
+        #     # if self.ocr_appear(self.O_WQ_TEXT_1, interval=1):
+        #     if (not wq_1_done) and self.txt_ocr_appear(self.O_WQ_TEXT_1, r".*[封|野]印.*", self.device.image):
+        #         # cu, re, total = self.O_WQ_NUM_1.ocr(self.device.image)
+        #         cu, re, total = self.process_ocr(self.O_WQ_NUM_1, self.device.image)
+        #         if cu == re == total == 0:
+        #             logger.warning('OCR failed and have a try')
+        #             ocr_error_count += 1
+        #             # 尝试打一次
+        #             unknown_num = self.O_WQ_NUM_UNKNOWN_1.ocr(self.device.image)
+        #             if unknown_num > 14:
+        #                 self.execute_mission(self.O_WQ_TEXT_1, 1, number_challenge)
+        #         if total > 14:
+        #             logger.warning("Total number of wanted quests is greater than 14")
+        #             total = total % 10
+        #         if cu > total:
+        #             logger.warning('Current number of wanted quests is greater than total number')
+        #             cu = cu % 10
+        #         if cu < total and re != 0:
+        #             self.execute_mission(self.O_WQ_TEXT_1, min(total - cu, 20), number_challenge)
+        #         if cu == total:
+        #             wq_1_done = True
+        #
+        #     # if self.ocr_appear(self.O_WQ_TEXT_2, interval=1):
+        #     if self.txt_ocr_appear(self.O_WQ_TEXT_2, r".*[封|野]印.*", self.device.image):
+        #         # cu, re, total = self.O_WQ_NUM_2.ocr(self.device.image)
+        #         cu, re, total = self.process_ocr(self.O_WQ_NUM_2, self.device.image)
+        #         if cu == re == total == 0:
+        #             logger.warning('OCR failed and have a try')
+        #             ocr_error_count += 1
+        #             # 尝试打一次
+        #             unknown_num = self.O_WQ_NUM_UNKNOWN_2.ocr(self.device.image)
+        #             if unknown_num > 14:
+        #                 self.execute_mission(self.O_WQ_TEXT_2, 1, number_challenge)
+        #         if total > 14:
+        #             logger.warning("Total number of wanted quests is greater than 14")
+        #             total = total % 10
+        #         if cu > total:
+        #             logger.warning('Current number of wanted quests is greater than total number')
+        #             cu = cu % 10
+        #         if cu < total and re != 0:
+        #             self.execute_mission(self.O_WQ_TEXT_2, min(total - cu, 20), number_challenge)
+        #         continue
+        #
+        #     # 妖气封印或者年兽，那就四分钟后继续
+        #     if self.appear(self.I_WQ_D1111) or self.appear(self.I_WQ_NIAN):
+        #         logger.warning('Tiger is in the way, wait for 4 minutes')
+        #         logger.info('Time to wait for 4 minutes')
+        #         self.set_next_run('WantedQuests', target=datetime.now() + timedelta(minutes=4))
+        #         raise TaskEnd('WantedQuests')
+        #     if self.appear(self.I_WQ_CHECK_TASK):
+        #         continue
+        #     sleep(1.5)
+        #     self.screenshot()
+        #     if not self.appear(self.I_WQ_CHECK_TASK):
+        #         logger.info('No wanted quests')
+        #         break
+        # endregion
 
         self.next_run()
         raise TaskEnd('WantedQuests')
@@ -136,8 +187,6 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             # 如果是在0点到5点之间，那就设定下一次运行的时间为今天的18点 + before_end
             next_run_datetime = datetime.combine(now_datetime.date(), time(hour=18))
             next_run_datetime = next_run_datetime + time_delta
-            logger.info(f'5<time<18 {next_run_datetime}')
-        
         self.set_next_run(task='WantedQuests', target=next_run_datetime)
 
     def pre_work(self):
@@ -255,7 +304,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
 
         :param ocr: 要点击的 文字
         :param num_want: 一共要打败的怪物数量
-        :param num_challenge: 现在有的挑戰卷数量
+        :param num_challenge: 现在有的挑战卷数量
         :return:
         """
         OCR_WQ_TYPE = [self.O_WQ_TYPE_1, self.O_WQ_TYPE_2, self.O_WQ_TYPE_3, self.O_WQ_TYPE_4]
@@ -274,13 +323,20 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             :return:
             (type, destination, number, goto_button, func)
             (类型, 地点层级，可以打败的数量，前往按钮, func)
-            类型： 挑戰0, 秘聞1， 探索2
+            类型： 挑战0, 秘闻1， 探索2
             """
             layer_limit = {
-                # 低層不限制
-                # "壹", "貳", "叁", "肆", "伍", "陸",
-                "柒", "捌", "玖", "拾", "番外"
+                # 低层不限制
+                # "壹", "贰", "叁", "肆", "伍", "陆",
+                "柒", "染", "捌", "玖", "拾", "番外"
             }
+            if self.config.model.wanted_quests.additional_config.skip_high_level == False:
+                # clear layer_limit as  "番外"
+                layer_limit = {
+                    "外", "番外"
+                }
+            if self.config.model.wanted_quests.additional_config.unwanted_destination_names != '':
+                unwanted_destination_names = set(self.config.model.wanted_quests.additional_config.unwanted_destination_names.split(','))
             # ,荒川之怒·壹，4，前往按钮，function
             result = [-1, '', -1, GOTO_BUTTON[index], self.challenge, '']
             type_wq = OCR_WQ_TYPE[index].ocr(self.device.image)
@@ -298,20 +354,21 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             match = (re.match(r"^(.*?)[(].*?数量:\s*(\d+)[)]", info_norm)
                      or re.match(r"^(.*?)[(].*?量:\s*(\d+)[)]", info_norm))
             if not match:
-                logger.warning(f"[Wanted Quests] not match, info_wq_1: {info_wq_1}")
                 return None
-            logger.info(f'[Wanted Quests] match: {match.group(0)}')
             wq_destination = match.group(1)
             wq_number = int(match.group(2))
-            # 跳过高层秘聞
+            # 跳过高层秘闻
             if wq_destination[-1] in layer_limit:
                 logger.warning('This secret layer is too high')
                 return None
+            # EXAMPLE wq_destination = "寮寧奇緣·染" unwanted_destination_names = {"奇緣", "世界"}
+            if any(unwanted in wq_destination for unwanted in unwanted_destination_names):
+                logger.warning(f'unwanted destination {wq_destination}')
+                return None
             result[1] = wq_destination
             result[2] = wq_number
-            battle_priority = self.config.model.wanted_quests.wanted_quests_config.battle_priority
-            battle_priority = battle_priority.replace('战', '戰').replace('闻', '聞')    # 以前預設值是簡中 為了避免舊版的人錯誤 這裡做相容性轉換
-            order_list = battle_priority
+            order_list = self.config.model.wanted_quests.wanted_quests_config.battle_priority
+            order_list = order_list.replace('战', '戰').replace('闻', '聞')    # 以前預設值是簡中 為了避免舊版的人錯誤 這裡做相容性轉換
             order_list = order_list.replace(' ', '').replace('\n', '')
             order_list: list = re.split(r'>', order_list)
             result[0] = order_list.index(type_wq) if type_wq in order_list else -1
@@ -372,11 +429,23 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         self.run_general_battle(config=wq_config)
         self.wait_until_appear(self.I_WQC_FIRE, wait_time=4)
         self.ui_click_until_disappear(self.I_UI_BACK_RED)
-        # 我忘记了打完后是否需要关闭 挑戰界面
+        # 我忘记了打完后是否需要关闭 挑战界面
 
     def secret(self, goto, num=1):
         self.ui_click(goto, self.I_WQSE_FIRE)
         for i in range(num):
+            # Add workaround if fight is same as week secret it will show diff fire I_SE_FIRE
+            while True:
+                self.screenshot()
+                if self.appear(self.I_SE_FIRE):
+                    logger.info('find week secret, return to explore')
+                    break
+                if self.appear(self.I_WQSE_FIRE):
+                    # 找到正常祕聞 FIRE，繼續後續流程
+                    break
+            if self.appear(self.I_SE_FIRE):
+                logger.info('find week secret, return to explore')
+                break
             self.wait_until_appear(self.I_WQSE_FIRE)
             # self.ui_click_until_disappear(self.I_WQSE_FIRE)
             # 又臭又长的对话针的是服了这个网易
@@ -448,6 +517,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         @return:
 
         """
+        # TODO this not handle if INVITE_1 not exists but INVITE_2 or 3 exists
         self.screenshot()
         if not self.appear(self.I_WQ_INVITE_1):
             return False

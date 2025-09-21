@@ -96,7 +96,15 @@ class WantedQuestsConfig(BaseModel):
     unwanted_boss_names: str = Field(default='酒吞童子,阎魔', description='unwanted_boss_name_help')
 
 
+class WantedQuestsAdditionalConfig(BaseModel):
+    # 是否跳過高層數
+    skip_high_level: bool = Field(default=True, description='skip_high_level_help')
+    # 忽略此名稱的目標挑戰,多個用逗號“，”分隔
+    unwanted_destination_names: str = Field(default='', description='recommend destination as 奇緣,世界')
+
+
 class WantedQuests(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     wanted_quests_config: WantedQuestsConfig = Field(default_factory=WantedQuestsConfig)
     switch_soul_config: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
+    additional_config: WantedQuestsAdditionalConfig = Field(default_factory=WantedQuestsAdditionalConfig)
