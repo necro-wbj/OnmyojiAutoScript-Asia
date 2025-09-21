@@ -156,7 +156,7 @@
     "itemName": "invite_ensure",
     "imageName": "gi_invite_ensure.png",
     "roiFront": "710,544,132,60",
-    "roiBack": "710,544,132,60",
+    "roiBack": "503,544,350,60",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击邀请"
@@ -165,7 +165,7 @@
     "itemName": "selected",
     "imageName": "gi_selected.png",
     "roiFront": "895,373,33,32",
-    "roiBack": "895,373,33,32",
+    "roiBack": "347,163,500,300",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "判断是否点中好友了"
