@@ -128,7 +128,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         # self.ui_goto(page_soul_zones)
         self.ui_goto(page_awake_zones)
         self.evozone_enter()
-        layer = self.config.evo_zone.evo_zone_config.layer
+        layer = self.config.evo_zone.evo_zone_config.layer[0]
         logger.info("test0")
         self.check_layer(layer)
         logger.info("test1")
@@ -276,7 +276,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         self.ui_get_current_page()
         self.ui_goto(page_awake_zones)
         self.evozone_enter()
-        layer = self.config.evo_zone.evo_zone_config.layer
+        layer = self.config.evo_zone.evo_zone_config.layer[0]
         self.check_layer(layer)
         self.check_lock(self.config.evo_zone.general_battle_config.lock_team_enable)
 

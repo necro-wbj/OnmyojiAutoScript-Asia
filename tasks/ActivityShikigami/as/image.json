@@ -38,8 +38,8 @@
   {
     "itemName": "drum",
     "imageName": "as_drum.png",
-    "roiFront": "327,627,145,28",
-    "roiBack": "256,462,301,232",
+    "roiFront": "562,295,39,151",
+    "roiBack": "444,176,301,435",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "归鹿之途"
@@ -68,7 +68,7 @@
     "roiFront": "1131,598,103,54",
     "roiBack": "1113,564,136,111",
     "method": "Template matching",
-    "threshold": 0.7,
+    "threshold": 0.8,
     "description": "点击战斗"
   },
   {
@@ -101,8 +101,8 @@
   {
     "itemName": "buy_jade",
     "imageName": "as_buy_jade.png",
-    "roiFront": "1004,192,38,42",
-    "roiBack": "836,619,38,42",
+    "roiFront": "845,627,30,32",
+    "roiBack": "809,581,66,78",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "购买活动的体力"
@@ -110,7 +110,7 @@
   {
     "itemName": "add_max",
     "imageName": "as_add_max.png",
-    "roiFront": "17,24,33,37",
+    "roiFront": "974,524,57,54",
     "roiBack": "974,524,57,54",
     "method": "Template matching",
     "threshold": 0.8,

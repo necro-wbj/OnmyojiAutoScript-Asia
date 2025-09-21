@@ -53,6 +53,17 @@ class RealmRaidAssets:
 	I_MEDAL_3_3 = RuleImage(roi_front=(902,479,201,50), roi_back=(902,479,201,50), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_medal_3_3.png")
 
 
+	# Image Rule Assets
+	# 出现呱太勋章 
+	I_FROG_MEDAL = RuleImage(roi_front=(912,12,32,35), roi_back=(912,12,32,35), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_frog_medal.png")
+	# 已经进攻三次了 
+	I_RR_THREE = RuleImage(roi_front=(346,584,42,44), roi_back=(346,584,42,44), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_rr_three.png")
+	# 呱太入侵， 第一次进入结界时候出现 
+	I_FROG_RAID = RuleImage(roi_front=(511,301,282,100), roi_back=(511,301,282,100), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_frog_raid.png")
+	# 个人 
+	I_RR_PERSON = RuleImage(roi_front=(1203,236,51,95), roi_back=(1193.6666666666665,225.33333333333331,74,120.33333333333331), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_rr_person.png")
+
+
 	# Ocr Rule Assets
 	# 刷新的时间 
 	O_FRESH_TIME = RuleOcr(roi=(1042,582,85,36), area=(0,0,100,100), mode="Duration", method="Default", keyword="", name="fresh_time")
@@ -78,17 +89,6 @@ class RealmRaidAssets:
 	O_FROG_9 = RuleOcr(roi=(825,440,33,33), area=(825,440,33,33), mode="Digit", method="Default", keyword="", name="frog_9")
 	# text 
 	O_TEXT = RuleOcr(roi=(1143,13,80,39), area=(0,0,100,100), mode="Single", method="Default", keyword="", name="text")
-
-
-	# Image Rule Assets
-	# 出现呱太勋章 
-	I_FROG_MEDAL = RuleImage(roi_front=(912,12,32,35), roi_back=(912,12,32,35), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_frog_medal.png")
-	# 已经进攻三次了 
-	I_RR_THREE = RuleImage(roi_front=(346,584,42,44), roi_back=(346,584,42,44), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_rr_three.png")
-	# 呱太入侵， 第一次进入结界时候出现 
-	I_FROG_RAID = RuleImage(roi_front=(511,301,282,100), roi_back=(511,301,282,100), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_frog_raid.png")
-	# 个人 
-	I_RR_PERSON = RuleImage(roi_front=(1203,236,56,100), roi_back=(1203,236,56,155), threshold=0.8, method="Template matching", file="./tasks/RealmRaid/res/res_rr_person.png")
 
 
 	# Click Rule Assets

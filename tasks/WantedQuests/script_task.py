@@ -311,9 +311,9 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         OCR_WQ_INFO = [self.O_WQ_INFO_1, self.O_WQ_INFO_2, self.O_WQ_INFO_3, self.O_WQ_INFO_4]
         GOTO_BUTTON = [self.I_GOTO_1, self.I_GOTO_2, self.I_GOTO_3, self.I_GOTO_4]
         name_funcs: dict = {
-            '挑战': self.challenge,
+            '挑戰': self.challenge,
             '探索': self.explore,
-            '秘闻': self.secret
+            '秘聞': self.secret
         }
 
         def extract_info(index: int) -> tuple or None:
@@ -328,15 +328,31 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             layer_limit = {
                 # 低层不限制
                 # "壹", "贰", "叁", "肆", "伍", "陆",
-                "柒", "捌", "玖", "拾", "番外"
+                "柒", "染", "捌", "玖", "拾", "番外"
             }
+            if self.config.model.wanted_quests.additional_config.skip_high_level == False:
+                # clear layer_limit as  "番外"
+                layer_limit = {
+                    "外", "番外"
+                }
+            if self.config.model.wanted_quests.additional_config.unwanted_destination_names != '':
+                unwanted_destination_names = set(self.config.model.wanted_quests.additional_config.unwanted_destination_names.split(','))
             # ,荒川之怒·壹，4，前往按钮，function
             result = [-1, '', -1, GOTO_BUTTON[index], self.challenge, '']
             type_wq = OCR_WQ_TYPE[index].ocr(self.device.image)
             info_wq_1 = OCR_WQ_INFO[index].ocr(self.device.image)
             info_wq_1 = info_wq_1.replace('：', ':').replace('（', '(').replace('）', ')')
             info_wq_1 = info_wq_1.replace('：', ':')
-            match = re.match(r"^(.*?)[（(]?数量[：:]\s*(\d+)[)）]", info_wq_1)
+            # 正規化：全形括號/冒號→半形，避免 OCR 樣式差異
+            info_norm = (info_wq_1
+                         .replace('（', '(')
+                         .replace('）', ')')
+                         .replace('：', ':'))
+            # 兼容兩種常見樣式：
+            # 1) ……(数量: 3)
+            # 2) ……(…量: 3)   （你的原版用「量:」）
+            match = (re.match(r"^(.*?)[(].*?数量:\s*(\d+)[)]", info_norm)
+                     or re.match(r"^(.*?)[(].*?量:\s*(\d+)[)]", info_norm))
             if not match:
                 return None
             wq_destination = match.group(1)
@@ -345,9 +361,14 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             if wq_destination[-1] in layer_limit:
                 logger.warning('This secret layer is too high')
                 return None
+            # EXAMPLE wq_destination = "寮寧奇緣·染" unwanted_destination_names = {"奇緣", "世界"}
+            if any(unwanted in wq_destination for unwanted in unwanted_destination_names):
+                logger.warning(f'unwanted destination {wq_destination}')
+                return None
             result[1] = wq_destination
             result[2] = wq_number
             order_list = self.config.model.wanted_quests.wanted_quests_config.battle_priority
+            order_list = order_list.replace('战', '戰').replace('闻', '聞')    # 以前預設值是簡中 為了避免舊版的人錯誤 這裡做相容性轉換
             order_list = order_list.replace(' ', '').replace('\n', '')
             order_list: list = re.split(r'>', order_list)
             result[0] = order_list.index(type_wq) if type_wq in order_list else -1
@@ -413,6 +434,18 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
     def secret(self, goto, num=1):
         self.ui_click(goto, self.I_WQSE_FIRE)
         for i in range(num):
+            # Add workaround if fight is same as week secret it will show diff fire I_SE_FIRE
+            while True:
+                self.screenshot()
+                if self.appear(self.I_SE_FIRE):
+                    logger.info('find week secret, return to explore')
+                    break
+                if self.appear(self.I_WQSE_FIRE):
+                    # 找到正常祕聞 FIRE，繼續後續流程
+                    break
+            if self.appear(self.I_SE_FIRE):
+                logger.info('find week secret, return to explore')
+                break
             self.wait_until_appear(self.I_WQSE_FIRE)
             # self.ui_click_until_disappear(self.I_WQSE_FIRE)
             # 又臭又长的对话针的是服了这个网易
@@ -484,6 +517,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         @return:
 
         """
+        # TODO this not handle if INVITE_1 not exists but INVITE_2 or 3 exists
         self.screenshot()
         if not self.appear(self.I_WQ_INVITE_1):
             return False
@@ -606,6 +640,32 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                 continue
         logger.info(f"get cooperation size {len(retList)}")
         return retList
+
+    def battle_wait(self, random_click_swipt_enable: bool) -> bool:
+        # 重写
+        self.device.stuck_record_add('BATTLE_STATUS_S')
+        self.device.click_record_clear()
+        # 战斗过程 随机点击和滑动 防封
+        logger.info("Start battle process WantedQuests")
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_SE_BATTLE_WIN):
+                logger.info('Win battle')
+                self.ui_click_until_disappear(self.I_SE_BATTLE_WIN, interval=2)
+                return True
+            if self.appear(self.I_WIN):
+                logger.info('Win battle')
+                self.ui_click_until_disappear(self.I_WIN, interval=2)
+                # for wanted quests it must end with self.I_REWARD
+                continue
+            if self.appear(self.I_REWARD):
+                logger.info('Win battle')
+                self.ui_click_until_disappear(self.I_REWARD)
+                return True
+            if self.appear(self.I_FALSE):
+                logger.warning('False battle')
+                self.ui_click_until_disappear(self.I_FALSE)
+                return False
 
     # 使用平均亮度检测是否一致
     def appear_highlight(self, rule_image: RuleImage):

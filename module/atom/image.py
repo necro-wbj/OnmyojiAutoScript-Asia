@@ -162,10 +162,13 @@ class RuleImage:
             logger.attr(self.name, f'matching score {max_val:.5f}')
 
         if max_val > threshold:
+            logger.attr(self.name, f"match success: {max_val}")
             self.roi_front[0] = max_loc[0] + self.roi_back[0]
             self.roi_front[1] = max_loc[1] + self.roi_back[1]
             return True
         else:
+            if(max_val > 0.6):
+                logger.attr(self.name, f"match faild: {max_val}")
             return False
 
     def match_all(self, image: np.array, threshold: float = None, roi: list = None) -> list[tuple]:

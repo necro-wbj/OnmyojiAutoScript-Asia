@@ -1,15 +1,50 @@
-* text=auto
-*.jpg -text
-*.png -text
-*.bat text eol=crlf
-*.txt text eol=lf
-*.sh text eol=lf
-*.js text eol=lf
-*.ts text eol=lf
-*.py  eol=lf
-*.vue text eol=lf
-*.css text eol=lf
-*.yml text eol=lf
-*.yaml text eol=lf
-*.json text eol=lf
-*.html text eol=lf
+# -------------------------------
+# 文字檔：開啟自動偵測並規範行尾
+# -------------------------------
+*               text=auto
+*.bat           text eol=crlf
+*.txt           text eol=lf
+*.sh            text eol=lf
+*.js            text eol=lf
+*.ts            text eol=lf
+*.py            text eol=lf
+*.vue           text eol=lf
+*.css           text eol=lf
+*.yml           text eol=lf
+*.yaml          text eol=lf
+*.json          text eol=lf
+*.html          text eol=lf
+
+# --------------------------------------------
+# 資產檔（圖片／音訊／影片／字型等）：不要做行尾轉換；合併時以 main 為準
+# 說明：merge=ours 在「把 PR 合併進 main」時，會保留 main 的版本
+# --------------------------------------------
+assets/**           -text merge=ours
+
+*.png               -text merge=ours
+*.jpg               -text merge=ours
+*.jpeg              -text merge=ours
+*.gif               -text merge=ours
+*.webp              -text merge=ours
+
+*.mp3               -text merge=ours
+*.wav               -text merge=ours
+
+*.mp4               -text merge=ours
+*.mov               -text merge=ours
+
+*.ico               -text merge=ours
+*.ttf               -text merge=ours
+*.otf               -text merge=ours
+
+# （如有其他模型/二進位資產，視需要加入）
+# *.onnx            -text merge=ours
+# *.bin             -text merge=ours
+
+# -------------------------------------------------
+# 自動產生的腳本/索引檔：PR 合併時一律以 main 為準
+# -------------------------------------------------
+tasks/**/assets.py  merge=ours
+tasks/**/*.json     merge=ours
+tasks/**/*.png      -text merge=ours
+tasks/**/*.jpg      -text merge=ours
