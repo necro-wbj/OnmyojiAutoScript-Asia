@@ -497,6 +497,11 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                     continue
                 while 1:
                     self.screenshot()
+                    # Workaround: handle red exit for event select drop
+                    if self.appear(self.I_AD_CLOSE_RED):
+                        self.click(self.I_AD_CLOSE_RED)
+                        logger.info('Handle red exit for event select drop')
+                        continue
                     if self.appear(self.I_UI_CONFIRM_SAMLL):
                         self.click(self.I_UI_CONFIRM_SAMLL)
                         logger.info('too much souls')
