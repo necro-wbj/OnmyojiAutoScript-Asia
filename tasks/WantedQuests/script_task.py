@@ -315,7 +315,10 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             '探索': self.explore,
             '秘聞': self.secret
         }
-
+        
+        cfg_unwanted = (self.config.model.wanted_quests.additional_config.unwanted_destination_names or '').strip()
+        unwanted_destination_names = set(filter(None, (s.strip() for s in cfg_unwanted.split(',')))) if cfg_unwanted else set()
+        
         def extract_info(index: int) -> tuple or None:
             """
             提取每一个地点的信息
@@ -335,8 +338,6 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                 layer_limit = {
                     "外", "番外"
                 }
-            if self.config.model.wanted_quests.additional_config.unwanted_destination_names != '':
-                unwanted_destination_names = set(self.config.model.wanted_quests.additional_config.unwanted_destination_names.split(','))
             # ,荒川之怒·壹，4，前往按钮，function
             result = [-1, '', -1, GOTO_BUTTON[index], self.challenge, '']
             type_wq = OCR_WQ_TYPE[index].ocr(self.device.image)
@@ -362,7 +363,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                 logger.warning('This secret layer is too high')
                 return None
             # EXAMPLE wq_destination = "寮寧奇緣·染" unwanted_destination_names = {"奇緣", "世界"}
-            if any(unwanted in wq_destination for unwanted in unwanted_destination_names):
+            if any(u in wq_destination for u in unwanted_destination_names):
                 logger.warning(f'unwanted destination {wq_destination}')
                 return None
             result[1] = wq_destination
@@ -409,8 +410,11 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             return False
         # sort
         info_wq_list.sort(key=lambda x: x[0])
-        filtered = list(filter(lambda x: (x[5] == '秘闻' or x[5] == '挑战') and x[2] >= 3, info_wq_list))
-        if not filtered and len(filtered) != 0:
+        def norm(t: str) -> str:
+            return t.replace('闻', '聞').replace('战', '戰')
+
+        filtered = [x for x in info_wq_list if norm(x[5]) in ('秘聞', '挑戰') and x[2] >= 3]
+        if filtered:
             info_wq_list = filtered
         best_type, destination, once_number, goto_button, func, _ = info_wq_list[0]
         do_number = 1 if once_number >= num_want else num_want // once_number + (1 if num_want % once_number > 0 else 0)
