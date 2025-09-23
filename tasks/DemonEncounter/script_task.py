@@ -189,6 +189,8 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                 if find_btn_clicked and self.click(self.C_DM_BOSS_CLICK, interval=5):
                     find_btn_clicked = False
                     continue
+                # 点击地图位置 重設位置
+                self.appear_then_click(self.I_DE_LOCATION, interval=4)
                 if self.best_boss_enable:
                     self.device.click_record_clear()
                     if self.appear(self.I_DE_BOSS_BEST) and (not find_btn_clicked):
@@ -225,6 +227,17 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                         # 退出重新选一个没人慢的boss
                         logger.info('Exit and reselect')
                         return False
+                    # AISA server boss when check zero people means already fight or really no people so need check five times
+                    if total == 300 and current == 0:
+                        logger.warning('Boss battle check zero people')
+                        if boss_fire_count >= 5:
+                            logger.warning('Boss battle already done because zero people five times')
+                            self.set_next_run(task='DemonEncounter', success=False, finish=True, server=True)
+                            self.ui_click_until_disappear(self.I_UI_BACK_RED)
+                            raise TaskEnd('DemonEncounter')
+                        if (self.appear_then_click(self.I_BOSS_FIRE, interval=3)
+                                or self.appear_then_click(self.I_BEST_BOSS_FIRE, interval=3)):
+                            boss_fire_count += 1
 
                 logger.info('Boss battle people is not full')
 
@@ -234,7 +247,17 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                     break
                 if self.appear(self.I_BOSS_GATHER):
                     break
+                # AISA server may over five times click and still not enter boss battle
                 if boss_fire_count >= 5:
+                    logger.warning('Boss battle click over 5 times so exit and reselect')
+                    # Exit and reselect to find another boss
+                    if not self.appear(self.I_UI_BACK_RED):
+                        logger.warning('Boss battle no find red back WTF')
+                        continue
+                    self.ui_click_until_disappear(self.I_UI_BACK_RED)
+                    # 退出重新选一个没人慢的boss
+                    logger.info('Exit and reselect')
+                    return False
                     logger.warning('Boss battle already done')
                     self.set_next_run(task='DemonEncounter', success=False, finish=True, server=True)
                     self.ui_click_until_disappear(self.I_UI_BACK_RED)
