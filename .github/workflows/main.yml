@@ -14,7 +14,7 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 permissions:
   contents: read
@@ -101,12 +101,28 @@ jobs:
           echo "[LOG] ${REASON}   up_ref=${UP_REF}   up_tip=${UP_TIP}   base_tip=${ORI_TIP}"
           echo "[LOG] diff(origin/${{ env.BASE_BRANCH }}...${UP_REF})   behind=${BEHIND}  ahead=${AHEAD}"
 
-      - name: Early exit if tips identical
+      - name: Early exit if base==upstream (no diff)
         if: steps.resolve.outputs.ahead == '0' && steps.resolve.outputs.behind == '0'
         run: echo "[LOG] origin/${{ env.BASE_BRANCH }} 與 upstream/${{ env.UPSTREAM_BRANCH }} 完全一致；跳過。"
 
-      - name: Configure PAT for pushing
+      # ⛳ PR 分支若已在 upstream tip，就整個 job 早退，避免排隊浪費
+      - name: Skip if PR branch already at upstream tip
+        id: tipcheck
         if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
+        shell: bash
+        run: |
+          set -euo pipefail
+          PR_TIP="$(git rev-parse --short origin/${PR_BRANCH} 2>/dev/null || echo '')"
+          UP_TIP="${{ steps.resolve.outputs.upstream_tip }}"
+          if [[ -n "$PR_TIP" && "$PR_TIP" = "$UP_TIP" ]]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "[LOG] PR branch already at upstream tip ($UP_TIP); skip mirror & PR ops."
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Configure PAT for pushing
+        if: (steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0') && steps.tipcheck.outputs.skip != 'true'
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
         shell: bash
@@ -121,9 +137,9 @@ jobs:
           git remote set-url --push origin "https://x-access-token:${GH_PAT}@github.com/${GITHUB_REPOSITORY}.git"
           echo "[LOG] origin push URL configured to use GH_PAT."
 
-      # ⬇️ 取代原本的「Mirror（force push）」：若 PR 分支存在就 merge upstream 進來；否則才初始化
+      # ⬇️ 合併 upstream → PR 分支（保留你本地修補；非強推）
       - name: Update PR branch from upstream (merge, keep local fixes)
-        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
+        if: (steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0') && steps.tipcheck.outputs.skip != 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -177,14 +193,14 @@ jobs:
 
       # ---- 產生 assets.py（在 PR 分支上），以生成結果為準 ----
       - name: Setup Python 3.10 (for generator)
-        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
+        if: (steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0') && steps.tipcheck.outputs.skip != 'true'
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
           cache: pip
 
       - name: Regenerate assets.py on PR branch (canonical)
-        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
+        if: (steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0') && steps.tipcheck.outputs.skip != 'true'
         shell: bash
         env:
           BASE_BRANCH: ${{ env.BASE_BRANCH }}
@@ -219,7 +235,7 @@ jobs:
           fi
 
       - name: Create / Update PR (robust; retry & REST fallback)
-        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
+        if: (steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0') && steps.tipcheck.outputs.skip != 'true'
         id: ghpr
         env:
           GH_TOKEN: ${{ secrets.GH_PAT != '' && secrets.GH_PAT || secrets.GITHUB_TOKEN }}
@@ -292,16 +308,21 @@ jobs:
           PR="$PR_URL"
           NUM="$(gh pr view "$PR" -R "$REPO" --json number --jq .number)"
 
+          # 建立一次性通知用的標籤（衝突/阻擋）
           gh label create sync-conflict-notified -R "$REPO" --force \
             --description "Conflict notified by sync workflow" --color B60205 >/dev/null 2>&1 || true
+          gh label create sync-blocked-notified  -R "$REPO" --force \
+            --description "Blocked notified by sync workflow"  --color D93F0B >/dev/null 2>&1 || true
 
           LABELS="$(gh pr view "$PR" -R "$REPO" --json labels --jq '.labels[].name' || true)"
-          HAS_FLAG=0
-          grep -qx 'sync-conflict-notified' <<<"$LABELS" && HAS_FLAG=1
+          HAS_CONFLICT=0; HAS_BLOCKED=0
+          grep -qx 'sync-conflict-notified' <<<"$LABELS" && HAS_CONFLICT=1
+          grep -qx 'sync-blocked-notified'  <<<"$LABELS" && HAS_BLOCKED=1
 
           GQL=""; REST=""
           for i in 2 3 4 5 6 7 8 9; do
             GQL="$(gh pr view "$PR" -R "$REPO" --json mergeStateStatus --jq '.mergeStateStatus' || echo '')"
+            # gh api 不支援 -R 旗標，直接帶 repos/${REPO}
             REST="$(gh api repos/${REPO}/pulls/$NUM --jq '.mergeable_state' || echo '')"
             if [[ -n "$GQL" && "$GQL" != "UNKNOWN" ]] || [[ -n "$REST" && "$REST" != "unknown" ]]; then
               break
@@ -322,7 +343,8 @@ jobs:
 
           case "$STATUS" in
             conflict)
-              if [[ $HAS_FLAG -eq 0 ]]; then
+              # 衝突：去重通知；同時清掉 blocked 標籤（避免狀態打架）
+              if [[ $HAS_CONFLICT -eq 0 ]]; then
                 printf -v MSG '⚠️ **Sync PR has conflicts**\nPR: %s\n已建立 rebase/preview 與 rerere 決策；請手動解衝突後合併。\n' "$PR"
                 curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
                   -d "$(jq -n --arg content "$MSG" '{content: $content}')"
@@ -330,18 +352,27 @@ jobs:
               else
                 echo "[LOG] conflict still present, already notified; skip."
               fi
+              [[ $HAS_BLOCKED -eq 1 ]] && gh pr edit "$PR" -R "$REPO" --remove-label sync-blocked-notified || true
               ;;
             blocked)
-              printf -v MSG '⛔ **Sync PR is blocked**\nPR: %s\n請檢查保護規則／審查或檢查狀態。\n' "$PR"
-              curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
-                -d "$(jq -n --arg content "$MSG" '{content: $content}')"
+              # 被保護規則等阻擋：去重通知
+              if [[ $HAS_BLOCKED -eq 0 ]]; then
+                printf -v MSG '⛔ **Sync PR is blocked**\nPR: %s\n請檢查保護規則／審查或檢查狀態。\n' "$PR"
+                curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
+                  -d "$(jq -n --arg content "$MSG" '{content: $content}')"
+                gh pr edit "$PR" -R "$REPO" --add-label sync-blocked-notified
+              else
+                echo "[LOG] blocked still present; skip notify."
+              fi
               ;;
             pending)
               echo "[LOG] pending mergeability; skip noisy notify."
               ;;
             *)
-              if [[ $HAS_FLAG -eq 1 ]]; then
+              # 可合併：若曾經發過 conflict/blocked，發一次「恢復可合併」
+              if [[ $HAS_CONFLICT -eq 1 || $HAS_BLOCKED -eq 1 ]]; then
                 gh pr edit "$PR" -R "$REPO" --remove-label sync-conflict-notified || true
+                gh pr edit "$PR" -R "$REPO" --remove-label sync-blocked-notified  || true
                 printf -v MSG '✅ **Upstream sync prepared**\nPR: %s\n狀態已恢復可合併。\n' "$PR"
                 curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
                   -d "$(jq -n --arg content "$MSG" '{content: $content}')"
@@ -353,7 +384,7 @@ jobs:
 
       # ✅ rebase 預覽前清乾淨，避免「local changes would be overwritten」
       - name: Clean working tree before rebase (discard generated assets)
-        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
+        if: (steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0') && steps.tipcheck.outputs.skip != 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -363,6 +394,7 @@ jobs:
 
       # （可選）rebase 預覽分支（觀察自動解的效果）
       - name: (Cache) Restore rerere decisions
+        if: (steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0') && steps.tipcheck.outputs.skip != 'true'
         uses: actions/cache@v4
         with:
           path: .git/rr-cache
@@ -371,7 +403,7 @@ jobs:
             rr-cache-${{ runner.os }}-${{ github.repository }}-
 
       - name: Rebase our local commits onto upstream (rerere; preview branch)
-        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
+        if: (steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0') && steps.tipcheck.outputs.skip != 'true'
         shell: bash
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
@@ -434,7 +466,7 @@ jobs:
           git push -f origin rebase/preview
 
       - name: (Cache) Save rerere decisions
-        if: always()
+        if: (steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0') && steps.tipcheck.outputs.skip != 'true'
         uses: actions/cache/save@v4
         with:
           path: .git/rr-cache
