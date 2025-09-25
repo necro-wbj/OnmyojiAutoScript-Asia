@@ -10,13 +10,6 @@ from module.atom.list import RuleList
 class SoulsTidyAssets: 
 
 
-	# Click Rule Assets
-	# 御魂详细 
-	C_ST_DETAIL = RuleClick(roi_front=(1188,318,87,74), roi_back=(1190,317,87,74), name="st_detail")
-	# 出现神赐 
-	C_ST_GOD_PRSENT = RuleClick(roi_front=(717,165,100,48), roi_back=(926,165,100,54), name="st_god_prsent")
-
-
 	# Image Rule Assets
 	# 点击御魂 
 	I_ST_SOULS = RuleImage(roi_front=(1170,226,70,80), roi_back=(1170,226,70,80), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_souls.png")
@@ -56,9 +49,11 @@ class SoulsTidyAssets:
 	I_ST_OVERFLOW = RuleImage(roi_front=(693,404,100,37), roi_back=(693,404,100,37), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_overflow.png")
 
 
-	# Long Click Rule Assets
-	# description 
-	L_ONE = RuleLongClick(roi_front=(88,272,100,78), roi_back=(88,272,100,78), duration=1500, name="one")
+	# Click Rule Assets
+	# 御魂详细 
+	C_ST_DETAIL = RuleClick(roi_front=(1188,318,87,74), roi_back=(1190,317,87,74), name="st_detail")
+	# 出现神赐 
+	C_ST_GOD_PRSENT = RuleClick(roi_front=(717,165,100,48), roi_back=(926,165,100,54), name="st_god_prsent")
 
 
 	# Ocr Rule Assets
@@ -78,5 +73,10 @@ class SoulsTidyAssets:
 	O_ST_SORT_LOCATION = RuleOcr(roi=(415,119,61,39), area=(415,119,61,39), mode="Single", method="Default", keyword="位置", name="st_sort_location")
 	# Ocr-description 
 	O_ST_OVERFLOW = RuleOcr(roi=(686,397,109,48), area=(686,397,109,48), mode="Single", method="Default", keyword="知道了", name="st_overflow")
+
+
+	# Long Click Rule Assets
+	# description 
+	L_ONE = RuleLongClick(roi_front=(88,272,100,78), roi_back=(88,272,100,78), duration=1500, name="one")
 
 
