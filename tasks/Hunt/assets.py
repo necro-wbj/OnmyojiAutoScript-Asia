@@ -10,20 +10,6 @@ from module.atom.list import RuleList
 class HuntAssets: 
 
 
-	# Click Rule Assets
-	# description 
-	C_HUNT_ENTER = RuleClick(roi_front=(1090,597,94,59), roi_back=(1090,597,94,59), name="hunt_enter")
-
-
-	# Image Rule Assets
-	# 神社 
-	I_HUNT_SHRINE = RuleImage(roi_front=(472.66666666666663,141,51.66666666666663,61), roi_back=(472.66666666666663,141,51.66666666666663,61), threshold=0.8, method="Template matching", file="./tasks/Hunt/hunt/hunt_hunt_shrine.png")
-	# 狩猎战 
-	I_HUNT_HUNT = RuleImage(roi_front=(157,414,215,166), roi_back=(157,414,215,166), threshold=0.8, method="Template matching", file="./tasks/Hunt/hunt/hunt_hunt_hunt.png")
-	# description 
-	I_HUNT_CLOSE = RuleImage(roi_front=(1150,43,69,67), roi_back=(1150,43,69,67), threshold=0.8, method="Template matching", file="./tasks/Hunt/hunt/hunt_hunt_close.png")
-
-
 	# Image Rule Assets
 	# 麒麟的挑战 
 	I_KIRIN_CHALLAGE = RuleImage(roi_front=(1072,577,93,46), roi_back=(1072,577,117,83), threshold=0.8, method="Template matching", file="./tasks/Hunt/kirin/kirin_kirin_challage.png")
@@ -42,5 +28,19 @@ class HuntAssets:
 	I_NW_CHALLAGE = RuleImage(roi_front=(306,590,171,63), roi_back=(306,590,171,63), threshold=0.8, method="Template matching", file="./tasks/Hunt/netherworld/netherworld_nw_challage.png")
 	# 今日已挑战 
 	I_NW_DONE = RuleImage(roi_front=(308,600,156,41), roi_back=(308,600,156,41), threshold=0.9, method="Template matching", file="./tasks/Hunt/netherworld/netherworld_nw_done.png")
+
+
+	# Image Rule Assets
+	# 神社 
+	I_HUNT_SHRINE = RuleImage(roi_front=(472.66666666666663,141,51.66666666666663,61), roi_back=(472.66666666666663,141,51.66666666666663,61), threshold=0.8, method="Template matching", file="./tasks/Hunt/hunt/hunt_hunt_shrine.png")
+	# 狩猎战 
+	I_HUNT_HUNT = RuleImage(roi_front=(157,414,215,166), roi_back=(157,414,215,166), threshold=0.8, method="Template matching", file="./tasks/Hunt/hunt/hunt_hunt_hunt.png")
+	# description 
+	I_HUNT_CLOSE = RuleImage(roi_front=(1150,43,69,67), roi_back=(1150,43,69,67), threshold=0.8, method="Template matching", file="./tasks/Hunt/hunt/hunt_hunt_close.png")
+
+
+	# Click Rule Assets
+	# description 
+	C_HUNT_ENTER = RuleClick(roi_front=(1090,597,94,59), roi_back=(1090,597,94,59), name="hunt_enter")
 
 
