@@ -5,7 +5,7 @@
     "roiFront": "801,109,38,37",
     "roiBack": "49,98,1033,61",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.85,
     "description": "description"
   },
   {
@@ -29,10 +29,10 @@
   {
     "itemName": "check_exploration",
     "imageName": "page_check_exploration.png",
-    "roiFront": "1146,175,21,22",
-    "roiBack": "1146,175,21,22",
+    "roiFront": "1131,118,52,59",
+    "roiBack": "1131,118,52,59",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.75,
     "description": "description"
   },
   {
@@ -86,7 +86,7 @@
     "roiFront": "546,628,61,55",
     "roiBack": "524,614,200,87",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "探索前往秘闻"
   },
   {
@@ -110,8 +110,8 @@
   {
     "itemName": "exploration_goto_six_gates",
     "imageName": "page_exploration_goto_six_gates.png",
-    "roiFront": "938,640,60,49",
-    "roiBack": "918,631,200,66",
+    "roiFront": "939,643,60,49",
+    "roiBack": "818,631,200,66",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "探索前往六道之门"
@@ -155,8 +155,8 @@
   {
     "itemName": "check_realm_raid",
     "imageName": "page_check_realm_raid.png",
-    "roiFront": "129,632,52,48",
-    "roiBack": "66,526,233,188",
+    "roiFront": "1099,15,34,33",
+    "roiBack": "1099,15,34,33",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "description"
@@ -191,11 +191,11 @@
   {
     "itemName": "check_area_boss",
     "imageName": "page_check_area_boss.png",
-    "roiFront": "20,320,150,130",
-    "roiBack": "20,320,150,130",
+    "roiFront": "1181,502,48,58",
+    "roiBack": "1181,502,48,58",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "地域鬼王的式神錄"
   },
   {
     "itemName": "check_heian_kitan",
@@ -248,7 +248,7 @@
     "roiFront": "1201,234,62,105",
     "roiBack": "1201,234,62,105",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.75,
     "description": "description"
   }
 ]

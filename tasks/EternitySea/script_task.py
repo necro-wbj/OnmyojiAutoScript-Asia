@@ -2,12 +2,14 @@
 # @author runhey
 # github https://github.com/runhey
 from datetime import datetime, timedelta
+from time import sleep
 
+from module.base.timer import Timer
 from module.exception import TaskEnd
 from module.logger import logger
 
 from tasks.GameUi.game_ui import GameUi, Page
-from tasks.GameUi.page import page_soul_zones, page_shikigami_records
+from tasks.GameUi.page import page_main,page_soul_zones, page_shikigami_records
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralRoom.general_room import GeneralRoom
 from tasks.Component.GeneralInvite.general_invite import GeneralInvite
@@ -38,8 +40,19 @@ class ScriptTask(
             self.run_switch_soul_by_name(config.group_name, config.team_name)
 
     def run(self) -> None:
+        self.ui_get_current_page()
+        self.ui_goto(page_main)
         self._two_teams_switch_sous(self._task_config.switch_soul_config_1)
         self._two_teams_switch_sous(self._task_config.switch_soul_config_2)
+
+        self.ui_get_current_page()
+        self.ui_goto(page_main)
+        limit_count = self._task_config.eternity_sea_config.limit_count
+        limit_time = self._task_config.eternity_sea_config.limit_time
+        self.current_count = 0
+        self.limit_count: int = limit_count
+        self.limit_time: timedelta = timedelta(hours=limit_time.hour, minutes=limit_time.minute, seconds=limit_time.second)
+
         match self._task_config.eternity_sea_config.user_status:
             case UserStatus.LEADER: success = self.run_leader()
             case UserStatus.MEMBER: success = self.run_member()
@@ -58,7 +71,7 @@ class ScriptTask(
         logger.info('Start run leader')
         self._navigate_to_soul_zones()
         self._enter_eternity_sea()
-        layer = self._task_config.eternity_sea_config.layer
+        layer = self._task_config.eternity_sea_config.layer[0]
         self.check_layer(layer)
         self.check_lock(self._task_config.general_battle_config.lock_team_enable)
         # 创建队伍
@@ -87,7 +100,7 @@ class ScriptTask(
 
             #限制
             if self.current_count >= self._task_config.eternity_sea_config.limit_count:
-                logger.info("EternitySea count limit out")
+                logger.info("EternitySea count limit out leader")
                 break
             if datetime.now() - self.start_time >= self._limit_time:
                 logger.info("EternitySea time limit out")
@@ -121,13 +134,16 @@ class ScriptTask(
                     is_first = False
                     self.run_general_battle(config=self._task_config.general_battle_config)
 
-        # 当结束或者是失败退出循环的时候只有两个UI的可能，在房间或者是在组队界面
-        # 如果在房间就退出
-        if self.exit_room():
-            pass
-        # 如果在组队界面就退出
-        if self.exit_team():
-            pass
+        while 1:
+            # 有一种情况是本来要退出的，但是队长邀请了进入的战斗的加载界面
+            if self.appear(self.I_GI_HOME) or self.appear(self.I_GI_EXPLORE):
+                break
+            # 如果可能在房间就退出
+            if self.exit_room():
+                pass
+            # 如果还在战斗中，就退出战斗
+            if self.exit_battle():
+                pass
 
         self.ui_get_current_page()
         self.ui_goto(page_main)
@@ -151,7 +167,7 @@ class ScriptTask(
 
             #限制
             if self.current_count >= self._task_config.eternity_sea_config.limit_count:
-                logger.info("EternitySea count limit out")
+                logger.info("EternitySea count limit out member")
                 break
             if datetime.now() - self.start_time >= self._limit_time:
                 logger.info("EternitySea time limit out")
@@ -202,7 +218,7 @@ class ScriptTask(
                 continue
 
             if self.current_count >= self._task_config.eternity_sea_config.limit_count:
-                logger.info("EternitySea count limit out")
+                logger.info("EternitySea count limit out alone")
                 break
             if datetime.now() - self.start_time >= self._limit_time:
                 logger.info("EternitySea time limit out")
