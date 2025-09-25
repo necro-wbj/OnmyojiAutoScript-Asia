@@ -86,7 +86,7 @@
     "roiFront": "546,628,61,55",
     "roiBack": "524,614,200,87",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "探索前往秘闻"
   },
   {

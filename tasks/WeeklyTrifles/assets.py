@@ -60,8 +60,8 @@ class WeeklyTriflesAssets:
 	I_WT_SCROLL_1 = RuleImage(roi_front=(1180,27,28,121), roi_back=(1159,12,65,152), threshold=0.7, method="Template matching", file="./tasks/WeeklyTrifles/collect/collect_wt_scroll_1.png")
 	# 百妖风物鉴 
 	I_WT_SCROLL_2 = RuleImage(roi_front=(1182,24,24,122), roi_back=(1163,12,63,155), threshold=0.7, method="Template matching", file="./tasks/WeeklyTrifles/collect/collect_wt_scroll_2.png")
-	# Twitter 
-	I_WT_COLLECT_TWITTER = RuleImage(roi_front=(1062,618,70,63), roi_back=(900,618,200,63), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/collect/collect_wt_collect_twitter.png")
+	# 微信分享 
+	I_WT_COLLECT_WECHAT = RuleImage(roi_front=(1062,618,70,63), roi_back=(900,618,200,63), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/collect/collect_wt_collect_wechat.png")
 	# 二维码 
 	I_WT_QR_CODE = RuleImage(roi_front=(300,229,186,45), roi_back=(300,229,186,45), threshold=0.65, method="Template matching", file="./tasks/WeeklyTrifles/collect/collect_wt_qr_code.png")
 
