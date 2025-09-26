@@ -10,11 +10,6 @@ from module.atom.list import RuleList
 class SecretAssets: 
 
 
-	# Click Rule Assets
-	# description 
-	C_SE_CLICK_LAYER = RuleClick(roi_front=(434,155,100,100), roi_back=(434,155,100,100), name="se_click_layer")
-
-
 	# Image Rule Assets
 	# 进入 
 	I_SE_ENTER = RuleImage(roi_front=(1145,593,100,100), roi_back=(1145,593,100,100), threshold=0.8, method="Template matching", file="./tasks/Secret/se/se_se_enter.png")
@@ -30,6 +25,16 @@ class SecretAssets:
 	I_SE_BATTLE_WIN = RuleImage(roi_front=(436,62,100,100), roi_back=(436,62,100,100), threshold=0.8, method="Template matching", file="./tasks/Secret/se/se_se_battle_win.png")
 	# 已经完成可以退出 
 	I_SE_FINISHED_1 = RuleImage(roi_front=(441,546,40,43), roi_back=(441,546,40,43), threshold=0.8, method="Template matching", file="./tasks/Secret/se/se_se_finished_1.png")
+
+
+	# Swipe Rule Assets
+	# 向下滑动 
+	S_SE_DOWN_SEIPE = RuleSwipe(roi_front=(229,520,124,27), roi_back=(217,390,145,35), mode="default", name="se_down_seipe")
+
+
+	# Click Rule Assets
+	# description 
+	C_SE_CLICK_LAYER = RuleClick(roi_front=(434,155,100,100), roi_back=(434,155,100,100), name="se_click_layer")
 
 
 	# Ocr Rule Assets
@@ -51,10 +56,5 @@ class SecretAssets:
 	O_SE_GOLD = RuleOcr(roi=(363,226,48,21), area=(363,226,48,21), mode="Digit", method="Default", keyword="", name="se_gold")
 	# 总耗时 
 	O_SE_TOTAL_TIME = RuleOcr(roi=(289,650,149,38), area=(289,650,149,38), mode="Single", method="Default", keyword="", name="se_total_time")
-
-
-	# Swipe Rule Assets
-	# 向下滑动 
-	S_SE_DOWN_SEIPE = RuleSwipe(roi_front=(229,520,124,27), roi_back=(217,390,145,35), mode="default", name="se_down_seipe")
 
 
