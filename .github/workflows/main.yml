@@ -88,42 +88,52 @@ jobs:
             echo "::error::No refs/remotes/upstream/${UPSTREAM_BRANCH} found."
             exit 2
           fi
+
+          BASE_REF="origin/${{ env.BASE_BRANCH }}"
           UP_TIP=$(git rev-parse --short "${UP_REF}")
-          ORI_TIP=$(git rev-parse --short origin/${{ env.BASE_BRANCH }})
-          read BEHIND AHEAD < <(git rev-list --left-right --count origin/${{ env.BASE_BRANCH }}..."${UP_REF}" | awk '{print $1" "$2}')
+          BASE_TIP=$(git rev-parse --short "${BASE_REF}")
+
+          # 統計雙邊各自獨有的提交數
+          UP_ONLY=$(git rev-list --count "${BASE_REF}..${UP_REF}")
+          BASE_ONLY=$(git rev-list --count "${UP_REF}..${BASE_REF}")
+
           {
             echo "up_ref=${UP_REF}"
             echo "reason=${REASON}"
             echo "upstream_tip=${UP_TIP}"
-            echo "origin_tip=${ORI_TIP}"
-            echo "ahead=${AHEAD}"
-            echo "behind=${BEHIND}"
+            echo "origin_tip=${BASE_TIP}"
+            echo "up_only=${UP_ONLY}"
+            echo "base_only=${BASE_ONLY}"
           } >> "$GITHUB_OUTPUT"
-          echo "[LOG] ${REASON}   up_ref=${UP_REF}   up_tip=${UP_TIP}   base_tip=${ORI_TIP}"
-          echo "[LOG] diff(origin/${{ env.BASE_BRANCH }}...${UP_REF})   behind=${BEHIND}  ahead=${AHEAD}"
+
+          echo "[LOG] ${REASON}   up_ref=${UP_REF}   up_tip=${UP_TIP}   base_tip=${BASE_TIP}"
+          echo "[LOG] unique commits -> base_only=${BASE_ONLY}, up_only=${UP_ONLY}"
 
       - name: Early exit if base==upstream (no diff)
-        if: steps.resolve.outputs.ahead == '0' && steps.resolve.outputs.behind == '0'
+        if: steps.resolve.outputs.up_only == '0' && steps.resolve.outputs.base_only == '0'
         run: echo "[LOG] origin/${{ env.BASE_BRANCH }} 與 upstream/${{ env.UPSTREAM_BRANCH }} 完全一致；跳過。"
 
-      # ⛳ PR 分支若已在 upstream tip，就整個 job 早退，避免排隊浪費
+      # ⛳ PR 分支若已涵蓋 upstream tip，就整個 job 早退，避免排隊浪費
       - name: Skip if PR branch already at upstream tip
         id: tipcheck
-        if: steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0'
+        if: steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0'
         shell: bash
         run: |
           set -euo pipefail
-          PR_TIP="$(git rev-parse --short origin/${PR_BRANCH} 2>/dev/null || echo '')"
-          UP_TIP="${{ steps.resolve.outputs.upstream_tip }}"
-          if [[ -n "$PR_TIP" && "$PR_TIP" = "$UP_TIP" ]]; then
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-            echo "[LOG] PR branch already at upstream tip ($UP_TIP); skip mirror & PR ops."
+          UP_REF="${{ steps.resolve.outputs.up_ref }}"
+          if git ls-remote --exit-code --heads origin "${PR_BRANCH}" >/dev/null 2>&1; then
+            if git merge-base --is-ancestor "${UP_REF}" "origin/${PR_BRANCH}"; then
+              echo "skip=true" >> "$GITHUB_OUTPUT"
+              echo "[LOG] PR branch already contains ${UP_REF}; skip mirror & PR ops."
+            else
+              echo "skip=false" >> "$GITHUB_OUTPUT"
+            fi
           else
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Configure PAT for pushing
-        if: (steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0') && steps.tipcheck.outputs.skip != 'true'
+        if: (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true'
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
         shell: bash
@@ -140,7 +150,7 @@ jobs:
 
       # ⬇️ 合併 upstream → PR 分支（保留你本地修補；非強推）
       - name: Update PR branch from upstream (try-merge; fallback to mirror)
-        if: (steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0') && steps.tipcheck.outputs.skip != 'true'
+        if: (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -196,14 +206,14 @@ jobs:
 
       # ---- 產生 assets.py（在 PR 分支上），以生成結果為準 ----
       - name: Setup Python 3.10 (for generator)
-        if: (steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0') && steps.tipcheck.outputs.skip != 'true'
+        if: (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true'
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
           cache: pip
 
       - name: Regenerate assets.py on PR branch (canonical)
-        if: (steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0') && steps.tipcheck.outputs.skip != 'true'
+        if: (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true'
         shell: bash
         env:
           BASE_BRANCH: ${{ env.BASE_BRANCH }}
@@ -238,7 +248,7 @@ jobs:
           fi
 
       - name: Create / Update PR (robust; retry & REST fallback)
-        if: (steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0') && steps.tipcheck.outputs.skip != 'true'
+        if: (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true'
         id: ghpr
         env:
           GH_TOKEN: ${{ secrets.GH_PAT != '' && secrets.GH_PAT || secrets.GITHUB_TOKEN }}
@@ -248,6 +258,15 @@ jobs:
           REPO="${GITHUB_REPOSITORY}"
           TITLE="sync: upstream/${{ env.UPSTREAM_BRANCH }} → ${{ env.BASE_BRANCH }} (manual conflict resolution)"
 
+          # ⚠️ 開 PR 前先檢查 base..head 是否真的有提交
+          DIFF_CNT=$(git rev-list --count "origin/${{ env.BASE_BRANCH }}..${{ env.PR_BRANCH }}" || echo 0)
+          if [[ "${DIFF_CNT}" -eq 0 ]]; then
+            echo "[LOG] No commits between ${{ env.BASE_BRANCH }} and ${{ env.PR_BRANCH }}; skip PR create/update."
+            echo "pull-request-url=" >> "$GITHUB_OUTPUT"
+            echo "pull-request-operation=skipped" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
           BODY_FILE="$(mktemp)"
           {
             printf 'This PR mirrors **upstream/%s** into **%s**.\n\n' "$UPSTREAM_BRANCH" "$BASE_BRANCH"
@@ -256,7 +275,7 @@ jobs:
             printf -- '- reason: `%s`\n' "${{ steps.resolve.outputs.reason }}"
             printf -- '- upstream tip: `%s`\n' "${{ steps.resolve.outputs.upstream_tip }}"
             printf -- '- origin tip:   `%s`\n' "${{ steps.resolve.outputs.origin_tip }}"
-            printf -- '- ahead(from %s): `%s`, behind: `%s`\n' "$BASE_BRANCH" "${{ steps.resolve.outputs.ahead }}" "${{ steps.resolve.outputs.behind }}"
+            printf -- '- unique commits: base_only=`%s`, up_only=`%s`\n' "${{ steps.resolve.outputs.base_only }}" "${{ steps.resolve.outputs.up_only }}"
           } > "$BODY_FILE"
 
           EXISTING="$(gh pr list -R "$REPO" --head "${{ env.PR_BRANCH }}" --base "${{ env.BASE_BRANCH }}" \
@@ -299,7 +318,7 @@ jobs:
           fi
 
       - name: Notify Discord (PR status)
-        if: ${{ steps.ghpr.outputs['pull-request-url'] != '' && steps.ghpr.outputs['pull-request-url'] != null }}
+        if: ${{ steps.ghpr.outputs['pull-request-operation'] == 'created' || steps.ghpr.outputs['pull-request-operation'] == 'updated' }}
         env:
           GH_TOKEN: ${{ secrets.GH_PAT != '' && secrets.GH_PAT || secrets.GITHUB_TOKEN }}
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
@@ -346,7 +365,6 @@ jobs:
 
           case "$STATUS" in
             conflict)
-              # 衝突：去重通知；同時清掉 blocked 標籤（避免狀態打架）
               if [[ $HAS_CONFLICT -eq 0 ]]; then
                 printf -v MSG '⚠️ **Sync PR has conflicts**\nPR: %s\n已建立 rebase/preview 與 rerere 決策；請手動解衝突後合併。\n' "$PR"
                 curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
@@ -358,7 +376,6 @@ jobs:
               [[ $HAS_BLOCKED -eq 1 ]] && gh pr edit "$PR" -R "$REPO" --remove-label sync-blocked-notified || true
               ;;
             blocked)
-              # 被保護規則等阻擋：去重通知
               if [[ $HAS_BLOCKED -eq 0 ]]; then
                 printf -v MSG '⛔ **Sync PR is blocked**\nPR: %s\n請檢查保護規則／審查或檢查狀態。\n' "$PR"
                 curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
@@ -372,7 +389,6 @@ jobs:
               echo "[LOG] pending mergeability; skip noisy notify."
               ;;
             *)
-              # 可合併：若曾經發過 conflict/blocked，發一次「恢復可合併」
               if [[ $HAS_CONFLICT -eq 1 || $HAS_BLOCKED -eq 1 ]]; then
                 gh pr edit "$PR" -R "$REPO" --remove-label sync-conflict-notified || true
                 gh pr edit "$PR" -R "$REPO" --remove-label sync-blocked-notified  || true
@@ -387,7 +403,7 @@ jobs:
 
       # ✅ rebase 預覽前清乾淨，避免「local changes would be overwritten」
       - name: Clean working tree before rebase (discard generated assets)
-        if: (steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0') && steps.tipcheck.outputs.skip != 'true'
+        if: (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -397,7 +413,7 @@ jobs:
 
       # （可選）rebase 預覽分支（觀察自動解的效果）
       - name: (Cache) Restore rerere decisions
-        if: (steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0') && steps.tipcheck.outputs.skip != 'true'
+        if: (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true'
         uses: actions/cache@v4
         with:
           path: .git/rr-cache
@@ -406,7 +422,7 @@ jobs:
             rr-cache-${{ runner.os }}-${{ github.repository }}-
 
       - name: Rebase our local commits onto upstream (rerere; preview branch)
-        if: (steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0') && steps.tipcheck.outputs.skip != 'true'
+        if: (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true'
         shell: bash
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
@@ -469,7 +485,7 @@ jobs:
           git push -f origin rebase/preview
 
       - name: (Cache) Save rerere decisions
-        if: (steps.resolve.outputs.ahead != '0' || steps.resolve.outputs.behind != '0') && steps.tipcheck.outputs.skip != 'true'
+        if: (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true'
         uses: actions/cache/save@v4
         with:
           path: .git/rr-cache
@@ -499,6 +515,7 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 10
+
     steps:
       - name: Checkout (full, no persisted credentials)
         uses: actions/checkout@v4
@@ -536,6 +553,7 @@ jobs:
             echo "::error::assets_extract.py not found on main"
             exit 1
           fi
+
           PYTHONPATH="$PWD" python "$SRC"
 
           CHANGED="$(git ls-files -m 'tasks/**/assets.py' || true)"
