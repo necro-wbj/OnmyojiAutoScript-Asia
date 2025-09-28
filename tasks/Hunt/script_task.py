@@ -39,7 +39,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
                     self.run_switch_soul(con.netherworld_group_team)
         self.ui_get_current_page()
         if self.kirin_day:
-            self.ui_goto(page_hunt)
+            self.ui_goto(page_hunt_kirin)
             self.kirin()
             # 判斷麒麟已挑戰後再回去 避免回去失敗
             self.wait_until_appear(self.I_KIRIN_END)
