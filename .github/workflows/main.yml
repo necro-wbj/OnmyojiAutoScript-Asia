@@ -5,7 +5,7 @@ on:
     - cron: "*/5 * * * *"
   workflow_dispatch: {}
   push:
-    branches: [ main ]
+    branches: [ work ]
     paths-ignore:
       - ".github/**"
       - "docs/**"
@@ -25,7 +25,7 @@ permissions:
 env:
   UPSTREAM_REPO: runhey/OnmyojiAutoScript
   UPSTREAM_BRANCH: dev
-  BASE_BRANCH: main
+  BASE_BRANCH: work
   PR_BRANCH: sync/upstream-dev
   # 影像/音訊等資產（rebase/merge 衝突時偏向保留我方）
   ASSET_GLOBS: |
@@ -507,12 +507,12 @@ jobs:
             -d "$(jq -n --arg content "$MSG" '{content: $content}')"
 
   # ------------------------------------------------------------
-  # B) push 到 main 時：在 main 分支重生 assets.py 並直接提交
+  # B) push 到 work 時：在 work 分支重生 assets.py 並直接提交
   #    （配合 .gitattributes 的 merge=ours，PR 不會顯示衝突，
   #     合併後由這個 job 把 assets.py 生對）
   # ------------------------------------------------------------
-  regen-assets-on-main:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+  regen-assets-on-work:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/work'
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -540,7 +540,7 @@ jobs:
           python-version: "3.10"
           cache: pip
 
-      - name: Re-generate assets.py (on main) and push
+      - name: Re-generate assets.py (on work) and push
         shell: bash
         run: |
           set -euo pipefail
@@ -550,7 +550,7 @@ jobs:
 
           SRC="./assets_extract.py"
           if [[ ! -f "$SRC" ]]; then
-            echo "::error::assets_extract.py not found on main"
+            echo "::error::assets_extract.py not found on work"
             exit 1
           fi
 
@@ -559,8 +559,8 @@ jobs:
           CHANGED="$(git ls-files -m 'tasks/**/assets.py' || true)"
           if [[ -n "$CHANGED" ]]; then
             git add $CHANGED
-            git commit -m "chore(assets): regenerate on main [ci skip]"
+            git commit -m "chore(assets): regenerate on work [ci skip]"
             git push
           else
-            echo "[LOG] no assets changes to commit on main."
+            echo "[LOG] no assets changes to commit on work."
           fi
