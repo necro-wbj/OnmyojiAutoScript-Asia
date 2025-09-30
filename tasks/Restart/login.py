@@ -59,7 +59,10 @@ class LoginHandler(BaseTask, RestartAssets):
 
             # 下载插画
             if self.appear_then_click(self.I_LOGIN_LOAD_DOWN, interval=1):
-                logger.info('Download inbetweening')
+                logger.info('Download inbetweening I_LOGIN_LOAD_DOWN')
+                continue
+            if self.appear_then_click(self.I_LOGIN_DOWNLOAD_DRAW, interval=1):
+                logger.info('Download inbetweening I_LOGIN_DOWNLOAD_DRAW')
                 continue
 
             # 右上角的红色的关闭
