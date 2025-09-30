@@ -153,8 +153,10 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             self.C_RANDOM_BOTTOM.name = "BATTLE_RANDOM"
             if self.appear(self.I_FIRE):
                 break
-            if self.appear_then_click(self.I_SHI, interval=1):
-                continue
+            if self.appear(self.I_SHI):
+                logger.info("Click enter activity")
+                self.wait_until_stable(self.I_SHI)
+                self.appear_then_click(self.I_SHI)
             if self.ocr_appear_click(self.O_ENTRY_ACTIVITY, interval=1):
                 continue
             if self.appear_then_click(self.I_TOGGLE_BUTTON, interval=3):
