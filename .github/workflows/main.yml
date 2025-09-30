@@ -136,17 +136,25 @@ jobs:
         if: (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true'
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
-          if [ -z "${GH_PAT:-}" ]; then
-            echo "::error::Secret GH_PAT is empty. Create a PAT with scopes: repo + workflow and add it as GH_PAT."
-            exit 1
-          fi
           git config --global --unset-all http.https://github.com/.extraheader || true
           git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
-          git remote set-url --push origin "https://x-access-token:${GH_PAT}@github.com/${GITHUB_REPOSITORY}.git"
-          echo "[LOG] origin push URL configured to use GH_PAT."
+          if [ -n "${GH_PAT:-}" ]; then
+            PUSH_USER="x-access-token:${GH_PAT}"
+            echo "[LOG] Using GH_PAT for authenticated pushes."
+          else
+            if [ -z "${GITHUB_TOKEN:-}" ]; then
+              echo "::error::Neither GH_PAT nor GITHUB_TOKEN is available for pushes."
+              exit 1
+            fi
+            PUSH_USER="x-access-token:${GITHUB_TOKEN}"
+            echo "::warning::Secret GH_PAT is empty; falling back to workflow GITHUB_TOKEN (workflow changes in upstream history may be skipped)."
+          fi
+
+          git remote set-url --push origin "https://${PUSH_USER}@github.com/${GITHUB_REPOSITORY}.git"
 
       # ⬇️ 合併 upstream → PR 分支（保留你本地修補；非強推）
       - name: Update PR branch from upstream (try-merge; fallback to mirror)
