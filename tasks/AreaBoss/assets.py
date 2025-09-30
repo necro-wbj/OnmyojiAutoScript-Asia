@@ -10,19 +10,6 @@ from module.atom.list import RuleList
 class AreaBossAssets: 
 
 
-	# Swipe Rule Assets
-	# 筛选列表 手指向上滑动 
-	S_AB_FILTER_UP = RuleSwipe(roi_front=(920,680,10,10), roi_back=(1130,230,10,10), mode="default", name="ab_filter_up")
-	# 筛选列表 手指向下滑动 
-	S_AB_FILTER_DOWN = RuleSwipe(roi_front=(1130,230,10,10), roi_back=(920,680,10,10), mode="default", name="ab_filter_down")
-	# 极地鬼 层数列表 手指向上滑动 
-	S_AB_FLOOR_UP = RuleSwipe(roi_front=(450,500,10,10), roi_back=(390,260,10,10), mode="default", name="ab_floor_up")
-	# 极地鬼 层数列表 手指向下滑动  
-	S_AB_FLOOR_DOWN = RuleSwipe(roi_front=(390,260,10,10), roi_back=(450,500,10,10), mode="default", name="ab_floor_down")
-	# 普通地鬼 等级滑轨 手指向右滑动  
-	S_AB_LEVEL_RIGHT = RuleSwipe(roi_front=(0,0,10,10), roi_back=(570,270,10,10), mode="default", name="ab_level_right")
-
-
 	# Click Rule Assets
 	# 悬赏按钮 
 	C_AB_REWARD_BTN = RuleClick(roi_front=(1190,100,50,120), roi_back=(1190,100,50,120), name="ab_reward_btn")
@@ -56,6 +43,34 @@ class AreaBossAssets:
 	C_AB_BOSS_REWARD_PHOTO_MINUS_1 = RuleClick(roi_front=(940,585,95,70), roi_back=(940,585,95,70), name="ab_boss_reward_photo_minus_1")
 	# 当前选择 的极地鬼层数 
 	C_AB_JI_FLOOR_SELECTED = RuleClick(roi_front=(380,120,70,30), roi_back=(380,120,70,30), name="ab_ji_floor_selected")
+
+
+	# Swipe Rule Assets
+	# 筛选列表 手指向上滑动 
+	S_AB_FILTER_UP = RuleSwipe(roi_front=(920,680,10,10), roi_back=(1130,230,10,10), mode="default", name="ab_filter_up")
+	# 筛选列表 手指向下滑动 
+	S_AB_FILTER_DOWN = RuleSwipe(roi_front=(1130,230,10,10), roi_back=(920,680,10,10), mode="default", name="ab_filter_down")
+	# 极地鬼 层数列表 手指向上滑动 
+	S_AB_FLOOR_UP = RuleSwipe(roi_front=(450,500,10,10), roi_back=(390,260,10,10), mode="default", name="ab_floor_up")
+	# 极地鬼 层数列表 手指向下滑动  
+	S_AB_FLOOR_DOWN = RuleSwipe(roi_front=(390,260,10,10), roi_back=(450,500,10,10), mode="default", name="ab_floor_down")
+	# 普通地鬼 等级滑轨 手指向右滑动  
+	S_AB_LEVEL_RIGHT = RuleSwipe(roi_front=(0,0,10,10), roi_back=(570,270,10,10), mode="default", name="ab_level_right")
+
+
+	# Ocr Rule Assets
+	# 急殺數最多 
+	O_AB_KILL_BEST = RuleOcr(roi=(942,123,157,52), area=(942,123,157,52), mode="Single", method="Default", keyword="数最多", name="ab_kill_best")
+	# 我的收藏 
+	O_AB_MY_COLLECT = RuleOcr(roi=(949,124,129,53), area=(949,124,129,53), mode="Single", method="Default", keyword="我的收藏", name="ab_my_collect")
+	# 熱門 
+	O_AB_FAMOUS = RuleOcr(roi=(1190,220,50,120), area=(1190,220,50,120), mode="Single", method="Default", keyword="熱門", name="ab_famous")
+	# 收藏 
+	O_AB_COLLECTING = RuleOcr(roi=(1190,580,50,120), area=(1190,580,50,120), mode="Single", method="Default", keyword="收藏", name="ab_collecting")
+	# 挑战人数 
+	O_AB_NUM_OF_CHALLENGE = RuleOcr(roi=(270,630,150,36), area=(270,630,150,36), mode="Digit", method="Default", keyword="", name="ab_num_of_challenge")
+	# 地鬼名字 
+	O_AB_BOSS_NAME = RuleOcr(roi=(114,36,248,69), area=(114,36,248,69), mode="Full", method="Default", keyword="", name="ab_boss_name")
 
 
 	# Image Rule Assets
@@ -105,20 +120,5 @@ class AreaBossAssets:
 	I_AB_GROUP_RANK_NONE = RuleImage(roi_front=(903,432,42,40), roi_back=(903,432,42,40), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_ab_group_rank_none.png")
 	# description 
 	I_TIMEOUT = RuleImage(roi_front=(468,224,55,32), roi_back=(468,224,55,32), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_timeout.png")
-
-
-	# Ocr Rule Assets
-	# 急殺數最多 
-	O_AB_KILL_BEST = RuleOcr(roi=(942,123,157,52), area=(942,123,157,52), mode="Single", method="Default", keyword="数最多", name="ab_kill_best")
-	# 我的收藏 
-	O_AB_MY_COLLECT = RuleOcr(roi=(949,124,129,53), area=(949,124,129,53), mode="Single", method="Default", keyword="我的收藏", name="ab_my_collect")
-	# 熱門 
-	O_AB_FAMOUS = RuleOcr(roi=(1190,220,50,120), area=(1190,220,50,120), mode="Single", method="Default", keyword="熱門", name="ab_famous")
-	# 收藏 
-	O_AB_COLLECTING = RuleOcr(roi=(1190,580,50,120), area=(1190,580,50,120), mode="Single", method="Default", keyword="收藏", name="ab_collecting")
-	# 挑战人数 
-	O_AB_NUM_OF_CHALLENGE = RuleOcr(roi=(270,630,150,36), area=(270,630,150,36), mode="Digit", method="Default", keyword="", name="ab_num_of_challenge")
-	# 地鬼名字 
-	O_AB_BOSS_NAME = RuleOcr(roi=(114,36,248,69), area=(114,36,248,69), mode="Full", method="Default", keyword="", name="ab_boss_name")
 
 

@@ -10,19 +10,6 @@ from module.atom.list import RuleList
 class QuizAssets: 
 
 
-	# Image Rule Assets
-	# description 
-	I_ENTRY = RuleImage(roi_front=(143,363,40,128), roi_back=(119,246,100,326), threshold=0.8, method="Template matching", file="./tasks/Quiz/quiz/quiz_entry.png")
-	# 开始 
-	I_START = RuleImage(roi_front=(1149,608,66,41), roi_back=(1136,574,100,100), threshold=0.8, method="Template matching", file="./tasks/Quiz/quiz/quiz_start.png")
-	# 标志 
-	I_MESSAGE = RuleImage(roi_front=(75,488,58,41), roi_back=(50,460,100,100), threshold=0.8, method="Template matching", file="./tasks/Quiz/quiz/quiz_message.png")
-	# 失败然后离开 
-	I_FAIL_QUIT = RuleImage(roi_front=(416,529,183,45), roi_back=(354,502,275,100), threshold=0.8, method="Template matching", file="./tasks/Quiz/quiz/quiz_fail_quit.png")
-	# 结算分享 
-	I_SHARE = RuleImage(roi_front=(1171,625,53,44), roi_back=(1152,592,100,100), threshold=0.8, method="Template matching", file="./tasks/Quiz/quiz/quiz_share.png")
-
-
 	# Ocr Rule Assets
 	# Ocr-description 
 	O_QUESTION = RuleOcr(roi=(903,32,322,101), area=(903,32,322,101), mode="Single", method="Default", keyword="", name="question")
@@ -40,5 +27,18 @@ class QuizAssets:
 	O_COUNTDOWN3 = RuleOcr(roi=(1045,6,27,30), area=(1045,6,27,30), mode="Digit", method="Default", keyword="3", name="countdown3")
 	# Ocr-description 
 	O_QUESTION_AND_ANSWER = RuleOcr(roi=(902,34,325,534), area=(902,34,325,534), mode="Full", method="Default", keyword="", name="question_and_answer")
+
+
+	# Image Rule Assets
+	# description 
+	I_ENTRY = RuleImage(roi_front=(143,363,40,128), roi_back=(119,246,100,326), threshold=0.8, method="Template matching", file="./tasks/Quiz/quiz/quiz_entry.png")
+	# 开始 
+	I_START = RuleImage(roi_front=(1149,608,66,41), roi_back=(1136,574,100,100), threshold=0.8, method="Template matching", file="./tasks/Quiz/quiz/quiz_start.png")
+	# 标志 
+	I_MESSAGE = RuleImage(roi_front=(75,488,58,41), roi_back=(50,460,100,100), threshold=0.8, method="Template matching", file="./tasks/Quiz/quiz/quiz_message.png")
+	# 失败然后离开 
+	I_FAIL_QUIT = RuleImage(roi_front=(416,529,183,45), roi_back=(354,502,275,100), threshold=0.8, method="Template matching", file="./tasks/Quiz/quiz/quiz_fail_quit.png")
+	# 结算分享 
+	I_SHARE = RuleImage(roi_front=(1171,625,53,44), roi_back=(1152,592,100,100), threshold=0.8, method="Template matching", file="./tasks/Quiz/quiz/quiz_share.png")
 
 

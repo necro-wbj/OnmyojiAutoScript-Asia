@@ -10,6 +10,17 @@ from module.atom.list import RuleList
 class ActivityShikigamiAssets: 
 
 
+	# Click Rule Assets
+	# description 
+	C_CLICK1 = RuleClick(roi_front=(120,138,130,75), roi_back=(120,138,130,75), name="click1")
+	# description 
+	C_CLICK2 = RuleClick(roi_front=(121,234,125,81), roi_back=(121,234,125,81), name="click2")
+	# description 
+	C_CLICK3 = RuleClick(roi_front=(126,337,118,77), roi_back=(126,337,118,77), name="click3")
+	# description 
+	C_CLICK4 = RuleClick(roi_front=(124,438,126,77), roi_back=(124,438,126,77), name="click4")
+
+
 	# Image Rule Assets
 	# description 
 	I_N_BATTLE = RuleImage(roi_front=(70,280,91,25), roi_back=(3,50,277,635), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/0110/0110_n_battle.png")
@@ -21,13 +32,44 @@ class ActivityShikigamiAssets:
 
 	# Click Rule Assets
 	# description 
-	C_CLICK1 = RuleClick(roi_front=(120,138,130,75), roi_back=(120,138,130,75), name="click1")
+	C_RANDOM_LEFT = RuleClick(roi_front=(21,23,237,599), roi_back=(21,23,237,599), name="random_left")
 	# description 
-	C_CLICK2 = RuleClick(roi_front=(121,234,125,81), roi_back=(121,234,125,81), name="click2")
+	C_RANDOM_RIGHT = RuleClick(roi_front=(1047,55,218,638), roi_back=(1047,55,218,638), name="random_right")
 	# description 
-	C_CLICK3 = RuleClick(roi_front=(126,337,118,77), roi_back=(126,337,118,77), name="click3")
+	C_RANDOM_TOP = RuleClick(roi_front=(85,46,1159,101), roi_back=(85,46,1159,101), name="random_top")
 	# description 
-	C_CLICK4 = RuleClick(roi_front=(124,438,126,77), roi_back=(124,438,126,77), name="click4")
+	C_RANDOM_BOTTOM = RuleClick(roi_front=(182,539,1063,100), roi_back=(182,539,1063,100), name="random_bottom")
+	# description 
+	C_RANDOM_ALL = RuleClick(roi_front=(42,94,1207,543), roi_back=(42,94,1207,543), name="random_all")
+	# 替换buff1 
+	C_BUFF_1_UP = RuleClick(roi_front=(204,626,134,39), roi_back=(204,626,134,39), name="buff_1_up")
+	# 替换buff2 
+	C_BUFF_2_UP = RuleClick(roi_front=(414,625,134,39), roi_back=(414,625,134,39), name="buff_2_up")
+	# 替换buff3 
+	C_BUFF_3_UP = RuleClick(roi_front=(619,625,134,39), roi_back=(619,625,134,39), name="buff_3_up")
+	# 替换buff4 
+	C_BUFF_4_UP = RuleClick(roi_front=(831,625,134,39), roi_back=(831,625,134,39), name="buff_4_up")
+	# 替换buff5 
+	C_BUFF_5_UP = RuleClick(roi_front=(1043,624,134,39), roi_back=(1043,624,134,39), name="buff_5_up")
+	# 上阵buff_1位置 
+	C_BUFF_1_BOX = RuleClick(roi_front=(333,338,70,72), roi_back=(333,338,70,72), name="buff_1_box")
+	# 上阵buff_2位置 
+	C_BUFF_2_BOX = RuleClick(roi_front=(877,220,59,62), roi_back=(877,220,59,62), name="buff_2_box")
+
+
+	# Ocr Rule Assets
+	# 体力的数量检测 
+	O_REMAIN_AP = RuleOcr(roi=(910,18,62,28), area=(910,18,62,28), mode="DigitCounter", method="Default", keyword="", name="remain_ap")
+	# 活动体力的剩余检测 
+	O_REMAIN_AP_ACTIVITY = RuleOcr(roi=(534,18,70,28), area=(534,18,70,28), mode="DigitCounter", method="Default", keyword="", name="remain_ap_activity")
+	# 还有多少次购买体力的机会 
+	O_REMAIN_BUY = RuleOcr(roi=(808,531,39,42), area=(808,531,39,42), mode="DigitCounter", method="Default", keyword="", name="remain_buy")
+	# 活动票数（没有百分比） 
+	O_REMAIN_AP_ACTIVITY2 = RuleOcr(roi=(558,18,47,29), area=(558,18,47,29), mode="Digit", method="Default", keyword="", name="remain_ap_activity2")
+	# 从左侧进入战斗 
+	O_ENTRY_ACTIVITY = RuleOcr(roi=(70,103,98,32), area=(70,103,98,32), mode="Single", method="Default", keyword="驻守平安", name="entry_activity")
+	# boss剩余攻击次数 
+	O_REMAIN_BOSS = RuleOcr(roi=(1113,669,131,31), area=(0,0,100,100), mode="DigitCounter", method="Default", keyword="", name="remain_boss")
 
 
 	# Image Rule Assets
@@ -85,47 +127,5 @@ class ActivityShikigamiAssets:
 	I_BUFF_SWITCH = RuleImage(roi_front=(640,624,100,39), roi_back=(180,601,1026,100), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_buff_switch.png")
 	# 爬塔活动buff页 
 	I_CHECK_BUFF = RuleImage(roi_front=(91,12,130,47), roi_back=(77,0,156,83), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_check_buff.png")
-
-
-	# Click Rule Assets
-	# description 
-	C_RANDOM_LEFT = RuleClick(roi_front=(21,23,237,599), roi_back=(21,23,237,599), name="random_left")
-	# description 
-	C_RANDOM_RIGHT = RuleClick(roi_front=(1047,55,218,638), roi_back=(1047,55,218,638), name="random_right")
-	# description 
-	C_RANDOM_TOP = RuleClick(roi_front=(85,46,1159,101), roi_back=(85,46,1159,101), name="random_top")
-	# description 
-	C_RANDOM_BOTTOM = RuleClick(roi_front=(182,539,1063,100), roi_back=(182,539,1063,100), name="random_bottom")
-	# description 
-	C_RANDOM_ALL = RuleClick(roi_front=(42,94,1207,543), roi_back=(42,94,1207,543), name="random_all")
-	# 替换buff1 
-	C_BUFF_1_UP = RuleClick(roi_front=(204,626,134,39), roi_back=(204,626,134,39), name="buff_1_up")
-	# 替换buff2 
-	C_BUFF_2_UP = RuleClick(roi_front=(414,625,134,39), roi_back=(414,625,134,39), name="buff_2_up")
-	# 替换buff3 
-	C_BUFF_3_UP = RuleClick(roi_front=(619,625,134,39), roi_back=(619,625,134,39), name="buff_3_up")
-	# 替换buff4 
-	C_BUFF_4_UP = RuleClick(roi_front=(831,625,134,39), roi_back=(831,625,134,39), name="buff_4_up")
-	# 替换buff5 
-	C_BUFF_5_UP = RuleClick(roi_front=(1043,624,134,39), roi_back=(1043,624,134,39), name="buff_5_up")
-	# 上阵buff_1位置 
-	C_BUFF_1_BOX = RuleClick(roi_front=(333,338,70,72), roi_back=(333,338,70,72), name="buff_1_box")
-	# 上阵buff_2位置 
-	C_BUFF_2_BOX = RuleClick(roi_front=(877,220,59,62), roi_back=(877,220,59,62), name="buff_2_box")
-
-
-	# Ocr Rule Assets
-	# 体力的数量检测 
-	O_REMAIN_AP = RuleOcr(roi=(910,18,62,28), area=(910,18,62,28), mode="DigitCounter", method="Default", keyword="", name="remain_ap")
-	# 活动体力的剩余检测 
-	O_REMAIN_AP_ACTIVITY = RuleOcr(roi=(534,18,70,28), area=(534,18,70,28), mode="DigitCounter", method="Default", keyword="", name="remain_ap_activity")
-	# 还有多少次购买体力的机会 
-	O_REMAIN_BUY = RuleOcr(roi=(808,531,39,42), area=(808,531,39,42), mode="DigitCounter", method="Default", keyword="", name="remain_buy")
-	# 活动票数（没有百分比） 
-	O_REMAIN_AP_ACTIVITY2 = RuleOcr(roi=(558,18,47,29), area=(558,18,47,29), mode="Digit", method="Default", keyword="", name="remain_ap_activity2")
-	# 从左侧进入战斗 
-	O_ENTRY_ACTIVITY = RuleOcr(roi=(70,103,98,32), area=(70,103,98,32), mode="Single", method="Default", keyword="驻守平安", name="entry_activity")
-	# boss剩余攻击次数 
-	O_REMAIN_BOSS = RuleOcr(roi=(1113,669,131,31), area=(0,0,100,100), mode="DigitCounter", method="Default", keyword="", name="remain_boss")
 
 

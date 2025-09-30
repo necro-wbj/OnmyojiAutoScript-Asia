@@ -10,6 +10,11 @@ from module.atom.list import RuleList
 class DemonRetreatAssets: 
 
 
+	# Ocr Rule Assets
+	# 检查是否迟到 
+	O_LATER_ENTER_CHECK = RuleOcr(roi=(928,16,48,35), area=(928,16,48,35), mode="Single", method="Default", keyword="", name="later_enter_check")
+
+
 	# Image Rule Assets
 	# 神社 
 	I_SHRINE = RuleImage(roi_front=(870,624,65,61), roi_back=(870,624,65,61), threshold=0.8, method="Template matching", file="./tasks/DemonRetreat/DemonRetreat/DemonRetreat_shrine.png")
@@ -31,10 +36,5 @@ class DemonRetreatAssets:
 	I_REWARD_ALL = RuleImage(roi_front=(535,540,177,60), roi_back=(535,540,177,60), threshold=0.8, method="Template matching", file="./tasks/DemonRetreat/DemonRetreat/DemonRetreat_reward_all.png")
 	# 祈愿 
 	I_PRAY = RuleImage(roi_front=(1176,385,43,70), roi_back=(1176,385,43,70), threshold=0.8, method="Template matching", file="./tasks/DemonRetreat/DemonRetreat/DemonRetreat_pray.png")
-
-
-	# Ocr Rule Assets
-	# 检查是否迟到 
-	O_LATER_ENTER_CHECK = RuleOcr(roi=(928,16,48,35), area=(928,16,48,35), mode="Single", method="Default", keyword="", name="later_enter_check")
 
 
