@@ -41,10 +41,6 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
         if self.kirin_day:
             self.ui_goto(page_hunt_kirin)
             self.kirin()
-            # 判斷麒麟已挑戰後再回去 避免回去失敗
-            self.wait_until_appear(self.I_KIRIN_END)
-            self.ui_get_current_page()
-            self.ui_goto(page_main)
         else:
             self.ui_goto(page_hunt)
             self.netherworld()
@@ -71,15 +67,15 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
             self.tomorrow_kirin_day = True
 
         now = datetime.now()
-        # 如果时间在可执行时间(麒麟日19:00、阴界日19:00)之前则设定时间为当天的自定义时间，返回False
+        # 如果时间在可执行时间(麒麟日6:00、阴界日19:00)之前则设定时间为当天的自定义时间，返回False
         # 如果是在可执行时间则返回True
         if self.kirin_day:
             logger.info('Today is the Kirin day')
-            if now.time() < time(19, 0):
+            if now.time() < time(6, 0):
                 self.custom_next_run(task='Hunt', custom_time=self.con_time.kirin_time, time_delta=0)
                 raise TaskEnd('Hunt')
-            # 如果是麒麟日在21:00-23:59之间则设定时间为明天的自定义时间，返回False
-            elif now.time() > time(21, 0):
+            # 如果是麒麟日在23:00-23:59之间则设定时间为明天的自定义时间，返回False
+            elif now.time() > time(23, 0):
                 self.plan_tomorrow_hunt()
                 raise TaskEnd('Hunt')
             else:
@@ -89,8 +85,8 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
             if now.time() < time(19, 0):
                 self.custom_next_run(task='Hunt', custom_time=self.con_time.netherworld_time, time_delta=0)
                 raise TaskEnd('Hunt')
-            # 如果是阴界日在21:00-23:59之间则设定时间为明天的自定义时间，返回False
-            elif now.time() > time(21, 0):
+            # 如果是阴界日在23:00-23:59之间则设定时间为明天的自定义时间，返回False
+            elif now.time() > time(23, 0):
                 self.plan_tomorrow_hunt()
                 raise TaskEnd('Hunt')
             else:
@@ -107,40 +103,21 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
 
     def kirin(self):
         logger.hr('kirin', 2)
-        # TODO: 没有碰到：（1）麒麟未开 （2）麒麟已经挑战完毕
         while 1:
             self.screenshot()
-            if self.appear(self.I_KIRIN_END):
-                # 你的阴阳寮已经打过的麒麟了
-                logger.warning('Your guild have already challenged the Kirin')
-                self.plan_tomorrow_hunt()
-                raise TaskEnd('Hunt')
-            if self.appear_then_click(self.I_KIRIN_CHALLAGE, interval=0.9):
+            if self.appear(self.I_PREPARE_HIGHLIGHT):
                 break
-            if self.click(self.C_HUNT_ENTER, interval=2.9):
+            if self.appear_then_click(self.I_UI_CONFIRM, interval=0.9):
                 continue
-            if self.appear_then_click(self.I_KIRIN_CHALLAGE, interval=0.9):
-                logger.info("Arrive the Kirin")
-                break
-            
-        # 等待进入战斗
-        # 等待挑战, 5秒也是等
-        sleep(5)
-        while not self.is_in_battle(True):
-            self.screenshot()
-            if self.appear(self.I_KIRIN_WINE, interval=0.9):
-                self.ui_get_reward(self.I_KIRIN_WINE)
-            if self.appear_then_click(self.I_KIRIN_CHALLAGE):
-                # 清除點擊紀錄避免點擊過多次觸發錯誤 此處可以放心點擊 理論上結束後遊戲會把你趕出去
-                self.device.click_record_clear()
-
-
-        self.device.stuck_record_add("BATTLE_STATUS_S")
-
-        self.device.stuck_record_clear()
-        self.device.stuck_record_add("BATTLE_STATUS_S")
+            if self.appear(self.I_KIRIN_END):
+                # 今日已挑战
+                logger.warning('Today have already challenged the Kirin')
+                self.ui_click_until_disappear(self.I_UI_BACK_YELLOW)
+                return
+            if self.appear_then_click(self.I_KIRIN_CHALLAGE, interval=1.5):
+                continue
         logger.info('Start battle')
-        self.run_general_battle()
+        self.run_general_battle()        
 
 
     def netherworld(self):
