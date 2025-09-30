@@ -10,22 +10,38 @@ from module.atom.list import RuleList
 class CollectiveMissionsAssets: 
 
 
-	# Image Rule Assets
-	# 堆叠 
-	I_FEED_HEAP = RuleImage(roi_front=(20,543,42,59), roi_back=(20,543,42,59), threshold=0.8, method="Template matching", file="./tasks/CollectiveMissions/feed/feed_feed_heap.png")
-	# 提交 
-	I_FEED_SUBMIT = RuleImage(roi_front=(703,340,114,54), roi_back=(703,340,114,54), threshold=0.8, method="Template matching", file="./tasks/CollectiveMissions/feed/feed_feed_submit.png")
+	# Click Rule Assets
+	# description 
+	C_CM_1 = RuleClick(roi_front=(231,468,141,55), roi_back=(231,468,141,55), name="cm_1")
+	# description 
+	C_CM_2 = RuleClick(roi_front=(567,468,143,55), roi_back=(567,468,143,55), name="cm_2")
+	# description 
+	C_CM_3 = RuleClick(roi_front=(903,470,136,58), roi_back=(903,470,136,58), name="cm_3")
 
 
-	# Long Click Rule Assets
-	# description 
-	L_FEED_CLICK_1 = RuleLongClick(roi_front=(160,531,100,100), roi_back=(160,531,100,100), duration=1500, name="feed_click_1")
-	# description 
-	L_FEED_CLICK_2 = RuleLongClick(roi_front=(293,533,100,100), roi_back=(293,533,100,100), duration=1500, name="feed_click_2")
-	# description 
-	L_FEED_CLICK_3 = RuleLongClick(roi_front=(430,530,100,100), roi_back=(430,530,100,100), duration=1500, name="feed_click_3")
-	# description 
-	L_FEED_CLICK_4 = RuleLongClick(roi_front=(576,529,100,100), roi_back=(576,529,100,100), duration=1500, name="feed_click_4")
+	# Ocr Rule Assets
+	# Ocr-description 
+	O_CM_1 = RuleOcr(roi=(217,133,115,43), area=(217,133,115,43), mode="Single", method="Default", keyword="", name="cm_1")
+	# Ocr-description 
+	O_CM_2 = RuleOcr(roi=(333,135,92,44), area=(333,135,92,44), mode="Single", method="Default", keyword="", name="cm_2")
+	# Ocr-description 
+	O_CM_3 = RuleOcr(roi=(554,135,113,40), area=(554,135,113,40), mode="Single", method="Default", keyword="", name="cm_3")
+	# Ocr-description 
+	O_CM_4 = RuleOcr(roi=(667,136,94,41), area=(667,136,94,41), mode="Single", method="Default", keyword="", name="cm_4")
+	# Ocr-description 
+	O_CM_5 = RuleOcr(roi=(889,133,112,44), area=(889,133,112,44), mode="Single", method="Default", keyword="", name="cm_5")
+	# Ocr-description 
+	O_CM_6 = RuleOcr(roi=(1002,133,91,42), area=(1002,133,91,42), mode="Single", method="Default", keyword="", name="cm_6")
+	# 记录已完成的数量 
+	O_CM_NUMBER = RuleOcr(roi=(1105,564,60,28), area=(1105,564,60,28), mode="DigitCounter", method="Default", keyword="", name="cm_number")
+	# 材料的数量 
+	O_CM_1_MATTER = RuleOcr(roi=(427,172,100,27), area=(427,172,100,27), mode="DigitCounter", method="Default", keyword="", name="cm_1_matter")
+	# Ocr-description 
+	O_CM_2_MATTER = RuleOcr(roi=(429,293,100,31), area=(429,293,100,31), mode="DigitCounter", method="Default", keyword="", name="cm_2_matter")
+	# Ocr-description 
+	O_CM_3_MATTER = RuleOcr(roi=(428,416,100,29), area=(428,416,100,29), mode="DigitCounter", method="Default", keyword="", name="cm_3_matter")
+	# Ocr-description 
+	O_CM_4_MATTER = RuleOcr(roi=(430,536,100,33), area=(430,536,100,33), mode="DigitCounter", method="Default", keyword="", name="cm_4_matter")
 
 
 	# Image Rule Assets
@@ -64,43 +80,22 @@ class CollectiveMissionsAssets:
 	S_CM_MATTER_4 = RuleSwipe(roi_front=(689,524,21,22), roi_back=(903,518,46,32), mode="default", name="cm_matter_4")
 
 
-	# Click Rule Assets
+	# Long Click Rule Assets
 	# description 
-	C_CM_1 = RuleClick(roi_front=(231,468,141,55), roi_back=(231,468,141,55), name="cm_1")
+	L_FEED_CLICK_1 = RuleLongClick(roi_front=(160,531,100,100), roi_back=(160,531,100,100), duration=1500, name="feed_click_1")
 	# description 
-	C_CM_2 = RuleClick(roi_front=(567,468,143,55), roi_back=(567,468,143,55), name="cm_2")
+	L_FEED_CLICK_2 = RuleLongClick(roi_front=(293,533,100,100), roi_back=(293,533,100,100), duration=1500, name="feed_click_2")
 	# description 
-	C_CM_3 = RuleClick(roi_front=(903,470,136,58), roi_back=(903,470,136,58), name="cm_3")
-
-
-	# Ocr Rule Assets
-	# Ocr-description 
-	O_CM_1 = RuleOcr(roi=(217,133,115,43), area=(217,133,115,43), mode="Single", method="Default", keyword="", name="cm_1")
-	# Ocr-description 
-	O_CM_2 = RuleOcr(roi=(333,135,92,44), area=(333,135,92,44), mode="Single", method="Default", keyword="", name="cm_2")
-	# Ocr-description 
-	O_CM_3 = RuleOcr(roi=(554,135,113,40), area=(554,135,113,40), mode="Single", method="Default", keyword="", name="cm_3")
-	# Ocr-description 
-	O_CM_4 = RuleOcr(roi=(667,136,94,41), area=(667,136,94,41), mode="Single", method="Default", keyword="", name="cm_4")
-	# Ocr-description 
-	O_CM_5 = RuleOcr(roi=(889,133,112,44), area=(889,133,112,44), mode="Single", method="Default", keyword="", name="cm_5")
-	# Ocr-description 
-	O_CM_6 = RuleOcr(roi=(1002,133,91,42), area=(1002,133,91,42), mode="Single", method="Default", keyword="", name="cm_6")
-	# 记录已完成的数量 
-	O_CM_NUMBER = RuleOcr(roi=(1105,564,60,28), area=(1105,564,60,28), mode="DigitCounter", method="Default", keyword="", name="cm_number")
-	# 材料的数量 
-	O_CM_1_MATTER = RuleOcr(roi=(427,172,100,27), area=(427,172,100,27), mode="DigitCounter", method="Default", keyword="", name="cm_1_matter")
-	# Ocr-description 
-	O_CM_2_MATTER = RuleOcr(roi=(429,293,100,31), area=(429,293,100,31), mode="DigitCounter", method="Default", keyword="", name="cm_2_matter")
-	# Ocr-description 
-	O_CM_3_MATTER = RuleOcr(roi=(428,416,100,29), area=(428,416,100,29), mode="DigitCounter", method="Default", keyword="", name="cm_3_matter")
-	# Ocr-description 
-	O_CM_4_MATTER = RuleOcr(roi=(430,536,100,33), area=(430,536,100,33), mode="DigitCounter", method="Default", keyword="", name="cm_4_matter")
+	L_FEED_CLICK_3 = RuleLongClick(roi_front=(430,530,100,100), roi_back=(430,530,100,100), duration=1500, name="feed_click_3")
+	# description 
+	L_FEED_CLICK_4 = RuleLongClick(roi_front=(576,529,100,100), roi_back=(576,529,100,100), duration=1500, name="feed_click_4")
 
 
 	# Image Rule Assets
+	# 堆叠 
+	I_FEED_HEAP = RuleImage(roi_front=(20,543,42,59), roi_back=(20,543,42,59), threshold=0.8, method="Template matching", file="./tasks/CollectiveMissions/feed/feed_feed_heap.png")
 	# 提交 
-	I_SL_SUBMIT = RuleImage(roi_front=(835,588,145,61), roi_back=(835,588,145,61), threshold=0.8, method="Template matching", file="./tasks/CollectiveMissions/soul/soul_sl_submit.png")
+	I_FEED_SUBMIT = RuleImage(roi_front=(703,340,114,54), roi_back=(703,340,114,54), threshold=0.8, method="Template matching", file="./tasks/CollectiveMissions/feed/feed_feed_submit.png")
 
 
 	# Ocr Rule Assets
@@ -113,5 +108,10 @@ class CollectiveMissionsAssets:
 	# Long Click Rule Assets
 	# 长按 
 	L_SL_LONG = RuleLongClick(roi_front=(178,194,58,49), roi_back=(178,194,58,49), duration=1500, name="sl_long")
+
+
+	# Image Rule Assets
+	# 提交 
+	I_SL_SUBMIT = RuleImage(roi_front=(835,588,145,61), roi_back=(835,588,145,61), threshold=0.8, method="Template matching", file="./tasks/CollectiveMissions/soul/soul_sl_submit.png")
 
 
