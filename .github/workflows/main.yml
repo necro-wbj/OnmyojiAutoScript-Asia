@@ -4,13 +4,6 @@ on:
   schedule:
     - cron: "*/5 * * * *"
   workflow_dispatch: {}
-  push:
-    branches: [ work ]
-    paths-ignore:
-      - ".github/**"
-      - "docs/**"
-      - "README.md"
-      - ".sync/**"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -25,7 +18,7 @@ permissions:
 env:
   UPSTREAM_REPO: runhey/OnmyojiAutoScript
   UPSTREAM_BRANCH: dev
-  BASE_BRANCH: work
+  BASE_BRANCH: main
   PR_BRANCH: sync/upstream-dev
   # 影像/音訊等資產（rebase/merge 衝突時偏向保留我方）
   ASSET_GLOBS: |
@@ -68,22 +61,22 @@ jobs:
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           git config --local core.autocrlf false
 
-          - name: Configure credentials for pushing
-            env:
-              GH_PAT: ${{ secrets.GH_PAT }}
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            run: |
-              set -euo pipefail
-              git config --global --unset-all http.https://github.com/.extraheader || true
-          
-              if [ -n "${GH_PAT:-}" ]; then
-                PUSH_USER="x-access-token:${GH_PAT}"
-                echo "[LOG] Using GH_PAT for authenticated pushes."
-              else
-                if [ -z "${GITHUB_TOKEN:-}" ]; then
-                  echo "::error::Neither GH_PAT nor GITHUB_TOKEN is available for pushes."
-                  exit 1
-          fi
+      - name: Configure credentials for pushing
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git config --global --unset-all http.https://github.com/.extraheader || true
+      
+          if [ -n "${GH_PAT:-}" ]; then
+            PUSH_USER="x-access-token:${GH_PAT}"
+            echo "[LOG] Using GH_PAT for authenticated pushes."
+          else
+            if [ -z "${GITHUB_TOKEN:-}" ]; then
+              echo "::error::Neither GH_PAT nor GITHUB_TOKEN is available for pushes."
+              exit 1
+            fi
             PUSH_USER="x-access-token:${GITHUB_TOKEN}"
             echo "::warning::Secret GH_PAT is empty; falling back to workflow GITHUB_TOKEN (workflow changes in upstream history may be skipped)."
           fi
@@ -417,7 +410,7 @@ jobs:
           case "$STATUS" in
             conflict)
               if [[ $HAS_CONFLICT -eq 0 ]]; then
-                printf -v MSG '⚠️ **Sync PR has conflicts**\nPR: %s\n已建立 rebase/preview 與 rerere 決策；請手動解衝突後合併。\n' "$PR"
+                printf -v MSG '⚠️ **Sync PR has conflicts**\nPR: %s\n請在 PR 介面手動解衝突後合併。\n' "$PR"
                 curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
                   -d "$(jq -n --arg content "$MSG" '{content: $content}')"
                 gh pr edit "$PR" -R "$REPO" --add-label sync-conflict-notified
@@ -452,109 +445,6 @@ jobs:
               ;;
           esac
 
-      # ✅ rebase 預覽前清乾淨，避免「local changes would be overwritten」
-      - name: Clean working tree before rebase (discard generated assets)
-        if: ${{ (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true' }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          git reset --hard
-          git clean -fdx
-          echo "[LOG] working tree cleaned."
-
-      # （可選）rebase 預覽分支（觀察自動解的效果）
-      - name: (Cache) Restore rerere decisions
-        if: ${{ (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true' }}
-        uses: actions/cache@v4
-        with:
-          path: .git/rr-cache
-          key: rr-cache-${{ runner.os }}-${{ github.repository }}-${{ steps.resolve.outputs.upstream_tip }}
-          restore-keys: |
-            rr-cache-${{ runner.os }}-${{ github.repository }}-
-
-      - name: Rebase our local commits onto upstream (rerere; preview branch)
-        if: ${{ (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true' }}
-        shell: bash
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-          UP_REF="${{ steps.resolve.outputs.up_ref }}"
-          
-          git checkout -B "${{ env.BASE_BRANCH }}" origin/${{ env.BASE_BRANCH }}
-          git switch -c rebase/preview || git checkout -B rebase/preview
-          
-          # 重要：避免任何互動式編輯器
-          export GIT_EDITOR=true
-          export GIT_SEQUENCE_EDITOR=:
-          git config rerere.enabled true
-          
-          # 用 non-interactive 的 editor 設定跑 rebase
-          if ! git -c core.editor=true rebase -s ort -X theirs "${UP_REF}"; then
-            echo "::warning::Rebase hit conflicts; applying asset-prefer-ours / prefer-theirs policies…"
-          
-            CONFLICTS=$(git diff --name-only --diff-filter=U || true)
-          
-            # 先處理資產檔：偏向我方（ours）
-            while IFS= read -r f; do
-              [[ -z "$f" ]] && continue
-              while IFS= read -r g; do
-                [[ -z "$g" ]] && continue
-                case "$f" in
-                  $g)
-                    git checkout --ours -- "$f" || true
-                    git add -- "$f" || true
-                    echo "[RERERE] asset resolved (prefer ours): $f"
-                    ;;
-                esac
-              done <<<"${{ env.ASSET_GLOBS }}"
-            done <<<"$CONFLICTS"
-          
-            # 再處理 dev/test/docs：偏向上游（theirs），含 modify/delete 的 rm 後備
-            UNMERGED=$(git diff --name-only --diff-filter=U || true)
-            while IFS= read -r f; do
-              [[ -z "$f" ]] && continue
-              case "$f" in
-                dev_tools/*|tests/*|docs/*)
-                  git checkout --theirs -- "$f" 2>/dev/null || git rm -f -- "$f" || true
-                  git add -- "$f" 2>/dev/null || true
-                  echo "[RERERE] dev/test/docs resolved (prefer upstream): $f"
-                  ;;
-              esac
-            done <<<"$UNMERGED"
-          
-            # 重點：若解完沒東西可提交 → 跳過這個 commit；否則繼續
-            if git diff --cached --quiet; then
-              echo "[RERERE] nothing to commit after resolution; skipping commit."
-              git rebase --skip || true
-            else
-              git -c core.editor=true rebase --continue || true
-            fi
-          fi
-          
-          if [ -n "${GH_PAT:-}" ]; then
-            PUSH_USER="x-access-token:${GH_PAT}"
-            echo "[LOG] Using GH_PAT for authenticated pushes (rebase preview)."
-          else
-            if [ -z "${GITHUB_TOKEN:-}" ]; then
-              echo "::error::Neither GH_PAT nor GITHUB_TOKEN is available for rebase preview pushes."
-              exit 1
-            fi
-            PUSH_USER="x-access-token:${GITHUB_TOKEN}"
-            echo "::warning::Secret GH_PAT is empty; falling back to workflow GITHUB_TOKEN for rebase preview (workflow changes in upstream history may be skipped)."
-          fi
-
-          git remote set-url --push origin "https://${PUSH_USER}@github.com/${GITHUB_REPOSITORY}.git"
-          git push -f origin rebase/preview
-
-      - name: (Cache) Save rerere decisions
-        if: ${{ (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true' }}
-        uses: actions/cache/save@v4
-        with:
-          path: .git/rr-cache
-          key: rr-cache-${{ runner.os }}-${{ github.repository }}-${{ steps.resolve.outputs.upstream_tip }}
-
       - name: Notify Discord (run failed)
         if: failure()
         env:
@@ -569,71 +459,3 @@ jobs:
           )
           curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
             -d "$(jq -n --arg content "$MSG" '{content: $content}')"
-
-  # ------------------------------------------------------------
-  # B) push 到 work 時：在 work 分支重生 assets.py 並直接提交
-  #    （配合 .gitattributes 的 merge=ours，PR 不會顯示衝突，
-  #     合併後由這個 job 把 assets.py 生對）
-  # ------------------------------------------------------------
-  regen-assets-on-work:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/work'
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-
-    steps:
-      - name: Checkout (full, no persisted credentials)
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-          
-      - name: Git setup
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config --local user.name  "github-actions[bot]"
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          git config --local core.autocrlf false
-
-      - name: Configure PAT push
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
-        run: |
-          set -euo pipefail
-          if [ -z "${GH_PAT:-}" ]; then
-            echo "::error::Secret GH_PAT is empty. Create a PAT with scopes: repo + workflow and add it as GH_PAT."
-            exit 1
-          fi
-          git remote set-url --push origin "https://x-access-token:${GH_PAT}@github.com/${GITHUB_REPOSITORY}.git"
-
-      - name: Setup Python 3.10
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-          cache: pip
-
-      - name: Re-generate assets.py (on work) and push
-        shell: bash
-        run: |
-          set -euo pipefail
-          python -VV
-          python -m pip install --upgrade pip
-          python -m pip install "numpy==1.24.3" "tqdm==4.66.1" "rich==13.7.1"
-
-          SRC="./assets_extract.py"
-          if [[ ! -f "$SRC" ]]; then
-            echo "::error::assets_extract.py not found on work"
-            exit 1
-          fi
-
-          PYTHONPATH="$PWD" python "$SRC"
-
-          CHANGED="$(git ls-files -m 'tasks/**/assets.py' || true)"
-          if [[ -n "$CHANGED" ]]; then
-            git add $CHANGED
-            git commit -m "chore(assets): regenerate on work [ci skip]"
-            git push
-          else
-            echo "[LOG] no assets changes to commit on work."
-          fi
