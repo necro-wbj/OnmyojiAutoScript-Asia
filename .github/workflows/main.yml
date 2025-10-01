@@ -243,7 +243,7 @@ jobs:
             while IFS= read -r f; do
               [[ -z "$f" ]] && continue
               case "$f" in
-                */assets.py|assets/*|*.png|*.jpg|*.jpeg|*.gif|*.webp|*.mp3|*.wav|*.mp4|*.mov|*.ico|*.ttf|*.otf)
+                **/assets.py|assets/**|**/*.png|**/*.jpg|**/*.jpeg|**/*.gif|**/*.webp|**/*.mp3|**/*.wav|**/*.mp4|**/*.mov|**/*.ico|**/*.ttf|**/*.otf|**/image*.json|**/ocr*.json|**/click*.json)
                   git checkout --ours -- "$f" || true
                   git add -- "$f" || true
                   echo "[POLICY] prefer ours on asset: $f"
