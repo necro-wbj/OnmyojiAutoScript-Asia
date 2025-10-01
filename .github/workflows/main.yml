@@ -586,6 +586,15 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+          
+      - name: Git setup
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config --local user.name  "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git config --local core.autocrlf false
 
       - name: Configure PAT push
         env:
