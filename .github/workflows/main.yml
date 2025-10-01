@@ -155,7 +155,9 @@ jobs:
           fi
 
       - name: Configure PAT for pushing
-        if: (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true'
+        if: >
+          (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') &&
+          steps.tipcheck.outputs.skip != 'true'
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -180,7 +182,9 @@ jobs:
 
       # ⬇️ 合併 upstream → PR 分支（保留你本地修補；非強推）
       - name: Update PR branch from upstream (try-merge; fallback to mirror)
-        if: (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true'
+        if: >
+          (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') &&
+          steps.tipcheck.outputs.skip != 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -236,14 +240,18 @@ jobs:
 
       # ---- 產生 assets.py（在 PR 分支上），以生成結果為準 ----
       - name: Setup Python 3.10 (for generator)
-        if: (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true'
+        if: >
+          (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') &&
+          steps.tipcheck.outputs.skip != 'true'
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
           cache: pip
 
       - name: Regenerate assets.py on PR branch (canonical)
-        if: (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true'
+        if: >
+          (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') &&
+          steps.tipcheck.outputs.skip != 'true'
         shell: bash
         env:
           BASE_BRANCH: ${{ env.BASE_BRANCH }}
@@ -278,7 +286,9 @@ jobs:
           fi
 
       - name: Create / Update PR (robust; retry & REST fallback)
-        if: (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true'
+        if: >
+          (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') &&
+          steps.tipcheck.outputs.skip != 'true'
         id: ghpr
         env:
           GH_TOKEN: ${{ secrets.GH_PAT != '' && secrets.GH_PAT || secrets.GITHUB_TOKEN }}
@@ -433,7 +443,9 @@ jobs:
 
       # ✅ rebase 預覽前清乾淨，避免「local changes would be overwritten」
       - name: Clean working tree before rebase (discard generated assets)
-        if: (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true'
+        if: >
+          (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') &&
+          steps.tipcheck.outputs.skip != 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -443,7 +455,9 @@ jobs:
 
       # （可選）rebase 預覽分支（觀察自動解的效果）
       - name: (Cache) Restore rerere decisions
-        if: (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true'
+        if: >
+          (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') &&
+          steps.tipcheck.outputs.skip != 'true'
         uses: actions/cache@v4
         with:
           path: .git/rr-cache
@@ -452,7 +466,9 @@ jobs:
             rr-cache-${{ runner.os }}-${{ github.repository }}-
 
       - name: Rebase our local commits onto upstream (rerere; preview branch)
-        if: (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true'
+        if: >
+          (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') &&
+          steps.tipcheck.outputs.skip != 'true'
         shell: bash
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
@@ -515,7 +531,9 @@ jobs:
           git push -f origin rebase/preview
 
       - name: (Cache) Save rerere decisions
-        if: (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true'
+        if: >
+          (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') &&
+          steps.tipcheck.outputs.skip != 'true'
         uses: actions/cache/save@v4
         with:
           path: .git/rr-cache
