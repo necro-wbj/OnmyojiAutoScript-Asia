@@ -2,7 +2,7 @@ name: Auto Sync Upstream Dev (PR-only, keep history & rerere)
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "0 1 * * 3"  # 每週三 09:00 Asia/Taipei（01:00 UTC）
   workflow_dispatch: {}
 
 concurrency:
@@ -196,15 +196,15 @@ jobs:
             while IFS= read -r f; do
               [[ -z "$f" ]] && continue
               case "$f" in
-                */assets.py|assets/*|*.png|*.jpg|*.jpeg|*.gif|*.webp|*.mp3|*.wav|*.mp4|*.mov|*.ico|*.ttf|*.otf)
+                **/assets.py|assets/**|**/*.png|**/*.jpg|**/*.jpeg|**/*.gif|**/*.webp|**/*.mp3|**/*.wav|**/*.mp4|**/*.mov|**/*.ico|**/*.ttf|**/*.otf|**/image*.json|**/ocr*.json|**/click*.json)
                   git checkout --ours -- "$f" || true
                   git add -- "$f" || true
-                  echo "[POLICY] prefer ours: $f"
+                  echo "[POLICY] prefer ours (asset/gen): $f"
                   ;;
                 dev_tools/*|tests/*|docs/*)
                   git checkout --theirs -- "$f" 2>/dev/null || git rm -f -- "$f" || true
                   git add -- "$f" 2>/dev/null || true
-                  echo "[POLICY] prefer theirs: $f"
+                  echo "[POLICY] prefer theirs (dev/tests/docs): $f"
                   ;;
               esac
             done <<<"$CONFLICTS"

@@ -44,8 +44,9 @@ assets/**           -text merge=ours
 # -------------------------------------------------
 # 自動產生的腳本/索引檔：PR 合併時一律以 main 為準
 # -------------------------------------------------
-**/assets.py merge=ours
-assets/**     merge=ours
-*.json     merge=ours
 **.png      -text merge=ours
 **.jpg      -text merge=ours
+*.py text eol=lf
+*.json text eol=lf
+assets/** binary
+**/assets.py linguist-generated
