@@ -155,9 +155,7 @@ jobs:
           fi
 
       - name: Configure PAT for pushing
-        if: >
-          (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') &&
-          steps.tipcheck.outputs.skip != 'true'
+        if: ${{ (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true' }}
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -182,9 +180,7 @@ jobs:
 
       # ⬇️ 合併 upstream → PR 分支（保留你本地修補；非強推）
       - name: Update PR branch from upstream (try-merge; fallback to mirror)
-        if: >
-          (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') &&
-          steps.tipcheck.outputs.skip != 'true'
+        if: ${{ (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -240,18 +236,14 @@ jobs:
 
       # ---- 產生 assets.py（在 PR 分支上），以生成結果為準 ----
       - name: Setup Python 3.10 (for generator)
-        if: >
-          (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') &&
-          steps.tipcheck.outputs.skip != 'true'
+        if: ${{ (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true' }}
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
           cache: pip
 
       - name: Regenerate assets.py on PR branch (canonical)
-        if: >
-          (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') &&
-          steps.tipcheck.outputs.skip != 'true'
+        if: ${{ (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true' }}
         shell: bash
         env:
           BASE_BRANCH: ${{ env.BASE_BRANCH }}
@@ -286,12 +278,11 @@ jobs:
           fi
 
       - name: Create / Update PR (robust; retry & REST fallback)
-        if: >
-          (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') &&
-          steps.tipcheck.outputs.skip != 'true'
+        if: ${{ (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true' }}
         id: ghpr
         env:
-          GH_TOKEN: ${{ secrets.GH_PAT != '' && secrets.GH_PAT || secrets.GITHUB_TOKEN }}
+          GH_PAT: ${{ secrets.GH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
@@ -317,6 +308,17 @@ jobs:
             printf -- '- origin tip:   `%s`\n' "${{ steps.resolve.outputs.origin_tip }}"
             printf -- '- unique commits: base_only=`%s`, up_only=`%s`\n' "${{ steps.resolve.outputs.base_only }}" "${{ steps.resolve.outputs.up_only }}"
           } > "$BODY_FILE"
+
+          if [[ -n "${GH_PAT:-}" ]]; then
+            export GH_TOKEN="${GH_PAT}"
+            echo "[LOG] Using GH_PAT for gh CLI authentication."
+          elif [[ -n "${GITHUB_TOKEN:-}" ]]; then
+            export GH_TOKEN="${GITHUB_TOKEN}"
+            echo "[LOG] GH_PAT unavailable; falling back to workflow GITHUB_TOKEN for gh CLI."
+          else
+            echo "::error::Neither GH_PAT nor GITHUB_TOKEN is available for gh CLI operations."
+            exit 1
+          fi
 
           EXISTING="$(gh pr list -R "$REPO" --head "${{ env.PR_BRANCH }}" --base "${{ env.BASE_BRANCH }}" \
                      --state open --json number --jq '.[0].number // empty' || true)"
@@ -360,12 +362,21 @@ jobs:
       - name: Notify Discord (PR status)
         if: ${{ steps.ghpr.outputs['pull-request-operation'] == 'created' || steps.ghpr.outputs['pull-request-operation'] == 'updated' }}
         env:
-          GH_TOKEN: ${{ secrets.GH_PAT != '' && secrets.GH_PAT || secrets.GITHUB_TOKEN }}
+          GH_PAT: ${{ secrets.GH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           PR_URL: ${{ steps.ghpr.outputs['pull-request-url'] }}
         shell: bash
         run: |
           set -euo pipefail
+          if [[ -n "${GH_PAT:-}" ]]; then
+            export GH_TOKEN="${GH_PAT}"
+          elif [[ -n "${GITHUB_TOKEN:-}" ]]; then
+            export GH_TOKEN="${GITHUB_TOKEN}"
+          else
+            echo "::error::Missing both GH_PAT and GITHUB_TOKEN for gh CLI calls."
+            exit 1
+          fi
           REPO="${GITHUB_REPOSITORY}"
           PR="$PR_URL"
           NUM="$(gh pr view "$PR" -R "$REPO" --json number --jq .number)"
@@ -443,9 +454,7 @@ jobs:
 
       # ✅ rebase 預覽前清乾淨，避免「local changes would be overwritten」
       - name: Clean working tree before rebase (discard generated assets)
-        if: >
-          (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') &&
-          steps.tipcheck.outputs.skip != 'true'
+        if: ${{ (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -455,9 +464,7 @@ jobs:
 
       # （可選）rebase 預覽分支（觀察自動解的效果）
       - name: (Cache) Restore rerere decisions
-        if: >
-          (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') &&
-          steps.tipcheck.outputs.skip != 'true'
+        if: ${{ (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true' }}
         uses: actions/cache@v4
         with:
           path: .git/rr-cache
@@ -466,9 +473,7 @@ jobs:
             rr-cache-${{ runner.os }}-${{ github.repository }}-
 
       - name: Rebase our local commits onto upstream (rerere; preview branch)
-        if: >
-          (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') &&
-          steps.tipcheck.outputs.skip != 'true'
+        if: ${{ (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true' }}
         shell: bash
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
@@ -544,9 +549,7 @@ jobs:
           git push -f origin rebase/preview
 
       - name: (Cache) Save rerere decisions
-        if: >
-          (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') &&
-          steps.tipcheck.outputs.skip != 'true'
+        if: ${{ (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true' }}
         uses: actions/cache/save@v4
         with:
           path: .git/rr-cache
