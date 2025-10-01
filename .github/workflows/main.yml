@@ -7,7 +7,7 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -38,9 +38,7 @@ env:
     **/*.otf
 
 jobs:
-  # ------------------------------------------------------------
-  # A) 做 upstream 同步 → 更新 PR 分支（merge，不覆蓋）→ PR 狀態通知
-  # ------------------------------------------------------------
+  # A) 做 upstream 同步 → 更新 PR 分支（merge，不覆蓋）→ 與 base 預先合併 → 再生 assets → PR 狀態通知
   sync-upstream:
     if: github.event_name != 'push' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
@@ -54,6 +52,7 @@ jobs:
           persist-credentials: false
 
       - name: Git setup
+        shell: bash
         run: |
           set -euo pipefail
           git config --local user.name  "github-actions[bot]"
@@ -62,13 +61,13 @@ jobs:
           git config --local core.autocrlf false
 
       - name: Configure credentials for pushing
+        shell: bash
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           git config --global --unset-all http.https://github.com/.extraheader || true
-      
           if [ -n "${GH_PAT:-}" ]; then
             PUSH_USER="x-access-token:${GH_PAT}"
             echo "[LOG] Using GH_PAT for authenticated pushes."
@@ -80,10 +79,10 @@ jobs:
             PUSH_USER="x-access-token:${GITHUB_TOKEN}"
             echo "::warning::Secret GH_PAT is empty; falling back to workflow GITHUB_TOKEN (workflow changes in upstream history may be skipped)."
           fi
-      
           git remote set-url --push origin "https://${PUSH_USER}@github.com/${GITHUB_REPOSITORY}.git"
 
       - name: Add upstream & fetch all
+        shell: bash
         run: |
           set -euo pipefail
           git remote remove upstream 2>/dev/null || true
@@ -126,9 +125,9 @@ jobs:
 
       - name: Early exit if base==upstream (no diff)
         if: steps.resolve.outputs.up_only == '0' && steps.resolve.outputs.base_only == '0'
+        shell: bash
         run: echo "[LOG] origin/${{ env.BASE_BRANCH }} 與 upstream/${{ env.UPSTREAM_BRANCH }} 完全一致；跳過。"
 
-      # ⛳ PR 分支若已涵蓋 upstream tip，就整個 job 早退，避免排隊浪費
       - name: Skip if PR branch already at upstream tip
         id: tipcheck
         if: steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0'
@@ -147,7 +146,7 @@ jobs:
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Configure PAT for pushing
+      - name: Configure PAT for pushing (safety)
         if: ${{ (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true' }}
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
@@ -159,19 +158,16 @@ jobs:
           git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
           if [ -n "${GH_PAT:-}" ]; then
             PUSH_USER="x-access-token:${GH_PAT}"
-            echo "[LOG] Using GH_PAT for authenticated pushes."
           else
             if [ -z "${GITHUB_TOKEN:-}" ]; then
               echo "::error::Neither GH_PAT nor GITHUB_TOKEN is available for pushes."
               exit 1
             fi
             PUSH_USER="x-access-token:${GITHUB_TOKEN}"
-            echo "::warning::Secret GH_PAT is empty; falling back to workflow GITHUB_TOKEN (workflow changes in upstream history may be skipped)."
           fi
-
           git remote set-url --push origin "https://${PUSH_USER}@github.com/${GITHUB_REPOSITORY}.git"
 
-      # ⬇️ 合併 upstream → PR 分支（保留你本地修補；非強推）
+      # 1) 先把 upstream 合進 PR 分支
       - name: Update PR branch from upstream (try-merge; fallback to mirror)
         if: ${{ (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true' }}
         shell: bash
@@ -196,7 +192,6 @@ jobs:
           else
             echo "::warning::Merge hit conflicts; applying path-based policy…"
 
-            # 先處理資產/生成檔：偏向 ours（之後會重新生成 assets.py）
             CONFLICTS="$(git diff --name-only --diff-filter=U || true)"
             while IFS= read -r f; do
               [[ -z "$f" ]] && continue
@@ -214,7 +209,6 @@ jobs:
               esac
             done <<<"$CONFLICTS"
 
-            # 還有未解衝突？就回退 merge，改成鏡像 upstream（讓 PR 由 GitHub 呈現衝突）
             if git diff --name-only --diff-filter=U | grep -q .; then
               echo "::warning::Unresolved conflicts remain; aborting merge and mirroring upstream to PR branch."
               git merge --abort || true
@@ -227,7 +221,53 @@ jobs:
           git push origin "+HEAD:${TARGET}"
           echo "[LOG] Pushed ${TARGET} (merged or mirrored to upstream)."
 
-      # ---- 產生 assets.py（在 PR 分支上），以生成結果為準 ----
+      # 2) 再把 base(main) 合進 PR 分支 → 預先吸收 main 的差異，避免 PR 顯示衝突
+      - name: Warm-merge base (main) into PR branch
+        if: ${{ (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TARGET="${PR_BRANCH}"
+          BASE="${{ env.BASE_BRANCH }}"
+
+          git checkout -B "${TARGET}" "origin/${TARGET}"
+          git fetch origin "+refs/heads/${BASE}:refs/remotes/origin/${BASE}"
+
+          if git merge --no-ff --no-edit "origin/${BASE}"; then
+            echo "[LOG] merged base(${BASE}) into ${TARGET}."
+          else
+            echo "::warning::Merge with base hit conflicts; applying path-based policy…"
+            CONFLICTS="$(git diff --name-only --diff-filter=U || true)"
+
+            # 資產/生成檔偏向 ours（PR 分支），因為等下會重生一次
+            while IFS= read -r f; do
+              [[ -z "$f" ]] && continue
+              case "$f" in
+                */assets.py|assets/*|*.png|*.jpg|*.jpeg|*.gif|*.webp|*.mp3|*.wav|*.mp4|*.mov|*.ico|*.ttf|*.otf)
+                  git checkout --ours -- "$f" || true
+                  git add -- "$f" || true
+                  echo "[POLICY] prefer ours on asset: $f"
+                  ;;
+                dev_tools/*|tests/*|docs/*)
+                  git checkout --theirs -- "$f" 2>/dev/null || git rm -f -- "$f" || true
+                  git add -- "$f" 2>/dev/null || true
+                  echo "[POLICY] prefer theirs on dev/tests/docs: $f"
+                  ;;
+              esac
+            done <<<"$CONFLICTS"
+
+            if git diff --name-only --diff-filter=U | grep -q .; then
+              echo "::error::Unresolved conflicts remain after merging base into PR."
+              exit 3
+            else
+              git commit -m "fix(conflict): pre-resolve vs base (assets=ours, dev/tests/docs=theirs)"
+            fi
+          fi
+
+          git push origin "+HEAD:${TARGET}"
+          echo "[LOG] Pushed ${TARGET} after merging base."
+
+      # 3) 在 PR 分支重生 assets.py（此時已包含 upstream 與 main 的差異）
       - name: Setup Python 3.10 (for generator)
         if: ${{ (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true' }}
         uses: actions/setup-python@v5
@@ -256,7 +296,6 @@ jobs:
           fi
 
           PYTHONPATH="$PWD" python "$SRC"
-
           [[ $TEMP -eq 1 ]] && rm -f ./assets_extract_temp.py || true
 
           CHANGED="$(git ls-files -m 'tasks/**/assets.py' || true)"
@@ -282,7 +321,7 @@ jobs:
           REPO="${GITHUB_REPOSITORY}"
           TITLE="sync: upstream/${{ env.UPSTREAM_BRANCH }} → ${{ env.BASE_BRANCH }} (manual conflict resolution)"
 
-          # ⚠️ 開 PR 前先檢查 base..head 是否真的有提交
+          # 開 PR 前先檢查 base..head 是否真有提交
           DIFF_CNT=$(git rev-list --count "origin/${{ env.BASE_BRANCH }}..${{ env.PR_BRANCH }}" || echo 0)
           if [[ "${DIFF_CNT}" -eq 0 ]]; then
             echo "[LOG] No commits between ${{ env.BASE_BRANCH }} and ${{ env.PR_BRANCH }}; skip PR create/update."
@@ -374,21 +413,14 @@ jobs:
           PR="$PR_URL"
           NUM="$(gh pr view "$PR" -R "$REPO" --json number --jq .number)"
 
-          # 建立一次性通知用的標籤（衝突/阻擋）
           gh label create sync-conflict-notified -R "$REPO" --force \
             --description "Conflict notified by sync workflow" --color B60205 >/dev/null 2>&1 || true
           gh label create sync-blocked-notified  -R "$REPO" --force \
             --description "Blocked notified by sync workflow"  --color D93F0B >/dev/null 2>&1 || true
 
-          LABELS="$(gh pr view "$PR" -R "$REPO" --json labels --jq '.labels[].name' || true)"
-          HAS_CONFLICT=0; HAS_BLOCKED=0
-          grep -qx 'sync-conflict-notified' <<<"$LABELS" && HAS_CONFLICT=1
-          grep -qx 'sync-blocked-notified'  <<<"$LABELS" && HAS_BLOCKED=1
-
           GQL=""; REST=""
           for i in 2 3 4 5 6 7 8 9; do
             GQL="$(gh pr view "$PR" -R "$REPO" --json mergeStateStatus --jq '.mergeStateStatus' || echo '')"
-            # gh api 不支援 -R 旗標，直接帶 repos/${REPO}
             REST="$(gh api repos/${REPO}/pulls/$NUM --jq '.mergeable_state' || echo '')"
             if [[ -n "$GQL" && "$GQL" != "UNKNOWN" ]] || [[ -n "$REST" && "$REST" != "unknown" ]]; then
               break
@@ -396,7 +428,6 @@ jobs:
             echo "[LOG] mergeStateStatus=$GQL mergeable_state=$REST ; retry in ${i}s..."
             sleep "$i"
           done
-          echo "[LOG] final: mergeStateStatus=${GQL:-EMPTY}, mergeable_state=${REST:-EMPTY}"
 
           STATUS="ok"
           if [[ "$GQL" == "DIRTY" || "$REST" == "dirty" ]]; then
@@ -409,39 +440,24 @@ jobs:
 
           case "$STATUS" in
             conflict)
-              if [[ $HAS_CONFLICT -eq 0 ]]; then
-                printf -v MSG '⚠️ **Sync PR has conflicts**\nPR: %s\n請在 PR 介面手動解衝突後合併。\n' "$PR"
-                curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
-                  -d "$(jq -n --arg content "$MSG" '{content: $content}')"
-                gh pr edit "$PR" -R "$REPO" --add-label sync-conflict-notified
-              else
-                echo "[LOG] conflict still present, already notified; skip."
-              fi
-              [[ $HAS_BLOCKED -eq 1 ]] && gh pr edit "$PR" -R "$REPO" --remove-label sync-blocked-notified || true
+              printf -v MSG '⚠️ **Sync PR has conflicts**\nPR: %s\n請在 PR 介面手動解衝突後合併。\n' "$PR"
+              curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
+                -d "$(jq -n --arg content "$MSG" '{content: $content}')"
+              gh pr edit "$PR" -R "$REPO" --add-label sync-conflict-notified || true
+              gh pr edit "$PR" -R "$REPO" --remove-label sync-blocked-notified || true
               ;;
             blocked)
-              if [[ $HAS_BLOCKED -eq 0 ]]; then
-                printf -v MSG '⛔ **Sync PR is blocked**\nPR: %s\n請檢查保護規則／審查或檢查狀態。\n' "$PR"
-                curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
-                  -d "$(jq -n --arg content "$MSG" '{content: $content}')"
-                gh pr edit "$PR" -R "$REPO" --add-label sync-blocked-notified
-              else
-                echo "[LOG] blocked still present; skip notify."
-              fi
+              printf -v MSG '⛔ **Sync PR is blocked**\nPR: %s\n請檢查保護規則／審查或檢查狀態。\n' "$PR"
+              curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
+                -d "$(jq -n --arg content "$MSG" '{content: $content}')"
+              gh pr edit "$PR" -R "$REPO" --add-label sync-blocked-notified || true
               ;;
             pending)
               echo "[LOG] pending mergeability; skip noisy notify."
               ;;
             *)
-              if [[ $HAS_CONFLICT -eq 1 || $HAS_BLOCKED -eq 1 ]]; then
-                gh pr edit "$PR" -R "$REPO" --remove-label sync-conflict-notified || true
-                gh pr edit "$PR" -R "$REPO" --remove-label sync-blocked-notified  || true
-                printf -v MSG '✅ **Upstream sync prepared**\nPR: %s\n狀態已恢復可合併。\n' "$PR"
-                curl -sS -X POST "$DISCORD_WEBHOOK" -H 'Content-Type: application/json' \
-                  -d "$(jq -n --arg content "$MSG" '{content: $content}')"
-              else
-                echo "[LOG] mergeable and no prior flag; skip notify."
-              fi
+              gh pr edit "$PR" -R "$REPO" --remove-label sync-conflict-notified || true
+              gh pr edit "$PR" -R "$REPO" --remove-label sync-blocked-notified  || true
               ;;
           esac
 
@@ -450,6 +466,7 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        shell: bash
         run: |
           set -euo pipefail
           MSG=$(cat <<EOF
