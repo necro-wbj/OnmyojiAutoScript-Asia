@@ -269,14 +269,12 @@ jobs:
 
       # 3) 在 PR 分支重生 assets.py（此時已包含 upstream 與 main 的差異）
       - name: Setup Python 3.10 (for generator)
-        if: ${{ (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true' }}
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
           cache: pip
 
       - name: Regenerate assets.py on PR branch (canonical)
-        if: ${{ (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true' }}
         shell: bash
         env:
           BASE_BRANCH: ${{ env.BASE_BRANCH }}
