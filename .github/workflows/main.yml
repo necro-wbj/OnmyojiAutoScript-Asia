@@ -63,10 +63,10 @@ jobs:
       - name: Git setup
         run: |
           set -euo pipefail
-          git config user.name  "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name  "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          git config core.autocrlf false
+          git config --local core.autocrlf false
 
           - name: Configure credentials for pushing
             env:
