@@ -298,11 +298,21 @@ jobs:
           PYTHONPATH="$PWD" python "$SRC"
           [[ $TEMP -eq 1 ]] && rm -f ./assets_extract_temp.py || true
 
-          CHANGED="$(git ls-files -m 'tasks/**/assets.py' || true)"
-          if [[ -n "$CHANGED" ]]; then
+          # 1) 找出所有變更的 assets.py 與 assets/ 目錄內容
+          CHANGED_FILES="$(
+            { git ls-files -m '**/assets.py' || true; } \
+            && { git ls-files -m 'assets/**' || true; } \
+            && { git ls-files -o --exclude-standard '**/assets.py' || true; } \
+            && { git ls-files -o --exclude-standard 'assets/**' || true; } \
+            | sort -u
+          )"
+
+          # 2) 有變更就提交；沒有就跳過
+          if [[ -n "$CHANGED_FILES" ]]; then
             echo "[LOG] assets changed:"
-            echo "$CHANGED"
-            git add $CHANGED
+            echo "$CHANGED_FILES"
+            # 注意：用 -- 跟檔名清單，避免 `git add` 把整樹加爆
+            git add -- $CHANGED_FILES
             git commit -m "chore(assets): regenerate by assets_extract.py [ci skip]"
             git push origin "+${{ env.PR_BRANCH }}:${{ env.PR_BRANCH }}"
           else
