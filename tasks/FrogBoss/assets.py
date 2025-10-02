@@ -10,15 +10,6 @@ from module.atom.list import RuleList
 class FrogBossAssets: 
 
 
-	# Ocr Rule Assets
-	# Ocr-description 
-	O_LEFT_COUNT = RuleOcr(roi=(143,496,69,31), area=(143,496,69,31), mode="Digit", method="Default", keyword="", name="left_count")
-	# Ocr-description 
-	O_RIGHT_COUNT = RuleOcr(roi=(1105,497,77,32), area=(1105,497,77,32), mode="Digit", method="Default", keyword="", name="right_count")
-	# Ocr-description 
-	O_TIME_REMAIN = RuleOcr(roi=(594,564,91,35), area=(594,564,91,35), mode="Duration", method="Default", keyword="", name="time_remain")
-
-
 	# Image Rule Assets
 	# 左边竞猜 
 	I_BET_LEFT = RuleImage(roi_front=(95,308,145,100), roi_back=(58,248,245,195), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_bet_left.png")
@@ -59,5 +50,14 @@ class FrogBossAssets:
 	I_FROG_BOSS_TOWN_ENTER = RuleImage(roi_front=(122,263,110,33), roi_back=(122,263,110,33), threshold=0.6, method="Template matching", file="./tasks/FrogBoss/fb/fb_frog_boss_town_enter.png")
 	# 休息中 
 	I_FROG_BOSS_REST = RuleImage(roi_front=(510,274,169,64), roi_back=(492,260,220,113), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_frog_boss_rest.png")
+
+
+	# Ocr Rule Assets
+	# Ocr-description 
+	O_LEFT_COUNT = RuleOcr(roi=(143,496,69,31), area=(143,496,69,31), mode="Digit", method="Default", keyword="", name="left_count")
+	# Ocr-description 
+	O_RIGHT_COUNT = RuleOcr(roi=(1105,497,77,32), area=(1105,497,77,32), mode="Digit", method="Default", keyword="", name="right_count")
+	# Ocr-description 
+	O_TIME_REMAIN = RuleOcr(roi=(594,564,91,35), area=(594,564,91,35), mode="Duration", method="Default", keyword="", name="time_remain")
 
 

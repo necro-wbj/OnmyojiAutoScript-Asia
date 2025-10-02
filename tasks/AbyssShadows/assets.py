@@ -10,45 +10,6 @@ from module.atom.list import RuleList
 class AbyssShadowsAssets: 
 
 
-	# Click Rule Assets
-	# 首领 
-	C_BOSS_CLICK_AREA = RuleClick(roi_front=(679,164,83,54), roi_back=(679,164,83,54), name="boss_click_area")
-	# 副将1 
-	C_GENERAL_1_CLICK_AREA = RuleClick(roi_front=(539,306,64,56), roi_back=(539,306,64,56), name="general_1_click_area")
-	# 副将2 
-	C_GENERAL_2_CLICK_AREA = RuleClick(roi_front=(856,293,58,50), roi_back=(856,293,58,50), name="general_2_click_area")
-	# 精英1 
-	C_ELITE_1_CLICK_AREA = RuleClick(roi_front=(453,418,54,45), roi_back=(453,418,54,45), name="elite_1_click_area")
-	# 精英2 
-	C_ELITE_2_CLICK_AREA = RuleClick(roi_front=(694,420,58,44), roi_back=(694,420,58,44), name="elite_2_click_area")
-	# 精英3 
-	C_ELITE_3_CLICK_AREA = RuleClick(roi_front=(938,413,60,44), roi_back=(938,413,60,44), name="elite_3_click_area")
-	# 前往阵眼 
-	C_CHANGE_ZONE = RuleClick(roi_front=(1000,606,54,54), roi_back=(1000,606,54,54), name="change_zone")
-	# 神龙暗域 
-	C_DRAGON_AREA = RuleClick(roi_front=(123,150,75,66), roi_back=(123,150,75,66), name="dragon_area")
-	# 孔雀暗域 
-	C_PEACOCK_AREA = RuleClick(roi_front=(125,278,74,62), roi_back=(125,278,74,62), name="peacock_area")
-	# 白藏主暗域 
-	C_FOX_AREA = RuleClick(roi_front=(126,409,79,74), roi_back=(126,409,79,74), name="fox_area")
-	# 黑豹暗域 
-	C_LEOPARD_AREA = RuleClick(roi_front=(122,537,81,76), roi_back=(122,537,81,76), name="leopard_area")
-	# 狭间_神龙入口 
-	C_ABYSS_DRAGON = RuleClick(roi_front=(232.5,196,55,151), roi_back=(190,147,140,283), name="abyss_dragon")
-	# 狭间_孔雀入口 
-	C_ABYSS_PEACOCK = RuleClick(roi_front=(526,189,48,165), roi_back=(476,138,145,312), name="abyss_peacock")
-	# 狭间_白藏主入口 
-	C_ABYSS_FOX = RuleClick(roi_front=(822,184,49,144), roi_back=(789,130,148,249), name="abyss_fox")
-	# 狭间_黑豹入口 
-	C_ABYSS_LEOPARD = RuleClick(roi_front=(1140,190,50,162), roi_back=(1093,143,138,297), name="abyss_leopard")
-
-
-	# List Rule Assets
-	# 这个是当前活跃的竂活动列表界面 
-	L_RYOU_ACTIVITY_LIST = RuleList(folder="./tasks/AbyssShadows/res", direction="vertical", mode="ocr", roi_back=(35,157,37,250), size=(42, 27), 
-					 array=["道馆", "首领", "狭间"])
-
-
 	# Image Rule Assets
 	# 阴阳竂->神社 
 	I_RYOU_SHENSHE = RuleImage(roi_front=(872,659,62,25), roi_back=(872,659,62,25), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_ryou_shenshe.png")
@@ -101,5 +62,44 @@ class AbyssShadowsAssets:
 	# Swipe Rule Assets
 	# 滑到狭间 
 	S_TO_ABBSY_SHADOWS = RuleSwipe(roi_front=(752,395,62,66), roi_back=(758,193,62,48), mode="default", name="to_abbsy_shadows")
+
+
+	# List Rule Assets
+	# 这个是当前活跃的竂活动列表界面 
+	L_RYOU_ACTIVITY_LIST = RuleList(folder="./tasks/AbyssShadows/res", direction="vertical", mode="ocr", roi_back=(35,157,37,250), size=(42, 27), 
+					 array=["道馆", "首领", "狭间"])
+
+
+	# Click Rule Assets
+	# 首领 
+	C_BOSS_CLICK_AREA = RuleClick(roi_front=(679,164,83,54), roi_back=(679,164,83,54), name="boss_click_area")
+	# 副将1 
+	C_GENERAL_1_CLICK_AREA = RuleClick(roi_front=(539,306,64,56), roi_back=(539,306,64,56), name="general_1_click_area")
+	# 副将2 
+	C_GENERAL_2_CLICK_AREA = RuleClick(roi_front=(856,293,58,50), roi_back=(856,293,58,50), name="general_2_click_area")
+	# 精英1 
+	C_ELITE_1_CLICK_AREA = RuleClick(roi_front=(453,418,54,45), roi_back=(453,418,54,45), name="elite_1_click_area")
+	# 精英2 
+	C_ELITE_2_CLICK_AREA = RuleClick(roi_front=(694,420,58,44), roi_back=(694,420,58,44), name="elite_2_click_area")
+	# 精英3 
+	C_ELITE_3_CLICK_AREA = RuleClick(roi_front=(938,413,60,44), roi_back=(938,413,60,44), name="elite_3_click_area")
+	# 前往阵眼 
+	C_CHANGE_ZONE = RuleClick(roi_front=(1000,606,54,54), roi_back=(1000,606,54,54), name="change_zone")
+	# 神龙暗域 
+	C_DRAGON_AREA = RuleClick(roi_front=(123,150,75,66), roi_back=(123,150,75,66), name="dragon_area")
+	# 孔雀暗域 
+	C_PEACOCK_AREA = RuleClick(roi_front=(125,278,74,62), roi_back=(125,278,74,62), name="peacock_area")
+	# 白藏主暗域 
+	C_FOX_AREA = RuleClick(roi_front=(126,409,79,74), roi_back=(126,409,79,74), name="fox_area")
+	# 黑豹暗域 
+	C_LEOPARD_AREA = RuleClick(roi_front=(122,537,81,76), roi_back=(122,537,81,76), name="leopard_area")
+	# 狭间_神龙入口 
+	C_ABYSS_DRAGON = RuleClick(roi_front=(232.5,196,55,151), roi_back=(190,147,140,283), name="abyss_dragon")
+	# 狭间_孔雀入口 
+	C_ABYSS_PEACOCK = RuleClick(roi_front=(526,189,48,165), roi_back=(476,138,145,312), name="abyss_peacock")
+	# 狭间_白藏主入口 
+	C_ABYSS_FOX = RuleClick(roi_front=(822,184,49,144), roi_back=(789,130,148,249), name="abyss_fox")
+	# 狭间_黑豹入口 
+	C_ABYSS_LEOPARD = RuleClick(roi_front=(1140,190,50,162), roi_back=(1093,143,138,297), name="abyss_leopard")
 
 

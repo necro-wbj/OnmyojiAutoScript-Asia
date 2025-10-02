@@ -10,11 +10,6 @@ from module.atom.list import RuleList
 class GlobalGameAssets: 
 
 
-	# Click Rule Assets
-	# description 
-	C_UI_REWARD = RuleClick(roi_front=(919,160,208,368), roi_back=(72,107,244,503), name="ui_reward")
-
-
 	# Image Rule Assets
 	# 长一点的确认 
 	I_UI_CONFIRM = RuleImage(roi_front=(602,411,77,39), roi_back=(550,370,320,110), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_confirm.png")
@@ -38,6 +33,11 @@ class GlobalGameAssets:
 	I_UI_UNCHECK = RuleImage(roi_front=(567,343,33,36), roi_back=(497,303,216,100), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_uncheck.png")
 	# 勾选 
 	I_UI_CHECK = RuleImage(roi_front=(564,341,40,38), roi_back=(512,329,164,78), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/ui/ui_ui_check.png")
+
+
+	# Click Rule Assets
+	# description 
+	C_UI_REWARD = RuleClick(roi_front=(919,160,208,368), roi_back=(72,107,244,503), name="ui_reward")
 
 
 	# Image Rule Assets
