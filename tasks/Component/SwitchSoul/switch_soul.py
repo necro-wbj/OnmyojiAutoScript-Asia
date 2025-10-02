@@ -21,6 +21,17 @@ def switch_parser(switch_str: str) -> tuple:
         raise ValueError('Switch_str must be 2 length')
     return int(switch_list[0]), int(switch_list[1])
 
+def convert_to_list_of_tuples(target: str) -> list[tuple]:
+    """
+    transform the string representation of a list of tuples to list[tuple]
+    :param target: the string representation of a list of tuples, e.g. "1,1;1,2"
+    :return: list[tuple]
+    """
+    # split the string representation of a list of tuples by ';'
+    tuple_strings = target.split(';')
+    # transform the string representation of a tuple to tuple
+    result = [tuple(map(int, t.split(','))) for t in tuple_strings]
+    return result
 
 class SwitchSoul(BaseTask, SwitchSoulAssets):
 
@@ -30,11 +41,19 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
         :return:
         """
         if isinstance(target, str):
-            try:
-                target = switch_parser(target)
-            except ValueError:
-                logger.error('Switch soul config error')
-                return
+            # check target include ';'
+            if target.find(';') != -1:
+                try:
+                    target = convert_to_list_of_tuples(target)
+                except ValueError:
+                    logger.error('Switch soul config error')
+                    return
+            else:
+                try:
+                    target = switch_parser(target)
+                except ValueError:
+                    logger.error('Switch soul config error')
+                    return
         self.click_preset()
         self.switch_souls(target)
 
@@ -94,7 +113,7 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
         while 1:
             self.screenshot()
             compare1 = self.O_SS_GROUP_NAME.detect_and_ocr(self.device.image)
-            ocr_text = str([result.ocr_text for result in compare1])
+            ocr_text = str(compare1[0].ocr_text)
             # 相等时 滑动到最上层
             if cur_text == ocr_text:
                 break
@@ -186,7 +205,7 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
         while 1:
             self.screenshot()
             compare1 = self.O_SS_GROUP_NAME.detect_and_ocr(self.device.image)
-            now_group_text = str([result.ocr_text for result in compare1])
+            now_group_text = str(compare1[0].ocr_text)
             if now_group_text == last_group_text:
                 break
             self.swipe(self.S_SS_GROUP_SWIPE_UP, 2)
@@ -222,7 +241,7 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
         while 1:
             self.screenshot()
             compare1 = self.O_SS_TEAM_NAME.detect_and_ocr(self.device.image)
-            now_team_text = str([result.ocr_text for result in compare1])
+            now_team_text = str(compare1[0].ocr_text)
             # 向上滑动
             if now_team_text == last_team_text:
                 break

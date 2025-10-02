@@ -81,7 +81,7 @@ if __name__ == '__main__':
     device = Device(config)
     task = ScriptTask(config, device)
     task.config.update_scheduler()
-    task.delay_pending_tasks()
+    task.run()
     # task.screenshot()
     # print(task.appear_then_click(task.I_LOGIN_SCROOLL_CLOSE, threshold=0.9))
 

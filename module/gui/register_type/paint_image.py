@@ -68,7 +68,7 @@ class PaintImage(QQuickPaintedItem):
         if not isinstance(file, str):
             logger.error("file must be str")
             return
-        x, y, width, height = map(int, roi.split(','))
+        x, y, width, height = [float(i) for i in roi.split(',')]
         roi_image = self._image.copy(x, y, width, height)
         roi_image.save(file)
         logger.info(f"save target image {file}success")

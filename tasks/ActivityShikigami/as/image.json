@@ -66,7 +66,7 @@
     "itemName": "fire",
     "imageName": "as_fire.png",
     "roiFront": "1131,598,103,54",
-    "roiBack": "1113,564,136,111",
+    "roiBack": "1123,589,124,88",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "点击战斗"
@@ -93,7 +93,7 @@
     "itemName": "switch",
     "imageName": "as_switch.png",
     "roiFront": "1215,551,23,23",
-    "roiBack": "1204,538,74,49",
+    "roiBack": "1204,538,54,49",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "切换按键"
@@ -119,8 +119,8 @@
   {
     "itemName": "skip_button",
     "imageName": "as_skip_button.png",
-    "roiFront": "1159,37,51,22",
-    "roiBack": "1141,27,86,43",
+    "roiFront": "1154,34,64,30",
+    "roiBack": "1154,34,64,30",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "右上跳过按钮"
@@ -128,8 +128,8 @@
   {
     "itemName": "red_exit",
     "imageName": "as_red_exit.png",
-    "roiFront": "1162,96,39,38",
-    "roiBack": "1120,49,110,135",
+    "roiFront": "1108,88,39,38",
+    "roiBack": "1071,52,110,135",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "红色退出"

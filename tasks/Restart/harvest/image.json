@@ -11,7 +11,7 @@
   {
     "itemName": "harvest_sign",
     "imageName": "harvest_harvest_sign.png",
-    "roiFront": "397,500,24,34",
+    "roiFront": "253,504,24,27",
     "roiBack": "70,471,889,89",
     "method": "Template matching",
     "threshold": 0.8,

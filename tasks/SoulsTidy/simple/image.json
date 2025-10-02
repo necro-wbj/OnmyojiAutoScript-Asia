@@ -65,8 +65,8 @@
   {
     "itemName": "st_unselected",
     "imageName": "simple_st_unselected.png",
-    "roiFront": "542,342,38,37",
-    "roiBack": "542,342,38,37",
+    "roiFront": "508,341,38,37",
+    "roiBack": "508,341,38,37",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "未选中"
@@ -108,10 +108,28 @@
     "description": "神赐"
   },
   {
+    "itemName": "st_abandon",
+    "imageName": "simple_st_abandon.png",
+    "roiFront": "31,116,107,40",
+    "roiBack": "20,107,152,58",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "已棄置"
+  },
+  {
+    "itemName": "st_firset_level",
+    "imageName": "simple_st_firset_level.png",
+    "roiFront": "91,237,35,28",
+    "roiBack": "91,237,35,28",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "+0"
+  },
+  {
     "itemName": "st_abandoned_selected",
     "imageName": "simple_st_abandoned_selected.png",
-    "roiFront": "32,112,107,52",
-    "roiBack": "15,89,139,87",
+    "roiFront": "28,110,112,55",
+    "roiBack": "28,110,112,55",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "已弃置被选中"
@@ -133,5 +151,14 @@
     "method": "Template matching",
     "threshold": 0.9,
     "description": "御魂奉纳后获得的金币"
+  },
+  {
+    "itemName": "st_overflow",
+    "imageName": "simple_st_overflow.png",
+    "roiFront": "693,404,100,37",
+    "roiBack": "693,404,100,37",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "太多魂的知道了"
   }
 ]
