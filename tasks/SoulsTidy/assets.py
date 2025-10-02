@@ -49,7 +49,7 @@ class SoulsTidyAssets:
 	# 已弃置被选中 
 	I_ST_ABANDONED_SELECTED = RuleImage(roi_front=(28,110,112,55), roi_back=(28,110,112,55), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_abandoned_selected.png")
 	# 第一个御魂是+0的 
-	I_ST_LEVEL_0 = RuleImage(roi_front=(85,235,45,30), roi_back=(85,235,45,30), threshold=0.9, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_level_0.png")
+	I_ST_LEVEL_0 = RuleImage(roi_front=(85,235,45,30), roi_back=(85,235,45,30), threshold=0.8, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_level_0.png")
 	# 御魂奉纳后获得的金币 
 	I_ST_GOLD = RuleImage(roi_front=(170,100,950,500), roi_back=(170,100,950,500), threshold=0.9, method="Template matching", file="./tasks/SoulsTidy/simple/simple_st_gold.png")
 	# 太多魂的知道了 
@@ -77,6 +77,6 @@ class SoulsTidyAssets:
 	# 位置 
 	O_ST_SORT_LOCATION = RuleOcr(roi=(415,119,61,39), area=(415,119,61,39), mode="Single", method="Default", keyword="位置", name="st_sort_location")
 	# Ocr-description 
-	O_ST_OVERFLOW = RuleOcr(roi=(686,397,109,48), area=(686,397,109,48), mode="Single", method="Default", keyword="知道了", name="st_overflow")
+	O_ST_OVERFLOW = RuleOcr(roi=(686,397,109,48), area=(686,397,109,48), mode="Single", method="Default", keyword="加道7", name="st_overflow")
 
 

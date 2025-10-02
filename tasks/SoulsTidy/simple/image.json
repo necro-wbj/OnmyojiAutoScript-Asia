@@ -140,7 +140,7 @@
     "roiFront": "85,235,45,30",
     "roiBack": "85,235,45,30",
     "method": "Template matching",
-    "threshold": 0.9,
+    "threshold": 0.8,
     "description": "第一个御魂是+0的"
   },
   {
