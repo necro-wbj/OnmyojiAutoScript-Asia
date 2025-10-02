@@ -166,13 +166,13 @@ jobs:
           git remote set-url --push origin "https://${PUSH_USER}@github.com/${GITHUB_REPOSITORY}.git"
 
       # 1) 先把 upstream 合進 PR 分支
-      - name: Update PR branch from upstream (prefer ours for assets; surface code conflicts)
+      - name: Update PR branch from upstream (no-commit; only auto-resolve assets; keep code conflicts)
         if: ${{ (steps.resolve.outputs.up_only != '0' || steps.resolve.outputs.base_only != '0') && steps.tipcheck.outputs.skip != 'true' }}
         shell: bash
         run: |
           set -euo pipefail
-          UP_REF="${{ steps.resolve.outputs.up_ref }}"
-          TARGET="${PR_BRANCH}"
+          UP_REF="upstream/${{ env.UPSTREAM_BRANCH }}"
+          TARGET="${{ env.PR_BRANCH }}"
 
           # 確保在 PR 分支（不存在就從 upstream 建）
           git fetch --prune origin "+refs/heads/${TARGET}:refs/remotes/origin/${TARGET}" || true
@@ -181,6 +181,13 @@ jobs:
           else
             git checkout -B "${TARGET}" "${UP_REF}"
             git push -u origin "${TARGET}"
+          fi
+
+          # 先看 upstream 到底有沒有新提交要合
+          UP_COMMITS=$(git rev-list --count "${TARGET}..${UP_REF}" || echo 0)
+          if [[ "${UP_COMMITS}" -eq 0 ]]; then
+            echo "[LOG] ${TARGET} already contains ${UP_REF}; nothing to merge."
+            exit 0
           fi
 
           # 嘗試合併上游，但先不提交；我們只想把「資源檔」自動解掉，其餘衝突保留
@@ -192,7 +199,6 @@ jobs:
           if [ $MERGE_EXIT -ne 0 ]; then
             echo "[LOG] merge with upstream has conflicts; resolving assets to ours…"
 
-            # 自動 ours 的資源清單（你可以再加）
             AUTO_OURS_GLOBS=(
               "assets/**"
               "**/assets.py"
@@ -202,10 +208,8 @@ jobs:
               "**/image*.json" "**/ocr*.json" "**/click*.json"
             )
 
-            # 目前有衝突的檔案
             mapfile -t UFILES < <(git diff --name-only --diff-filter=U || true)
 
-            # 先把資源檔衝突統一選 ours
             for f in "${UFILES[@]}"; do
               for pat in "${AUTO_OURS_GLOBS[@]}"; do
                 if [[ "$f" == $pat ]]; then
@@ -217,7 +221,7 @@ jobs:
               done
             done
 
-            # 再看是否還有「非資源檔」衝突；有的話就中止合併、僅記錄讓 PR 顯示需要手解
+            # 還有非資源檔衝突就中止合併，讓 PR 頁面顯示需要手解
             if git diff --name-only --diff-filter=U | grep -q .; then
               git diff --name-only --diff-filter=U | tee conflicts_upstream.txt || true
               {
@@ -226,18 +230,27 @@ jobs:
                 sed 's/^/- /' conflicts_upstream.txt
               } >> "$GITHUB_STEP_SUMMARY"
               git merge --abort || true
-              echo "[LOG] keep PR as-is; let PR page show code conflicts."
+              echo "[LOG] keep PR as-is; PR will show code conflicts to resolve manually."
+              exit 0
+            fi
+
+            # 只剩資源檔（已自動 ours）→ 若真的有東西被 staged 才提交
+            if git diff --cached --quiet; then
+              echo "[LOG] only asset conflicts were present but nothing staged? skipping commit."
             else
-              # 只剩資源檔（已自動 ours），這時才提交
               git commit -m "chore: merge upstream into ${TARGET} (assets=ours)"
               git push origin "+HEAD:${TARGET}"
-              echo "[LOG] merged upstream and pushed."
+              echo "[LOG] merged upstream (assets auto-resolved) and pushed."
             fi
           else
-            # 沒衝突直接提交
-            git commit -m "chore: merge upstream into ${TARGET}"
-            git push origin "+HEAD:${TARGET}"
-            echo "[LOG] merged upstream cleanly."
+            # 合併成功且無衝突→ 可能是有實際變更，也可能實際上沒變更
+            if git diff --cached --quiet; then
+              echo "[LOG] merge completed but nothing to commit (already up-to-date after no-commit merge)."
+            else
+              git commit -m "chore: merge upstream into ${TARGET}"
+              git push origin "+HEAD:${TARGET}"
+              echo "[LOG] merged upstream cleanly and pushed."
+            fi
           fi
 
       # 2) 再把 base(main) 合進 PR 分支 → 預先吸收 main 的差異，避免 PR 顯示衝突
