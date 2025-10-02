@@ -32,4 +32,3 @@ class ActivityShikigami(ConfigBase):
 
 
 
-

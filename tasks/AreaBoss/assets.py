@@ -58,21 +58,6 @@ class AreaBossAssets:
 	S_AB_LEVEL_RIGHT = RuleSwipe(roi_front=(0,0,10,10), roi_back=(570,270,10,10), mode="default", name="ab_level_right")
 
 
-	# Ocr Rule Assets
-	# 急殺數最多 
-	O_AB_KILL_BEST = RuleOcr(roi=(942,123,157,52), area=(942,123,157,52), mode="Single", method="Default", keyword="数最多", name="ab_kill_best")
-	# 我的收藏 
-	O_AB_MY_COLLECT = RuleOcr(roi=(949,124,129,53), area=(949,124,129,53), mode="Single", method="Default", keyword="我的收藏", name="ab_my_collect")
-	# 熱門 
-	O_AB_FAMOUS = RuleOcr(roi=(1190,220,50,120), area=(1190,220,50,120), mode="Single", method="Default", keyword="熱門", name="ab_famous")
-	# 收藏 
-	O_AB_COLLECTING = RuleOcr(roi=(1190,580,50,120), area=(1190,580,50,120), mode="Single", method="Default", keyword="收藏", name="ab_collecting")
-	# 挑战人数 
-	O_AB_NUM_OF_CHALLENGE = RuleOcr(roi=(270,630,150,36), area=(270,630,150,36), mode="Digit", method="Default", keyword="", name="ab_num_of_challenge")
-	# 地鬼名字 
-	O_AB_BOSS_NAME = RuleOcr(roi=(114,36,248,69), area=(114,36,248,69), mode="Full", method="Default", keyword="", name="ab_boss_name")
-
-
 	# Image Rule Assets
 	# 探索图标 
 	I_EXPLORE = RuleImage(roi_front=(758,122,66,77), roi_back=(339,104,836,120), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_explore.png")
@@ -120,5 +105,20 @@ class AreaBossAssets:
 	I_AB_GROUP_RANK_NONE = RuleImage(roi_front=(903,432,42,40), roi_back=(903,432,42,40), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_ab_group_rank_none.png")
 	# description 
 	I_TIMEOUT = RuleImage(roi_front=(468,224,55,32), roi_back=(468,224,55,32), threshold=0.8, method="Template matching", file="./tasks/AreaBoss/res/res_timeout.png")
+
+
+	# Ocr Rule Assets
+	# 急殺數最多 
+	O_AB_KILL_BEST = RuleOcr(roi=(942,123,157,52), area=(942,123,157,52), mode="Single", method="Default", keyword="数最多", name="ab_kill_best")
+	# 我的收藏 
+	O_AB_MY_COLLECT = RuleOcr(roi=(949,124,129,53), area=(949,124,129,53), mode="Single", method="Default", keyword="我的收藏", name="ab_my_collect")
+	# 熱門 
+	O_AB_FAMOUS = RuleOcr(roi=(1190,220,50,120), area=(1190,220,50,120), mode="Single", method="Default", keyword="熱門", name="ab_famous")
+	# 收藏 
+	O_AB_COLLECTING = RuleOcr(roi=(1190,580,50,120), area=(1190,580,50,120), mode="Single", method="Default", keyword="收藏", name="ab_collecting")
+	# 挑战人数 
+	O_AB_NUM_OF_CHALLENGE = RuleOcr(roi=(270,630,150,36), area=(270,630,150,36), mode="Digit", method="Default", keyword="", name="ab_num_of_challenge")
+	# 地鬼名字 
+	O_AB_BOSS_NAME = RuleOcr(roi=(114,36,248,69), area=(114,36,248,69), mode="Full", method="Default", keyword="", name="ab_boss_name")
 
 

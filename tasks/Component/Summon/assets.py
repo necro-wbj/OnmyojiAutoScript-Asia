@@ -10,11 +10,6 @@ from module.atom.list import RuleList
 class SummonAssets: 
 
 
-	# Ocr Rule Assets
-	# Ocr-description 
-	O_ONE_TICKET = RuleOcr(roi=(574,681,100,32), area=(574,681,100,32), mode="Single", method="Default", keyword="", name="one_ticket")
-
-
 	# Image Rule Assets
 	# 点击蓝票 
 	I_BLUE_TICKET = RuleImage(roi_front=(595,586,65,76), roi_back=(523,563,211,111), threshold=0.8, method="Template matching", file="./tasks/Component/Summon/sm/sm_blue_ticket.png")
@@ -28,6 +23,11 @@ class SummonAssets:
 	I_SM_CONFIRM_2 = RuleImage(roi_front=(377,630,206,62), roi_back=(377,630,206,62), threshold=0.8, method="Template matching", file="./tasks/Component/Summon/sm/sm_sm_confirm_2.png")
 	# 召喚活動 
 	I_SM_EVENT = RuleImage(roi_front=(103,20,130,41), roi_back=(0,0,260,81), threshold=0.8, method="Template matching", file="./tasks/Component/Summon/sm/sm_sm_event.png")
+
+
+	# Ocr Rule Assets
+	# Ocr-description 
+	O_ONE_TICKET = RuleOcr(roi=(574,681,100,32), area=(574,681,100,32), mode="Single", method="Default", keyword="", name="one_ticket")
 
 
 	# Swipe Rule Assets

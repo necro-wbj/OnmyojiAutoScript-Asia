@@ -70,28 +70,6 @@ class ExplorationAssets:
 	C_SAFE_RANDOM = RuleClick(roi_front=(0,0,111,12), roi_back=(0,0,111,12), name="safe_random")
 
 
-	# Ocr Rule Assets
-	# 识别当前显示的章节 
-	O_E_EXPLORATION_LEVEL_NUMBER = RuleOcr(roi=(1079,193,147,467), area=(1079,193,147,467), mode="Full", method="Default", keyword="", name="e_exploration_level_number")
-	# 候补出战的数量 
-	O_E_ALTERNATE_NUMBER = RuleOcr(roi=(1092,122,69,32), area=(1092,122,69,32), mode="DigitCounter", method="Default", keyword="", name="e_alternate_number")
-	# 探索右上角 突破卷的数量 
-	O_REALM_RAID_NUMBER = RuleOcr(roi=(739,11,78,37), area=(739,11,78,37), mode="DigitCounter", method="Default", keyword="", name="realm_raid_number")
-	# （点出困难28时候）探索右上角 突破卷的数量 
-	O_REALM_RAID_NUMBER1 = RuleOcr(roi=(936,10,82,36), area=(936,10,82,36), mode="DigitCounter", method="Default", keyword="", name="realm_raid_number1")
-
-
-	# Long Click Rule Assets
-	# description 
-	L_ROTATE_1 = RuleLongClick(roi_front=(516,582,22,21), roi_back=(516,582,22,21), duration=1500, name="rotate_1")
-	# description 
-	L_ROTATE_2 = RuleLongClick(roi_front=(650,587,21,21), roi_back=(650,587,21,21), duration=1500, name="rotate_2")
-	# description 
-	L_ROTATE_3 = RuleLongClick(roi_front=(785,587,21,21), roi_back=(785,587,21,21), duration=1500, name="rotate_3")
-	# description 
-	L_ROTATE_4 = RuleLongClick(roi_front=(921,590,21,21), roi_back=(921,590,21,21), duration=1500, name="rotate_4")
-
-
 	# Image Rule Assets
 	# 进入难度选择界面 
 	I_E_EXPLORATION_OPEN = RuleImage(roi_front=(1077,248,37,80), roi_back=(1072,242,47,92), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_exploration_open.png")
@@ -141,6 +119,28 @@ class ExplorationAssets:
 	I_EXP_CREATE_TEAM = RuleImage(roi_front=(590,514,122,52), roi_back=(543,490,192,100), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_exp_create_team.png")
 	# 创建确认 
 	I_EXP_CREATE_ENSURE = RuleImage(roi_front=(534,486,218,59), roi_back=(516,475,244,85), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_exp_create_ensure.png")
+
+
+	# Long Click Rule Assets
+	# description 
+	L_ROTATE_1 = RuleLongClick(roi_front=(516,582,22,21), roi_back=(516,582,22,21), duration=1500, name="rotate_1")
+	# description 
+	L_ROTATE_2 = RuleLongClick(roi_front=(650,587,21,21), roi_back=(650,587,21,21), duration=1500, name="rotate_2")
+	# description 
+	L_ROTATE_3 = RuleLongClick(roi_front=(785,587,21,21), roi_back=(785,587,21,21), duration=1500, name="rotate_3")
+	# description 
+	L_ROTATE_4 = RuleLongClick(roi_front=(921,590,21,21), roi_back=(921,590,21,21), duration=1500, name="rotate_4")
+
+
+	# Ocr Rule Assets
+	# 识别当前显示的章节 
+	O_E_EXPLORATION_LEVEL_NUMBER = RuleOcr(roi=(1079,193,147,467), area=(1079,193,147,467), mode="Full", method="Default", keyword="", name="e_exploration_level_number")
+	# 候补出战的数量 
+	O_E_ALTERNATE_NUMBER = RuleOcr(roi=(1092,122,69,32), area=(1092,122,69,32), mode="DigitCounter", method="Default", keyword="", name="e_alternate_number")
+	# 探索右上角 突破卷的数量 
+	O_REALM_RAID_NUMBER = RuleOcr(roi=(739,11,78,37), area=(739,11,78,37), mode="DigitCounter", method="Default", keyword="", name="realm_raid_number")
+	# （点出困难28时候）探索右上角 突破卷的数量 
+	O_REALM_RAID_NUMBER1 = RuleOcr(roi=(936,10,82,36), area=(936,10,82,36), mode="DigitCounter", method="Default", keyword="", name="realm_raid_number1")
 
 
 	# Swipe Rule Assets

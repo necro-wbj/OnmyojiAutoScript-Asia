@@ -10,16 +10,11 @@ from module.atom.list import RuleList
 class DemonRetreatAssets: 
 
 
-	# Ocr Rule Assets
-	# 检查是否迟到 
-	O_LATER_ENTER_CHECK = RuleOcr(roi=(928,16,48,35), area=(928,16,48,35), mode="Single", method="Default", keyword="", name="later_enter_check")
-
-
 	# Image Rule Assets
 	# 神社 
 	I_SHRINE = RuleImage(roi_front=(870,624,65,61), roi_back=(870,624,65,61), threshold=0.8, method="Template matching", file="./tasks/DemonRetreat/DemonRetreat/DemonRetreat_shrine.png")
 	# 首领退治 
-	I_HUNT = RuleImage(roi_front=(661,164,187,165), roi_back=(661,164,187,165), threshold=0.8, method="Template matching", file="./tasks/DemonRetreat/DemonRetreat/DemonRetreat_hunt.png")
+	I_HUNT = RuleImage(roi_front=(698,228,122,78), roi_back=(661,164,187,165), threshold=0.8, method="Template matching", file="./tasks/DemonRetreat/DemonRetreat/DemonRetreat_hunt.png")
 	# 检查是否成功进入首领退治 
 	I_HUNT_CHECK = RuleImage(roi_front=(570,12,143,46), roi_back=(570,12,143,46), threshold=0.8, method="Template matching", file="./tasks/DemonRetreat/DemonRetreat/DemonRetreat_hunt_check.png")
 	# description 
@@ -36,5 +31,10 @@ class DemonRetreatAssets:
 	I_REWARD_ALL = RuleImage(roi_front=(535,540,177,60), roi_back=(535,540,177,60), threshold=0.8, method="Template matching", file="./tasks/DemonRetreat/DemonRetreat/DemonRetreat_reward_all.png")
 	# 祈愿 
 	I_PRAY = RuleImage(roi_front=(1176,385,43,70), roi_back=(1176,385,43,70), threshold=0.8, method="Template matching", file="./tasks/DemonRetreat/DemonRetreat/DemonRetreat_pray.png")
+
+
+	# Ocr Rule Assets
+	# 检查是否迟到 
+	O_LATER_ENTER_CHECK = RuleOcr(roi=(928,16,48,35), area=(928,16,48,35), mode="Single", method="Default", keyword="", name="later_enter_check")
 
 

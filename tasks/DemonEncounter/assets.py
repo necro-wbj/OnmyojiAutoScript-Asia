@@ -11,6 +11,55 @@ class DemonEncounterAssets:
 
 
 	# Click Rule Assets
+	# description 
+	C_DM_BOSS_CLICK = RuleClick(roi_front=(593,274,100,100), roi_back=(593,274,100,100), name="dm_boss_click")
+
+
+	# Image Rule Assets
+	# 地震鲇 
+	I_BOSS_NAMAZU = RuleImage(roi_front=(589,294,100,100), roi_back=(589,294,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_namazu.png")
+	# 蜃气楼 
+	I_BOSS_SHINKIRO = RuleImage(roi_front=(587,279,100,100), roi_back=(587,279,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_shinkiro.png")
+	# 荒骷髅 
+	I_BOSS_ODOKURO = RuleImage(roi_front=(596,287,100,100), roi_back=(596,287,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_odokuro.png")
+	# 胧车 
+	I_BOSS_OBOROGURUMA = RuleImage(roi_front=(588,285,100,100), roi_back=(588,285,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_oboroguruma.png")
+	# 土蜘蛛 
+	I_BOSS_TSUCHIGUMO = RuleImage(roi_front=(603,294,100,66), roi_back=(603,294,100,66), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_tsuchigumo.png")
+	# 歌姬 
+	I_BOSS_SONGSTRESS = RuleImage(roi_front=(592,323,67,61), roi_back=(592,323,67,61), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_songstress.png")
+	# 集结挑战 
+	I_BOSS_FIRE = RuleImage(roi_front=(1062,549,95,95), roi_back=(1062,523,139,131), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_fire.png")
+	# description 
+	I_BOSS_CONFIRM = RuleImage(roi_front=(671,400,175,61), roi_back=(671,400,175,61), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_confirm.png")
+	# 已选中 
+	I_BOSS_SELECTED = RuleImage(roi_front=(509,340,37,41), roi_back=(509,340,37,41), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_selected.png")
+	# 还没选中 
+	I_BOSS_NO_SELECT = RuleImage(roi_front=(510,339,37,43), roi_back=(510,339,37,43), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_no_select.png")
+	# 集结 
+	I_BOSS_GATHER = RuleImage(roi_front=(801,589,100,91), roi_back=(801,589,100,91), threshold=0.75, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_gather.png")
+	# 战斗胜利 
+	I_BOSS_WIN = RuleImage(roi_front=(380,43,100,100), roi_back=(380,43,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_win.png")
+	# 白色退出 
+	I_BOSS_BACK_WHITE = RuleImage(roi_front=(16,12,39,40), roi_back=(16,12,39,40), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_back_white.png")
+	# 已击败 
+	I_BOSS_KILLED = RuleImage(roi_front=(654,596,35,68), roi_back=(614,537,123,176), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_killed.png")
+	# 极逢魔集结挑战 
+	I_BEST_BOSS_FIRE = RuleImage(roi_front=(1088,562,99,32), roi_back=(1062,523,139,131), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_best_boss_fire.png")
+	# 战斗失败-等待界面 
+	I_BOSS_WAIT = RuleImage(roi_front=(490,50,350,150), roi_back=(490,50,350,150), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_wait.png")
+	# 战斗结束标识，左下角有战绩按钮 
+	I_BOSS_DONE_CHECK = RuleImage(roi_front=(0,450,100,130), roi_back=(0,450,100,130), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_done_check.png")
+
+
+	# Ocr Rule Assets
+	# 人數 
+	O_DE_BOSS_PEOPLE = RuleOcr(roi=(880,591,100,35), area=(880,591,100,35), mode="DigitCounter", method="Default", keyword="", name="de_boss_people")
+	# 極逢魔人數 
+	O_DE_BEST_BOSS_PEOPLE = RuleOcr(roi=(900,565,100,35), area=(900,565,100,35), mode="DigitCounter", method="Default", keyword="", name="de_best_boss_people")
+
+
+	# Click Rule Assets
 	# 从下开始数第一个 
 	C_DE_1 = RuleClick(roi_front=(1211,478,61,58), roi_back=(1211,478,61,58), name="de_1")
 	# 2 
@@ -19,11 +68,6 @@ class DemonEncounterAssets:
 	C_DE_3 = RuleClick(roi_front=(1225,344,53,55), roi_back=(1225,344,53,55), name="de_3")
 	# 第四个 
 	C_DE_4 = RuleClick(roi_front=(1200,282,56,53), roi_back=(1200,282,56,53), name="de_4")
-
-
-	# Ocr Rule Assets
-	# 计数已经开启多少的 
-	O_DE_COUNTER = RuleOcr(roi=(1204,685,48,34), area=(1204,685,48,34), mode="DigitCounter", method="Default", keyword="", name="de_counter")
 
 
 	# Image Rule Assets
@@ -78,53 +122,9 @@ class DemonEncounterAssets:
 	I_DE_FIND_BOSS = RuleImage(roi_front=(1210,425,29,36), roi_back=(1182,279,93,266), threshold=0.7, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_find_boss.png")
 
 
-	# Click Rule Assets
-	# description 
-	C_DM_BOSS_CLICK = RuleClick(roi_front=(593,274,100,100), roi_back=(593,274,100,100), name="dm_boss_click")
-
-
 	# Ocr Rule Assets
-	# 人數 
-	O_DE_BOSS_PEOPLE = RuleOcr(roi=(880,591,100,35), area=(880,591,100,35), mode="DigitCounter", method="Default", keyword="", name="de_boss_people")
-	# 極逢魔人數 
-	O_DE_BEST_BOSS_PEOPLE = RuleOcr(roi=(900,565,100,35), area=(900,565,100,35), mode="DigitCounter", method="Default", keyword="", name="de_best_boss_people")
-
-
-	# Image Rule Assets
-	# 地震鲇 
-	I_BOSS_NAMAZU = RuleImage(roi_front=(589,294,100,100), roi_back=(589,294,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_namazu.png")
-	# 蜃气楼 
-	I_BOSS_SHINKIRO = RuleImage(roi_front=(587,279,100,100), roi_back=(587,279,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_shinkiro.png")
-	# 荒骷髅 
-	I_BOSS_ODOKURO = RuleImage(roi_front=(596,287,100,100), roi_back=(596,287,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_odokuro.png")
-	# 胧车 
-	I_BOSS_OBOROGURUMA = RuleImage(roi_front=(588,285,100,100), roi_back=(588,285,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_oboroguruma.png")
-	# 土蜘蛛 
-	I_BOSS_TSUCHIGUMO = RuleImage(roi_front=(603,294,100,66), roi_back=(603,294,100,66), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_tsuchigumo.png")
-	# 歌姬 
-	I_BOSS_SONGSTRESS = RuleImage(roi_front=(592,323,67,61), roi_back=(592,323,67,61), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_songstress.png")
-	# 集结挑战 
-	I_BOSS_FIRE = RuleImage(roi_front=(1062,549,95,95), roi_back=(1062,523,139,131), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_fire.png")
-	# description 
-	I_BOSS_CONFIRM = RuleImage(roi_front=(671,400,175,61), roi_back=(671,400,175,61), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_confirm.png")
-	# 已选中 
-	I_BOSS_SELECTED = RuleImage(roi_front=(509,340,37,41), roi_back=(509,340,37,41), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_selected.png")
-	# 还没选中 
-	I_BOSS_NO_SELECT = RuleImage(roi_front=(510,339,37,43), roi_back=(510,339,37,43), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_no_select.png")
-	# 集结 
-	I_BOSS_GATHER = RuleImage(roi_front=(801,589,100,91), roi_back=(801,589,100,91), threshold=0.75, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_gather.png")
-	# 战斗胜利 
-	I_BOSS_WIN = RuleImage(roi_front=(380,43,100,100), roi_back=(380,43,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_win.png")
-	# 白色退出 
-	I_BOSS_BACK_WHITE = RuleImage(roi_front=(16,12,39,40), roi_back=(16,12,39,40), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_back_white.png")
-	# 已击败 
-	I_BOSS_KILLED = RuleImage(roi_front=(654,596,35,68), roi_back=(614,537,123,176), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_killed.png")
-	# 极逢魔集结挑战 
-	I_BEST_BOSS_FIRE = RuleImage(roi_front=(1088,562,99,32), roi_back=(1062,523,139,131), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_best_boss_fire.png")
-	# 战斗失败-等待界面 
-	I_BOSS_WAIT = RuleImage(roi_front=(490,50,350,150), roi_back=(490,50,350,150), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_wait.png")
-	# 战斗结束标识，左下角有战绩按钮 
-	I_BOSS_DONE_CHECK = RuleImage(roi_front=(0,450,100,130), roi_back=(0,450,100,130), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_done_check.png")
+	# 计数已经开启多少的 
+	O_DE_COUNTER = RuleOcr(roi=(1204,685,48,34), area=(1204,685,48,34), mode="DigitCounter", method="Default", keyword="", name="de_counter")
 
 
 	# Click Rule Assets

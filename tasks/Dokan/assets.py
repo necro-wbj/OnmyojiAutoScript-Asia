@@ -33,27 +33,6 @@ class DokanAssets:
 	C_DOKAN_BATTLE_QUIT_AREA = RuleClick(roi_front=(10,36,50,14), roi_back=(10,36,50,14), name="dokan_battle_quit_area")
 
 
-	# List Rule Assets
-	# 这个是当前活跃的竂活动列表界面 
-	L_RYOU_ACTIVITY_LIST = RuleList(folder="./tasks/Dokan/res", direction="vertical", mode="ocr", roi_back=(20,150,170,400), size=(42, 27), 
-					 array=["道馆", "首领", "狭间"])
-
-
-	# Ocr Rule Assets
-	# 道馆地图里找文字：万 
-	O_DOKAN_MAP = RuleOcr(roi=(270,130,740,460), area=(270,130,740,460), mode="Full", method="Default", keyword="万", name="dokan_map")
-	# 道馆里找文字：后开战 
-	O_DOKAN_GATHERING = RuleOcr(roi=(535,75,211,29), area=(535,75,211,29), mode="Single", method="Default", keyword="开战", name="dokan_gathering")
-	# 道馆里找文字：剩余突破时间 
-	O_DOKAN_ATTACKING = RuleOcr(roi=(1122,546,92,51), area=(1122,546,92,51), mode="Single", method="Default", keyword="剩余", name="dokan_attacking")
-	# 道馆里找文字：后挑战馆主 
-	O_DOKAN_BOSS_WAITING = RuleOcr(roi=(603,148,130,32), area=(603,148,130,32), mode="Single", method="Default", keyword="馆主", name="dokan_boss_waiting")
-	# 查找道馆时,右侧边栏中的赏金 
-	O_DOKAN_RIGHTPAD_BOUNTY = RuleOcr(roi=(0,0,0,0), area=(0,0,0,0), mode="Single", method="Default", keyword="", name="dokan_rightpad_bounty")
-	# 查找道馆时,中间卡片上防守人数 
-	O_DOKAN_CENTER_PEOPLE_NUMBER = RuleOcr(roi=(0,0,0,0), area=(0,0,0,0), mode="Full", method="Default", keyword="", name="dokan_center_people_number")
-
-
 	# Image Rule Assets
 	# 阴阳寮->神社的按钮 
 	I_RYOU_SHENSHE = RuleImage(roi_front=(850,660,100,60), roi_back=(850,660,100,60), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_shenshe.png")
@@ -136,7 +115,7 @@ class DokanAssets:
 	# 场景检测：阴阳竂 
 	I_SCENE_RYOU = RuleImage(roi_front=(1161,674,75,31), roi_back=(1161,674,75,31), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/scene_ryou.png")
 	# 场景检测：神社 
-	I_SCENE_SHENSHE = RuleImage(roi_front=(477,165,63,65), roi_back=(477,165,63,65), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/scene_shenshe.png")
+	I_SCENE_SHENSHE = RuleImage(roi_front=(477,165,63,65), roi_back=(477,165,65,80), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/scene_shenshe.png")
 	# 道馆 地图界面 建立道馆按钮 
 	I_RYOU_DOKAN_CREATE_DOKAN = RuleImage(roi_front=(230,580,130,120), roi_back=(230,580,130,120), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_create_dokan.png")
 	# 道馆 地图界面 点击建立道馆按钮后弹窗中的 确认按钮 
@@ -171,6 +150,27 @@ class DokanAssets:
 	I_RYOU_DOKAN_DOKAN_QUIT = RuleImage(roi_front=(0,2,80,80), roi_back=(0,2,80,80), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_dokan_quit.png")
 	# 道馆攻破后夺得资金界面 
 	I_RYOU_DOKAN_SPOILS_OF_DOKAN = RuleImage(roi_front=(480,400,400,100), roi_back=(480,400,400,100), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_spoils_of_dokan.png")
+
+
+	# List Rule Assets
+	# 这个是当前活跃的竂活动列表界面 
+	L_RYOU_ACTIVITY_LIST = RuleList(folder="./tasks/Dokan/res", direction="vertical", mode="ocr", roi_back=(20,150,170,400), size=(42, 27), 
+					 array=["道馆", "首领", "狭间"])
+
+
+	# Ocr Rule Assets
+	# 道馆地图里找文字：万 
+	O_DOKAN_MAP = RuleOcr(roi=(270,130,740,460), area=(270,130,740,460), mode="Full", method="Default", keyword="万", name="dokan_map")
+	# 道馆里找文字：后开战 
+	O_DOKAN_GATHERING = RuleOcr(roi=(535,75,211,29), area=(535,75,211,29), mode="Single", method="Default", keyword="开战", name="dokan_gathering")
+	# 道馆里找文字：剩余突破时间 
+	O_DOKAN_ATTACKING = RuleOcr(roi=(1122,546,92,51), area=(1122,546,92,51), mode="Single", method="Default", keyword="剩余", name="dokan_attacking")
+	# 道馆里找文字：后挑战馆主 
+	O_DOKAN_BOSS_WAITING = RuleOcr(roi=(603,148,130,32), area=(603,148,130,32), mode="Single", method="Default", keyword="馆主", name="dokan_boss_waiting")
+	# 查找道馆时,右侧边栏中的赏金 
+	O_DOKAN_RIGHTPAD_BOUNTY = RuleOcr(roi=(0,0,0,0), area=(0,0,0,0), mode="Single", method="Default", keyword="", name="dokan_rightpad_bounty")
+	# 查找道馆时,中间卡片上防守人数 
+	O_DOKAN_CENTER_PEOPLE_NUMBER = RuleOcr(roi=(0,0,0,0), area=(0,0,0,0), mode="Full", method="Default", keyword="", name="dokan_center_people_number")
 
 
 	# Swipe Rule Assets

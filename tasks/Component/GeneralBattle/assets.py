@@ -67,20 +67,6 @@ class GeneralBattleAssets:
 
 
 	# Image Rule Assets
-	# description 
-	I_GREED_GHOST = RuleImage(roi_front=(56,40,45,45), roi_back=(56,40,45,45), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_greed_ghost.png")
-
-
-	# Ocr Rule Assets
-	# 准备 
-	O_BATTLE_PREPARE = RuleOcr(roi=(1122,546,92,51), area=(1122,546,92,51), mode="Single", method="Default", keyword="准备", name="battle_prepare")
-	# 预设,部分场景预设按钮上的文字为'预设'+数字,导致点击preset失败 
-	O_PRESET = RuleOcr(roi=(20,620,60,80), area=(20,620,60,80), mode="Single", method="Default", keyword="预", name="preset")
-	# 预设 
-	O_PRESET_FULL = RuleOcr(roi=(20,620,60,80), area=(20,620,60,80), mode="Single", method="Default", keyword="预设", name="preset_full")
-
-
-	# Image Rule Assets
 	# 奖励，就是那个魂 
 	I_REWARD = RuleImage(roi_front=(555,606,166,21), roi_back=(494,364,285,274), threshold=0.75, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_reward.png")
 	# 预设的小图标 
@@ -151,6 +137,20 @@ class GeneralBattleAssets:
 	I_PRESET_WIT_NUMBER = RuleImage(roi_front=(40,655,37,37), roi_back=(9,636,100,74), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_preset_wit_number.png")
 	# 战斗信息标识 
 	I_BATTLE_INFO = RuleImage(roi_front=(230,12,37,39), roi_back=(210,1,147,72), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_battle_info.png")
+
+
+	# Image Rule Assets
+	# description 
+	I_GREED_GHOST = RuleImage(roi_front=(56,40,45,45), roi_back=(56,40,45,45), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_greed_ghost.png")
+
+
+	# Ocr Rule Assets
+	# 准备 
+	O_BATTLE_PREPARE = RuleOcr(roi=(1122,546,92,51), area=(1122,546,92,51), mode="Single", method="Default", keyword="准备", name="battle_prepare")
+	# 预设,部分场景预设按钮上的文字为'预设'+数字,导致点击preset失败 
+	O_PRESET = RuleOcr(roi=(20,620,60,80), area=(20,620,60,80), mode="Single", method="Default", keyword="预", name="preset")
+	# 预设 
+	O_PRESET_FULL = RuleOcr(roi=(20,620,60,80), area=(20,620,60,80), mode="Single", method="Default", keyword="预设", name="preset_full")
 
 
 	# Swipe Rule Assets

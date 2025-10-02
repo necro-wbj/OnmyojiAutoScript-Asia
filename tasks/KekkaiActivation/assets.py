@@ -27,37 +27,6 @@ class KekkaiActivationAssets:
 	S_CARDS_SWIPE = RuleSwipe(roi_front=(178,401,23,23), roi_back=(176,168,29,24), mode="default", name="cards_swipe")
 
 
-	# Image Rule Assets
-	# description 
-	I_CARDS_KAIKO_6 = RuleImage(roi_front=(193,204,89,73), roi_back=(169,148,130,501), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_kaiko_6.png")
-	# description 
-	I_CARDS_KAIKO_5 = RuleImage(roi_front=(191,345,88,58), roi_back=(172,162,126,488), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_kaiko_5.png")
-	# description 
-	I_CARDS_KAIKO_4 = RuleImage(roi_front=(190,255,90,22), roi_back=(179,165,116,482), threshold=0.85, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_kaiko_4.png")
-	# description 
-	I_CARDS_KAIKO_3 = RuleImage(roi_front=(191,351,89,66), roi_back=(183,169,109,474), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_kaiko_3.png")
-	# description 
-	I_CARDS_FISH_6 = RuleImage(roi_front=(193,183,87,91), roi_back=(178,169,110,474), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_fish_6.png")
-	# description 
-	I_CARDS_FISH_5 = RuleImage(roi_front=(192,329,88,90), roi_back=(176,155,116,492), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_fish_5.png")
-	# description 
-	I_CARDS_FISH_4 = RuleImage(roi_front=(192,409,87,21), roi_back=(176,175,118,473), threshold=0.7, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_fish_4.png")
-	# description 
-	I_CARDS_FISH_3 = RuleImage(roi_front=(193,314,86,64), roi_back=(188,164,100,482), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_fish_3.png")
-	# description 
-	I_CARDS_MOON_6 = RuleImage(roi_front=(189,186,89,88), roi_back=(183,167,100,480), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_moon_6.png")
-	# description 
-	I_CARDS_MOON_5 = RuleImage(roi_front=(190,398,91,22), roi_back=(183,163,100,489), threshold=0.9, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_moon_5.png")
-	# description 
-	I_CARDS_MOON_4 = RuleImage(roi_front=(190,426,91,21), roi_back=(186,144,100,491), threshold=0.9, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_moon_4.png")
-	# description 
-	I_CARDS_MOON_3 = RuleImage(roi_front=(189,366,92,22), roi_back=(181,153,107,495), threshold=0.9, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_moon_3.png")
-	# description 
-	I_CARDS_MOON_2 = RuleImage(roi_front=(189,355,91,60), roi_back=(180,162,108,484), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_moon_2.png")
-	# description 
-	I_CARDS_MOON_1 = RuleImage(roi_front=(190,430,93,74), roi_back=(173,156,123,492), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_moon_1.png")
-
-
 	# Click Rule Assets
 	# 收穫結界卡 
 	C_A_HARVEST_CARD = RuleClick(roi_front=(892,152,57,56), roi_back=(892,152,57,56), name="a_harvest_card")
@@ -119,5 +88,36 @@ class KekkaiActivationAssets:
 	# Image Rule Assets
 	# 用于判断是否滑到底了 
 	I_AA_SWIPE_BLOCK = RuleImage(roi_front=(124,622,35,32), roi_back=(117,612,50,51), threshold=0.9, method="Template matching", file="./tasks/KekkaiActivation/a/a_aa_swipe_block.png")
+
+
+	# Image Rule Assets
+	# description 
+	I_CARDS_KAIKO_6 = RuleImage(roi_front=(193,204,89,73), roi_back=(169,148,130,501), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_kaiko_6.png")
+	# description 
+	I_CARDS_KAIKO_5 = RuleImage(roi_front=(191,345,88,58), roi_back=(172,162,126,488), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_kaiko_5.png")
+	# description 
+	I_CARDS_KAIKO_4 = RuleImage(roi_front=(190,255,90,22), roi_back=(179,165,116,482), threshold=0.85, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_kaiko_4.png")
+	# description 
+	I_CARDS_KAIKO_3 = RuleImage(roi_front=(191,351,89,66), roi_back=(183,169,109,474), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_kaiko_3.png")
+	# description 
+	I_CARDS_FISH_6 = RuleImage(roi_front=(193,183,87,91), roi_back=(178,169,110,474), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_fish_6.png")
+	# description 
+	I_CARDS_FISH_5 = RuleImage(roi_front=(192,329,88,90), roi_back=(176,155,116,492), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_fish_5.png")
+	# description 
+	I_CARDS_FISH_4 = RuleImage(roi_front=(192,409,87,21), roi_back=(176,175,118,473), threshold=0.7, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_fish_4.png")
+	# description 
+	I_CARDS_FISH_3 = RuleImage(roi_front=(193,314,86,64), roi_back=(188,164,100,482), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_fish_3.png")
+	# description 
+	I_CARDS_MOON_6 = RuleImage(roi_front=(189,186,89,88), roi_back=(183,167,100,480), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_moon_6.png")
+	# description 
+	I_CARDS_MOON_5 = RuleImage(roi_front=(190,398,91,22), roi_back=(183,163,100,489), threshold=0.9, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_moon_5.png")
+	# description 
+	I_CARDS_MOON_4 = RuleImage(roi_front=(190,426,91,21), roi_back=(186,144,100,491), threshold=0.9, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_moon_4.png")
+	# description 
+	I_CARDS_MOON_3 = RuleImage(roi_front=(189,366,92,22), roi_back=(181,153,107,495), threshold=0.9, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_moon_3.png")
+	# description 
+	I_CARDS_MOON_2 = RuleImage(roi_front=(189,355,91,60), roi_back=(180,162,108,484), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_moon_2.png")
+	# description 
+	I_CARDS_MOON_1 = RuleImage(roi_front=(190,430,93,74), roi_back=(173,156,123,492), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/cards/cards_cards_moon_1.png")
 
 

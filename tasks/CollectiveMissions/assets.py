@@ -19,31 +19,6 @@ class CollectiveMissionsAssets:
 	C_CM_3 = RuleClick(roi_front=(903,470,136,58), roi_back=(903,470,136,58), name="cm_3")
 
 
-	# Ocr Rule Assets
-	# Ocr-description 
-	O_CM_1 = RuleOcr(roi=(217,133,115,43), area=(217,133,115,43), mode="Single", method="Default", keyword="", name="cm_1")
-	# Ocr-description 
-	O_CM_2 = RuleOcr(roi=(333,135,92,44), area=(333,135,92,44), mode="Single", method="Default", keyword="", name="cm_2")
-	# Ocr-description 
-	O_CM_3 = RuleOcr(roi=(554,135,113,40), area=(554,135,113,40), mode="Single", method="Default", keyword="", name="cm_3")
-	# Ocr-description 
-	O_CM_4 = RuleOcr(roi=(667,136,94,41), area=(667,136,94,41), mode="Single", method="Default", keyword="", name="cm_4")
-	# Ocr-description 
-	O_CM_5 = RuleOcr(roi=(889,133,112,44), area=(889,133,112,44), mode="Single", method="Default", keyword="", name="cm_5")
-	# Ocr-description 
-	O_CM_6 = RuleOcr(roi=(1002,133,91,42), area=(1002,133,91,42), mode="Single", method="Default", keyword="", name="cm_6")
-	# 记录已完成的数量 
-	O_CM_NUMBER = RuleOcr(roi=(1105,564,60,28), area=(1105,564,60,28), mode="DigitCounter", method="Default", keyword="", name="cm_number")
-	# 材料的数量 
-	O_CM_1_MATTER = RuleOcr(roi=(427,172,100,27), area=(427,172,100,27), mode="DigitCounter", method="Default", keyword="", name="cm_1_matter")
-	# Ocr-description 
-	O_CM_2_MATTER = RuleOcr(roi=(429,293,100,31), area=(429,293,100,31), mode="DigitCounter", method="Default", keyword="", name="cm_2_matter")
-	# Ocr-description 
-	O_CM_3_MATTER = RuleOcr(roi=(428,416,100,29), area=(428,416,100,29), mode="DigitCounter", method="Default", keyword="", name="cm_3_matter")
-	# Ocr-description 
-	O_CM_4_MATTER = RuleOcr(roi=(430,536,100,33), area=(430,536,100,33), mode="DigitCounter", method="Default", keyword="", name="cm_4_matter")
-
-
 	# Image Rule Assets
 	# 神社 
 	I_CM_SHRINE = RuleImage(roi_front=(875,628,55,60), roi_back=(853,604,100,100), threshold=0.8, method="Template matching", file="./tasks/CollectiveMissions/cm/cm_cm_shrine.png")
@@ -69,6 +44,31 @@ class CollectiveMissionsAssets:
 	I_CM_SWITCH = RuleImage(roi_front=(414,478,43,58), roi_back=(310,453,282,114), threshold=0.8, method="Template matching", file="./tasks/CollectiveMissions/cm/cm_cm_switch.png")
 
 
+	# Ocr Rule Assets
+	# Ocr-description 
+	O_CM_1 = RuleOcr(roi=(217,133,115,43), area=(217,133,115,43), mode="Single", method="Default", keyword="", name="cm_1")
+	# Ocr-description 
+	O_CM_2 = RuleOcr(roi=(333,135,92,44), area=(333,135,92,44), mode="Single", method="Default", keyword="", name="cm_2")
+	# Ocr-description 
+	O_CM_3 = RuleOcr(roi=(554,135,113,40), area=(554,135,113,40), mode="Single", method="Default", keyword="", name="cm_3")
+	# Ocr-description 
+	O_CM_4 = RuleOcr(roi=(667,136,94,41), area=(667,136,94,41), mode="Single", method="Default", keyword="", name="cm_4")
+	# Ocr-description 
+	O_CM_5 = RuleOcr(roi=(889,133,112,44), area=(889,133,112,44), mode="Single", method="Default", keyword="", name="cm_5")
+	# Ocr-description 
+	O_CM_6 = RuleOcr(roi=(1002,133,91,42), area=(1002,133,91,42), mode="Single", method="Default", keyword="", name="cm_6")
+	# 记录已完成的数量 
+	O_CM_NUMBER = RuleOcr(roi=(1105,564,60,28), area=(1105,564,60,28), mode="DigitCounter", method="Default", keyword="", name="cm_number")
+	# 材料的数量 
+	O_CM_1_MATTER = RuleOcr(roi=(427,172,100,27), area=(427,172,100,27), mode="DigitCounter", method="Default", keyword="", name="cm_1_matter")
+	# Ocr-description 
+	O_CM_2_MATTER = RuleOcr(roi=(429,293,100,31), area=(429,293,100,31), mode="DigitCounter", method="Default", keyword="", name="cm_2_matter")
+	# Ocr-description 
+	O_CM_3_MATTER = RuleOcr(roi=(428,416,100,29), area=(428,416,100,29), mode="DigitCounter", method="Default", keyword="", name="cm_3_matter")
+	# Ocr-description 
+	O_CM_4_MATTER = RuleOcr(roi=(430,536,100,33), area=(430,536,100,33), mode="DigitCounter", method="Default", keyword="", name="cm_4_matter")
+
+
 	# Swipe Rule Assets
 	# description 
 	S_CM_MATTER_1 = RuleSwipe(roi_front=(684,147,41,37), roi_back=(1060,142,46,41), mode="default", name="cm_matter_1")
@@ -78,6 +78,13 @@ class CollectiveMissionsAssets:
 	S_CM_MATTER_3 = RuleSwipe(roi_front=(688,392,35,38), roi_back=(1117,388,50,45), mode="default", name="cm_matter_3")
 	# description 
 	S_CM_MATTER_4 = RuleSwipe(roi_front=(689,524,21,22), roi_back=(903,518,46,32), mode="default", name="cm_matter_4")
+
+
+	# Image Rule Assets
+	# 堆叠 
+	I_FEED_HEAP = RuleImage(roi_front=(20,543,42,59), roi_back=(20,543,42,59), threshold=0.8, method="Template matching", file="./tasks/CollectiveMissions/feed/feed_feed_heap.png")
+	# 提交 
+	I_FEED_SUBMIT = RuleImage(roi_front=(703,340,114,54), roi_back=(703,340,114,54), threshold=0.8, method="Template matching", file="./tasks/CollectiveMissions/feed/feed_feed_submit.png")
 
 
 	# Long Click Rule Assets
@@ -92,17 +99,8 @@ class CollectiveMissionsAssets:
 
 
 	# Image Rule Assets
-	# 堆叠 
-	I_FEED_HEAP = RuleImage(roi_front=(20,543,42,59), roi_back=(20,543,42,59), threshold=0.8, method="Template matching", file="./tasks/CollectiveMissions/feed/feed_feed_heap.png")
 	# 提交 
-	I_FEED_SUBMIT = RuleImage(roi_front=(703,340,114,54), roi_back=(703,340,114,54), threshold=0.8, method="Template matching", file="./tasks/CollectiveMissions/feed/feed_feed_submit.png")
-
-
-	# Ocr Rule Assets
-	# +0 级 
-	O_SL_LEVEL = RuleOcr(roi=(174,139,30,24), area=(174,139,30,24), mode="Single", method="Default", keyword="古", name="sl_level")
-	# 将提交xx次任务 
-	O_SL_NUMBER = RuleOcr(roi=(813,94,187,39), area=(813,94,187,39), mode="Single", method="Default", keyword="", name="sl_number")
+	I_SL_SUBMIT = RuleImage(roi_front=(835,588,145,61), roi_back=(835,588,145,61), threshold=0.8, method="Template matching", file="./tasks/CollectiveMissions/soul/soul_sl_submit.png")
 
 
 	# Long Click Rule Assets
@@ -110,8 +108,10 @@ class CollectiveMissionsAssets:
 	L_SL_LONG = RuleLongClick(roi_front=(178,194,58,49), roi_back=(178,194,58,49), duration=1500, name="sl_long")
 
 
-	# Image Rule Assets
-	# 提交 
-	I_SL_SUBMIT = RuleImage(roi_front=(835,588,145,61), roi_back=(835,588,145,61), threshold=0.8, method="Template matching", file="./tasks/CollectiveMissions/soul/soul_sl_submit.png")
+	# Ocr Rule Assets
+	# +0 级 
+	O_SL_LEVEL = RuleOcr(roi=(174,139,30,24), area=(174,139,30,24), mode="Single", method="Default", keyword="古", name="sl_level")
+	# 将提交xx次任务 
+	O_SL_NUMBER = RuleOcr(roi=(813,94,187,39), area=(813,94,187,39), mode="Single", method="Default", keyword="", name="sl_number")
 
 

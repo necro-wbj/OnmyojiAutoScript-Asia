@@ -10,11 +10,6 @@ from module.atom.list import RuleList
 class DyeTrialsAssets: 
 
 
-	# Ocr Rule Assets
-	# 战斗次数 
-	O_BATTLE_NUM = RuleOcr(roi=(1144,408,100,21), area=(1144,408,100,21), mode="DigitCounter", method="Default", keyword="", name="battle_num")
-
-
 	# Image Rule Assets
 	# 从庭院进入灵染试炼活动 
 	I_FP_ACCESS = RuleImage(roi_front=(1192,317,36,34), roi_back=(1000,101,261,472), threshold=0.8, method="Template matching", file="./tasks/DyeTrials/fp/fp_fp_access.png")
@@ -26,5 +21,10 @@ class DyeTrialsAssets:
 	I_FP_CHALLENGE = RuleImage(roi_front=(1159,598,60,29), roi_back=(1159,598,60,29), threshold=0.8, method="Template matching", file="./tasks/DyeTrials/fp/fp_fp_challenge.png")
 	# description 
 	I_BATTLE_SUCCESS = RuleImage(roi_front=(435,147,100,100), roi_back=(435,147,100,100), threshold=0.8, method="Template matching", file="./tasks/DyeTrials/fp/battle_success.png")
+
+
+	# Ocr Rule Assets
+	# 战斗次数 
+	O_BATTLE_NUM = RuleOcr(roi=(1144,408,100,21), area=(1144,408,100,21), mode="DigitCounter", method="Default", keyword="", name="battle_num")
 
 

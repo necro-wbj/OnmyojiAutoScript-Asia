@@ -15,13 +15,6 @@ class NianAssets:
 	C_CLIC_SAFE = RuleClick(roi_front=(242,25,100,65), roi_back=(242,25,100,65), name="clic_safe")
 
 
-	# Ocr Rule Assets
-	# 再次挑战 
-	O_N_BATTLE_AGAIN = RuleOcr(roi=(612,251,123,37), area=(612,251,123,37), mode="Single", method="Default", keyword="再次挑战", name="n_battle_again")
-	# 冷却的时间 
-	O_N_CD = RuleOcr(roi=(578,218,172,41), area=(578,218,172,41), mode="Single", method="Default", keyword="", name="n_cd")
-
-
 	# Image Rule Assets
 	# 自动匹配 
 	I_AUTO_MATCHING = RuleImage(roi_front=(698,598,180,64), roi_back=(698,598,180,64), threshold=0.8, method="Template matching", file="./tasks/Nian/nian/nian_auto_matching.png")
@@ -29,5 +22,12 @@ class NianAssets:
 	I_N_CHECK = RuleImage(roi_front=(793,279,242,246), roi_back=(793,279,242,246), threshold=0.8, method="Template matching", file="./tasks/Nian/nian/nian_n_check.png")
 	# 等待进入，也是关闭按钮 
 	I_N_WAITING = RuleImage(roi_front=(735,28,54,51), roi_back=(735,28,54,51), threshold=0.7, method="Template matching", file="./tasks/Nian/nian/nian_n_waiting.png")
+
+
+	# Ocr Rule Assets
+	# 再次挑战 
+	O_N_BATTLE_AGAIN = RuleOcr(roi=(612,251,123,37), area=(612,251,123,37), mode="Single", method="Default", keyword="再次挑战", name="n_battle_again")
+	# 冷却的时间 
+	O_N_CD = RuleOcr(roi=(578,218,172,41), area=(578,218,172,41), mode="Single", method="Default", keyword="", name="n_cd")
 
 

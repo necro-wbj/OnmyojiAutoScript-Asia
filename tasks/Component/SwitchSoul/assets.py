@@ -29,13 +29,6 @@ class SwitchSoulAssets:
 	C_SOU_TEAM_SELECT = RuleClick(roi_front=(977,157,21,21), roi_back=(977,157,21,21), name="sou_team_select")
 
 
-	# Ocr Rule Assets
-	# 隊伍預設分組 
-	O_SS_GROUP_NAME = RuleOcr(roi=(1087,91,155,566), area=(1110,94,116,533), mode="Full", method="Default", keyword="", name="ss_group_name")
-	# 阵容匹配 
-	O_SS_TEAM_NAME = RuleOcr(roi=(573,140,277,481), area=(667,144,32,475), mode="Full", method="Default", keyword="", name="ss_team_name")
-
-
 	# Image Rule Assets
 	# 退出式神录 
 	I_RECORD_SOUL_BACK = RuleImage(roi_front=(19,9,51,44), roi_back=(19,9,51,44), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_record_soul_back.png")
@@ -73,6 +66,13 @@ class SwitchSoulAssets:
 	I_SOU_CLICK_PRESENT = RuleImage(roi_front=(967,305,43,22), roi_back=(965,142,48,480), threshold=0.9, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_sou_click_present.png")
 	# 误触点到式神检查 
 	I_CHECK_BLOCK = RuleImage(roi_front=(572,408,137,49), roi_back=(572,408,137,49), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_check_block.png")
+
+
+	# Ocr Rule Assets
+	# 隊伍預設分組 
+	O_SS_GROUP_NAME = RuleOcr(roi=(1087,91,155,566), area=(1110,94,116,533), mode="Full", method="Default", keyword="", name="ss_group_name")
+	# 阵容匹配 
+	O_SS_TEAM_NAME = RuleOcr(roi=(573,140,277,481), area=(667,144,32,475), mode="Full", method="Default", keyword="", name="ss_team_name")
 
 
 	# Swipe Rule Assets
