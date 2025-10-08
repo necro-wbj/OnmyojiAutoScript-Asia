@@ -119,6 +119,11 @@ class ScriptTask(GameUi, HyaSlave):
                         hya_save_result=hya_save_result)
 
     def run(self):
+        self.fast_screenshot(screenshot=self._config.debug_config.hya_screenshot_method)
+        logger.info(f'game window size: {self.device.image.shape}')
+        if self.device.image.shape != (720,1280,3):
+            logger.error('game windoq size error it should be 1280x720')
+            raise RequestHumanTakeover('game windoq size should be 1280x720')
         hya_count: int = 0
         self.limit_count: int = self._config.hyakkiyakou_config.hya_limit_count
         limit_time = self._config.hyakkiyakou_config.hya_limit_time
@@ -127,7 +132,12 @@ class ScriptTask(GameUi, HyaSlave):
         self.ui_get_current_page()
         self.ui_goto(page_hyakkiyakou)
 
+        while 1:
+            self.fast_screenshot(screenshot=self._config.debug_config.hya_screenshot_method)
+            if self.appear(self.I_HACCESS):
+                break
 
+        logger.info('Hyakkiyakou Start and fast_screenshot is OK')
         while 1:
             if hya_count >= self.limit_count:
                 logger.info('Hyakkiyakou count limit out')
@@ -140,7 +150,7 @@ class ScriptTask(GameUi, HyaSlave):
             hya_count += 1
 
         while 1:
-            self.screenshot()
+            self.fast_screenshot(screenshot=self._config.debug_config.hya_screenshot_method)
 
             if not self.appear(self.I_HACCESS):
                 continue
@@ -150,6 +160,28 @@ class ScriptTask(GameUi, HyaSlave):
         self.set_next_run(task='Hyakkiyakou', success=True, finish=False)
         raise TaskEnd
 
+    def choose_click(self,click,stop):
+        success = False
+        while not self.appear(stop):
+            self.fast_screenshot(screenshot=self._config.debug_config.hya_screenshot_method)
+            if self.appear(click):
+                success = not success
+                x, y = click.coord()
+                if success:
+                    self.fast_click(x, y)
+                else:
+                    self.device.click(x=x, y=y)
+                time.sleep(2)
+
+        if not success:
+            logger.warn("fast click failed, replaced it with the original click.")
+            self.fast_click = self.slow_click
+            
+
+    def slow_click (self, x, y):
+        self.device.click(x=x, y=y)
+        self.device.click_record.clear()
+
     def one(self):
         self.reset_state()
         if not self.appear(self.I_HACCESS):
@@ -157,12 +189,12 @@ class ScriptTask(GameUi, HyaSlave):
         if self._config.hyakkiyakou_config.hya_invite_friend:
             self.invite_friend()
         # start
-        self.ui_click(self.I_HACCESS, self.I_HSTART, interval=2)
+        self.choose_click(self.I_HACCESS, self.I_HSTART)
         self.wait_until_appear(self.I_HTITLE)
         # 随机选一个
         click_button = choice([self.C_HSELECT_1, self.C_HSELECT_2, self.C_HSELECT_3])
         while 1:
-            self.screenshot()
+            self.fast_screenshot(screenshot=self._config.debug_config.hya_screenshot_method)
             if not self.appear(self.I_HTITLE):
                 break
             if self.appear_then_click(self.I_HSTART, interval=2):
@@ -177,6 +209,7 @@ class ScriptTask(GameUi, HyaSlave):
         self.hya_fs_check_timer.reset()
         if self._config.debug_config.hya_show:
             self.debugger.show_start()
+        
         while 1:
             self.fast_screenshot(screenshot=self._config.debug_config.hya_screenshot_method)
             if self.appear(self.I_HEND):
@@ -210,7 +243,7 @@ class ScriptTask(GameUi, HyaSlave):
             self.debugger.show_stop()
         if self._config.debug_config.hya_save_result:
             # 走个动画
-            time.sleep(1.5)
+            time.sleep(2)
             self.debugger.save_result(self.device.image)
         self.ui_click(self.I_HEND, self.I_HACCESS)
         self.debugger.save_images()

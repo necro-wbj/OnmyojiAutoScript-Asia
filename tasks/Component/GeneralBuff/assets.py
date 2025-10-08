@@ -26,28 +26,28 @@ class GeneralBuffAssets:
 	# description 
 	I_EXP_100 = RuleImage(roi_front=(383,406,30,40), roi_back=(368,126,58,386), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBuff/gb/gb_exp_100.png")
 	# description 
-	I_OPEN_YELLOW = RuleImage(roi_front=(772,347,21,21), roi_back=(766,133,35,366), threshold=0.7, method="Template matching", file="./tasks/Component/GeneralBuff/gb/gb_open_yellow.png")
+	I_OPEN_YELLOW = RuleImage(roi_front=(772,347,21,21), roi_back=(766,133,35,366), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBuff/gb/gb_open_yellow.png")
 	# description 
-	I_CLOSE_RED = RuleImage(roi_front=(774,143,21,21), roi_back=(764,134,38,369), threshold=0.63, method="Template matching", file="./tasks/Component/GeneralBuff/gb/gb_close_red.png")
+	I_CLOSE_RED = RuleImage(roi_front=(774,143,21,21), roi_back=(764,134,38,369), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBuff/gb/gb_close_red.png")
 	# 用来判定是否点击的那个 
 	I_CLOUD = RuleImage(roi_front=(357,505,65,38), roi_back=(313,484,158,75), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBuff/gb/gb_cloud.png")
+
+
+	# Ocr Rule Assets
+	# Ocr-description 
+	O_GOLD_50 = RuleOcr(roi=(428,120,338,389), area=(0,0,100,100), mode="Full", method="Default", keyword=".*金幣增加50%", name="gold_50")
+	# Ocr-description 
+	O_GOLD_100 = RuleOcr(roi=(425,118,342,397), area=(0,0,100,100), mode="Full", method="Default", keyword=".*金幣增加100%", name="gold_100")
+	# Ocr-description 
+	O_EXP_50 = RuleOcr(roi=(426,119,335,394), area=(0,0,100,100), mode="Full", method="Default", keyword=".*經驗增加50%", name="exp_50")
+	# Ocr-description 
+	O_EXP_100 = RuleOcr(roi=(421,127,342,388), area=(0,0,100,100), mode="Full", method="Default", keyword=".*經驗增加100%", name="exp_100")
+	# 打开buff加成 
+	O_GB_BUFF_2 = RuleOcr(roi=(348,31,93,51), area=(363,36,29,43), mode="Single", method="Default", keyword="加成", name="gb_buff_2")
 
 
 	# Swipe Rule Assets
 	# description 
 	S_BUFF_UP = RuleSwipe(roi_front=(397,124,456,35), roi_back=(447,457,386,37), mode="default", name="buff_up")
-
-
-	# Ocr Rule Assets
-	# Ocr-description 
-	O_GOLD_50 = RuleOcr(roi=(428,120,338,389), area=(0,0,100,100), mode="Full", method="Default", keyword="战斗胜利获得的金币增加50%", name="gold_50")
-	# Ocr-description 
-	O_GOLD_100 = RuleOcr(roi=(425,118,342,397), area=(0,0,100,100), mode="Full", method="Default", keyword="战斗胜利获得的金币增加100%", name="gold_100")
-	# Ocr-description 
-	O_EXP_50 = RuleOcr(roi=(426,119,335,394), area=(0,0,100,100), mode="Full", method="Default", keyword="战斗胜利获得的经验增加50%", name="exp_50")
-	# Ocr-description 
-	O_EXP_100 = RuleOcr(roi=(421,127,342,388), area=(0,0,100,100), mode="Full", method="Default", keyword="战斗胜利获得的经验增加100%", name="exp_100")
-	# 打开buff加成 
-	O_GB_BUFF_2 = RuleOcr(roi=(348,31,93,51), area=(363,36,29,43), mode="Single", method="Default", keyword="加成", name="gb_buff_2")
 
 

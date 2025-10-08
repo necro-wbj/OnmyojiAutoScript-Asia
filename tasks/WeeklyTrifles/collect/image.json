@@ -47,8 +47,8 @@
   {
     "itemName": "wt_collect_wechat",
     "imageName": "collect_wt_collect_wechat.png",
-    "roiFront": "280,600,440,100",
-    "roiBack": "280,600,440,100",
+    "roiFront": "1062,618,70,63",
+    "roiBack": "900,618,200,63",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "微信分享"
@@ -56,8 +56,8 @@
   {
     "itemName": "wt_qr_code",
     "imageName": "collect_wt_qr_code.png",
-    "roiFront": "473,161,336,96",
-    "roiBack": "404,112,483,168",
+    "roiFront": "300,229,186,45",
+    "roiBack": "300,229,186,45",
     "method": "Template matching",
     "threshold": 0.65,
     "description": "二维码"

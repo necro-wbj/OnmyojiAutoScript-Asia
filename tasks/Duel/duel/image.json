@@ -38,7 +38,7 @@
   {
     "itemName": "d_auto_entry",
     "imageName": "duel_d_auto_entry.png",
-    "roiFront": "42,133,66,62",
+    "roiFront": "30,127,66,62",
     "roiBack": "20,119,115,111",
     "method": "Template matching",
     "threshold": 0.8,
@@ -48,7 +48,7 @@
     "itemName": "d_help",
     "imageName": "duel_d_help.png",
     "roiFront": "719,434,32,30",
-    "roiBack": "708,397,49,78",
+    "roiBack": "680,400,80,80",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "主界面的感叹号"
@@ -74,8 +74,8 @@
   {
     "itemName": "d_victory",
     "imageName": "duel_d_victory.png",
-    "roiFront": "433,76,100,100",
-    "roiBack": "433,76,100,100",
+    "roiFront": "466,88,95,95",
+    "roiBack": "433,55,160,165",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "胜利"

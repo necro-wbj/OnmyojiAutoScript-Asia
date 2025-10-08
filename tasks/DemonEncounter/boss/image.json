@@ -56,8 +56,8 @@
   {
     "itemName": "boss_fire",
     "imageName": "boss_boss_fire.png",
-    "roiFront": "1062,549,100,100",
-    "roiBack": "1062,549,100,100",
+    "roiFront": "1062,549,95,95",
+    "roiBack": "1062,523,139,131",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "集结挑战"
@@ -74,8 +74,8 @@
   {
     "itemName": "boss_selected",
     "imageName": "boss_boss_selected.png",
-    "roiFront": "543,339,37,41",
-    "roiBack": "543,339,37,41",
+    "roiFront": "509,340,37,41",
+    "roiBack": "509,340,37,41",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "已选中"
@@ -83,8 +83,8 @@
   {
     "itemName": "boss_no_select",
     "imageName": "boss_boss_no_select.png",
-    "roiFront": "544,337,37,43",
-    "roiBack": "544,337,37,43",
+    "roiFront": "510,339,37,43",
+    "roiBack": "510,339,37,43",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "还没选中"
@@ -92,10 +92,10 @@
   {
     "itemName": "boss_gather",
     "imageName": "boss_boss_gather.png",
-    "roiFront": "801,589,100,100",
-    "roiBack": "801,589,100,100",
+    "roiFront": "801,589,100,91",
+    "roiBack": "801,589,100,91",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.75,
     "description": "集结"
   },
   {
@@ -128,8 +128,8 @@
   {
     "itemName": "best_boss_fire",
     "imageName": "boss_best_boss_fire.png",
-    "roiFront": "1087,562,100,36",
-    "roiBack": "1087,562,100,36",
+    "roiFront": "1088,562,99,32",
+    "roiBack": "1062,523,139,131",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "极逢魔集结挑战"

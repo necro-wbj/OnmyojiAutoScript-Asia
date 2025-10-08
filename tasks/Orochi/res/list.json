@@ -2,7 +2,7 @@
   "name": "layer_list",
   "direction": "vertical",
   "type": "ocr",
-  "roiBack": "138,130,359,500",
+  "roiBack": "273,130,52,500",
   "description": "这个是御魂界面选择不同层数的",
   "list": [
     {
@@ -14,7 +14,7 @@
       "roiFront": "280,253,39,85"
     },
     {
-      "itemName": "叁",
+      "itemName": "参",
       "roiFront": "283,422,43,93"
     },
     {
@@ -51,10 +51,6 @@
     },
     {
       "itemName": "神",
-      "roiFront": "277,534,46,86"
-    },
-    {
-      "itemName": "虚",
       "roiFront": "277,534,46,86"
     }
   ]

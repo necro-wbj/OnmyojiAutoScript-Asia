@@ -29,8 +29,8 @@
   {
     "itemName": "a_card_all",
     "imageName": "a_a_card_all.png",
-    "roiFront": "357,175,167,59",
-    "roiBack": "357,175,167,59",
+    "roiFront": "372.66666666666663,173.33333333333331,134,59",
+    "roiBack": "372.66666666666663,173.33333333333331,134,59",
     "method": "Template matching",
     "threshold": 0.9,
     "description": "description"
@@ -38,8 +38,8 @@
   {
     "itemName": "a_card_kaiko",
     "imageName": "a_a_card_kaiko.png",
-    "roiFront": "355,237,169,62",
-    "roiBack": "355,237,169,62",
+    "roiFront": "361,240.33333333333331,162,54",
+    "roiBack": "361,240.33333333333331,162,54",
     "method": "Template matching",
     "threshold": 0.9,
     "description": "description"
@@ -47,8 +47,8 @@
   {
     "itemName": "a_card_fish",
     "imageName": "a_a_card_fish.png",
-    "roiFront": "352,303,173,62",
-    "roiBack": "352,303,173,62",
+    "roiFront": "359,307.66666666666663,164,54",
+    "roiBack": "359,307.66666666666663,164,54",
     "method": "Template matching",
     "threshold": 0.9,
     "description": "description"
@@ -56,8 +56,8 @@
   {
     "itemName": "a_card_room",
     "imageName": "a_a_card_room.png",
-    "roiFront": "355,370,167,59",
-    "roiBack": "355,370,167,59",
+    "roiFront": "356.33333333333326,369.66666666666663,167,59",
+    "roiBack": "356.33333333333326,369.66666666666663,167,59",
     "method": "Template matching",
     "threshold": 0.9,
     "description": "description"
@@ -65,8 +65,8 @@
   {
     "itemName": "a_card_moon",
     "imageName": "a_a_card_moon.png",
-    "roiFront": "354,439,171,59",
-    "roiBack": "354,439,171,59",
+    "roiFront": "358.33333333333326,437,162,59",
+    "roiBack": "358.33333333333326,437,162,59",
     "method": "Template matching",
     "threshold": 0.9,
     "description": "description"
@@ -74,8 +74,8 @@
   {
     "itemName": "a_card_other",
     "imageName": "a_a_card_other.png",
-    "roiFront": "353,502,173,61",
-    "roiBack": "353,502,173,61",
+    "roiFront": "358.66666666666663,507,166,54",
+    "roiBack": "358.66666666666663,507,166,54",
     "method": "Template matching",
     "threshold": 0.9,
     "description": "其他变异"
@@ -83,7 +83,7 @@
   {
     "itemName": "a_invite",
     "imageName": "a_a_invite.png",
-    "roiFront": "1045,559,100,100",
+    "roiFront": "1049,561,99,101",
     "roiBack": "1014,538,182,162",
     "method": "Template matching",
     "threshold": 0.8,
@@ -92,8 +92,8 @@
   {
     "itemName": "a_auto_invite",
     "imageName": "a_a_auto_invite.png",
-    "roiFront": "1071,456,53,51",
-    "roiBack": "1071,456,53,51",
+    "roiFront": "1071,459,44,48",
+    "roiBack": "1071,459,44,48",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "自动邀请"
@@ -101,7 +101,7 @@
   {
     "itemName": "a_friend_1",
     "imageName": "a_a_friend_1.png",
-    "roiFront": "590,573,64,73",
+    "roiFront": "1071,456,48,46",
     "roiBack": "590,573,64,73",
     "method": "Template matching",
     "threshold": 0.8,
@@ -110,7 +110,7 @@
   {
     "itemName": "a_friend_2",
     "imageName": "a_a_friend_2.png",
-    "roiFront": "741,572,70,69",
+    "roiFront": "598,586.5,59,69",
     "roiBack": "741,572,70,69",
     "method": "Template matching",
     "threshold": 0.8,
@@ -119,7 +119,7 @@
   {
     "itemName": "a_activate_yellow",
     "imageName": "a_a_activate_yellow.png",
-    "roiFront": "1047,560,100,100",
+    "roiFront": "746.5,572,65,64",
     "roiBack": "1047,560,100,100",
     "method": "Template matching",
     "threshold": 0.8,
@@ -128,7 +128,7 @@
   {
     "itemName": "a_activate_gray",
     "imageName": "a_a_activate_gray.png",
-    "roiFront": "1046,556,100,100",
+    "roiFront": "1064.5,578,100,100",
     "roiBack": "1046,556,100,100",
     "method": "Template matching",
     "threshold": 0.8,
@@ -146,7 +146,7 @@
   {
     "itemName": "a_check_card",
     "imageName": "a_a_check_card.png",
-    "roiFront": "513,32,260,49",
+    "roiFront": "806,271,260,49",
     "roiBack": "513,32,260,49",
     "method": "Template matching",
     "threshold": 0.8,
@@ -200,7 +200,7 @@
   {
     "itemName": "a_demount",
     "imageName": "a_a_demount.png",
-    "roiFront": "939,575,55,47",
+    "roiFront": "903,551,107,91",
     "roiBack": "903,551,107,91",
     "method": "Template matching",
     "threshold": 0.8,
