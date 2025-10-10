@@ -72,7 +72,7 @@ class Summon(BaseTask, SummonAssets):
             logger.warning(f'不支持的月份: {current_month}')
             return
         self.screenshot()
-        self.device.draw_adb(current_pattern)
+        self.device.draw_minitouch(current_pattern)
 
 
 
@@ -106,11 +106,8 @@ class Summon(BaseTask, SummonAssets):
                 logger.info('click confirm small')
                 continue
         self.wait_until_appear(self.I_BLUE_TICKET)
-        
-        logger.info('get I_BLUE_TICKET')
         while True:
             ticket_info = self.O_ONE_TICKET.ocr(self.device.image)
-            logger.info('ticket_info: %s' % ticket_info)
             # 处理 None 和空字符串
             if ticket_info is None or ticket_info == '':
                 ticket_info = 0
@@ -155,23 +152,6 @@ class Summon(BaseTask, SummonAssets):
                         self.summon_mystery_pattern()
                     else:
                         self.summon()
-                    continue
-            logger.info('Summon one success')
-            # 画一张票
-            time.sleep(0.5)
-            while 1:
-                self.screenshot()
-                if self.appear(self.I_SM_CONFIRM, interval=0.6):
-                    self.ui_click_until_disappear(self.I_SM_CONFIRM)
-                    break
-                if self.appear(self.I_SM_CONFIRM_2, interval=0.6):
-                    self.ui_click_until_disappear(self.I_SM_CONFIRM_2)
-                    break
-                if self.appear(self.I_ONE_TICKET, interval=1):
-                    # 某些时候会点击到 “语言召唤”
-                    if self.appear_then_click(self.I_UI_CANCEL, interval=0.8):
-                        continue
-                    self.summon()
                     continue
             logger.info('Summon one success')
 
