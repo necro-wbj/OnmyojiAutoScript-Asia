@@ -47,21 +47,6 @@ class BondlingFairylandAssets:
 
 
 	# Image Rule Assets
-	# 挑战 
-	I_BALL_FIRE = RuleImage(roi_front=(1140,575,100,100), roi_back=(1140,575,100,100), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/ball_ball_fire.png")
-	# description 
-	I_BALL_UNLOCK = RuleImage(roi_front=(714,637,31,33), roi_back=(714,637,31,33), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/ball_ball_unlock.png")
-	# description 
-	I_BALL_LOCK = RuleImage(roi_front=(715,637,29,32), roi_back=(715,637,29,32), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/ball_ball_lock.png")
-	# 点击式神录 
-	I_BALL_RECORDS = RuleImage(roi_front=(856,566,38,39), roi_back=(856,566,38,39), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/ball_ball_records.png")
-	# 求援 
-	I_BALL_HELP = RuleImage(roi_front=(963,571,100,100), roi_back=(963,571,100,100), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/ball_ball_help.png")
-	# 契灵创建队伍 
-	I_CREATE_TEAM = RuleImage(roi_front=(569,491,141,50), roi_back=(569,491,141,50), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/create_team.png")
-
-
-	# Image Rule Assets
 	# description 
 	I_BF_SEARSH = RuleImage(roi_front=(1133,577,100,100), roi_back=(1133,577,100,100), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/bf/bf_bf_searsh.png")
 	# description 
@@ -85,24 +70,29 @@ class BondlingFairylandAssets:
 
 
 	# Image Rule Assets
-	# 镇墓兽 
-	I_TOMB_GUARD = RuleImage(roi_front=(847,518,30,31), roi_back=(832,501,64,60), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_tomb_guard.png")
-	# 茨球 
-	I_SNOWBALL = RuleImage(roi_front=(532,375,44,48), roi_back=(512,353,94,93), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_snowball.png")
-	# 小黑 
-	I_LITTLE_KURO = RuleImage(roi_front=(478,334,77,70), roi_back=(462,318,108,102), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_little_kuro.png")
-	# 火灵 
-	I_AZURE_BASAN = RuleImage(roi_front=(654,260,48,46), roi_back=(631,235,91,92), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_azure_basan.png")
 	# description 
-	I_CAP_SUCCESS = RuleImage(roi_front=(210,445,22,21), roi_back=(210,445,22,21), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_cap_success.png")
+	I_SELECT_KUAQU_ON = RuleImage(roi_front=(485,124,79,31), roi_back=(485,124,79,31), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/invite/select_kuaqu_on.png")
 	# description 
-	I_CAP_FAILURE = RuleImage(roi_front=(1192,608,30,39), roi_back=(1192,608,30,39), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_cap_failure.png")
+	I_SELECT_FRIEND_OFF = RuleImage(roi_front=(366,121,78,32), roi_back=(366,121,78,32), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/invite/select_friend_off.png")
 	# description 
-	I_BATTLE_FAIL = RuleImage(roi_front=(740,267,79,84), roi_back=(740,267,79,84), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/battle_fail.png")
-	# 放弃结契 
-	I_BATTLE_FAIL_ABANDON = RuleImage(roi_front=(436,606,115,36), roi_back=(436,606,115,36), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/battle_fail_abandon.png")
+	I_SELECT_FRIEND_ON = RuleImage(roi_front=(376,121,63,38), roi_back=(376,121,63,38), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/invite/select_friend_on.png")
 	# description 
-	I_BATTLE_SUCCESS = RuleImage(roi_front=(651,203,70,81), roi_back=(651,203,70,81), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/battle_success.png")
+	I_SELECT_KUAQU_OFF = RuleImage(roi_front=(490,119,68,33), roi_back=(490,119,68,33), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/invite/select_kuaqu_off.png")
+
+
+	# Image Rule Assets
+	# 挑战 
+	I_BALL_FIRE = RuleImage(roi_front=(1140,575,100,100), roi_back=(1140,575,100,100), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/ball_ball_fire.png")
+	# description 
+	I_BALL_UNLOCK = RuleImage(roi_front=(714,637,31,33), roi_back=(714,637,31,33), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/ball_ball_unlock.png")
+	# description 
+	I_BALL_LOCK = RuleImage(roi_front=(715,637,29,32), roi_back=(715,637,29,32), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/ball_ball_lock.png")
+	# 点击式神录 
+	I_BALL_RECORDS = RuleImage(roi_front=(856,566,38,39), roi_back=(856,566,38,39), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/ball_ball_records.png")
+	# 求援 
+	I_BALL_HELP = RuleImage(roi_front=(963,571,100,100), roi_back=(963,571,100,100), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/ball_ball_help.png")
+	# 契灵创建队伍 
+	I_CREATE_TEAM = RuleImage(roi_front=(569,491,141,50), roi_back=(569,491,141,50), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/ball/create_team.png")
 
 
 	# Image Rule Assets
@@ -133,25 +123,24 @@ class BondlingFairylandAssets:
 
 
 	# Image Rule Assets
+	# 镇墓兽 
+	I_TOMB_GUARD = RuleImage(roi_front=(847,518,30,31), roi_back=(832,501,64,60), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_tomb_guard.png")
+	# 茨球 
+	I_SNOWBALL = RuleImage(roi_front=(532,375,44,48), roi_back=(512,353,94,93), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_snowball.png")
+	# 小黑 
+	I_LITTLE_KURO = RuleImage(roi_front=(478,334,77,70), roi_back=(462,318,108,102), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_little_kuro.png")
+	# 火灵 
+	I_AZURE_BASAN = RuleImage(roi_front=(654,260,48,46), roi_back=(631,235,91,92), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_azure_basan.png")
 	# description 
-	I_SELECT_KUAQU_ON = RuleImage(roi_front=(485,124,79,31), roi_back=(485,124,79,31), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/invite/select_kuaqu_on.png")
+	I_CAP_SUCCESS = RuleImage(roi_front=(210,445,22,21), roi_back=(210,445,22,21), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_cap_success.png")
 	# description 
-	I_SELECT_FRIEND_OFF = RuleImage(roi_front=(366,121,78,32), roi_back=(366,121,78,32), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/invite/select_friend_off.png")
+	I_CAP_FAILURE = RuleImage(roi_front=(1192,608,30,39), roi_back=(1192,608,30,39), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_cap_failure.png")
 	# description 
-	I_SELECT_FRIEND_ON = RuleImage(roi_front=(376,121,63,38), roi_back=(376,121,63,38), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/invite/select_friend_on.png")
+	I_BATTLE_FAIL = RuleImage(roi_front=(740,267,79,84), roi_back=(740,267,79,84), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/battle_fail.png")
+	# 放弃结契 
+	I_BATTLE_FAIL_ABANDON = RuleImage(roi_front=(436,606,115,36), roi_back=(436,606,115,36), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/battle_fail_abandon.png")
 	# description 
-	I_SELECT_KUAQU_OFF = RuleImage(roi_front=(490,119,68,33), roi_back=(490,119,68,33), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/invite/select_kuaqu_off.png")
-
-
-	# Click Rule Assets
-	# description 
-	C_LEFT_1 = RuleClick(roi_front=(167,198,128,265), roi_back=(167,198,128,265), name="left_1")
-	# description 
-	C_LEFT_2 = RuleClick(roi_front=(423,226,111,241), roi_back=(423,226,111,241), name="left_2")
-	# description 
-	C_LEFT_3 = RuleClick(roi_front=(676,176,107,275), roi_back=(676,176,107,275), name="left_3")
-	# description 
-	C_LEFT_4 = RuleClick(roi_front=(918,223,108,235), roi_back=(918,223,108,235), name="left_4")
+	I_BATTLE_SUCCESS = RuleImage(roi_front=(651,203,70,81), roi_back=(651,203,70,81), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/battle_success.png")
 
 
 	# Image Rule Assets
@@ -165,5 +154,16 @@ class BondlingFairylandAssets:
 	I_BUY_ADD = RuleImage(roi_front=(678,540,43,40), roi_back=(678,540,43,40), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/stone/buy_add.png")
 	# description 
 	I_BUY_SUB = RuleImage(roi_front=(468,540,43,40), roi_back=(468,540,43,40), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/stone/buy_sub.png")
+
+
+	# Click Rule Assets
+	# description 
+	C_LEFT_1 = RuleClick(roi_front=(167,198,128,265), roi_back=(167,198,128,265), name="left_1")
+	# description 
+	C_LEFT_2 = RuleClick(roi_front=(423,226,111,241), roi_back=(423,226,111,241), name="left_2")
+	# description 
+	C_LEFT_3 = RuleClick(roi_front=(676,176,107,275), roi_back=(676,176,107,275), name="left_3")
+	# description 
+	C_LEFT_4 = RuleClick(roi_front=(918,223,108,235), roi_back=(918,223,108,235), name="left_4")
 
 
