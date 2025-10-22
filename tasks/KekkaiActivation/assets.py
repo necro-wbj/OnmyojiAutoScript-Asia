@@ -10,6 +10,11 @@ from module.atom.list import RuleList
 class KekkaiActivationAssets: 
 
 
+	# Swipe Rule Assets
+	# description 
+	S_CARDS_SWIPE = RuleSwipe(roi_front=(178,401,23,23), roi_back=(176,168,29,24), mode="default", name="cards_swipe")
+
+
 	# Click Rule Assets
 	# 切换卡的种类 
 	C_A_SELECT_CARD_LIST = RuleClick(roi_front=(352,99,172,53), roi_back=(352,99,172,53), name="a_select_card_list")
@@ -22,11 +27,6 @@ class KekkaiActivationAssets:
 	O_CARD_ALL_TIME = RuleOcr(roi=(926,262,95,31), area=(926,262,95,31), mode="Duration", method="Default", keyword="", name="card_all_time")
 	# 识别结界卡每小时收益 
 	O_CHECK_CARD_NUMBER = RuleOcr(roi=(305,153,107,481), area=(305,153,107,481), mode="Single", method="Default", keyword="", name="check_card_number")
-
-
-	# Swipe Rule Assets
-	# description 
-	S_CARDS_SWIPE = RuleSwipe(roi_front=(178,401,23,23), roi_back=(176,168,29,24), mode="default", name="cards_swipe")
 
 
 	# Image Rule Assets
