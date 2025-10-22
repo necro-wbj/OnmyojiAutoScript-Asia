@@ -21,7 +21,7 @@
     "itemName": "frog_boss_town_enter",
     "imageName": "fb_frog_boss_town_enter.png",
     "roiFront": "122,263,110,33",
-    "roiBack": "122,263,110,33",
+    "roiBack": "122,263,500,33",
     "method": "Template matching",
     "threshold": 0.6,
     "description": "frog_boss_town_enter"

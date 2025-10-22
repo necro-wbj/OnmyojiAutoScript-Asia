@@ -30,7 +30,7 @@ class FrogBossAssets:
 	# description 
 	I_GOLD_30_CHECK = RuleImage(roi_front=(513,196,58,53), roi_back=(402,141,459,489), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_gold_30_check.png")
 	# description 
-	I_BETTED = RuleImage(roi_front=(93,352,125,54), roi_back=(49,283,1192,161), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_betted.png")
+	I_BETTED = RuleImage(roi_front=(109,308,101,54), roi_back=(49,283,1192,161), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_betted.png")
 	# description 
 	I_SUCCESS_RIGHT = RuleImage(roi_front=(1048,341,122,116), roi_back=(999,243,201,260), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_success_right.png")
 	# description 
@@ -47,7 +47,7 @@ class FrogBossAssets:
 	# frog_boss_enter 
 	I_FROG_BOSS_ENTER = RuleImage(roi_front=(1181,153,59,54), roi_back=(1181,153,59,54), threshold=0.6, method="Template matching", file="./tasks/FrogBoss/fb/fb_frog_boss_enter.png")
 	# frog_boss_town_enter 
-	I_FROG_BOSS_TOWN_ENTER = RuleImage(roi_front=(122,263,110,33), roi_back=(122,263,110,33), threshold=0.6, method="Template matching", file="./tasks/FrogBoss/fb/fb_frog_boss_town_enter.png")
+	I_FROG_BOSS_TOWN_ENTER = RuleImage(roi_front=(122,263,110,33), roi_back=(122,263,500,33), threshold=0.6, method="Template matching", file="./tasks/FrogBoss/fb/fb_frog_boss_town_enter.png")
 	# 休息中 
 	I_FROG_BOSS_REST = RuleImage(roi_front=(510,274,169,64), roi_back=(492,260,220,113), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_frog_boss_rest.png")
 
