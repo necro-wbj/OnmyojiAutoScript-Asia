@@ -28,8 +28,8 @@ class Device(Platform, Screenshot, Control, AppControl):
     detect_record = set()
     click_record = deque(maxlen=15)
     stuck_timer = Timer(60, count=60).start()
-    stuck_timer_long = Timer(600, count=600).start()
-    stuck_long_wait_list = ['BATTLE_STATUS_S', 'PAUSE', 'LOGIN_CHECK']
+    stuck_timer_long = Timer(300, count=300).start()
+    stuck_long_wait_list = ['BATTLE_STATUS_S', 'PAUSE', 'LOGIN_CHECK', 'PREPARE_BEFORE_BATTLE']
 
     def __init__(self, *args, **kwargs):
         for trial in range(4):
