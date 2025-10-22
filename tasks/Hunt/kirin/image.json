@@ -12,7 +12,7 @@
     "itemName": "kirin_end",
     "imageName": "kirin_kirin_end.png",
     "roiFront": "1126,600,105,47",
-    "roiBack": "1,3,209,124",
+    "roiBack": "1126,600,105,47",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "麒麟已挑战"
