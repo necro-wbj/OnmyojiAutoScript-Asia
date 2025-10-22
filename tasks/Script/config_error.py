@@ -14,11 +14,8 @@ class Error(BaseModel):
                                description='是否多次出错关闭模拟器')
     save_error: bool = Field(default=True,
                              description='')
-    screenshot_length: int = Field(
-        default=1,
-        description='',
-        ge=1,
-    )
+    screenshot_length: int = Field(default=1,
+                                   description='')
     notify_enable: bool = Field(default=False,
                                 description='')
     notify_config: MultiLine = Field(default='provider: null', description='notify_config_help')

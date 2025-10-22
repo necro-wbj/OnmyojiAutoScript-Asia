@@ -158,7 +158,6 @@ class Timer:
         diff = self._current + self.limit - time.time()
         if diff > 0:
             time.sleep(diff)
-        return self
 
     def show(self):
         from module.logger import logger
