@@ -241,5 +241,50 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "爬塔活动buff页"
+  },
+  {
+    "itemName": "entry_activity",
+    "imageName": "as_entry_activity.png",
+    "roiFront": "567,258,46,42",
+    "roiBack": "254,56,774,524",
+    "method": "Template matching",
+    "threshold": 0.5,
+    "description": "进入门票活动"
+  },
+  {
+    "itemName": "check_act_list_climb_act",
+    "imageName": "as_check_act_list_climb_act.png",
+    "roiFront": "538,194,497,193",
+    "roiBack": "415,67,773,390",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "活动列表页爬塔活动"
+  },
+  {
+    "itemName": "act_map_switch",
+    "imageName": "as_act_map_switch.png",
+    "roiFront": "1196,303,59,48",
+    "roiBack": "1174,263,104,118",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "活动地图切换"
+  },
+  {
+    "itemName": "pass_act_locat",
+    "imageName": "as_pass_act_locat.png",
+    "roiFront": "1214,395,29,31",
+    "roiBack": "1179,373,100,86",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "门票活动定位"
+  },
+  {
+    "itemName": "check_ap100",
+    "imageName": "as_check_ap100.png",
+    "roiFront": "971,575,96,100",
+    "roiBack": "934,537,166,167",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "100体爬塔标识"
   }
 ]

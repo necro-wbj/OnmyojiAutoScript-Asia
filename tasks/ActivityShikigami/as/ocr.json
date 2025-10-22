@@ -43,5 +43,41 @@
     "method": "Default",
     "keyword": ".守平.",
     "description": "从左侧进入战斗"
+  },
+  {
+    "itemName": "remain_boss",
+    "roiFront": "1113,669,131,31",
+    "roiBack": "1099,659,162,52",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "boss剩餘攻擊次數"
+  },
+  {
+    "itemName": "fire",
+    "roiFront": "1137,599,83,44",
+    "roiBack": "1129,570,100,100",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "挑戰",
+    "description": "挑戰"
+  },
+  {
+    "itemName": "remain_ap100",
+    "roiFront": "922,21,112,39",
+    "roiBack": "913,8,131,62",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "100體活動門票檢測"
+  },
+  {
+    "itemName": "enter_ap100",
+    "roiFront": "72,187,95,32",
+    "roiBack": "7,172,256,108",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "將靈魂試煉",
+    "description": "進入100體活動標識"
   }
 ]
