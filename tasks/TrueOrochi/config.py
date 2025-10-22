@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 from enum import Enum
 from datetime import datetime, time
 
+from tasks.Component.SwitchSoul.switch_soul_config import SwitchSoulConfig
 from tasks.Component.config_scheduler import Scheduler
 from tasks.Component.config_base import ConfigBase, TimeDelta
 from tasks.Utils.config_enum import ShikigamiClass
@@ -23,7 +24,7 @@ class GreenMarkType(str, Enum):
 
 class TrueOrochiScheduler(Scheduler):
     priority: int = Field(default=10, description='priority_help')
-    success_interval: TimeDelta = Field(default=TimeDelta(days=3), description='success_interval_help')
+    success_interval: TimeDelta = Field(default=TimeDelta(days=7), description='success_interval_help')
     failure_interval: TimeDelta = Field(default=TimeDelta(days=1), description='failure_interval_help')
 
 class TrueOrochiConfig(BaseModel):

@@ -31,4 +31,3 @@ if __name__ == "__main__":
     t = ScriptTask(config, device)
     t.config.exploration.exploration_config.exploration_level = '第二十八章'
     t.run()
-

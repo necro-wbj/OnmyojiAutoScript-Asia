@@ -12,7 +12,7 @@
     "itemName": "wq_invite_2",
     "imageName": "invite_wq_invite_2.png",
     "roiFront": "462,361,37,47",
-    "roiBack": "435,336,100,100",
+    "roiBack": "417,336,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -21,7 +21,7 @@
     "itemName": "wq_invite_3",
     "imageName": "invite_wq_invite_3.png",
     "roiFront": "754,366,39,42",
-    "roiBack": "728,339,100,100",
+    "roiBack": "715,335,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
