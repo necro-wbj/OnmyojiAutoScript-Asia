@@ -56,7 +56,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         raise TaskEnd
 
     def recive_guild_ap_or_assets(self):
-        for i in range(1, 5):
+        for i in range(1, 2):
             self.ui_get_current_page()
             self.ui_goto(page_guild)
             # 在寮的主界面 检查是否有收取体力或者是收取寮资金
@@ -262,6 +262,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                 self.screenshot()
                 # 如果出现结界皮肤， 表示收取好了
                 if self.appear(self.I_REALM_SHIN) and not self.appear(self.I_BOX_EXP, threshold=0.6):
+                    logger.info('如果出现结界皮肤， 表示收取好了')
                     break
                 # 如果出现收取确认，表明进入到了有满级的
                 if self.appear(self.I_UI_CONFIRM):
@@ -290,6 +291,8 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                         logger.info('Exp box reach max do not collect')
                         break
                 if self.appear_then_click(self.I_BOX_EXP, threshold=0.6, interval=1):
+                    logger.info('Click exp box and wait extract')
+                    self.wait_until_stable(self.I_EXP_EXTRACT)
                     continue
                 if self.appear_then_click(self.I_EXP_EXTRACT, interval=1):
                     continue
@@ -429,17 +432,17 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         :return:
         """
         logger.hr('Start utilize')
-        if self.first_utilize:
-            self.swipe(self.S_U_END, interval=3)
-            self.first_utilize = False
-            if friend == SelectFriendList.SAME_SERVER:
-                self.switch_friend_list(SelectFriendList.DIFFERENT_SERVER)
-                self.switch_friend_list(SelectFriendList.SAME_SERVER)
-            else:
-                self.switch_friend_list(SelectFriendList.SAME_SERVER)
-                self.switch_friend_list(SelectFriendList.DIFFERENT_SERVER)
-        else:
-            self.switch_friend_list(friend)
+        # if self.first_utilize:
+        #     self.swipe(self.S_U_END, interval=3)
+        #     self.first_utilize = False
+        #     if friend == SelectFriendList.SAME_SERVER:
+        #         self.switch_friend_list(SelectFriendList.DIFFERENT_SERVER)
+        #         self.switch_friend_list(SelectFriendList.SAME_SERVER)
+        #     else:
+        #         self.switch_friend_list(SelectFriendList.SAME_SERVER)
+        #         self.switch_friend_list(SelectFriendList.DIFFERENT_SERVER)
+        # else:
+        #     self.switch_friend_list(friend)
 
         # --------------- 结界卡选择 ---------------
         if not self._select_optimal_resource_card():
