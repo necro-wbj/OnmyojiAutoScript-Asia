@@ -23,40 +23,20 @@ from tasks.FrogBoss.config import Strategy
 
 class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
     def run(self):
-        self.ui_get_current_page()
-        self.ui_goto(page_main)
-        # try to enter frog boss
-        if self.wait_until_appear(self.I_FROG_BOSS_ENTER, wait_time=3):
-            logger.info('from main page enter frog boss')
-            self.ui_click(self.I_FROG_BOSS_ENTER, self.I_FROG_BOSS_IN)
-        else:
-            logger.info('try to enter frog boss from town')
-            self.ui_goto(page_town)
-            if self.wait_until_appear(self.I_FROG_BOSS_TOWN_ENTER, wait_time=3):
-                logger.info('from town page enter frog boss')
-                self.ui_click(self.I_FROG_BOSS_TOWN_ENTER, self.I_FROG_BOSS_IN)
-            else:
-                logger.info('not found frog boss enter button')
-                self.ui_goto(page_main)
-                self.next_run()
-                raise TaskEnd('FrogBoss')
-
+        self.enter(self.I_FROG_BOSS_ENTER)
         # 进入主界面
-        status = ""
         while 1:
             self.screenshot()
-            if(status != ""):
-                logger.info(status)
-            status = "判斷是否已經下注"
-            self.appear_then_click(self.I_FROG_BOSS_ENTER)
+
+            # 已经下注
             if self.appear(self.I_BETTED):
                 logger.info('You have betted')
                 break
-            status = "判斷是否休息中"
+            # 休息中
             if self.appear(self.I_FROG_BOSS_REST):
                 logger.info('Frog Boss Rest')
                 break
-            status = "判斷是否競猜成功"
+            # 竞猜成功
             if self.appear(self.I_BET_SUCCESS):
                 logger.info('You bet win')
                 self.detect()
@@ -74,13 +54,13 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
                     if self.appear_then_click(self.I_NEXT_COMPETITION, interval=4):
                         continue
                 continue
-            status = "判斷是否競猜失敗"
+            # 竞猜失败
             if self.appear(self.I_BET_FAILURE):
                 logger.info('You bet lose')
                 self.ui_click_until_disappear(self.I_NEXT_COMPETITION)
                 self.detect()
                 continue
-            status = "判斷是否可下注"
+            # 正式竞猜
             if self.appear(self.I_BET_LEFT) and self.appear(self.I_BET_RIGHT):
                 self.do_bet()
                 continue
@@ -163,8 +143,6 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
                 continue
             if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=2):
                 continue
-            # if self.appear_then_click(self.I_GOLD_30, interval=2):
-            #     continue
 
     def detect(self) -> bool:
         """
@@ -335,12 +313,6 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
                 return self.I_BET_LEFT
             else:
                 return self.I_BET_RIGHT
-    def is_time_in_frog(self):
-        now = datetime.now().time()
-        morning_start = time(10, 0)
-        if morning_start <= now:
-            return True
-        return False
 
 
 if __name__ == '__main__':
