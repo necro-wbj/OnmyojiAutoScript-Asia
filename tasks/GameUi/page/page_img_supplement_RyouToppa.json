@@ -2,8 +2,8 @@
   {
     "itemName": "kekkai_toppa",
     "imageName": "page_kekkai_toppa.png",
-    "roiFront": "1192,352,78,117",
-    "roiBack": "1192,352,78,117",
+    "roiFront": "68,630,56,56",
+    "roiBack": "68,630,56,56",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "突破紀錄"
