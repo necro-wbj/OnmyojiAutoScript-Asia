@@ -3,6 +3,7 @@
 # github https://github.com/runhey
 import time
 from time import sleep
+import re
 
 from enum import Enum
 from cached_property import cached_property
@@ -30,6 +31,7 @@ class LanternClass(Enum):
     MYSTERY = 5  # 神秘任务
     BOSS = 6  # 大鬼王
 
+
 class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
     best_boss_enable = False
 
@@ -37,7 +39,6 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         if not self.check_time():
             logger.warning('Time is not right')
             raise TaskEnd('DemonEncounter')
-
         self.ui_get_current_page()
         # 切换御魂
         soul_config = self.config.demon_encounter.demon_soul_config
@@ -138,7 +139,11 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             group, team = soul_config.demon_nightly_aramitama.split(",")
             logger.info(f'Normal demon boss nightly aramitama group: {group}, team: {team}')
         if group and team:
-            self.run_switch_soul_by_name(group, team)
+            # if group and team only number then use index switch
+            if re.match(r'^\d+,\d+$', group + ',' + team):
+                self.run_switch_soul(str(group+','+team))
+            else:
+                self.run_switch_soul_by_name(group, team)
         # 周一 鬼灵歌姬 補充
         if today == 0:
             # 获取group,team
@@ -148,7 +153,12 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             else:
                 group, team = soul_config.demon_kiryou_utahime_supplementary.split(",")
                 logger.info(f'Normal demon boss kiryou supplementary group: {group}, team: {team}')
-            self.run_switch_soul_by_name(group, team)
+            if group and team:
+                # if group and team only number then use index switch
+                if re.match(r'^\d+,\d+$', group + ',' + team):
+                    self.run_switch_soul(str(group+','+team))
+                else:
+                    self.run_switch_soul_by_name(group, team)
 
     def execute_boss(self):
         """
@@ -238,6 +248,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                         if (self.appear_then_click(self.I_BOSS_FIRE, interval=3)
                                 or self.appear_then_click(self.I_BEST_BOSS_FIRE, interval=3)):
                             boss_fire_count += 1
+                            continue
 
                 logger.info('Boss battle people is not full')
 

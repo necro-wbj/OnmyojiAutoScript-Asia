@@ -117,7 +117,7 @@ class ScriptTask(KU, KekkaiActivationAssets):
             # 不稳定太，等待动画结束
             if not card_status and not card_effect:
                 # 黄色的 ”激活“
-                if self.appear(self.I_A_ACTIVATE_YELLOW, threshold=0.97):
+                if self.appear(self.I_A_ACTIVATE_YELLOW, threshold=0.95):
                     continue
                 if self.appear(self.I_A_DEMOUNT):
                     # 现在在动画里面
@@ -398,7 +398,6 @@ class ScriptTask(KU, KekkaiActivationAssets):
         收卡的经验
         :return:
         """
-        logger.info("harvest card")
         self.appear_then_click(self.I_A_HARVEST_EXP)  # 如果到最后没有领的话有下面的一些图片
         self.appear_then_click(self.I_A_HARVEST_FISH4)  # 斗鱼4/5区别不大 斗鱼的如果一直没有领的话
         self.appear_then_click(self.I_A_HARVEST_KAIKO_4)  # 太鼓4
@@ -408,7 +407,6 @@ class ScriptTask(KU, KekkaiActivationAssets):
         self.appear_then_click(self.I_A_HARVEST_MOON_3)  # 太阴3
         self.appear_then_click(self.I_A_HARVEST_FISH_3)  # 斗鱼三
         self.appear_then_click(self.I_A_HARVEST_OBOROGURUMA)  # 胧车
-        self.click(self.C_A_HARVEST_CARD,0.5)
 
 
 if __name__ == "__main__":
