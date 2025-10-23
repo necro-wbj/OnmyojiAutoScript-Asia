@@ -192,6 +192,7 @@ class LoginHandler(BaseTask, RestartAssets):
         """
         logger.hr('Harvest')
         timer_harvest = Timer(5)  # 如果连续5秒没有发现任何奖励，退出
+        skip_default = False
         while 1:
             self.screenshot()
 
@@ -213,12 +214,18 @@ class LoginHandler(BaseTask, RestartAssets):
                 timer_harvest.reset()
                 logger.info('Close yellow close')
                 continue
-                # 关闭宠物小屋
+            # 关闭宠物小屋
             if self.appear_then_click(self.I_HARVEST_BACK_PET_HOUSE, interval=0.6):
                 timer_harvest.reset()
                 logger.info('Close yellow close')
                 continue
-                # 关闭姿度出现的蒙版
+            # 御魂溢确认
+            if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=2.5):
+                timer_harvest.reset()
+                skip_default = True
+                logger.info('Soul overflow')
+                continue
+            # 关闭姿度出现的蒙版
             if self.appear(self.I_HARVEST_ZIDU, interval=1):
                 timer_harvest.reset()
                 self.I_HARVEST_ZIDU.roi_front[0] -= 200
@@ -251,9 +258,8 @@ class LoginHandler(BaseTask, RestartAssets):
             if self.appear_then_click(self.I_HARVEST_SIGN_999, interval=1.5):
                 timer_harvest.reset()
                 continue
-
-            # 郵件（依設定決定是否收）
-            if self.config.restart.harvest_config.enable_mail:
+            # 判断是否勾选了收取邮件（不收取邮件可以查看每日收获）
+            if not skip_default and self.config.restart.harvest_config.enable_mail:
                 if self.appear(self.I_HARVEST_MAIL_CONFIRM):
                     self.click(self.I_HARVEST_MAIL_CONFIRM, interval=2)
                     timer_harvest.reset()
@@ -290,7 +296,7 @@ class LoginHandler(BaseTask, RestartAssets):
                 timer_harvest.reset()
                 continue
             # 自选御魂
-            if self.appear(self.I_HARVEST_SOUL_1):
+            if not skip_default and self.appear(self.I_HARVEST_SOUL_1):
                 logger.info('Select soul 2')
                 self.ui_click(self.I_HARVEST_SOUL_1, stop=self.I_HARVEST_SOUL_2)
                 self.ui_click(self.I_HARVEST_SOUL_2, stop=self.I_HARVEST_SOUL_3, interval=3)
