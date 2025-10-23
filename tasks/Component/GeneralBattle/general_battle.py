@@ -6,7 +6,6 @@ import random
 from time import sleep
 
 import cv2
-from module.base.timer import Timer
 
 from module.base.utils import get_color, color_similar
 from tasks.base_task import BaseTask
@@ -24,64 +23,62 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
     使用这个通用的战斗必须要求这个任务的config有config_general_battle
     """
 
-    def run_general_battle(self, config: GeneralBattleConfig = None, buff: BuffClass or list[BuffClass] = None) -> bool:
+    def run_general_battle(
+        self,
+        config: GeneralBattleConfig = None,
+        buff: BuffClass or list[BuffClass] = None,
+    ) -> bool:
         """
         运行脚本
         :return:
         """
-        logger.hr("General battle start", 2)
-        if config is None:
-            config = GeneralBattleConfig()
         # 本人选择的策略是只要进来了就算一次，不管是不是打完了
-        # 战斗统计
+        logger.hr("General battle start", 2)
         self.current_count += 1
         logger.info(f"Current count: {self.current_count}")
-        # 战前设置
-        self.battle_before(buff, config)
+        if config is None:
+            config = GeneralBattleConfig()
+
+        # 如果没有锁定队伍。那么可以根据配置设定队伍
+        if not config.lock_team_enable:
+            logger.info("Lock team is not enable")
+            # 如果更换队伍
+            if self.current_count == 1:
+                self.switch_preset_team(
+                    config.preset_enable, config.preset_group, config.preset_team
+                )
+
+            # 打开buff
+            self.check_buff(buff)
+
+            # 点击准备按钮
+            self.wait_until_appear(self.I_PREPARE_HIGHLIGHT)
+            self.wait_until_appear(self.I_BUFF)
+            occur_prepare_button = False
+            while 1:
+                self.screenshot()
+                if not self.appear(self.I_BUFF):
+                    break
+                if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
+                    occur_prepare_button = True
+                    continue
+                # if occur_prepare_button and self.ocr_appear_click(self.O_BATTLE_PREPARE, interval=2):
+                #     continue
+            logger.info("Click prepare ensure button")
+
+            # 照顾一下某些模拟器慢的
+            time.sleep(0.1)
+
         # 绿标
+        self.wait_until_disappear(self.I_BUFF)
         if self.is_in_battle(False):
             self.green_mark(config.green_enable, config.green_mark)
-        # 战中设置
+
         win = self.battle_wait(config.random_click_swipt_enable)
         if win:
             return True
         else:
             return False
-
-    def battle_before(self, buff, config):
-        """
-        战斗前设置
-        """
-        # 用于ui加载,防止还在加载过程中导致准备界面识别失败,最多等待2秒
-        wait_in_prepare_timer = Timer(2).start()
-        while not self.is_in_prepare() and not wait_in_prepare_timer.reached():
-            logger.info('Wait to enter the preparation page')
-            time.sleep(0.5)
-        confed = False
-        need_battle_timer = Timer(2)
-        # 如果不在准备界面,想设置也设置不了,只能直接开始战斗
-        while self.is_in_prepare():
-            # 配置了锁定阵容则启动超时器
-            if config.lock_team_enable and not need_battle_timer.started():
-                need_battle_timer.start()
-            # 在准备界面,且没有锁定阵容,则进行相关配置
-            if not config.lock_team_enable and not confed:
-                logger.info("Lock team is not enable")
-                # 第一次进则切换预设
-                if self.current_count == 1:
-                    self.switch_preset_team(config.preset_enable, config.preset_group, config.preset_team)
-                # 判断是否开启buff并开启
-                self.check_and_open_buff(buff)
-                # 配置过了不再配置
-                confed = True
-            # 如果锁定了阵容且超过2秒还在准备界面,则点击准备
-            if config.lock_team_enable and need_battle_timer.reached():
-                self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5)
-            # 没有锁定阵容且配置完成则直接点击准备
-            if not config.lock_team_enable and confed:
-                self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5)
-            # 照顾一下某些模拟器慢的
-            time.sleep(0.2)
 
     def run_general_battle_back(self, config: GeneralBattleConfig = None, exit_four: bool = False) -> bool:
         """
@@ -172,7 +169,7 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
         """
         # 有的时候是长战斗，需要在设置stuck检测为长战斗
         # 但是无需取消设置，因为如果有点击或者滑动的话 handle_control_check会自行取消掉
-        self.device.stuck_record_add('BATTLE_STATUS_S')
+        self.device.stuck_record_add("BATTLE_STATUS_S")
         self.device.click_record_clear()
         # 战斗过程 随机点击和滑动 防封
         logger.info("Start battle process")
@@ -210,10 +207,17 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
         logger.info("Reconfirm the results of the battle")
         while 1:
             self.screenshot()
+            # 如果出現御魂過多
+            if self.appear(self.I_UI_CONFIRM_SAMLL):
+                self.click(self.I_UI_CONFIRM_SAMLL)
+                logger.info('too much souls')
+                continue
             if win:
                 # 点击赢了
                 action_click = random.choice([self.C_WIN_1, self.C_WIN_2, self.C_WIN_3])
-                if self.appear_then_click(self.I_WIN, action=action_click, interval=0.5):
+                if self.appear_then_click(
+                    self.I_WIN, action=action_click, interval=0.5
+                ):
                     continue
                 if not self.appear(self.I_WIN):
                     break
@@ -256,7 +260,9 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
 
         return win
 
-    def green_mark(self, enable: bool = False, mark_mode: GreenMarkType = GreenMarkType.GREEN_MAIN):
+    def green_mark(
+        self, enable: bool = False, mark_mode: GreenMarkType = GreenMarkType.GREEN_MAIN
+    ):
         """
         绿标， 如果不使能就直接返回
         :param enable:
@@ -298,7 +304,9 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
             # 点击绿标
             self.device.click(x, y)
 
-    def switch_preset_team(self, enable: bool = False, preset_group: int = 1, preset_team: int = 1):
+    def switch_preset_team(
+        self, enable: bool = False, preset_group: int = 1, preset_team: int = 1
+    ):
         """
         切换预设的队伍， 要求是在不锁定队伍时的情况下
         :param enable:
@@ -453,7 +461,9 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
         else:
             return False
 
-    def check_take_over_battle(self, is_screenshot: bool, config: GeneralBattleConfig) -> bool or None:
+    def check_take_over_battle(
+        self, is_screenshot: bool, config: GeneralBattleConfig
+    ) -> bool or None:
         """
         中途接入战斗，并且接管
         :return:  赢了返回True， 输了返回False, 不是在战斗中返回None
@@ -463,7 +473,20 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
         if not self.is_in_battle():
             return None
 
-        return self.run_general_battle(config=config)
+        if self.is_in_prepare(False):
+            while 1:
+                self.screenshot()
+                if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
+                    continue
+                if not self.appear(self.I_BUFF):
+                    break
+
+            # 被接管的战斗，只有准备阶段才可以点绿标。
+            # 因为如果是战斗中，无法保证点击的时候是否出现动画
+            self.wait_until_disappear(self.I_BUFF)
+            self.green_mark(config.green_enable, config.green_mark)
+
+        return self.battle_wait(config.random_click_swipt_enable)
 
     def check_lock(self, enable: bool, lock_image, unlock_image):
         """
@@ -490,15 +513,16 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
                 if self.appear_then_click(lock_image, interval=1):
                     continue
 
-    def check_and_open_buff(self, buff: BuffClass or list[BuffClass] = None):
+    def check_buff(self, buff: BuffClass or list[BuffClass] = None):
         """
         检测是否开启buff
         :param buff:
         :return:
         """
         if not buff:
+            logger.info(f"No need buff anything")
             return
-        logger.info(f'Open buff {buff}')
+        logger.info(f"Open buff {buff}")
         self.ui_click(self.I_BUFF, self.I_CLOUD, interval=2)
         if isinstance(buff, BuffClass):
             buff = [buff]
@@ -520,7 +544,7 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
             func, is_open = match_method[b]
             func(is_open)
             time.sleep(0.1)
-        logger.info(f'Open buff success')
+        logger.info(f"Open buff success")
         while 1:
             self.screenshot()
             if not self.appear(self.I_CLOUD):
@@ -529,11 +553,11 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
                 continue
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config('oas1')
+    c = Config("oas1")
     d = Device(c)
     t = GeneralBattle(c, d)
     self = t

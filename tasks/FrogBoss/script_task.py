@@ -2,7 +2,7 @@
 # @author runhey
 # github https://github.com/runhey
 from cached_property import cached_property
-from datetime import datetime
+from datetime import datetime, time
 import requests
 import re
 import json
@@ -13,7 +13,7 @@ from module.atom.image import RuleImage
 from module.base.timer import Timer
 
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main
+from tasks.GameUi.page import page_main,page_town
 from tasks.Component.RightActivity.right_activity import RightActivity
 from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
 from tasks.Component.config_base import TimeDelta
@@ -23,26 +23,49 @@ from tasks.FrogBoss.config import Strategy
 
 class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
     def run(self):
-        self.enter(self.I_FROG_BOSS_ENTER)
+        self.ui_get_current_page()
+        self.ui_goto(page_main)
+        # try to enter frog boss
+        if self.wait_until_appear(self.I_FROG_BOSS_ENTER, wait_time=3):
+            logger.info('from main page enter frog boss')
+            self.ui_click(self.I_FROG_BOSS_ENTER, self.I_FROG_BOSS_IN)
+        else:
+            logger.info('try to enter frog boss from town')
+            self.ui_goto(page_town)
+            if self.wait_until_appear(self.I_FROG_BOSS_TOWN_ENTER, wait_time=3):
+                logger.info('from town page enter frog boss')
+                self.ui_click(self.I_FROG_BOSS_TOWN_ENTER, self.I_FROG_BOSS_IN)
+            else:
+                logger.info('not found frog boss enter button')
+                self.ui_goto(page_main)
+                self.next_run()
+                raise TaskEnd('FrogBoss')
+
         # 进入主界面
+        status = ""
         while 1:
             self.screenshot()
-
-            # 已经下注
+            if(status != ""):
+                logger.info(status)
+            status = "判斷是否已經下注"
+            self.appear_then_click(self.I_FROG_BOSS_ENTER)
             if self.appear(self.I_BETTED):
                 logger.info('You have betted')
                 break
-            # 休息中
+            status = "判斷是否休息中"
             if self.appear(self.I_FROG_BOSS_REST):
                 logger.info('Frog Boss Rest')
                 break
-            # 竞猜成功
+            status = "判斷是否競猜成功"
             if self.appear(self.I_BET_SUCCESS):
                 logger.info('You bet win')
                 self.detect()
                 while 1:
                     self.screenshot()
                     if self.appear(self.I_BET_LEFT) and self.appear(self.I_BET_RIGHT):
+                        break
+                    if self.appear(self.I_FROG_BOSS_REST):
+                        logger.info('Frog Boss Rest')
                         break
                     if self.appear_then_click(self.I_BET_SUCCESS_BOX, interval=1):
                         continue
@@ -51,13 +74,13 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
                     if self.appear_then_click(self.I_NEXT_COMPETITION, interval=4):
                         continue
                 continue
-            # 竞猜失败
+            status = "判斷是否競猜失敗"
             if self.appear(self.I_BET_FAILURE):
                 logger.info('You bet lose')
                 self.ui_click_until_disappear(self.I_NEXT_COMPETITION)
                 self.detect()
                 continue
-            # 正式竞猜
+            status = "判斷是否可下注"
             if self.appear(self.I_BET_LEFT) and self.appear(self.I_BET_RIGHT):
                 self.do_bet()
                 continue
@@ -96,6 +119,7 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
         flag_glod_30 = 0
         count_left = self.O_LEFT_COUNT.ocr(self.device.image)
         count_right = self.O_RIGHT_COUNT.ocr(self.device.image)
+        logger.info(f'左側數量: {count_left}, 右側數量: {count_right}')
         match self.config.model.frog_boss.frog_boss_config.strategy_frog:
             case Strategy.Majority:
                 click_image = self.I_BET_LEFT if count_left > count_right else self.I_BET_RIGHT
@@ -114,7 +138,10 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
         while 1:
             self.screenshot()
             if self.appear(self.I_GOLD_30_CHECK):
-                break
+                logger.info('Gold 30 check appear')
+                if self.appear_then_click(self.I_GOLD_30, interval=3):
+                    logger.info('Gold 30 check appear (CLOSE)')
+                    break
             if gold_30_timer.reached():
                 logger.info('Gold 30 not appear')
                 break
@@ -125,6 +152,7 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
         while 1:
             self.screenshot()
             if self.appear(self.I_BETTED):
+                logger.info('betted')
                 break
             if self.appear_then_click(self.I_BET_SURE, interval=2) and flag_glod_30 == 1:
                 continue
@@ -135,6 +163,8 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
                 continue
             if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=2):
                 continue
+            # if self.appear_then_click(self.I_GOLD_30, interval=2):
+            #     continue
 
     def detect(self) -> bool:
         """
@@ -256,9 +286,7 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
             {"name": "Mico林木森", "id": "b6b5bc8277e34f69aeca018db0081397"},
             {"name": "查查尔", "id": "d9dc2a75497c4a91b2db1e909a36544d"},
             {"name": "CC南浔", "id": "74db771d92a54c28ae3e98d19aa565a3"},
-            {"name": "冰七喜Den", "id": "e498e524252041e29999b38e57c4df1d"},
-            {"name": "行水姑娘", "id": "30b0c2923faa483f95572c324a5bc910"},
-            {"name": "更慕林", "id": "e32aedbdd8da46a5b5b497a16c4b7658"}
+            {"name": "冰七喜Den", "id": "e498e524252041e29999b38e57c4df1d"}
             # ... 可以添加更多 uid
         ]
 
@@ -305,6 +333,12 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
                 return self.I_BET_LEFT
             else:
                 return self.I_BET_RIGHT
+    def is_time_in_frog(self):
+        now = datetime.now().time()
+        morning_start = time(10, 0)
+        if morning_start <= now:
+            return True
+        return False
 
 
 if __name__ == '__main__':

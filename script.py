@@ -118,6 +118,50 @@ class Script:
                 lines = handle_sensitive_logs(lines)
             with open(f'{folder}/log.txt', 'w', encoding='utf-8') as f:
                 f.writelines(lines)
+                   
+        from module.config.config_model import ConfigModel
+        if self.config.script.error.notify_tg_pic_log_send == True:
+            import yaml
+            logger.info(self.config.script.error.notify_config)
+            config = {}
+            for item in yaml.safe_load_all(self.config.script.error.notify_config):
+                config.update(item)
+
+            provider_name: str = config.pop("provider", None)
+            if provider_name is None:
+                logger.info("No provider specified, skip sending")
+            else:
+                logger.info(f'provider_name is OK')
+            if provider_name == 'telegram':
+                from telegram.ext import Updater, CommandHandler
+                # 获取notifier
+                token_name: str = config.pop("token", None)
+                if token_name is None:
+                    logger.info("No token specified, skip sending")
+                else:
+                    logger.info(f'token_name is OK')
+                    
+                userid_name: str = config.pop("userid", None)
+                if userid_name is None:
+                    logger.info("No userid specified, skip sending")
+                else:
+                    logger.info(f'userid_name is OK')
+                updater = Updater(token_name)
+                dispatcher = updater.dispatcher
+                #dend msg
+                dispatcher.bot.send_message(chat_id=userid_name, text=f'TG send message')
+                logger.info(f'TG send message')
+                # TG PNG
+                file = open(f'{folder}/{image_time}.png','rb')
+                dispatcher.bot.send_document(chat_id=userid_name, document=file) 
+                logger.info(f'TG send PIC')
+                file.close()
+                # TG TXT
+                file = open(f'{folder}/log.txt','rb')
+                dispatcher.bot.send_document(chat_id=userid_name, document=file) 
+                logger.info(f'TG send TXT')
+                file.close()
+        
 
     def init_server(self, port: int) -> int:
         """
@@ -269,6 +313,9 @@ class Script:
             result[key] = item
         return json.dumps(result)
 
+
+
+
     def wait_until(self, future):
         """
         Wait until a specific time.
@@ -300,68 +347,47 @@ class Script:
         获取下一个任务的名字, 大驼峰。
         :return:
         """
-        while True:
+        while 1:
             task = self.config.get_next()
             self.config.task = task
             if self.state_queue:
                 self.state_queue.put({"schedule": self.config.get_schedule_data()})
-            now = datetime.now()
-            # 任务时间到了返回任务名称
-            if task.next_run <= now:
-                return task.command
-            # 根据策略执行等待逻辑
-            if not self._handle_wait_during_idle(task.next_run):
-                # 若等待被打断, 则刷新配置
-                del_cached_property(self, "config")
 
-    def _handle_wait_during_idle(self, next_run: datetime) -> bool:
-        """
-        处理任务空闲期间的行为策略
-        :param next_run: 下一个任务的时间
-        :return: True 表示等待成功完成, False 表示等待被中断
-        """
-        method = self.config.script.optimization.when_task_queue_empty
-        strategy_map = {
-            "close_game": self._wait_close_game,
-            "goto_main": self._wait_goto_main,
-        }
-        func = strategy_map.get(method)
-        if not func:
-            logger.warning(f"Invalid Optimization_WhenTaskQueueEmpty: {method}, fallback to stay_there")
-            func = self._wait_stay_there
-        return func(next_run)
+            # from module.base.resource import release_resources
+            # if self.config.task.command != 'Alas':
+            #     release_resources(next_task=task.command)
 
-    def _wait_close_game(self, next_run: datetime) -> bool:
-        logger.info("Close game during wait")
-        self.device.app_stop()
-        self.device.release_during_wait()
-        if not self.wait_until(next_run):
-            return False
-        self.run("Restart")
-        return True
+            if task.next_run > datetime.now():
+                logger.info(f'Wait until {task.next_run} for task `{task.command}`')
+                method = self.config.script.optimization.when_task_queue_empty
+                if method == 'close_game':
+                    logger.info('Close game during wait')
+                    self.device.app_stop()
+                    self.device.release_during_wait()
+                    if not self.wait_until(task.next_run):
+                        del_cached_property(self, 'config')
+                        continue
+                    self.run('Restart')
+                elif method == 'goto_main':
+                    logger.info('Goto main page during wait')
+                    self.run('GotoMain')
+                    self.device.release_during_wait()
+                    if not self.wait_until(task.next_run):
+                        del_cached_property(self, 'config')
+                        continue
+                else:
+                    logger.warning(f'Invalid Optimization_WhenTaskQueueEmpty: {method}, fallback to stay_there')
+                    self.device.release_during_wait()
+                    if not self.wait_until(task.next_run):
+                        del_cached_property(self, 'config')
+                        continue
+            break
 
-    def _wait_goto_main(self, next_run: datetime) -> bool:
-        logger.info("Goto main page during wait")
-        self.run("GotoMain")
-        self.device.release_during_wait()
-        return self.wait_until(next_run)
-
-    def _wait_stay_there(self, next_run: datetime) -> bool:
-        logger.info("Stay_there (no action) during wait")
-        self.device.release_during_wait()
-        return self.wait_until(next_run)
-
-    def exception_handler(self, e: Exception, command: str) -> None:
-        # 处理御魂溢出
-        from tasks.Utils.post_diagnotor import PostDiagnotor, AnalyzeType
-        image = getattr(self.device, 'image', None)
-        analyse_type = PostDiagnotor().handle(e=e, command=command, image=image)
-        if analyse_type == AnalyzeType.SoulOverflow:
-            self.config.task_call('SoulsTidy')
-            time.sleep(1)
+        return task.command
 
     def run(self, command: str) -> bool:
         """
+
         :param command:  大写驼峰命名的任务名字
         :return:
         """
@@ -379,13 +405,11 @@ class Script:
             return True
         except GameNotRunningError as e:
             logger.warning(e)
-            self.exception_handler(e=e, command=command)
             self.config.task_call('Restart')
             return True
         except (GameStuckError, GameTooManyClickError) as e:
             logger.error(e)
             self.save_error_log()
-            self.exception_handler(e=e, command=command)
             logger.warning(f'Game stuck, {self.device.package} will be restarted in 10 seconds')
             logger.warning('If you are playing by hand, please stop Alas')
             self.config.notifier.push(title=f'{I18n.trans_zh_cn(command)}{command}', content=f"<{self.config_name}> GameStuckError or GameTooManyClickError")
@@ -395,37 +419,34 @@ class Script:
         except GameBugError as e:
             logger.warning(e)
             self.save_error_log()
-            self.exception_handler(e=e, command=command)
             logger.warning('An error has occurred in Azur Lane game client, Alas is unable to handle')
             logger.warning(f'Restarting {self.device.package} to fix it')
             self.config.task_call('Restart')
             self.device.sleep(10)
             return False
-        except GamePageUnknownError as e:
+        except GamePageUnknownError:
             logger.info('Game server may be under maintenance or network may be broken, check server status now')
             # 这个还不重要 留着坑填
             logger.critical('Game page unknown')
             self.save_error_log()
-            self.exception_handler(e=e, command=command)
             self.config.notifier.push(title=f'{I18n.trans_zh_cn(command)}{command}', content=f"<{self.config_name}> GamePageUnknownError")
             self.config.task_call('Restart')
             self.device.sleep(10)
             return False
         except ScriptError as e:
             logger.critical(e)
-            self.exception_handler(e=e, command=command)
             logger.critical('This is likely to be a mistake of developers, but sometimes just random issues')
             self.config.notifier.push(title=f'{I18n.trans_zh_cn(command)}{command}', content=f"<{self.config_name}> ScriptError")
             exit(1)
         except RequestHumanTakeover as e:
             logger.critical(e)
-            self.exception_handler(e=e, command=command)
             logger.critical('Request human takeover')
             self.config.notifier.push(title=f'{I18n.trans_zh_cn(command)}{command}', content=f"<{self.config_name}> RequestHumanTakeover")
-            exit(1)
+            self.config.task_call('Restart')
+            self.device.sleep(10)
+            return False
         except Exception as e:
             logger.exception(e)
-            self.exception_handler(e=e, command=command)
             self.save_error_log()
             self.config.notifier.push(title=f'{I18n.trans_zh_cn(command)}{command}', content=f"<{self.config_name}> Exception occured")
             exit(1)
@@ -439,7 +460,6 @@ class Script:
             logger.set_file_logger(self.config_name, do_cleanup=True)
         start_day = date.today()
         logger.info(f'Start scheduler loop: {self.config_name}')
-        self.config.model.running_task = ''
 
         # Update GUI 防呆, 读取设置并立刻显示后台模拟器到前台
         if not self.config.script.device.run_background_only:
@@ -475,6 +495,8 @@ class Script:
 
             # Get task
             task = self.get_next_task()
+            # 更新 gui的任务
+            # Init device and change server
             _ = self.device
             # Skip first restart
             if self.is_first_task and task == 'Restart':
@@ -484,13 +506,13 @@ class Script:
                 continue
 
             # Run
+            if self.state_queue:
+                self.state_queue.put({"schedule": self.config.get_schedule_data()})
             logger.info(f'Scheduler: Start task `{task}`')
             self.device.stuck_record_clear()
             self.device.click_record_clear()
             logger.hr(task, level=0)
-            self.config.model.running_task = task
             success = self.run(inflection.camelize(task))
-            self.config.model.running_task = ''
             logger.info(f'Scheduler: End task `{task}`')
             self.is_first_task = False
 
@@ -539,5 +561,6 @@ class Script:
 
 
 if __name__ == "__main__":
-    script = Script("oas2")
-    script.loop()
+    script = Script("oas1")
+    print(script.gui_task_list())
+    print(script.config.gui_menu)

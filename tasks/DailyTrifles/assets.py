@@ -11,6 +11,45 @@ class DailyTriflesAssets:
 
 
 	# Image Rule Assets
+	# description 
+	I_L_FRIENDS = RuleImage(roi_front=(136,628,70,72), roi_back=(136,628,70,72), threshold=0.9, method="Template matching", file="./tasks/DailyTrifles/love/love_l_friends.png")
+	# description 
+	I_L_LOVE = RuleImage(roi_front=(123,625,67,72), roi_back=(123,625,67,72), threshold=0.9, method="Template matching", file="./tasks/DailyTrifles/love/love_l_love.png")
+	# 一键收取 
+	I_L_COLLECT = RuleImage(roi_front=(47,537,129,56), roi_back=(47,537,129,56), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/love_l_collect.png")
+	# 吉闻 
+	I_LUCK_MSG = RuleImage(roi_front=(22,47,46,27), roi_back=(22,47,46,27), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/love_luck_msg.png")
+	# 一键祝福 
+	I_ONE_CLICK_BLESS = RuleImage(roi_front=(1115,500,93,33), roi_back=(1115,500,93,33), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/love_one_click_bless.png")
+	# 点击祝福 
+	I_CLICK_BLESS = RuleImage(roi_front=(617,442,92,39), roi_back=(617,442,92,39), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/love_click_bless.png")
+	# 吉闻页 
+	I_LUCK_TITLE = RuleImage(roi_front=(600,52,131,67), roi_back=(600,52,131,67), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/love_luck_title.png")
+	# 好友羁绊提升弹窗 
+	I_FRIENDSHIP_UP = RuleImage(roi_front=(1147,80,27,28), roi_back=(1147,80,27,28), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/love_friendship_up.png")
+	# 關閉吉闻页 
+	I_CLOSE_BLESS = RuleImage(roi_front=(1056,124,41,43), roi_back=(1015,88,100,100), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/love_close_bless.png")
+
+
+	# Image Rule Assets
+	# 礼包屋 
+	I_ROOM_GIFT = RuleImage(roi_front=(1138,658,52,40), roi_back=(1119,621,103,94), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/store/store_room_gift.png")
+	# description 
+	I_GIFT_RECOMMEND = RuleImage(roi_front=(1183,454,53,64), roi_back=(1162,77,98,457), threshold=0.7, method="Template matching", file="./tasks/DailyTrifles/store/store_gift_recommend.png")
+	# 免费一抽领黑蛋 
+	I_GIFT_SIGN = RuleImage(roi_front=(629,192,129,149), roi_back=(130,129,891,473), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/store/store_gift_sign.png")
+	# 体力 
+	I_SPECIAL_SUSHI = RuleImage(roi_front=(180,130,800,460), roi_back=(180,130,800,460), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/store/store_sushi.png")
+	# 购买时货币类型为勾玉 
+	I_STORE_COST_TYPE_JADE = RuleImage(roi_front=(600,490,50,60), roi_back=(600,490,50,60), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/store/store_cost_type_jade.png")
+
+
+	# Ocr Rule Assets
+	# 商店Special购买体力所需勾玉数量，roiBack为动态调整，故此设置为0，0，0，0 
+	O_STORE_SUSHI_PRICE = RuleOcr(roi=(0,0,0,0), area=(0,0,0,0), mode="Digit", method="Default", keyword="", name="store_sushi_price")
+
+
+	# Image Rule Assets
 	# 点击今忆召唤票 
 	I_RECALL_TICKET = RuleImage(roi_front=(595,586,65,76), roi_back=(595,586,65,76), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/summonRecall/recall_ticket.png")
 	# 今忆召唤单抽 
@@ -34,42 +73,5 @@ class DailyTriflesAssets:
 	O_SELECT_SM3 = RuleOcr(roi=(26,304,45,38), area=(26,304,45,38), mode="Single", method="Default", keyword="", name="select_sm3")
 	# description 
 	O_SELECT_SM4 = RuleOcr(roi=(26,397,45,38), area=(26,397,45,38), mode="Single", method="Default", keyword="", name="select_sm4")
-
-
-	# Image Rule Assets
-	# 礼包屋 
-	I_ROOM_GIFT = RuleImage(roi_front=(1138,658,52,40), roi_back=(1119,621,103,94), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/store/store_room_gift.png")
-	# description 
-	I_GIFT_RECOMMEND = RuleImage(roi_front=(1183,454,53,64), roi_back=(1162,77,98,457), threshold=0.7, method="Template matching", file="./tasks/DailyTrifles/store/store_gift_recommend.png")
-	# 免费一抽领黑蛋 
-	I_GIFT_SIGN = RuleImage(roi_front=(629,192,129,149), roi_back=(130,129,891,473), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/store/store_gift_sign.png")
-	# 体力 
-	I_SPECIAL_SUSHI = RuleImage(roi_front=(180,130,800,460), roi_back=(180,130,800,460), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/store/store_sushi.png")
-	# 购买时货币类型为勾玉 
-	I_STORE_COST_TYPE_JADE = RuleImage(roi_front=(600,490,50,60), roi_back=(600,490,50,60), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/store/store_cost_type_jade.png")
-
-
-	# Ocr Rule Assets
-	# 商店Special购买体力所需勾玉数量，roiBack为动态调整，故此设置为0，0，0，0 
-	O_STORE_SUSHI_PRICE = RuleOcr(roi=(0,0,0,0), area=(0,0,0,0), mode="Digit", method="Default", keyword="", name="store_sushi_price")
-
-
-	# Image Rule Assets
-	# description 
-	I_L_FRIENDS = RuleImage(roi_front=(67,625,70,72), roi_back=(67,625,70,72), threshold=0.9, method="Template matching", file="./tasks/DailyTrifles/love/love_l_friends.png")
-	# description 
-	I_L_LOVE = RuleImage(roi_front=(123,625,67,72), roi_back=(123,625,67,72), threshold=0.9, method="Template matching", file="./tasks/DailyTrifles/love/love_l_love.png")
-	# 一键收取 
-	I_L_COLLECT = RuleImage(roi_front=(47,537,129,56), roi_back=(47,537,129,56), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/love_l_collect.png")
-	# 吉闻 
-	I_LUCK_MSG = RuleImage(roi_front=(22,47,46,27), roi_back=(22,47,46,27), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/Screenshots_luck_msg.png")
-	# 一键祝福 
-	I_ONE_CLICK_BLESS = RuleImage(roi_front=(1115,500,93,33), roi_back=(1115,500,93,33), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/Screenshots_one_click_bless.png")
-	# 点击祝福 
-	I_CLICK_BLESS = RuleImage(roi_front=(617,442,92,39), roi_back=(617,442,92,39), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/Screenshots_click_bless.png")
-	# 吉闻页 
-	I_LUCK_TITLE = RuleImage(roi_front=(600,52,131,67), roi_back=(600,52,131,67), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/Screenshots_luck_title.png")
-	# 好友羁绊提升弹窗 
-	I_FRIENDSHIP_UP = RuleImage(roi_front=(1147,80,27,28), roi_back=(1147,80,27,28), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/friendship_up.png")
 
 

@@ -15,7 +15,7 @@
     "roiBack": "992,614,51,60",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "陰陽術"
   },
   {
     "itemName": "main_goto_friends",
@@ -24,16 +24,16 @@
     "roiBack": "867,606,79,77",
     "method": "Template matching",
     "threshold": 0.7,
-    "description": "description"
+    "description": "好友"
   },
   {
     "itemName": "main_goto_daily",
     "imageName": "page_main_goto_daily.png",
-    "roiFront": "779,612,51,67",
-    "roiBack": "754,595,89,97",
+    "roiFront": "760,656,70,28",
+    "roiBack": "744,595,98,102",
     "method": "Template matching",
     "threshold": 0.7,
-    "description": "进入花合战"
+    "description": "Main daily"
   },
   {
     "itemName": "main_goto_mall",
@@ -47,8 +47,8 @@
   {
     "itemName": "main_goto_guild",
     "imageName": "page_main_goto_guild.png",
-    "roiFront": "540,611,50,54",
-    "roiBack": "540,611,50,54",
+    "roiFront": "539,661,58,22",
+    "roiBack": "529,615,77,77",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "description"
@@ -196,14 +196,5 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "下载拓展包弹窗"
-  },
-  {
-    "itemName": "back_battle",
-    "imageName": "page_back_battle.png",
-    "roiFront": "24,19,40,38",
-    "roiBack": "0,0,90,85",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "退出战斗按钮"
   }
 ]

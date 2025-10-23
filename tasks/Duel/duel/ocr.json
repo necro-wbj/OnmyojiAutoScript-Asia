@@ -32,8 +32,8 @@
     "roiBack": "31,639,63,45",
     "mode": "Single",
     "method": "Default",
-    "keyword": "手动",
-    "description": "手动"
+    "keyword": "手動",
+    "description": "手動"
   },
   {
     "itemName": "d_auto",
@@ -41,8 +41,8 @@
     "roiBack": "30,640,65,44",
     "mode": "Single",
     "method": "Default",
-    "keyword": "自动",
-    "description": "自动"
+    "keyword": "自動",
+    "description": "自動"
   },
   {
     "itemName": "d_ban_name",

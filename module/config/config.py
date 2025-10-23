@@ -103,7 +103,6 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         super(ConfigWatcher, self).__init__()
         super(ConfigMenu, self).__init__()
         self.model = ConfigModel(config_name=config_name)
-        self.scheduler_update_dt = None  # 调度器更新时间
 
     def __getattr__(self, name):
         """
@@ -182,14 +181,14 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         pending_task = []
         waiting_task = []
         error = []
-        self.scheduler_update_dt = datetime.now()
+        now = datetime.now()
         for key, value in self.model.dict().items():
             func = Function(key, value)
             if not func.enable:
                 continue
             if not isinstance(func.next_run, datetime):
                 error.append(func)
-            elif func.next_run < self.scheduler_update_dt:
+            elif func.next_run < now:
                 pending_task.append(func)
             else:
                 waiting_task.append(func)
@@ -199,13 +198,6 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         if pending_task:
             pending_task = TaskScheduler.schedule(rule=self.model.script.optimization.schedule_rule,
                                                   pending=pending_task)
-            # 防止正在运行的任务被新上来的pending队列中的任务给顶替掉
-            if self.model.running_task and pending_task:
-                for i, obj in enumerate(pending_task):
-                    if obj.command == self.model.running_task:
-                        pending_task.insert(0, pending_task.pop(i))
-                        logger.info(f'{self.model.running_task} is running')
-                        break
         if waiting_task:
             # waiting_task = f.apply(waiting_task)
             waiting_task = sorted(waiting_task, key=operator.attrgetter("next_run"))
@@ -246,10 +238,8 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         获取调度器的数据， 但是你必须使用update_scheduler来更新信息
         :return:
         """
-        # 根据调度器更新时间来判断是否有可运行的任务,保证逻辑一致性
-        scheduler_update_dt = getattr(self, 'scheduler_update_dt', datetime.now())
         running = {}
-        if self.task is not None and self.task.next_run < scheduler_update_dt:
+        if self.task is not None and self.task.next_run < datetime.now():
             running = {"name": self.task.command, "next_run": str(self.task.next_run)}
 
         pending = []
@@ -294,7 +284,7 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         """
         设置下次运行时间  当然这个也是可以重写的
         :param target: 可以自定义的下次运行时间
-        :param server: True
+        :param server: 這個會根據server_update的時間來設定下次運行時間，優先度最高
         :param success: 判断是成功的还是失败的时间间隔
         :param task: 任务名称，大驼峰的
         :param finish: 是完成任务后的时间为基准还是开始任务的时间为基准

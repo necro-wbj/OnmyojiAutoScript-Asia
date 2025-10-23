@@ -21,7 +21,7 @@ class UserStatus(str, Enum):
 class Layer(str, Enum):
     ONE = '壹层'
     TWO = '贰层'
-    THREE = '叁层'
+    THREE = '参层'
     FOUR = '肆层'
     FIVE = '伍层'
     SIX = '陆层'
@@ -30,9 +30,7 @@ class Layer(str, Enum):
     NINE = '玖层'
     TEN = '拾层'
     ELEVEN = '悲鸣'
-    TWELVE = '神罚'
-    THIRTEEN = '虚无'
-
+    TWELVE = '神蜀'
 
 class OrochiConfig(ConfigBase):
     # 身份
@@ -59,8 +57,6 @@ class SwitchSoulConfig(BaseSwitchSoulConfig):
     eleven_switch: str = Field(default='-1,-1', description='eleven_switch_help')
     # 神罚 config
     twelve_switch: str = Field(default='-1,-1', description='twelve_switch_help')
-    # 虚无 config
-    thirteen_switch: str = Field(default='-1,-1', description='thirteen_switch_help')
 
 
 class Orochi(ConfigBase):

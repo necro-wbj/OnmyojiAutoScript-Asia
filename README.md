@@ -1,126 +1,135 @@
 <div align="center">
 
-# OnmyojiAutoScript
+# OnmyojiAutoScript-Asia (OASA)
+
+## 由 OAS（陸服）分支並適配為 **亞洲服** 版本  
+> 搬運 & 持續完善中，歡迎一同建設
 
 <br>
 
 <div>
-    <img alt="python" src="https://img.shields.io/badge/python-3.10-%233776AB?logo=python">
+ <img alt="python" src="https://img.shields.io/badge/python-3.10-%233776AB?logo=python">
 </div>
 <div>
-    <img alt="platform" src="https://img.shields.io/badge/platform-Windows-blueviolet">
+ <img alt="platform" src="https://img.shields.io/badge/platform-Windows-blueviolet">
 </div>
 <div>
-    <img alt="license" src="https://img.shields.io/github/license/runhey/OnmyojiAutoScript">
-    <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/runhey/OnmyojiAutoScript">
-    <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/runhey/OnmyojiAutoScript/total">
-    <img alt="stars" src="https://img.shields.io/github/stars/runhey/OnmyojiAutoScript?style=social">
+ <img alt="license" src="https://img.shields.io/github/license/necro-wbj/OnmyojiAutoScript-Asia">
+ <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/necro-wbj/OnmyojiAutoScript-Asia">
+ <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/necro-wbj/OnmyojiAutoScript-Asia/total">
+ <img alt="stars" src="https://img.shields.io/github/stars/necro-wbj/OnmyojiAutoScript-Asia?style=social">
 </div>
+
 <br>
 
-阴阳师自动化脚本 
+陰陽師自動化腳本（亞洲服）  
+一鍵託管，解放雙手
 
-一键托管
-
-
-### [文档](https://runhey.github.io/OnmyojiAutoScript-website/)
-
-#### 主仓库: [https://github.com/runhey/OnmyojiAutoScript](https://github.com/runhey/OnmyojiAutoScript)
+#### 主庫: [https://github.com/necro-wbj/OnmyojiAutoScript-Asia](https://github.com/necro-wbj/OnmyojiAutoScript-Asia)
 
 </div>
 
-阴阳师，作为一个手游，已经进入了生命周期的晚期。从现在到关服的这段时间里，请减少花费在阴阳师上的时间，把一切都交给 OAS。
+> 陰陽師已步入生命週期後期。請把重複日常交給 **OASA**，把時間留給更重要的事。
+
+---
+
+## 為何有 OASA？
+- 本專案以 **OAS（OnmyojiAutoScript, 陸服）** 為上游，針對 **亞洲服** 的界面、文本與活動節奏做適配與調整。
+- 若你來自上游，基本用法與文檔一致；如遇亞洲服特有差異，請先看本文的「差異與限制」。
+
+---
 
 ## 功能 Features
+- **日常任務**：懸賞封印、小貓咪、小雜簽到、金幣妖怪、年獸、花合戰、地鬼、封魔、御魂整理  
+- **每週相關**：真蛇、秘聞競速、神秘商店、搜刮商店、鬥技、每週小雜事  
+- **陰陽寮**：結界上卡、結界蹭卡、結界突破、寮突破、狩獵戰、集體任務、道館  
+- **御魂副本**：八岐大蛇、業原火、日輪之城、永生之海、六道之門  
+- **肝帝專屬**：探索、契靈、禦靈、覺醒副本、石距、百鬼夜行  
+- **限時活動**：每期爬塔、超鬼王、對弈競猜、花車巡遊、智力答案
 
-- **日常任务**: 悬赏封印、小猫咪、小杂签到、金币妖怪、年兽、花合战、地鬼、封魔、御魂整理
-- **每周相关**: 真蛇、秘闻竞速、神秘商店、搜刮商店、斗技、每周小杂事
-- **阴阳寮**: 结界上卡、结界蹭卡、结界突破、寮突破、狩猎战、集体任务、道馆
-- **御魂副本**: 八岐大蛇、业原火、日轮之城、永生之海、六道之门
-- **肝帝专属**: 探索、契灵、御灵、觉醒副本、石距、百鬼夜行
-- **限时活动**: 每期爬塔、超鬼王、对弈竞猜、花车巡游、智力答题
+### 顯著特點
+- **全部任務**：盡可能覆蓋常見玩法，一條龍釋放雙手（有坑就挖，有餅就畫 🤝）  
+- **無縫銜接**：時間管理與任務排程優化，寄養/任務無縫切換  
+- **裝飾可選**：支援自訂庭院與主題，[詳細說明](https://github.com/runhey/OnmyojiAutoScript/issues/180)  
+- **百鬼夜行**：AI 智慧撒豆，模型含全部式神，[效果展示](https://runhey.github.io/OnmyojiAutoScript-website/docs/user-manual/hyakkiyakou)
 
-### 显著特点 
-- **全部任务**: 你能想到的没有想到的都有，一条龙给你解放双手（该画饼画饼，该挖坑挖坑）
-- **无缝衔接**: 时间管理大师，优异的任务调度系统，无缝寄养，无缝执行任务
-- **装饰可选**: 全部初始皮肤是什么鬼，这里支持你喜欢的庭院、主题等等，[详细说明](https://github.com/runhey/OnmyojiAutoScript/issues/180)
-- **百鬼夜行**: 利用AI来智能撒豆子，模型包含所有式神，[效果展示](https://runhey.github.io/OnmyojiAutoScript-website/docs/user-manual/hyakkiyakou)
+---
 
-## 许可证 LICENSE
+## 與上游（陸服 OAS）的差異與限制
+> 本段會隨適配進度持續更新
 
-This project is licensed under the GNU General Public License v3.0.
+- **文字/資產適配**：亞洲服界面文案、資源命名與陸服略有不同，已逐步覆蓋；如遇識別不到或跳轉錯誤，請附截圖回報。  
+- **活動節奏**：亞洲服活動檔期常與陸服不同，限時活動支援以「當期實測」為準。  
+- **預設配置**：預設伺服區與語系以亞洲服為主；如需跑陸服請回上游。  
+- **尚待完善**：少量低頻功能仍在比對修正中，歡迎提交 PR/Issue 協力完善。
 
-## 声明 Announcement
-本软件开源、免费，仅供学习交流使用。开发者团队拥有本项目的最终解释权。使用本软件产生的所有问题与本项目与开发者团队无关。
-OAS is a free open source software, if you paid for OAS from any channel, please refund.
-OAS 是一款免费开源软件，如果你在任何渠道付费购买了OAS，请退款。
+### 🛠 實現邏輯的調整與優化（摘錄）
+> 為了更貼合亞洲服行為與文本差異，**本分支對部分實現邏輯做了修改與優化**（以實際程式碼為準）：
+- **畫面識別**：針對亞洲服界面元素重新訓練與多語系字串映射，並優化模板匹配/閾值策略以提高穩定度。  
+- **點擊流程**：新增關鍵步驟的容錯與重試邏輯（超時/誤跳轉自動回復），減少卡死。  
+- **日誌與診斷**：細化執行結果碼與錯誤訊息，便於快速回報與定位問題。  
 
-## 关于 Alas
-OAS 基于碧蓝航线脚本 [AzurLaneAutoScript](https://github.com/LmeSzinc/AzurLaneAutoScript) 开发，考虑到星穹铁道脚本 [StarRailCopilot](https://github.com/LmeSzinc/StarRailCopilot) 中所提及的问题，
-OAS 在其基础上进行了如下优化：
-- **调整设计架构**: 将前后端拆离出来更加灵活，方便后续的维护和扩展；优化代码架构使其减少同游戏耦合，更加通用。
-- **搭建新的GUI**: 原先的方案过于臃肿，选用 [flutter](https://flutter.cn) 搭建一个全平台的界面端，界面更加舒适简洁
-- **新的OCR库**: 跟随 [LmeSzinc](https://github.com/LmeSzinc) 的步伐， [ppocr-onnx](https://github.com/triwinds/ppocr-onnx) 更加简易使用，精度更高速度更快 
-- **新的Assets管理**: 构建了一个新的Assets管理系统，更加方便的管理游戏资源如图片，文字，点击等等
-- **配置文件 [pydantic](https://github.com/pydantic/pydantic) 化**: pydantic 可以更加优雅的管理用户配置
+> 若你有更佳的策略（例如某副本的更穩流程/更快判斷），歡迎 PR 以具體改動為準確依據。
 
-## 相关项目 Relative Repositories
+---
 
-- [Alas](https://github.com/LmeSzinc/AzurLaneAutoScript): 碧蓝航线的自动化脚本
-- [SRC](https://github.com/LmeSzinc/StarRailCopilot): 星铁速溶茶，崩坏：星穹铁道脚本，基于下一代Alas框架。
-- [OASX](https://github.com/runhey/OASX): 同 OAS 对接的全平台 GUI
-- [NikkeAutoScript](https://github.com/takagisanmie/NIKKEAutoScript): 胜利女神：NIKKE 自动日常脚本
-- [AAS](https://github.com/TheFunny/ArisuAutoSweeper): 蔚蓝档案自动化脚本
-- [MAA](https://github.com/MaaAssistantArknights/MaaAssistantArknights): 明日方舟小助手，全日常一键长草
-- [FGO-py](https://github.com/hgjazhgj/FGO-py): 全自动免配置跨平台开箱即用的Fate/Grand Order助手
-- [OAS-website](https://github.com/runhey/OnmyojiAutoScript-website): OAS 的文档网站，使用 [docusaurus](https://docusaurus.io/) 构建
-- [ppocr-onnx](https://github.com/triwinds/ppocr-onnx): OCR 库，基于 onnxruntime 和 PaddleOCR
-- [gurs](https://github.com/2833844911/gurs): 基于赛贝尔曲线模拟滑动轨迹, 引入其轨迹模拟人手滑动
+## 安裝 Installation
+> **環境需求**：Windows、Python **3.10**（或相容 3.10.x）
 
-## 联系/加入我们 Contact/Join Us
+- 📖 [學會提問](https://runhey.github.io/OnmyojiAutoScript-website/docs/user-manual/scientific-question)：**必看**  
+- 🚀 [使用手冊](https://runhey.github.io/OnmyojiAutoScript-website/docs/user-manual/getting-started)：完整入門  
+- 🧩 [安裝教學](https://runhey.github.io/OnmyojiAutoScript-website/docs/user-manual/installation)：保母式步驟  
+- 🛠️ [開發文件](https://runhey.github.io/OnmyojiAutoScript-website/docs/development/preamble)：入門開發與架構概覽  
 
+> **提示**：文檔以上游為主，但步驟一致。
 
+---
 
-相对于其他的游戏，阴阳师玩家总体而言对脚本这类工具具有极高的排斥性。树大招风，无论你是否喜欢 OAS ，我们都希望你不在互联网上进行宣传，这保护 OAS , 也保护开发者们。
+## 回報問題 / 參與貢獻
+- 提 Issue 前請先閱讀「學會提問」，並附上：**版本、日誌、螢幕截圖/錄影、可重現步驟**。  
+- 問題與需求請在 **Issues**；修正/功能請送 **PR**（小步提交、附測試/截圖更佳）。  
+- 歡迎補充 **亞洲服專屬資產**（圖片模板、字串映射、活動流程）。
 
-为此保持较高的入群门槛: 
-#### QQ交流群: 465946275
-- 你的QQ等级必须大于32级(🌞🌞)，注册时间超过一年，低等级账号成分复杂，还请见谅。
-- 你必须拥有一个 Github 账户来点一个 **Star** (这并不影响你入群后取消Star)，同样的要求注册时间过半年。
-- 入群验证填入你的 Github `username`(不是`name`)，无需在意问题是什么，由QQ机器人审核(机器永远的对的)。
+---
 
-#### QQ开发群: 207613181 (有意开发本项目请加此群, 请不要胡乱加群)
+## 許可證 LICENSE
+本專案以 **GNU General Public License v3.0** 發佈。
 
-- 开发规划：[#354](https://github.com/runhey/OnmyojiAutoScript/issues/354)
-- OAS 继承了 Alas 的设计思路，极大简便了开发，欢迎提交 PR，挑选你感兴趣的部分进行开发即可。
-- OAS 仍在活跃中， 我们会不定期发布未来的工作在 Issues 上并标记为 `help wanted`，欢迎向 OAS 提交 PR，我们会认真阅读你的每一行代码的。
+---
 
-## 安装 Installation 
+## 聲明 Announcement
+本軟體開源、免費，僅供學習交流使用。開發者團隊擁有本專案的最終解釋權。使用本軟體產生的所有問題與本專案與開發者團隊無關。  
+OASA is a free open source software. **If you paid for OASA from any channel, please refund.**  
+OASA 是免費開源軟體，**若你在任何管道付費購買，請立即退款**。
 
-- [学会提问](https://runhey.github.io/OnmyojiAutoScript-website/docs/user-manual/scientific-question): 最基本的要求，**必看必学必会**
-- [用户手册](https://runhey.github.io/OnmyojiAutoScript-website/docs/user-manual/getting-started): 在线手册，不定期更新，包含所有使用说明
-- [安装教程](https://runhey.github.io/OnmyojiAutoScript-website/docs/user-manual/installation): 保姆式安装手册,多翻翻有惊喜
-- [开发文档](https://runhey.github.io/OnmyojiAutoScript-website/docs/development/preamble): 虽然迭代很多、年久失修，但入门开发必读，具体以源码为准
+---
 
-## 鸣谢 Acknowledgements
+## 關於 Alas（上游框架）
+OAS 基於碧藍航線腳本 [AzurLaneAutoScript](https://github.com/LmeSzinc/AzurLaneAutoScript)（簡稱 **Alas**）開發，並參考星穹鐵道腳本 [StarRailCopilot](https://github.com/LmeSzinc/StarRailCopilot) 的經驗；在其基礎上進行了：  
+- **設計重構**：前後端解耦，架構更通用、維護擴充更容易  
+- **全新 GUI**：採用 [Flutter](https://flutter.dev) 構建全平台界面  
+- **OCR 升級**：採用 [ppocr-onnx](https://github.com/triwinds/ppocr-onnx)，精度與效能兼顧  
+- **資產管理**：建立新的 Assets 系統以管理圖片/文字/點擊等資源  
+- **設定檔 pydantic 化**：用 [pydantic](https://github.com/pydantic/pydantic) 更優雅地管理配置
 
-感谢所有参与到开发/测试中的朋友们
+---
 
-[![Contributors](https://contributors-img.web.app/image?repo=runhey/OnmyojiAutoScript)](https://github.com/runhey/OnmyojiAutoScript/graphs/contributors)
+## 相關項目 Relative Repositories
+- [OAS（陸服版）](https://github.com/runhey/OnmyojiAutoScript/tree/dev)：陰陽師陸服自動化腳本  
+- [Alas](https://github.com/LmeSzinc/AzurLaneAutoScript)：碧藍航線自動化腳本  
+- [SRC](https://github.com/LmeSzinc/StarRailCopilot)：星穹鐵道腳本（下一代 Alas 框架）  
+- [OASX](https://github.com/runhey/OASX)：與 OAS 對接的全平台 GUI  
+- [NikkeAutoScript](https://github.com/takagisanmie/NIKKEAutoScript)：勝利女神：NIKKE 自動日常腳本  
+- [AAS](https://github.com/TheFunny/ArisuAutoSweeper)：蔚藍檔案自動化腳本  
+- [MAA](https://github.com/MaaAssistantArknights/MaaAssistantArknights)：明日方舟小助手  
+- [FGO-py](https://github.com/hgjazhgj/FGO-py)：Fate/Grand Order 助手  
+- [OAS-website](https://github.com/runhey/OnmyojiAutoScript-website)：OAS 文檔網站（[Docusaurus](https://docusaurus.io/)）  
+- [ppocr-onnx](https://github.com/triwinds/ppocr-onnx)：基於 onnxruntime 與 PaddleOCR 的 OCR  
+- [gurs](https://github.com/2833844911/gurs)：基於貝賽爾曲線的滑動軌跡模擬
 
-感谢所有完善文档的朋友们
+> 相較其他遊戲社群，陰陽師玩家對腳本排斥度較高。無論你是否喜歡 OASA，請**勿在公開網路宣傳**，以保護專案與開發者。
 
-[![Contributors](https://contributors-img.web.app/image?repo=runhey/OnmyojiAutoScript-website)](https://github.com/runhey/OnmyojiAutoScript-website/graphs/contributors)
+---
 
-<div align="center">
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=runhey/OnmyojiAutoScript&type=Date)](https://star-history.com/#runhey/OnmyojiAutoScript&Date)
-
-
-## ⚡ Visitor count
-
-![](https://profile-counter.glitch.me/runhey-OnmyojiAutoScript/count.svg)
-
-</div>
+### 社群
+Discord：<https://discord.gg/zNRdjZNmzZ>
