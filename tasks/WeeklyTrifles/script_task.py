@@ -216,7 +216,9 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
                 continue
             if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=1):
                 continue
-            if self.appear_then_click(self.I_WT_SE_SHARE, interval=1):
+            if self.appear(self.I_WT_SE_WECHAT, interval=1):
+                self.wait_until_stable(self.I_WT_SE_WECHAT, skip_first_screenshot=True, timer=Timer(3))
+                self.appear_then_click(self.I_WT_SE_WECHAT)
                 # 再次點擊分享按鈕，以避免分享畫面過黑找不到返回
                 continue
 
