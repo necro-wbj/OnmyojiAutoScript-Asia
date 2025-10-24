@@ -38,11 +38,10 @@
   {
     "itemName": "battle_success",
     "imageName": "battle_success.png",
-    "roiFront": "435,147,100,100",
-    "roiBack": "435,147,100,100",
+    "roiFront": "385,47,100,100",
+    "roiBack": "296,33,414,224",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
   }
 ]
-
