@@ -432,17 +432,18 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         :return:
         """
         logger.hr('Start utilize')
-        # if self.first_utilize:
-        #     self.swipe(self.S_U_END, interval=3)
-        #     self.first_utilize = False
-        #     if friend == SelectFriendList.SAME_SERVER:
-        #         self.switch_friend_list(SelectFriendList.DIFFERENT_SERVER)
-        #         self.switch_friend_list(SelectFriendList.SAME_SERVER)
-        #     else:
-        #         self.switch_friend_list(SelectFriendList.SAME_SERVER)
-        #         self.switch_friend_list(SelectFriendList.DIFFERENT_SERVER)
-        # else:
-        #     self.switch_friend_list(friend)
+        if(self.IS_CN_SERVER):
+            if self.first_utilize:
+                self.swipe(self.S_U_END, interval=3)
+                self.first_utilize = False
+                if friend == SelectFriendList.SAME_SERVER:
+                    self.switch_friend_list(SelectFriendList.DIFFERENT_SERVER)
+                    self.switch_friend_list(SelectFriendList.SAME_SERVER)
+                else:
+                    self.switch_friend_list(SelectFriendList.SAME_SERVER)
+                    self.switch_friend_list(SelectFriendList.DIFFERENT_SERVER)
+            else:
+                self.switch_friend_list(friend)
 
         # --------------- 结界卡选择 ---------------
         if not self._select_optimal_resource_card():
