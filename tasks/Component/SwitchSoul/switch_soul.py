@@ -197,9 +197,27 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
     def switch_soul_by_name(self, groupName, teamName):
         """
         保证在式神录的界面
+        支援多個分組和隊伍名稱，格式：'分組1|分組2|分組3'
+        :param groupName: 分組名稱，可以用 '|' 分隔多個OCR可能的變體
+        :param teamName: 隊伍名稱，可以用 '|' 分隔多個OCR可能的變體
         :return:
         """
         logger.hr('Switch soul by name')
+        
+        # 解析分組名稱列表
+        if isinstance(groupName, str) and '|' in groupName:
+            group_names = [name.strip() for name in groupName.split('|')]
+            logger.info(f'Multiple group names: {group_names}')
+        else:
+            group_names = [groupName] if isinstance(groupName, str) else [groupName]
+        
+        # 解析隊伍名稱列表
+        if isinstance(teamName, str) and '|' in teamName:
+            team_names = [name.strip() for name in teamName.split('|')]
+            logger.info(f'Multiple team names: {team_names}')
+        else:
+            team_names = [teamName] if isinstance(teamName, str) else [teamName]
+            
         # 滑动至分组最上层
         last_group_text = ''
         while 1:
@@ -213,28 +231,46 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
             last_group_text = now_group_text
         logger.info('Swipe to top of group')
 
-        # 判断有无目标分组
-        while 1:
+        # 判断有无目标分组（支援多個分組名稱匹配）
+        found_group = None
+        max_group_attempts = 10  # 防止無限循環
+        group_attempts = 0
+        
+        while group_attempts < max_group_attempts:
             self.screenshot()
             # 获取当前分组名
             results = self.O_SS_GROUP_NAME.detect_and_ocr(self.device.image)
             text1 = [result.ocr_text for result in results]
-            # 判断当前分组有无目标分组
-            result = set(text1).intersection({groupName})
-            # 有则跳出检测
-            if result and len(result) > 0:
+            
+            # 檢查所有可能的分組名稱
+            for group_name in group_names:
+                result = set(text1).intersection({group_name})
+                if result and len(result) > 0:
+                    found_group = list(result)[0]  # 取找到的實際名稱
+                    logger.info(f'Found group: {group_name} -> {found_group}')
+                    break
+            
+            # 有找到則跳出檢測
+            if found_group:
                 break
+                
             self.swipe(self.S_SS_GROUP_SWIPE_DOWN)
             sleep(1.5)
+            group_attempts += 1
+        
+        if not found_group:
+            logger.error(f'Group not found after {max_group_attempts} attempts. Target names: {group_names}')
+            return
+            
         logger.info('Swipe down to find target group')
 
-        # 选中分组
+        # 选中分组（使用找到的實際名稱）
         while 1:
             self.screenshot()
-            self.O_SS_GROUP_NAME.keyword = groupName
+            self.O_SS_GROUP_NAME.keyword = found_group
             if self.ocr_appear_click(self.O_SS_GROUP_NAME):
                 break
-        logger.info(f'Select group {groupName}')
+        logger.info(f'Select group {found_group} from list {group_names}')
 
         # 滑动至阵容最上层
         last_team_text = ''
@@ -250,40 +286,75 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
             last_team_text = now_team_text
         logger.info('Swipe to top of team')
 
-        # 判断当前分组有无目标阵容
-        while 1:
+        # 判断当前分组有无目标阵容（支援多個名稱匹配）
+        found_team = None
+        max_attempts = 20  # 防止無限循環
+        attempts = 0
+        
+        while attempts < max_attempts:
             self.screenshot()
             # 获取当前阵容名
             results = self.O_SS_TEAM_NAME.detect_and_ocr(self.device.image)
             text1 = [result.ocr_text for result in results]
-            # 判断当前分组有无目标阵容
-            result = set(text1).intersection({teamName})
-            # 有则跳出检测
-            if result and len(result) > 0:
+            
+            # 檢查所有可能的隊伍名稱
+            for team_name in team_names:
+                result = set(text1).intersection({team_name})
+                if result and len(result) > 0:
+                    found_team = list(result)[0]  # 取找到的實際名稱
+                    logger.info(f'Found team: {team_name} -> {found_team}')
+                    break
+            
+            # 有找到則跳出檢測
+            if found_team:
                 break
+                
             self.swipe(self.S_SS_TEAM_SWIPE_UP, 0.3)
+            sleep(1)
+            attempts += 1
+        
+        if not found_team:
+            logger.error(f'Team not found after {max_attempts} attempts. Target names: {team_names}')
+            return
+            
         logger.info('Swipe up to find target team')
 
-        # 选中分组
+        # 选中隊伍（使用找到的實際名稱）
         while 1:
             self.screenshot()
-            self.O_SS_TEAM_NAME.keyword = teamName
+            self.O_SS_TEAM_NAME.keyword = found_team
             if self.ocr_appear_click(self.O_SS_TEAM_NAME):
                 break
-        logger.info(f'Select team {teamName}')
+        logger.info(f'Select team {found_team} from list {team_names}')
         # 切换御魂
         cnt_click: int = 0
-        self.O_SS_TEAM_NAME.keyword = teamName
         while 1:
             self.screenshot()
             if cnt_click >= 4:
                 break
             if self.appear_then_click(self.I_SOU_SWITCH_SURE, interval=0.8):
                 continue
-            if self.ocr_appear_click_by_rule(self.O_SS_TEAM_NAME, self.I_SOU_CLICK_PRESENT, interval=1.5):
-                cnt_click += 1
-                continue
-        logger.info(f'Switch soul_one group {groupName} team {teamName}')
+            
+            # 重新根據 team_names 列表去匹配當前OCR結果
+            current_found_team = None
+            results = self.O_SS_TEAM_NAME.detect_and_ocr(self.device.image)
+            text1 = [result.ocr_text for result in results]
+            
+            # 檢查所有可能的隊伍名稱
+            for team_name in team_names:
+                result = set(text1).intersection({team_name})
+                if result and len(result) > 0:
+                    current_found_team = list(result)[0]
+                    logger.debug(f'Current OCR found: {team_name} -> {current_found_team}')
+                    break
+            
+            # 如果找到了匹配的隊伍名稱，使用它來點擊
+            if current_found_team:
+                self.O_SS_TEAM_NAME.keyword = current_found_team
+                if self.ocr_appear_click_by_rule(self.O_SS_TEAM_NAME, self.I_SOU_CLICK_PRESENT, interval=1.5):
+                    cnt_click += 1
+                    continue
+        logger.info(f'Switch soul_one group {found_group} team {found_team}')
 
     def ocr_appear_click_by_rule(self,
                                  target: RuleOcr,
