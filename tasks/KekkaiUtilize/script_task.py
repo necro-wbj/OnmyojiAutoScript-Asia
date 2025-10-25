@@ -20,6 +20,7 @@ from tasks.Component.ReplaceShikigami.replace_shikigami import ReplaceShikigami
 from tasks.GameUi.page import page_main, page_guild
 from module.base.utils import point2str
 import random
+from deploy.git import GitManager
 
 """ 结界蹭卡 """
 
@@ -56,7 +57,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         raise TaskEnd
 
     def recive_guild_ap_or_assets(self):
-        for i in range(1, 2):
+        for i in range(1, 5):
             self.ui_get_current_page()
             self.ui_goto(page_guild)
             # 在寮的主界面 检查是否有收取体力或者是收取寮资金
@@ -432,6 +433,8 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         :return:
         """
         logger.hr('Start utilize')
+        
+        # 亞服沒有跨區伺服器選項
         if(self.IS_CN_SERVER):
             if self.first_utilize:
                 self.swipe(self.S_U_END, interval=3)
@@ -749,12 +752,10 @@ if __name__ == "__main__":
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config('switch')
+    c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
-    for i in range(10):
-        t.perform_swipe_action()
-    t.recive_guild_ap_or_assets()
+    t.run()
     # t.check_utilize_add()
     # t.check_card_num('勾玉', 67)
     # t.screenshot()

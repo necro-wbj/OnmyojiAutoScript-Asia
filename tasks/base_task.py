@@ -41,6 +41,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
     current_count: int = None  # 当前运行的次数
 
     IS_CN_SERVER = False # 用來標記陸服特有功能
+    
 
     def __init__(self, config: Config, device: Device) -> None:
         """
