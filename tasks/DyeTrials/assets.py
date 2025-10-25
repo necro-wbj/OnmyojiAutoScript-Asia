@@ -20,7 +20,7 @@ class DyeTrialsAssets:
 	# 挑战 
 	I_FP_CHALLENGE = RuleImage(roi_front=(1159,598,60,29), roi_back=(1159,598,60,29), threshold=0.8, method="Template matching", file="./tasks/DyeTrials/fp/fp_fp_challenge.png")
 	# description 
-	I_BATTLE_SUCCESS = RuleImage(roi_front=(435,147,100,100), roi_back=(435,147,100,100), threshold=0.8, method="Template matching", file="./tasks/DyeTrials/fp/battle_success.png")
+	I_BATTLE_SUCCESS = RuleImage(roi_front=(385,47,100,100), roi_back=(296,33,414,224), threshold=0.8, method="Template matching", file="./tasks/DyeTrials/fp/battle_success.png")
 
 
 	# Ocr Rule Assets

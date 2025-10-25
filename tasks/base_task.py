@@ -40,7 +40,8 @@ class BaseTask(GlobalGameAssets, CostumeBase):
     limit_count: int = None  # 限制运行的次数
     current_count: int = None  # 当前运行的次数
 
-    IS_CN_SERVER = True # 用來標記陸服特有功能
+    IS_CN_SERVER = False # 用來標記陸服特有功能
+    
 
     def __init__(self, config: Config, device: Device) -> None:
         """
