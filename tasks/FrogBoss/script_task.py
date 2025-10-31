@@ -2,7 +2,7 @@
 # @author runhey
 # github https://github.com/runhey
 from cached_property import cached_property
-from datetime import datetime
+from datetime import datetime, time
 import requests
 import re
 import json
@@ -13,7 +13,7 @@ from module.atom.image import RuleImage
 from module.base.timer import Timer
 
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main
+from tasks.GameUi.page import page_main,page_town
 from tasks.Component.RightActivity.right_activity import RightActivity
 from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
 from tasks.Component.config_base import TimeDelta
@@ -43,6 +43,9 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
                 while 1:
                     self.screenshot()
                     if self.appear(self.I_BET_LEFT) and self.appear(self.I_BET_RIGHT):
+                        break
+                    if self.appear(self.I_FROG_BOSS_REST):
+                        logger.info('Frog Boss Rest')
                         break
                     if self.appear_then_click(self.I_BET_SUCCESS_BOX, interval=1):
                         continue
@@ -96,6 +99,7 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
         flag_glod_30 = 0
         count_left = self.O_LEFT_COUNT.ocr(self.device.image)
         count_right = self.O_RIGHT_COUNT.ocr(self.device.image)
+        logger.info(f'左側數量: {count_left}, 右側數量: {count_right}')
         match self.config.model.frog_boss.frog_boss_config.strategy_frog:
             case Strategy.Majority:
                 click_image = self.I_BET_LEFT if count_left > count_right else self.I_BET_RIGHT
@@ -114,7 +118,10 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
         while 1:
             self.screenshot()
             if self.appear(self.I_GOLD_30_CHECK):
-                break
+                logger.info('Gold 30 check appear')
+                if self.appear_then_click(self.I_GOLD_30, interval=3):
+                    logger.info('Gold 30 check appear (CLOSE)')
+                    break
             if gold_30_timer.reached():
                 logger.info('Gold 30 not appear')
                 break
@@ -125,6 +132,7 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
         while 1:
             self.screenshot()
             if self.appear(self.I_BETTED):
+                logger.info('betted')
                 break
             if self.appear_then_click(self.I_BET_SURE, interval=2) and flag_glod_30 == 1:
                 continue

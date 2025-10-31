@@ -10,6 +10,15 @@ from module.atom.list import RuleList
 class SougenbiAssets: 
 
 
+	# Click Rule Assets
+	# description 
+	C_C_GREED = RuleClick(roi_front=(172,144,299,100), roi_back=(172,144,299,100), name="c_greed")
+	# description 
+	C_C_ANGER = RuleClick(roi_front=(165,289,307,100), roi_back=(165,289,307,100), name="c_anger")
+	# description 
+	C_C_FOOLERY = RuleClick(roi_front=(166,435,303,100), roi_back=(166,435,303,100), name="c_foolery")
+
+
 	# Image Rule Assets
 	# 进入业原火 
 	I_S_SOUGENBI = RuleImage(roi_front=(405,97,301,414), roi_back=(405,97,301,414), threshold=0.8, method="Template matching", file="./tasks/Sougenbi/s/s_s_sougenbi.png")
@@ -24,24 +33,15 @@ class SougenbiAssets:
 	# description 
 	I_S_TEAM_UNLOCK = RuleImage(roi_front=(555,561,33,33), roi_back=(555,561,33,33), threshold=0.8, method="Template matching", file="./tasks/Sougenbi/s/s_s_team_unlock.png")
 	# 挑战 
-	I_S_FIRE = RuleImage(roi_front=(1105,585,100,100), roi_back=(1105,585,100,100), threshold=0.7, method="Template matching", file="./tasks/Sougenbi/s/s_s_fire.png")
+	I_S_FIRE = RuleImage(roi_front=(1105,585,100,57), roi_back=(1105,585,100,57), threshold=0.7, method="Template matching", file="./tasks/Sougenbi/s/s_s_fire.png")
 	# 确认进入业原火 
 	I_S_CHECK_SOUGENBI = RuleImage(roi_front=(772,222,307,292), roi_back=(772,222,307,292), threshold=0.8, method="Template matching", file="./tasks/Sougenbi/s/s_s_check_sougenbi.png")
 	# 贪 
-	I_S_FIRE_GREED = RuleImage(roi_front=(1132,640,21,33), roi_back=(1122,635,41,48), threshold=0.8, method="Template matching", file="./tasks/Sougenbi/s/s_s_fire_greed.png")
+	I_S_FIRE_GREED = RuleImage(roi_front=(1132,640,21,33), roi_back=(1122,629,41,54), threshold=0.8, method="Template matching", file="./tasks/Sougenbi/s/s_s_fire_greed.png")
 	# description 
 	I_S_FIRE_ANGER = RuleImage(roi_front=(1131,643,21,30), roi_back=(1122,636,40,42), threshold=0.8, method="Template matching", file="./tasks/Sougenbi/s/s_s_fire_anger.png")
 	# 痴 
-	I_S_FIRE_FOOLERY = RuleImage(roi_front=(1130,641,22,31), roi_back=(1117,630,46,52), threshold=0.8, method="Template matching", file="./tasks/Sougenbi/s/s_s_fire_foolery.png")
-
-
-	# Click Rule Assets
-	# description 
-	C_C_GREED = RuleClick(roi_front=(172,144,299,100), roi_back=(172,144,299,100), name="c_greed")
-	# description 
-	C_C_ANGER = RuleClick(roi_front=(165,289,307,100), roi_back=(165,289,307,100), name="c_anger")
-	# description 
-	C_C_FOOLERY = RuleClick(roi_front=(166,435,303,100), roi_back=(166,435,303,100), name="c_foolery")
+	I_S_FIRE_FOOLERY = RuleImage(roi_front=(1130,641,22,31), roi_back=(1117,627,46,55), threshold=0.8, method="Template matching", file="./tasks/Sougenbi/s/s_s_fire_foolery.png")
 
 
 	# Ocr Rule Assets

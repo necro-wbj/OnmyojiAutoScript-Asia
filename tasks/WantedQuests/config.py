@@ -88,15 +88,23 @@ class WantedQuestsConfig(BaseModel):
     invite_friend_name: str = Field(default=str(""), description="invite_friend_name_help")
     cooperation_type: CooperationSelectMaskDescription = Field(default=CooperationSelectMaskDescription.Any,
                                                                description="cooperation_type_help")
-    # 找怪优先级  挑战 > 秘闻 > 探索
-    battle_priority: str = Field(default='挑战 > 秘闻 > 探索', description='battle_priority_help')
+    # 找怪優先級  挑戰 > 秘聞 > 探索
+    battle_priority: str = Field(default='挑戰 > 秘聞 > 探索', description='battle_priority_help')
     # 只完成协作任务
     cooperation_only: bool = Field(default=False, description="cooperation_only_help")
     # 忽略任务的任务目标名称（“酒吞童子”等）,多个用逗号“，,"分隔
     unwanted_boss_names: str = Field(default='酒吞童子,阎魔', description='unwanted_boss_name_help')
 
 
+class WantedQuestsAdditionalConfig(BaseModel):
+    # 是否跳過高層數
+    skip_high_level: bool = Field(default=True, description='skip_high_level_help')
+    # 忽略此名稱的目標挑戰,多個用逗號“，”分隔
+    unwanted_destination_names: str = Field(default='', description='recommend destination as 奇緣,世界')
+
+
 class WantedQuests(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     wanted_quests_config: WantedQuestsConfig = Field(default_factory=WantedQuestsConfig)
     switch_soul_config: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
+    additional_config: WantedQuestsAdditionalConfig = Field(default_factory=WantedQuestsAdditionalConfig)

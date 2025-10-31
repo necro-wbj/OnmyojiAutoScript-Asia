@@ -9,7 +9,6 @@ from module.logger import logger
 
 from tasks.Component.config_base import ConfigBase, TimeDelta, Time
 
-
 class ApMode(str, Enum):
     AP_ACTIVITY = 'ap_activity'
     AP_GAME = 'ap_game'
@@ -30,9 +29,9 @@ class GeneralClimb(ConfigBase):
     # # boss爬塔buff
     # boss_buff: str = Field(default='buff_1,buff_3', description='boss战爬塔加成,buff1-5,加成页从左往右顺序,清空则不切换加成')
     # 结束后激活 御魂清理
-    active_souls_clean: bool = Field(default=False, description='是否运行结束后清理御魂')
+    active_souls_clean: bool = Field(default=False, description='active_souls_clean_help')
     # 点击战斗随机休息
-    random_sleep: bool = Field(default=False, description='是否启用在点击战斗前随机休息')
+    random_sleep: bool = Field(default=False, description='random_delay_help')
 
     @property
     def limit_time_v(self) -> timedelta:
@@ -77,3 +76,21 @@ class GeneralClimb(ConfigBase):
                     logger.warning('Invalid limit_time value. Expected format: HH:MM:SS')
                     return time(hour=0, minute=30, second=0)
         return value
+
+    @validator('ap_limit', pre=True, always=True)
+    def reset_game_max(cls, value):
+        def_value = int(300)
+        if isinstance(value, str):
+            try:
+                return int(value)
+            except ValueError:
+                logger.warning('Invalid ap_limit value. Expected format: int')
+                return def_value
+        elif isinstance(value, int):
+            return def_value
+        return def_value
+
+    # 适用于活动爬塔仅有游戏体力的情况
+    # @field_validator('ap_mode', mode='after')
+    # def check_mode(cls, value):
+    #     return ApMode.AP_GAME

@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
+import re
 
 from time import sleep
 
@@ -38,6 +39,8 @@ class BaseTask(GlobalGameAssets, CostumeBase):
     limit_time: timedelta = None  # 限制运行的时间，是软时间，不是硬时间
     limit_count: int = None  # 限制运行的次数
     current_count: int = None  # 当前运行的次数
+
+    IS_CN_SERVER = False # 用來標記陸服特有功能
 
     def __init__(self, config: Config, device: Device) -> None:
         """
@@ -421,7 +424,10 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             case OcrMode.FULL:  # 全匹配
                 appear = result != (0, 0, 0, 0)
             case OcrMode.SINGLE:
-                appear = result == target.keyword
+                # 測試使用regex 保留原始邏輯
+                # appear = result == target.keyword
+                appear = re.match(target.keyword,result)
+                logger.info(f"Ocr appear {appear}")
             case OcrMode.DIGIT:
                 appear = result == int(target.keyword)
             case OcrMode.DIGITCOUNTER:
@@ -571,6 +577,8 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                     # 一直点击
                     if self.ui_reward_appear_click():
                         continue
+                    #連續點擊會直接把獎勵點擊掉
+                    sleep(0.5)
                 break
             if _timer.reached():
                 logger.warning('Get reward timeout')
