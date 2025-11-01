@@ -50,13 +50,13 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         self.check_box_ap_or_exp(con.box_ap_enable, con.box_exp_enable, con.box_exp_waste)
 
         # 收取寮资金和体力
-        self.recive_guild_ap_or_assets()
+        self.recive_guild_ap_or_assets(con.harvest_guild_max_times)
         if not con.utilize_enable:
             self.set_next_run(task='KekkaiUtilize', finish=True, success=True)
         raise TaskEnd
 
-    def recive_guild_ap_or_assets(self):
-        for i in range(1, 2):
+    def recive_guild_ap_or_assets(self, max_tries: int = 3):
+        for i in range(1, max_tries+1):
             self.ui_get_current_page()
             self.ui_goto(page_guild)
             # 在寮的主界面 检查是否有收取体力或者是收取寮资金
@@ -198,7 +198,8 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                 break
             if self.appear(self.I_SHI_DEFENSE):
                 break
-
+            if self.appear_then_click(self.I_PLANT_TREE_CLOSE):
+                continue
             if self.appear_then_click(self.I_GUILD_REALM, interval=1):
                 continue
 
@@ -725,6 +726,8 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                 break
             if self.appear(self.I_GUILD_REALM):
                 break
+            if self.appear_then_click(self.I_PLANT_TREE_CLOSE):
+                continue
 
             if self.appear_then_click(self.I_UI_BACK_RED, interval=1):
                 continue
@@ -749,12 +752,10 @@ if __name__ == "__main__":
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config('switch')
+    c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
-    for i in range(10):
-        t.perform_swipe_action()
-    t.recive_guild_ap_or_assets()
+    t.run()
     # t.check_utilize_add()
     # t.check_card_num('勾玉', 67)
     # t.screenshot()
