@@ -83,7 +83,7 @@
   {
     "itemName": "betted",
     "imageName": "fb_betted.png",
-    "roiFront": "93,352,125,54",
+    "roiFront": "109,308,101,54",
     "roiBack": "49,283,1192,161",
     "method": "Template matching",
     "threshold": 0.8,

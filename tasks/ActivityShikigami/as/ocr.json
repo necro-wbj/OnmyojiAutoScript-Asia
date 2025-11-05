@@ -1,8 +1,8 @@
 [
   {
     "itemName": "remain_ap",
-    "roiFront": "727,18,105,28",
-    "roiBack": "716,11,122,41",
+    "roiFront": "910,18,62,28",
+    "roiBack": "910,18,62,28",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
@@ -28,8 +28,8 @@
   },
   {
     "itemName": "remain_ap_activity2",
-    "roiFront": "1115,25,88,29",
-    "roiBack": "1107,14,103,50",
+    "roiFront": "558,18,47,29",
+    "roiBack": "558,18,47,29",
     "mode": "Digit",
     "method": "Default",
     "keyword": "",
@@ -37,11 +37,11 @@
   },
   {
     "itemName": "entry_activity",
-    "roiFront": "73,189,98,32",
-    "roiBack": "72,188,98,32",
+    "roiFront": "70,103,98,32",
+    "roiBack": "70,103,98,32",
     "mode": "Single",
     "method": "Default",
-    "keyword": "临战演武",
+    "keyword": ".守平.",
     "description": "从左侧进入战斗"
   },
   {
@@ -51,7 +51,7 @@
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
-    "description": "boss剩余攻击次数"
+    "description": "boss剩餘攻擊次數"
   },
   {
     "itemName": "fire",
@@ -59,8 +59,8 @@
     "roiBack": "1129,570,100,100",
     "mode": "Single",
     "method": "Default",
-    "keyword": "挑战",
-    "description": "挑战"
+    "keyword": "挑戰",
+    "description": "挑戰"
   },
   {
     "itemName": "remain_ap100",
@@ -69,15 +69,15 @@
     "mode": "Digit",
     "method": "Default",
     "keyword": "",
-    "description": "100体活动门票检测"
+    "description": "100體活動門票檢測"
   },
   {
     "itemName": "enter_ap100",
-    "roiFront": "73,98,95,32",
-    "roiBack": "5,79,256,108",
+    "roiFront": "72,187,95,32",
+    "roiBack": "7,172,256,108",
     "mode": "Single",
     "method": "Default",
-    "keyword": "将魂试炼",
-    "description": "进入100体活动标识"
+    "keyword": "將靈魂試煉",
+    "description": "進入100體活動標識"
   }
 ]

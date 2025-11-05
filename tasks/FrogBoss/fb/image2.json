@@ -1,12 +1,30 @@
 [
   {
+    "itemName": "frog_boss_in",
+    "imageName": "fb_frog_boss_in.png",
+    "roiFront": "552,1,141,42",
+    "roiBack": "552,1,141,42",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "in frog boss page"
+  },
+  {
     "itemName": "frog_boss_enter",
     "imageName": "fb_frog_boss_enter.png",
-    "roiFront": "1191,391,36,38",
-    "roiBack": "1174,135,78,320",
+    "roiFront": "1181,153,59,54",
+    "roiBack": "1181,153,59,54",
     "method": "Template matching",
-    "threshold": 0.7,
-    "description": "description"
+    "threshold": 0.6,
+    "description": "frog_boss_enter"
+  },
+  {
+    "itemName": "frog_boss_town_enter",
+    "imageName": "fb_frog_boss_town_enter.png",
+    "roiFront": "122,263,110,33",
+    "roiBack": "122,263,500,33",
+    "method": "Template matching",
+    "threshold": 0.6,
+    "description": "frog_boss_town_enter"
   },
   {
     "itemName": "frog_boss_rest",

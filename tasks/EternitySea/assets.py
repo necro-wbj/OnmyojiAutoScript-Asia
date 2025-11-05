@@ -28,8 +28,8 @@ class EternitySeaAssets:
 
 
 	# List Rule Assets
-	# 永生之海层数列表 
-	L_LAYER_LIST = RuleList(folder="./tasks/EternitySea/res", direction="vertical", mode="ocr", roi_back=(138,127,353,435), size=(56, 68), 
-					 array=["壹", "贰", "叁", "肆"])
+	# 这个是御魂界面选择不同层数的 
+	L_LAYER_LIST = RuleList(folder="./tasks/EternitySea/res", direction="vertical", mode="ocr", roi_back=(138,130,359,430), size=(41, 91), 
+					 array=["壹", "贰", "参", "肆"])
 
 

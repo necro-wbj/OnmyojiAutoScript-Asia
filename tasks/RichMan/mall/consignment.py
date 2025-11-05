@@ -28,12 +28,15 @@ class Consignment(Buy, MallNavbar):
             logger.info('Consignment buy_sale_ticket is not enable')
             return
         self._enter_consignment()
+        # if script run too fast, it may not appear need to wait it
+        self.wait_until_appear(self.I_CON_ENTER)
         self.ui_click(self.I_CON_ENTER, self.I_CON_ENTER_CHECK)
         time.sleep(0.5)
         self.screenshot()
+        # if enable it set is as always enough
         if not self.mall_check_money(3, 100):
             logger.warning('Consignment money is not enough')
-            return
+            # return
         remain_number = self.O_CON_NUMBER.ocr(self.device.image)
         if remain_number == 0:
             logger.warning('Consignment number is 0')

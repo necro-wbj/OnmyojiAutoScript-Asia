@@ -7,7 +7,6 @@ from time import sleep
 import cv2
 import numpy as np
 import random
-import tasks.Component.GeneralBattle.config_general_battle
 from datetime import datetime, timedelta, time
 from module.atom.click import RuleClick
 from module.atom.ocr import RuleOcr
@@ -20,6 +19,10 @@ from tasks.ActivityShikigami.config import SwitchSoulConfig, GeneralBattleConfig
 from tasks.Component.BaseActivity.base_activity import BaseActivity
 from tasks.Component.BaseActivity.config_activity import GeneralClimb
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
+from tasks.Component.BaseActivity.base_activity import BaseActivity
+from tasks.Component.BaseActivity.config_activity import ApMode
+from tasks.ActivityShikigami.assets import ActivityShikigamiAssets
+from tasks.GameUi.page import page_main, page_shikigami_records
 from tasks.GameUi.game_ui import GameUi
 import tasks.GameUi.page as game
 from typing import Any
@@ -334,23 +337,10 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             ok = 0
             while ok <= 3:
                 self.screenshot()
-                # 打开buff面板
-                self.click(buff_box, interval=1.5)
-                ok = (ok + 1) if self.appear(buff_box_empty_list[i]) else 0
-                # 卸下buff
-                self.appear_then_click(self.I_BUFF_DOWN, interval=0.5)
-            logger.info(f'Down {buff_list[i]} ok')
-        for i, buff_box in enumerate(buff_box_list):
-            logger.info(f'Start up {buff_list[i]}')
-            ok = 0
-            while ok <= 3:
-                self.screenshot()
-                # 打开buff面板
-                self.click(buff_box, interval=1.5)
-                ok = (ok + 1) if not self.appear(buff_box_empty_list[i]) else 0
-                # 装上buff
-                self.appear_then_click(self.I_BUFF_UP, buff_up_map[buff_list[i]], interval=0.5)
-            logger.info(f'Up {buff_list[i]} ok')
+                if self.appear_then_click(self.I_LOCK, interval=1):
+                    continue
+                if self.appear(self.I_UNLOCK):
+                    break
 
     def put_status(self):
         """
@@ -442,6 +432,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         从庭院到活动的爬塔界面
         :return:
         """
+
         logger.hr("Enter Shikigami", 2)
         self.ui_goto(game.page_climb_act)
 

@@ -2,8 +2,8 @@
   {
     "itemName": "ryou_toppa",
     "imageName": "res_ryou_toppa.png",
-    "roiFront": "1191,352,78,116",
-    "roiBack": "1161,323,118,193",
+    "roiFront": "1216,366,31,87",
+    "roiBack": "1191,352,78,200",
     "method": "Template matching",
     "threshold": 0.6,
     "description": "寮突"
@@ -41,7 +41,7 @@
     "roiFront": "134,417,241,40",
     "roiBack": "134,417,241,40",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.75,
     "description": "寮击破奖励"
   },
   {
@@ -77,7 +77,16 @@
     "roiFront": "134,415,232,38",
     "roiBack": "134,415,232,38",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.7,
     "description": "击破后的寮奖励"
+  },
+  {
+    "itemName": "wait_start_ryou_toppa",
+    "imageName": "res_wait_start_ryou_toppa.png",
+    "roiFront": "460,583,357,40.33333333333326",
+    "roiBack": "460,583,357,40.33333333333326",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]

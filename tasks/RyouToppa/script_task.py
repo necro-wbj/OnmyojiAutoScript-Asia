@@ -110,7 +110,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
             if self.appear(self.I_REAL_RAID_REFRESH, threshold=0.8):
                 if self.appear_then_click(self.I_RYOU_TOPPA, interval=1):
                     continue
-            # 攻破阴阳寮，说明寮突已开，则退出
+            # 攻破陰陽寮，說明寮突已開，则退出
             elif self.appear(self.I_SUCCESS_PENETRATION, threshold=0.8):
                 ryou_toppa_start_flag = True
                 ryou_toppa_success_penetration = True
@@ -125,7 +125,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
                 ryou_toppa_start_flag = False
                 break
             # 出现寮奖励， 说明寮突已开
-            elif self.appear(self.I_RYOU_REWARD, threshold=0.8) or self.appear(self.I_RYOU_REWARD_90, threshold=0.8):
+            elif self.appear(self.I_RYOU_REWARD, threshold=0.7) or self.appear(self.I_RYOU_REWARD_90):
                 ryou_toppa_start_flag = True
                 break
 
@@ -307,11 +307,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
             if click_failure_count >= 5:
                 logger.warning("Click failure, check your click position")
                 return False
-            if not self.appear(self.I_TOPPA_RECORD, threshold=0.85):
-                time.sleep(1)
-                self.screenshot()
-                if self.appear(self.I_TOPPA_RECORD, threshold=0.85):
-                    continue
+            if self.is_in_battle(False):
                 logger.info("Start attach area [%s]" % str(index + 1))
                 return self.run_general_battle(config=self.config.ryou_toppa.general_battle_config)
 
