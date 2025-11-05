@@ -60,15 +60,6 @@ class WantedQuestsAssets:
 
 	# Image Rule Assets
 	# description 
-	I_WQC_LOCK = RuleImage(roi_front=(620,528,27,31), roi_back=(620,528,27,31), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/chanllenge/chanllenge_wqc_lock.png")
-	# description 
-	I_WQC_UNLOCK = RuleImage(roi_front=(621,527,26,28), roi_back=(621,527,26,28), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/chanllenge/chanllenge_wqc_unlock.png")
-	# 挑战 
-	I_WQC_FIRE = RuleImage(roi_front=(893,503,123,64), roi_back=(871,485,164,91), threshold=0.7, method="Template matching", file="./tasks/WantedQuests/chanllenge/chanllenge_wqc_fire.png")
-
-
-	# Image Rule Assets
-	# description 
 	I_WQ_INVITE_1 = RuleImage(roi_front=(137,361,39,47), roi_back=(108,338,100,100), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/invite_wq_invite_1.png")
 	# description 
 	I_WQ_INVITE_2 = RuleImage(roi_front=(462,361,37,47), roi_back=(417,336,100,100), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/invite/invite_wq_invite_2.png")
@@ -174,6 +165,11 @@ class WantedQuestsAssets:
 	I_WQ_LIST_TOP_BOTTOM_CHECK = RuleImage(roi_front=(120,125,25,425), roi_back=(120,125,25,425), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_list_top_bottom_check.png")
 
 
+	# Swipe Rule Assets
+	# 手指向上滑动 
+	S_WQ_LIST_UP = RuleSwipe(roi_front=(60,250,2,4), roi_back=(65,200,2,4), mode="default", name="wq_list_up")
+
+
 	# Image Rule Assets
 	# 奇怪了之前的不能用 
 	I_WQSE_FIRE = RuleImage(roi_front=(1071,575,64,64), roi_back=(1016,520,223,173), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_wqse_fire.png")
@@ -183,8 +179,12 @@ class WantedQuestsAssets:
 	I_WQ_NIAN = RuleImage(roi_front=(19,176,100,100), roi_back=(0,153,166,273), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/wq/wq_wq_nian.png")
 
 
-	# Swipe Rule Assets
-	# 手指向上滑动 
-	S_WQ_LIST_UP = RuleSwipe(roi_front=(60,250,2,4), roi_back=(65,200,2,4), mode="default", name="wq_list_up")
+	# Image Rule Assets
+	# description 
+	I_WQC_LOCK = RuleImage(roi_front=(620,528,27,31), roi_back=(620,528,27,31), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/chanllenge/chanllenge_wqc_lock.png")
+	# description 
+	I_WQC_UNLOCK = RuleImage(roi_front=(621,527,26,28), roi_back=(621,527,26,28), threshold=0.8, method="Template matching", file="./tasks/WantedQuests/chanllenge/chanllenge_wqc_unlock.png")
+	# 挑战 
+	I_WQC_FIRE = RuleImage(roi_front=(893,503,123,64), roi_back=(871,485,164,91), threshold=0.7, method="Template matching", file="./tasks/WantedQuests/chanllenge/chanllenge_wqc_fire.png")
 
 
