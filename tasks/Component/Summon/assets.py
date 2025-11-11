@@ -25,6 +25,11 @@ class SummonAssets:
 	I_SM_EVENT = RuleImage(roi_front=(103,20,130,41), roi_back=(0,0,260,81), threshold=0.8, method="Template matching", file="./tasks/Component/Summon/sm/sm_sm_event.png")
 
 
+	# Ocr Rule Assets
+	# Ocr-description 
+	O_ONE_TICKET = RuleOcr(roi=(574,681,100,32), area=(574,681,100,32), mode="Single", method="Default", keyword="", name="one_ticket")
+
+
 	# Swipe Rule Assets
 	# description 
 	S_RANDOM_SWIPE_1 = RuleSwipe(roi_front=(459,136,369,100), roi_back=(456,448,400,100), mode="default", name="random_swipe_1")
@@ -34,10 +39,5 @@ class SummonAssets:
 	S_RANDOM_SWIPE_3 = RuleSwipe(roi_front=(401,123,100,440), roi_back=(762,122,100,434), mode="default", name="random_swipe_3")
 	# description 
 	S_RANDOM_SWIPE_4 = RuleSwipe(roi_front=(777,128,100,412), roi_back=(431,120,100,444), mode="default", name="random_swipe_4")
-
-
-	# Ocr Rule Assets
-	# Ocr-description 
-	O_ONE_TICKET = RuleOcr(roi=(574,681,100,32), area=(574,681,100,32), mode="Single", method="Default", keyword="", name="one_ticket")
 
 

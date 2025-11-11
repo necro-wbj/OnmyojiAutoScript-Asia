@@ -10,6 +10,19 @@ from module.atom.list import RuleList
 class DelegationAssets: 
 
 
+	# Click Rule Assets
+	# description 
+	C_D_1 = RuleClick(roi_front=(162,496,100,166), roi_back=(162,496,100,166), name="d_1")
+	# description 
+	C_D_2 = RuleClick(roi_front=(293,493,100,170), roi_back=(293,493,100,170), name="d_2")
+	# description 
+	C_D_3 = RuleClick(roi_front=(427,492,100,170), roi_back=(427,492,100,170), name="d_3")
+	# description 
+	C_D_4 = RuleClick(roi_front=(563,493,100,174), roi_back=(563,493,100,174), name="d_4")
+	# description 
+	C_D_5 = RuleClick(roi_front=(695,491,100,178), roi_back=(695,491,100,178), name="d_5")
+
+
 	# Image Rule Assets
 	# 委派式神 
 	I_D_CONFIRM = RuleImage(roi_front=(979,302,152,62), roi_back=(979,302,152,62), threshold=0.8, method="Template matching", file="./tasks/Delegation/d/d_d_confirm.png")
@@ -31,19 +44,6 @@ class DelegationAssets:
 	I_D_SELECT_5 = RuleImage(roi_front=(767,593,41,40), roi_back=(721,556,103,86), threshold=0.7, method="Template matching", file="./tasks/Delegation/d/d_d_select_5.png")
 	# 返回 
 	I_D_BACK = RuleImage(roi_front=(940,415,138,51), roi_back=(940,415,138,51), threshold=0.8, method="Template matching", file="./tasks/Delegation/d/d_d_back.png")
-
-
-	# Click Rule Assets
-	# description 
-	C_D_1 = RuleClick(roi_front=(162,496,100,166), roi_back=(162,496,100,166), name="d_1")
-	# description 
-	C_D_2 = RuleClick(roi_front=(293,493,100,170), roi_back=(293,493,100,170), name="d_2")
-	# description 
-	C_D_3 = RuleClick(roi_front=(427,492,100,170), roi_back=(427,492,100,170), name="d_3")
-	# description 
-	C_D_4 = RuleClick(roi_front=(563,493,100,174), roi_back=(563,493,100,174), name="d_4")
-	# description 
-	C_D_5 = RuleClick(roi_front=(695,491,100,178), roi_back=(695,491,100,178), name="d_5")
 
 
 	# Ocr Rule Assets
