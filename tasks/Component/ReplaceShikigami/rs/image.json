@@ -142,5 +142,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "智能放入"
+  },
+  {
+    "itemName": "rs_ur",
+    "imageName": "rs_rs_ur.png",
+    "roiFront": "149,623,56,58",
+    "roiBack": "136,603,88,95",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "rs_ur_selected",
+    "imageName": "rs_rs_ur_selected.png",
+    "roiFront": "36,620,54,58",
+    "roiBack": "14,601,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]
