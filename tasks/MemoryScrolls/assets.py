@@ -10,6 +10,25 @@ from module.atom.list import RuleList
 class MemoryScrollsAssets: 
 
 
+	# Click Rule Assets
+	# 进入卷一 
+	C_MS_SCROLL_1 = RuleClick(roi_front=(170,157,279,192), roi_back=(170,157,279,192), name="ms_scroll_1")
+	# 进入卷二 
+	C_MS_SCROLL_2 = RuleClick(roi_front=(490,135,297,210), roi_back=(490,135,297,210), name="ms_scroll_2")
+	# 进入卷三 
+	C_MS_SCROLL_3 = RuleClick(roi_front=(836,135,304,210), roi_back=(836,135,304,210), name="ms_scroll_3")
+	# 进入卷四 
+	C_MS_SCROLL_4 = RuleClick(roi_front=(137,389,305,206), roi_back=(137,389,305,206), name="ms_scroll_4")
+	# 进入卷五 
+	C_MS_SCROLL_5 = RuleClick(roi_front=(491,390,303,207), roi_back=(491,390,303,207), name="ms_scroll_5")
+	# 进入卷六 
+	C_MS_SCROLL_6 = RuleClick(roi_front=(835,389,303,204), roi_back=(835,389,303,204), name="ms_scroll_6")
+	# 贡献完成跳结算 
+	C_MS_CONTRIBUTED = RuleClick(roi_front=(108,509,993,190), roi_back=(108,509,993,190), name="ms_contributed")
+	# 双绘卷之二 
+	C_MS_DOUBLE_SCROLLS_2 = RuleClick(roi_front=(714,128,464,397), roi_back=(714,128,464,397), name="ms_double_scrolls_2")
+
+
 	# Image Rule Assets
 	# 进入绘卷主界面 
 	I_MS_ENTER = RuleImage(roi_front=(1169,155,24,55), roi_back=(1169,155,24,55), threshold=0.5, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_enter.png")
@@ -50,24 +69,5 @@ class MemoryScrollsAssets:
 	S_MS_SWIPE_M = RuleSwipe(roi_front=(838,352,37,23), roi_back=(1176,326,83,84), mode="default", name="ms_swipe_m")
 	# 大碎片拉满 
 	S_MS_SWIPE_L = RuleSwipe(roi_front=(839,503,34,25), roi_back=(1175,473,78,85), mode="default", name="ms_swipe_l")
-
-
-	# Click Rule Assets
-	# 进入卷一 
-	C_MS_SCROLL_1 = RuleClick(roi_front=(170,157,279,192), roi_back=(170,157,279,192), name="ms_scroll_1")
-	# 进入卷二 
-	C_MS_SCROLL_2 = RuleClick(roi_front=(490,135,297,210), roi_back=(490,135,297,210), name="ms_scroll_2")
-	# 进入卷三 
-	C_MS_SCROLL_3 = RuleClick(roi_front=(836,135,304,210), roi_back=(836,135,304,210), name="ms_scroll_3")
-	# 进入卷四 
-	C_MS_SCROLL_4 = RuleClick(roi_front=(137,389,305,206), roi_back=(137,389,305,206), name="ms_scroll_4")
-	# 进入卷五 
-	C_MS_SCROLL_5 = RuleClick(roi_front=(491,390,303,207), roi_back=(491,390,303,207), name="ms_scroll_5")
-	# 进入卷六 
-	C_MS_SCROLL_6 = RuleClick(roi_front=(835,389,303,204), roi_back=(835,389,303,204), name="ms_scroll_6")
-	# 贡献完成跳结算 
-	C_MS_CONTRIBUTED = RuleClick(roi_front=(108,509,993,190), roi_back=(108,509,993,190), name="ms_contributed")
-	# 双绘卷之二 
-	C_MS_DOUBLE_SCROLLS_2 = RuleClick(roi_front=(714,128,464,397), roi_back=(714,128,464,397), name="ms_double_scrolls_2")
 
 

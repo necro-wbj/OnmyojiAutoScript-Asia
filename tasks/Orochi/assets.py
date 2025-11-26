@@ -10,17 +10,6 @@ from module.atom.list import RuleList
 class OrochiAssets: 
 
 
-	# List Rule Assets
-	# 这个是御魂界面选择不同层数的 
-	L_LAYER_LIST = RuleList(folder="./tasks/Orochi/res", direction="vertical", mode="ocr", roi_back=(273,130,52,500), size=(45, 88), 
-					 array=["壹", "贰", "参", "肆", "伍", "陆", "柒", "捌", "玖", "拾", "悲", "神"])
-
-
-	# Ocr Rule Assets
-	# Ocr-description 
-	O_O_TEST_OCR = RuleOcr(roi=(126,136,360,491), area=(126,136,360,491), mode="Full", method="Default", keyword="", name="o_test_ocr")
-
-
 	# Image Rule Assets
 	# 八级大蛇进入 
 	I_OROCHI = RuleImage(roi_front=(55,104,295,406), roi_back=(55,104,295,406), threshold=0.8, method="Template matching", file="./tasks/Orochi/o/o_orochi.png")
@@ -36,5 +25,16 @@ class OrochiAssets:
 	I_SHI_RECORDS = RuleImage(roi_front=(821,638,48,45), roi_back=(821,638,48,45), threshold=0.8, method="Template matching", file="./tasks/Orochi/o/o_shi_records.png")
 	# 小小宠物，发现宝藏 
 	I_PET_PRESENT = RuleImage(roi_front=(873,184,62,147), roi_back=(873,184,62,147), threshold=0.8, method="Template matching", file="./tasks/Orochi/o/o_pet_present.png")
+
+
+	# List Rule Assets
+	# 这个是御魂界面选择不同层数的 
+	L_LAYER_LIST = RuleList(folder="./tasks/Orochi/res", direction="vertical", mode="ocr", roi_back=(273,130,52,500), size=(45, 88), 
+					 array=["壹", "贰", "参", "肆", "伍", "陆", "柒", "捌", "玖", "拾", "悲", "神"])
+
+
+	# Ocr Rule Assets
+	# Ocr-description 
+	O_O_TEST_OCR = RuleOcr(roi=(126,136,360,491), area=(126,136,360,491), mode="Full", method="Default", keyword="", name="o_test_ocr")
 
 
