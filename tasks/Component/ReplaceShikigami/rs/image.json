@@ -11,8 +11,8 @@
   {
     "itemName": "rs_material",
     "imageName": "rs_rs_material.png",
-    "roiFront": "32,283,59,56",
-    "roiBack": "32,283,59,56",
+    "roiFront": "41,288,50,50",
+    "roiBack": "12,264,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "素材"
@@ -20,8 +20,8 @@
   {
     "itemName": "rs_n",
     "imageName": "rs_rs_n.png",
-    "roiFront": "138,299,57,59",
-    "roiBack": "138,299,57,59",
+    "roiFront": "128,299,50,50",
+    "roiBack": "99,270,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -29,8 +29,8 @@
   {
     "itemName": "rs_r",
     "imageName": "rs_rs_r.png",
-    "roiFront": "230,344,64,61",
-    "roiBack": "230,344,64,61",
+    "roiFront": "210,335,50,50",
+    "roiBack": "185,306,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -38,8 +38,8 @@
   {
     "itemName": "rs_sr",
     "imageName": "rs_rs_sr.png",
-    "roiFront": "307,421,62,58",
-    "roiBack": "307,421,62,58",
+    "roiFront": "279,385,50,50",
+    "roiBack": "254,361,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -47,8 +47,8 @@
   {
     "itemName": "rs_ssr",
     "imageName": "rs_rs_ssr.png",
-    "roiFront": "354,517,63,58",
-    "roiBack": "354,517,63,58",
+    "roiFront": "331,458,50,50",
+    "roiBack": "305,431,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -56,8 +56,17 @@
   {
     "itemName": "rs_sp",
     "imageName": "rs_rs_sp.png",
-    "roiFront": "372,621,58,60",
-    "roiBack": "372,621,58,60",
+    "roiFront": "368,540,50,50",
+    "roiBack": "339,510,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "rs_ur",
+    "imageName": "rs_rs_ur.png",
+    "roiFront": "375,628,50,50",
+    "roiBack": "348,602,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
