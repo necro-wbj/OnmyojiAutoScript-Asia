@@ -10,17 +10,6 @@ from module.atom.list import RuleList
 class DuelAssets: 
 
 
-	# Click Rule Assets
-	# 清明 
-	C_QM_ZHAN = RuleClick(roi_front=(263,435,60,75), roi_back=(263,435,60,75), name="qm_zhan")
-	# 神乐 
-	C_SL_ZHAN = RuleClick(roi_front=(520,434,60,75), roi_back=(520,434,60,75), name="sl_zhan")
-	# 源博雅 
-	C_YBY_ZHAN = RuleClick(roi_front=(775,435,60,75), roi_back=(775,435,60,75), name="yby_zhan")
-	# 八百比丘尼 
-	C_BBBQN_ZHAN = RuleClick(roi_front=(1030,437,60,75), roi_back=(1030,437,60,75), name="bbbqn_zhan")
-
-
 	# Image Rule Assets
 	# 进入阴阳术 
 	I_YINYANGSHU = RuleImage(roi_front=(970,633,100,49), roi_back=(970,633,100,49), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/Screenshots_yinyangshu.png")
@@ -45,10 +34,14 @@ class DuelAssets:
 
 
 	# Click Rule Assets
-	# 战斗数据 
-	C_D_BATTLE_DATA = RuleClick(roi_front=(584,279,100,100), roi_back=(584,279,100,100), name="d_battle_data")
-	# 点击第五手上式神位置，获得式神名称 
-	C_DUEL_CLICK_5 = RuleClick(roi_front=(105,23,52,47), roi_back=(105,23,52,47), name="duel_click_5")
+	# 清明 
+	C_QM_ZHAN = RuleClick(roi_front=(263,435,60,75), roi_back=(263,435,60,75), name="qm_zhan")
+	# 神乐 
+	C_SL_ZHAN = RuleClick(roi_front=(520,434,60,75), roi_back=(520,434,60,75), name="sl_zhan")
+	# 源博雅 
+	C_YBY_ZHAN = RuleClick(roi_front=(775,435,60,75), roi_back=(775,435,60,75), name="yby_zhan")
+	# 八百比丘尼 
+	C_BBBQN_ZHAN = RuleClick(roi_front=(1030,437,60,75), roi_back=(1030,437,60,75), name="bbbqn_zhan")
 
 
 	# Image Rule Assets
@@ -66,8 +59,6 @@ class DuelAssets:
 	I_D_HELP = RuleImage(roi_front=(784,502,32,30), roi_back=(774,489,49,55), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_help.png")
 	# 准备 
 	I_D_PREPARE = RuleImage(roi_front=(1127,541,100,100), roi_back=(1127,541,100,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_prepare.png")
-	# 准备完毕 
-	I_D_PREPARE_DONE = RuleImage(roi_front=(495,82,75,55), roi_back=(495,82,75,55), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_prepare_done.png")
 	# 战斗数据 
 	I_D_BATTLE_DATA = RuleImage(roi_front=(1068,610,38,60), roi_back=(1068,610,38,60), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_battle_data.png")
 	# 胜利 
@@ -92,6 +83,13 @@ class DuelAssets:
 	I_BAN = RuleImage(roi_front=(1112,537,100,100), roi_back=(1112,537,100,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_ban.png")
 	# 左上角的退出 
 	I_DUEL_EXIT = RuleImage(roi_front=(14,12,43,41), roi_back=(14,12,43,41), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_duel_exit.png")
+
+
+	# Click Rule Assets
+	# 战斗数据 
+	C_D_BATTLE_DATA = RuleClick(roi_front=(584,279,100,100), roi_back=(584,279,100,100), name="d_battle_data")
+	# 点击第五手上式神位置，获得式神名称 
+	C_DUEL_CLICK_5 = RuleClick(roi_front=(105,23,52,47), roi_back=(105,23,52,47), name="duel_click_5")
 
 
 	# Ocr Rule Assets

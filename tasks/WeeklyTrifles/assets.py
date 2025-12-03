@@ -10,24 +10,6 @@ from module.atom.list import RuleList
 class WeeklyTriflesAssets: 
 
 
-	# Click Rule Assets
-	# 进入已经挑战的第一个 
-	C_WT_AB_CLICK = RuleClick(roi_front=(168,362,68,72), roi_back=(168,362,68,72), name="wt_ab_click")
-
-
-	# Image Rule Assets
-	# 今日挑战 
-	I_WT_DAY_BATTLE = RuleImage(roi_front=(40,365,65,66), roi_back=(40,365,65,66), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_day_battle.png")
-	# 今天一个都没有打 
-	I_WT_NO_DAY = RuleImage(roi_front=(167,360,72,69), roi_back=(167,360,72,69), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_no_day.png")
-	# 地鬼分享 
-	I_WT_SHARE_AB = RuleImage(roi_front=(1183,308,45,39), roi_back=(1183,308,45,39), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_share_ab.png")
-	# 分享勾玉 
-	I_WT_AB_JADE = RuleImage(roi_front=(977,552,44,47), roi_back=(977,552,44,47), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_ab_jade.png")
-	# 微信分享 
-	I_WT_AB_WECHAT = RuleImage(roi_front=(845,643,50,41), roi_back=(845,643,50,41), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_ab_wechat.png")
-
-
 	# Image Rule Assets
 	# 进入普通召唤 
 	I_BM_ENTER = RuleImage(roi_front=(437,600,62,68), roi_back=(437,600,62,68), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/broken_amulet/broken_amulet_bm_enter.png")
@@ -48,9 +30,17 @@ class WeeklyTriflesAssets:
 	O_BA_TIMES = RuleOcr(roi=(741,564,174,44), area=(641,566,278,41), mode="Full", method="Default", keyword="", name="ba_times")
 
 
-	# Click Rule Assets
-	# 微信分享的点击 
-	C_WT_WECHAT = RuleClick(roi_front=(470,111,337,44), roi_back=(470,111,337,44), name="wt_wechat")
+	# Image Rule Assets
+	# 秘闻进入 
+	I_WT_ENTER_SE = RuleImage(roi_front=(1145,598,100,100), roi_back=(1145,598,100,100), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/secret/secret_wt_enter_se.png")
+	# 秘闻分享 
+	I_WT_SE_SHARE = RuleImage(roi_front=(911,570,46,43), roi_back=(886,547,92,95), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/secret/secret_wt_se_share.png")
+	# 微信 
+	I_WT_SE_WECHAT = RuleImage(roi_front=(786,627,45,37), roi_back=(786,627,45,37), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/secret/secret_wt_se_wechat.png")
+	# 勾玉 
+	I_WT_SE_JADE = RuleImage(roi_front=(1126,533,35,39), roi_back=(1118,525,50,55), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/secret/secret_wt_se_jade.png")
+	# 排行 
+	I_WT_SE_RANK = RuleImage(roi_front=(1017,572,45,44), roi_back=(989,556,103,81), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/secret/secret_wt_se_rank.png")
 
 
 	# Image Rule Assets
@@ -70,16 +60,26 @@ class WeeklyTriflesAssets:
 	I_WT_QR_CODE = RuleImage(roi_front=(473,161,336,96), roi_back=(404,112,483,168), threshold=0.65, method="Template matching", file="./tasks/WeeklyTrifles/collect/collect_wt_qr_code.png")
 
 
+	# Click Rule Assets
+	# 微信分享的点击 
+	C_WT_WECHAT = RuleClick(roi_front=(470,111,337,44), roi_back=(470,111,337,44), name="wt_wechat")
+
+
 	# Image Rule Assets
-	# 秘闻进入 
-	I_WT_ENTER_SE = RuleImage(roi_front=(1145,598,100,100), roi_back=(1145,598,100,100), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/secret/secret_wt_enter_se.png")
-	# 秘闻分享 
-	I_WT_SE_SHARE = RuleImage(roi_front=(911,570,46,43), roi_back=(886,547,92,95), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/secret/secret_wt_se_share.png")
-	# 微信 
-	I_WT_SE_WECHAT = RuleImage(roi_front=(786,627,45,37), roi_back=(786,627,45,37), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/secret/secret_wt_se_wechat.png")
-	# 勾玉 
-	I_WT_SE_JADE = RuleImage(roi_front=(1126,533,35,39), roi_back=(1118,525,50,55), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/secret/secret_wt_se_jade.png")
-	# 排行 
-	I_WT_SE_RANK = RuleImage(roi_front=(1017,572,45,44), roi_back=(989,556,103,81), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/secret/secret_wt_se_rank.png")
+	# 今日挑战 
+	I_WT_DAY_BATTLE = RuleImage(roi_front=(40,365,65,66), roi_back=(40,365,65,66), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_day_battle.png")
+	# 今天一个都没有打 
+	I_WT_NO_DAY = RuleImage(roi_front=(167,360,72,69), roi_back=(167,360,72,69), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_no_day.png")
+	# 地鬼分享 
+	I_WT_SHARE_AB = RuleImage(roi_front=(1183,308,45,39), roi_back=(1183,308,45,39), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_share_ab.png")
+	# 分享勾玉 
+	I_WT_AB_JADE = RuleImage(roi_front=(977,552,44,47), roi_back=(977,552,44,47), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_ab_jade.png")
+	# 微信分享 
+	I_WT_AB_WECHAT = RuleImage(roi_front=(845,643,50,41), roi_back=(845,643,50,41), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_ab_wechat.png")
+
+
+	# Click Rule Assets
+	# 进入已经挑战的第一个 
+	C_WT_AB_CLICK = RuleClick(roi_front=(168,362,68,72), roi_back=(168,362,68,72), name="wt_ab_click")
 
 
