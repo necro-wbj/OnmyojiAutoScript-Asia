@@ -63,6 +63,13 @@ class SixRealmsAssets:
 	I_ISLAND_TAG_FLAG = RuleImage(roi_front=(543,601,100,100), roi_back=(543,601,100,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_island_tag_flag.png")
 	# 暂时离开六道之门 
 	I_EXIT_SIXREALMS = RuleImage(roi_front=(507.5,308,100,100), roi_back=(507.5,308,100,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_exit_sixrealms.png")
+	# 选择一个式神加入征伐队伍 
+	I_SELECT_SHIKIGAMI_AND_CONFIRM = RuleImage(roi_front=(499,238,151,57), roi_back=(479,213,199,113), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_select_shikigami_and_confirm.png")
+
+
+	# Swipe Rule Assets
+	# 征伐队伍选择界面底部阵容上拉 
+	S_TEAM_SWIPE_UP = RuleSwipe(roi_front=(520,571,93,98), roi_back=(589,180,100,100), mode="default", name="team_swipe_up")
 
 
 	# Click Rule Assets
