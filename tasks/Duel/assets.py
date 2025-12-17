@@ -10,29 +10,6 @@ from module.atom.list import RuleList
 class DuelAssets: 
 
 
-	# Image Rule Assets
-	# 进入阴阳术 
-	I_YINYANGSHU = RuleImage(roi_front=(970,633,100,49), roi_back=(970,633,100,49), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/Screenshots_yinyangshu.png")
-	# 进入阴阳术成功 
-	I_YINYANGSHUOK = RuleImage(roi_front=(98,3,100,38), roi_back=(98,3,100,38), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/Screenshots_yinyangshuok.png")
-	# 点击阴阳师 
-	I_YINYANGSHI = RuleImage(roi_front=(80,615,58,67), roi_back=(80,615,58,67), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/Screenshots_yinyangshi.png")
-	# 点击英杰 
-	I_YINGJIE = RuleImage(roi_front=(80,615,58,67), roi_back=(80,615,58,67), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/Screenshots_yingjie.png")
-	# 交替 
-	I_JIAOTI = RuleImage(roi_front=(32,380,52,42), roi_back=(32,380,52,42), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/Screenshots_jiaoti.png")
-	# 进入阴阳师交换页面 
-	I_YYSJIOAHUAN = RuleImage(roi_front=(89,13,176,42), roi_back=(89,13,176,42), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/Screenshots_yysjioahuan.png")
-	# 清明（出战） 
-	I_QM_ZHAN = RuleImage(roi_front=(263,435,60,75), roi_back=(263,435,60,75), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/qm_zhan.png")
-	# 神乐（出战） 
-	I_SL_ZHAN = RuleImage(roi_front=(520,434,60,75), roi_back=(520,434,60,75), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/sl_zhan.png")
-	# 源博雅（出战） 
-	I_YBY_ZHAN = RuleImage(roi_front=(775,435,60,75), roi_back=(775,435,60,75), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/yby_zhan.png")
-	# 八百比丘尼（出战） 
-	I_BBBQN_ZHAN = RuleImage(roi_front=(1030,437,60,75), roi_back=(1030,437,60,75), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/bbbqn_zhan.png")
-
-
 	# Click Rule Assets
 	# 清明 
 	C_QM_ZHAN = RuleClick(roi_front=(263,435,60,75), roi_back=(263,435,60,75), name="qm_zhan")
@@ -45,6 +22,36 @@ class DuelAssets:
 
 
 	# Image Rule Assets
+	# 进入阴阳术 
+	I_YINYANGSHU = RuleImage(roi_front=(970,633,100,49), roi_back=(970,633,100,49), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/changeyys_yinyangshu.png")
+	# 进入阴阳术成功 
+	I_YINYANGSHUOK = RuleImage(roi_front=(98,3,100,38), roi_back=(98,3,100,38), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/changeyys_yinyangshuok.png")
+	# 点击阴阳师 
+	I_YINYANGSHI = RuleImage(roi_front=(80,615,58,67), roi_back=(80,615,58,67), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/changeyys_yinyangshi.png")
+	# 点击英杰 
+	I_YINGJIE = RuleImage(roi_front=(80,615,58,67), roi_back=(80,615,58,67), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/changeyys_yingjie.png")
+	# 交替 
+	I_JIAOTI = RuleImage(roi_front=(32,380,52,42), roi_back=(32,380,52,42), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/changeyys_jiaoti.png")
+	# 进入阴阳师交换页面 
+	I_YYSJIOAHUAN = RuleImage(roi_front=(89,13,176,42), roi_back=(89,13,176,42), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/changeyys_yysjioahuan.png")
+	# 清明（出战） 
+	I_QM_ZHAN = RuleImage(roi_front=(263,435,60,75), roi_back=(263,435,60,75), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/changeyys_qm_zhan.png")
+	# 神乐（出战） 
+	I_SL_ZHAN = RuleImage(roi_front=(520,434,60,75), roi_back=(520,434,60,75), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/changeyys_sl_zhan.png")
+	# 源博雅（出战） 
+	I_YBY_ZHAN = RuleImage(roi_front=(775,435,60,75), roi_back=(775,435,60,75), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/changeyys_yby_zhan.png")
+	# 八百比丘尼（出战） 
+	I_BBBQN_ZHAN = RuleImage(roi_front=(1030,437,60,75), roi_back=(1030,437,60,75), threshold=0.8, method="Template matching", file="./tasks/Duel/changeyys/changeyys_bbbqn_zhan.png")
+
+
+	# Click Rule Assets
+	# 战斗数据 
+	C_D_BATTLE_DATA = RuleClick(roi_front=(584,279,100,100), roi_back=(584,279,100,100), name="d_battle_data")
+	# 点击第五手上式神位置，获得式神名称 
+	C_DUEL_CLICK_5 = RuleClick(roi_front=(105,23,52,47), roi_back=(105,23,52,47), name="duel_click_5")
+
+
+	# Image Rule Assets
 	# 点击阵容 
 	I_D_TEAM = RuleImage(roi_front=(813,288,34,74), roi_back=(785,259,115,119), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_team.png")
 	# 一键切换所有的御魂 
@@ -54,17 +61,15 @@ class DuelAssets:
 	# 战斗带保护的 
 	I_D_BATTLE_PROTECT = RuleImage(roi_front=(1153,578,100,100), roi_back=(1118,553,155,149), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_battle_protect.png")
 	# 自动上阵 
-	I_D_AUTO_ENTRY = RuleImage(roi_front=(21,116,66,62), roi_back=(2,95,115,111), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_auto_entry.png")
+	I_D_AUTO_ENTRY = RuleImage(roi_front=(30,127,66,62), roi_back=(20,119,115,111), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_auto_entry.png")
 	# 主界面的感叹号 
-	I_D_HELP = RuleImage(roi_front=(784,502,32,30), roi_back=(774,489,49,55), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_help.png")
+	I_D_HELP = RuleImage(roi_front=(719,434,32,30), roi_back=(680,400,80,80), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_help.png")
 	# 准备 
 	I_D_PREPARE = RuleImage(roi_front=(1127,541,100,100), roi_back=(1127,541,100,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_prepare.png")
-	# 准备完毕  
-	I_D_PREPARE_DONE = RuleImage(roi_front=(495,82,75,55), roi_back=(495,82,75,55), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_prepare_done.png")
 	# 战斗数据 
 	I_D_BATTLE_DATA = RuleImage(roi_front=(1068,610,38,60), roi_back=(1068,610,38,60), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_battle_data.png")
 	# 胜利 
-	I_D_VICTORY = RuleImage(roi_front=(433,76,100,100), roi_back=(433,76,100,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_victory.png")
+	I_D_VICTORY = RuleImage(roi_front=(466,88,95,95), roi_back=(433,55,160,165), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_victory.png")
 	# 失败 
 	I_D_FAIL = RuleImage(roi_front=(422,66,100,100), roi_back=(422,66,100,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_fail.png")
 	# 战 
@@ -84,14 +89,7 @@ class DuelAssets:
 	# 禁用 
 	I_BAN = RuleImage(roi_front=(1112,537,100,100), roi_back=(1112,537,100,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_ban.png")
 	# 左上角的退出 
-	I_DUEL_EXIT = RuleImage(roi_front=(14,12,43,41), roi_back=(14,12,43,41), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_duel_exit.png")
-
-
-	# Click Rule Assets
-	# 战斗数据 
-	C_D_BATTLE_DATA = RuleClick(roi_front=(584,279,100,100), roi_back=(584,279,100,100), name="d_battle_data")
-	# 点击第五手上式神位置，获得式神名称 
-	C_DUEL_CLICK_5 = RuleClick(roi_front=(105,23,52,47), roi_back=(105,23,52,47), name="duel_click_5")
+	I_DUEL_EXIT = RuleImage(roi_front=(14,12,43,41), roi_back=(14,12,43,41), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/gb_exit.png")
 
 
 	# Ocr Rule Assets
@@ -101,10 +99,10 @@ class DuelAssets:
 	O_D_SCORE = RuleOcr(roi=(701,509,61,33), area=(701,509,61,33), mode="Digit", method="Default", keyword="", name="d_score")
 	# 名士星星数 
 	O_D_CELEB_STAR = RuleOcr(roi=(625,454,77,37), area=(625,454,77,37), mode="Digit", method="Default", keyword="", name="d_celeb_star")
-	# 手动 
-	O_D_HAND = RuleOcr(roi=(31,639,63,45), area=(31,639,63,45), mode="Single", method="Default", keyword="手动", name="d_hand")
-	# 自动 
-	O_D_AUTO = RuleOcr(roi=(30,640,65,44), area=(30,640,65,44), mode="Single", method="Default", keyword="自动", name="d_auto")
+	# 手動 
+	O_D_HAND = RuleOcr(roi=(31,639,63,45), area=(31,639,63,45), mode="Single", method="Default", keyword="手動", name="d_hand")
+	# 自動 
+	O_D_AUTO = RuleOcr(roi=(30,640,65,44), area=(30,640,65,44), mode="Single", method="Default", keyword="自動", name="d_auto")
 	# 被办式神名称 
 	O_D_BAN_NAME = RuleOcr(roi=(92,97,82,25), area=(92,97,82,25), mode="Single", method="Default", keyword="", name="d_ban_name")
 

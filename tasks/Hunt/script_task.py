@@ -110,13 +110,13 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
                 break
             if self.appear_then_click(self.I_UI_CONFIRM, interval=0.9):
                 continue
-            if self.appear_then_click(self.I_KIRIN_CHALLAGE, interval=1.5):
-                continue
             if self.appear(self.I_KIRIN_END):
                 # 今日已挑战
                 logger.warning('Today have already challenged the Kirin')
                 self.ui_click_until_disappear(self.I_UI_BACK_YELLOW)
                 return
+            if self.appear_then_click(self.I_KIRIN_CHALLAGE, interval=1.5):
+                continue
         logger.info('Start battle')
         self.run_general_battle(self.config.hunt.kirin_battle_config)
 

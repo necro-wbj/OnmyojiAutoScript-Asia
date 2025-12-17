@@ -3,6 +3,7 @@
 # github https://github.com/runhey
 from time import sleep
 from datetime import time, datetime, timedelta
+import re
 
 import cv2
 import numpy as np
@@ -15,11 +16,10 @@ from module.base.timer import Timer
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main, page_duel
+from tasks.GameUi.page import page_main, page_duel, page_shikigami_records
 from tasks.Duel.config import Duel, Onmyoji
 from tasks.Duel.assets import DuelAssets
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
-from tasks.GameUi.page import page_main, page_team, page_shikigami_records
 import os
 from module.atom.image import RuleImage
 from tasks.GlobalGame.assets import GlobalGameAssets as GGA
@@ -36,8 +36,10 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
     def run(self):
 
         current_time = datetime.now().time()
-        if not (time(12, 00) <= current_time < time(23, 00)):
-            self.set_next_run(task='Duel', success=True, finish=False)
+        # Asia duel time 11:00-14:00 17:00-22:00
+        # 检查是否在斗技时间段
+        if not (time(11, 0) <= current_time < time(14, 0) or time(17, 0) <= current_time < time(22, 0)):
+            self.set_next_schedule()
             raise TaskEnd('Duel')
 
         con = self.config.duel
@@ -92,6 +94,10 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
             # 关闭恭喜晋升段位页面
             if self.appear_then_click(GGA.I_UI_BACK_RED):
                 continue
+            # 若顯示練習按鈕，表示並非斗技時間
+            if self.appear(self.I_BATTLE_WITH_TRAIN, interval=1):
+                logger.info('Not Duel time')
+                break
             if self.appear_then_click(self.I_REWARD, interval=0.6):
                 continue
             if not self.duel_main():
@@ -148,6 +154,20 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
         self.set_next_run(task='TalismanPass', target=datetime.now())
         raise TaskEnd('Duel')
 
+    def set_next_schedule(self):
+        now = datetime.now()
+        next_schedule = None
+        if now.hour < 11:
+            next_schedule = now.replace(hour=11, minute=0, second=0, microsecond=0)
+        elif 14 <= now.hour < 17:
+            next_schedule = now.replace(hour=17, minute=0, second=0, microsecond=0)
+        elif now.hour >= 22:
+            next_schedule = (now + timedelta(days=1)).replace(hour=11, minute=0, second=0, microsecond=0)
+        else:
+            # 當前時間在指定範圍內，不需要重新計劃
+            next_schedule = None
+        self.set_next_run(task='Duel', success=True, finish=False,target=next_schedule)
+        
     def duel_main(self, screenshot=False) -> bool:
         """
         判断是否斗技主界面
@@ -163,11 +183,13 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
         :return:
         """
         click_count = 0  # 计数
+        logger.info('Souls Switch start')
         while 1:
             self.screenshot()
             if click_count >= 4:
                 break
-
+            if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
+                continue
             if self.appear_then_click(self.I_D_TEAM, interval=1):
                 continue
             if self.appear_then_click(self.I_UI_CONFIRM, interval=0.6):
@@ -175,6 +197,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
             if self.appear_then_click(self.I_D_TEAM_SWTICH, interval=1):
                 click_count += 1
                 continue
+            logger.info('Souls Switch no find nothing')
         logger.info('Souls Switch is complete')
         self.ui_click(self.I_UI_BACK_YELLOW, self.I_D_TEAM)
 
@@ -250,7 +273,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
             return True
         return False
 
-    def check_score(self) -> int or None:
+    def check_score(self) -> int | None:
         """
         检查是否达到目标分数
         :param target: 目标分数
@@ -266,7 +289,8 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
                     self.battle_lose_copy = self.battle_lose_count
                     self.current_score -= 100
                 else:
-                    self.current_score = self.current_score
+                    # no change
+                    pass
             else:
                 self.current_score = self.O_D_SCORE.ocr(self.device.image)
                 if self.current_score > 10000:
@@ -318,10 +342,47 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
 
         # 点击斗技 开始匹配对手
         logger.hr('Duel start match')
+        # battle_GO_LOSE = False
+        # if current_score == 3000:
+        #     self.wait_until_appear(self.I_D_CELEB_BATTLE_BAN, wait_time=60)
+        #     self.screenshot()
+        #     while self.appear(self.I_D_CELEB_BATTLE_BAN):
+        #         self.screenshot()
+        #         if self.appear(self.I_D_CELEB_BAN_LOCK):
+        #             if self.celeb_ban_card(): 
+        #                 # my team be banned current no change card rule so just go lose
+        #                 logger.info('My team is banned')
+        #                 battle_GO_LOSE = True
+        #                 break
+        #             else:
+        #                 logger.info('My team no banned go fight.')
+        #                 battle_GO_LOSE = False
+        #                 break
+        # if battle_GO_LOSE:
+        #     while 1:
+        #         self.screenshot()
+        #         if self.appear_then_click(self.I_EXIT_ENSURE):
+        #             continue
+        #         if self.appear(self.I_FALSE):
+        #             # 打输了
+        #             logger.info('Duel battle lose')
+        #             self.ui_click_until_disappear(self.I_FALSE)
+        #             battle_win = False
+        #             return battle_win
+        #         if self.appear(self.I_D_FAIL):
+        #             # 输了
+        #             logger.info('Duel battle lose')
+        #             self.ui_click_until_disappear(self.I_D_FAIL)
+        #             battle_win = False
+        #             return battle_win
+        #         if self.appear_then_click(self.I_EXIT):
+        #             continue
         while 1:
             self.screenshot()
             # 出现自动上阵
             if self.appear(self.I_D_AUTO_ENTRY):
+                # Workaround: OCR 常回傳亂碼而非空字串，需等待畫面穩定再判斷 ban name
+                self.wait_until_stable(self.I_D_AUTO_ENTRY)
                 ban_check_success = True
                 if celeb_status:
                     # 检查禁选式神
@@ -341,9 +402,14 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
                             self.battle_win_count += 1
                             return
                         ocr_ban_name = self.O_D_BAN_NAME.ocr(self.device.image)
+                        # in OCR get english remove it
+                        ocr_ban_name = re.sub(r'[A-Za-z]', '', ocr_ban_name)
+                        ocr_ban_name = ocr_ban_name.replace(' ', '').replace(' ', '')
+                        logger.info(f'Ban name: {ocr_ban_name}')
                         if ocr_ban_name == '':
                             continue
                         if any(char in ocr_ban_name for char in ban_name):
+                            logger.info('The opponent banned my shikigami')
                             ban_check_success = True
                             break
                         else:
@@ -351,6 +417,8 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
 
                 # 处理检查结果
                 if not ban_check_success:
+                    # 禁选了我方式神，直接退赛
+                    logger.info('The opponent banned my shikigami, exit the battle')
                     self.duel_exit_battle()
                     if self.appear(self.I_D_FAIL):
                         # 输了
@@ -481,7 +549,8 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
-    c = Config('oas3')
+
+    c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
 

@@ -46,6 +46,7 @@ class ScriptTask(GameUi, SoulsTidyAssets):
                 continue
         # 御魂超过上限的提示
         self.ocr_appear_click(self.O_ST_OVERFLOW)
+        self.appear_then_click(self.I_ST_OVERFLOW, interval=1)
         logger.info('Enter souls page')
 
     def back_records(self):
@@ -63,7 +64,17 @@ class ScriptTask(GameUi, SoulsTidyAssets):
         # 先是贪吃鬼
         if self.config.souls_tidy.simple_tidy.enable_greed:
             logger.hr('Greed Ghost')
-            self.ui_click(self.I_ST_GREED, self.I_ST_GREED_HABIT)
+            # self.ui_click(self.I_ST_GREED, self.I_ST_GREED_HABIT)
+            # replace ui_click with loop
+            while 1:
+                self.screenshot()
+                if self.appear_then_click(self.I_ST_OVERFLOW, interval=1):
+                    logger.info('greed_maneki I_ST_OVERFLOW')
+                    continue
+                if self.appear(self.I_ST_GREED_HABIT):
+                    break
+                if self.appear_then_click(self.I_ST_GREED):
+                    continue
             self.ui_click(self.I_ST_GREED_HABIT, self.I_ST_FEED_NOW)
             logger.info('Feed greed ghost')
             feed_count = 0
@@ -99,9 +110,11 @@ class ScriptTask(GameUi, SoulsTidyAssets):
             if self.appear_then_click(self.I_ST_BONGNA, interval=1, threshold=0.6):
                 continue
         if self.config.souls_tidy.simple_tidy.enable_maneki:
-            """
-            """
             logger.hr('Enter bongna')
+            # 进入已弃置界面
+            """
+            现在默认进入就是已弃置界面,所以不需要点击
+            """
             # 确保已弃置界面
             while 1:
                 self.screenshot()
@@ -130,14 +143,16 @@ class ScriptTask(GameUi, SoulsTidyAssets):
                 if not self.appear(self.I_ST_LEVEL_0):
                     logger.info("First Orichi isn't Level 0,quit")
                     break
-                firvel = self.O_ST_FIRSET_LEVEL.ocr(self.device.image)
-                if firvel is None or firvel == '':
-                    logger.info('ocr result is Null')
-                    continue
-                if firvel != '古':
-                    # 问就是 把 +0 识别成了 古
-                    logger.info('No zero level, bongna done')
-                    break
+                # use pic not ocr to check level
+                # firvel = self.O_ST_FIRSET_LEVEL.ocr(self.device.image)
+                # logger.info(f'First level: {firvel}')
+                # if firvel is None or firvel == '':
+                #     logger.info('ocr result is Null')
+                #     continue
+                # if firvel != '古' and firvel != '0' and firvel != '+0':
+                #     # 问就是 把 +0 识别成了 古
+                #     logger.info('No zero level, bongna done')
+                #     break
 
                 # !!!!!!  这里没有检查金币是否足够
                 # 长按
@@ -181,10 +196,9 @@ if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config('oas1')
+    c = Config('oas3')
     d = Device(c)
     t = ScriptTask(c, d)
 
     #t.greed_maneki()
     t.run()
-

@@ -263,6 +263,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                 self.screenshot()
                 # 如果出现结界皮肤， 表示收取好了
                 if self.appear(self.I_REALM_SHIN) and not self.appear(self.I_BOX_EXP, threshold=0.6):
+                    logger.info('如果出现结界皮肤， 表示收取好了')
                     break
                 # 如果出现收取确认，表明进入到了有满级的
                 if self.appear(self.I_UI_CONFIRM):
@@ -291,6 +292,8 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                         logger.info('Exp box reach max do not collect')
                         break
                 if self.appear_then_click(self.I_BOX_EXP, threshold=0.6, interval=1):
+                    logger.info('Click exp box and wait extract')
+                    self.wait_until_stable(self.I_EXP_EXTRACT)
                     continue
                 if self.appear_then_click(self.I_EXP_EXTRACT, interval=1):
                     continue
@@ -354,6 +357,8 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             if self.appear(self.I_U_ENTER_REALM):
                 break
             if self.appear_then_click(self.I_UTILIZE_ADD, interval=2):
+                #wait 5 sec for let it loading or 2nd click will close it
+                time.sleep(5)
                 continue
         logger.info('Enter utilize')
         return True
@@ -428,17 +433,18 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         :return:
         """
         logger.hr('Start utilize')
-        if self.first_utilize:
-            self.swipe(self.S_U_END, interval=3)
-            self.first_utilize = False
-            if friend == SelectFriendList.SAME_SERVER:
-                self.switch_friend_list(SelectFriendList.DIFFERENT_SERVER)
-                self.switch_friend_list(SelectFriendList.SAME_SERVER)
+        if(self.IS_CN_SERVER):
+            if self.first_utilize:
+                self.swipe(self.S_U_END, interval=3)
+                self.first_utilize = False
+                if friend == SelectFriendList.SAME_SERVER:
+                    self.switch_friend_list(SelectFriendList.DIFFERENT_SERVER)
+                    self.switch_friend_list(SelectFriendList.SAME_SERVER)
+                else:
+                    self.switch_friend_list(SelectFriendList.SAME_SERVER)
+                    self.switch_friend_list(SelectFriendList.DIFFERENT_SERVER)
             else:
-                self.switch_friend_list(SelectFriendList.SAME_SERVER)
-                self.switch_friend_list(SelectFriendList.DIFFERENT_SERVER)
-        else:
-            self.switch_friend_list(friend)
+                self.switch_friend_list(friend)
 
         # --------------- 结界卡选择 ---------------
         if not self._select_optimal_resource_card():
@@ -712,6 +718,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         回到寮的界面
         :return:
         """
+        logger.info("回到寮的界面")
         while 1:
             self.screenshot()
 
@@ -745,12 +752,10 @@ if __name__ == "__main__":
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config('switch')
+    c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
-    for i in range(10):
-        t.perform_swipe_action()
-    t.recive_guild_ap_or_assets()
+    t.run()
     # t.check_utilize_add()
     # t.check_card_num('勾玉', 67)
     # t.screenshot()

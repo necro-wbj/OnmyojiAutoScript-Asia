@@ -11,8 +11,8 @@
   {
     "itemName": "rs_material",
     "imageName": "rs_rs_material.png",
-    "roiFront": "38,286,54,52",
-    "roiBack": "0,265,1072,454",
+    "roiFront": "41,288,50,50",
+    "roiBack": "12,264,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "素材"
@@ -20,8 +20,8 @@
   {
     "itemName": "rs_n",
     "imageName": "rs_rs_n.png",
-    "roiFront": "129,298,47,49",
-    "roiBack": "0,265,1072,454",
+    "roiFront": "128,299,50,50",
+    "roiBack": "99,270,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -29,8 +29,8 @@
   {
     "itemName": "rs_r",
     "imageName": "rs_rs_r.png",
-    "roiFront": "209,335,48,47",
-    "roiBack": "0,265,1072,454",
+    "roiFront": "210,335,50,50",
+    "roiBack": "185,306,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -38,8 +38,8 @@
   {
     "itemName": "rs_sr",
     "imageName": "rs_rs_sr.png",
-    "roiFront": "279,388,48,47",
-    "roiBack": "0,265,1072,454",
+    "roiFront": "279,385,50,50",
+    "roiBack": "254,361,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -47,8 +47,8 @@
   {
     "itemName": "rs_ssr",
     "imageName": "rs_rs_ssr.png",
-    "roiFront": "331,457,53,46",
-    "roiBack": "0,265,1072,454",
+    "roiFront": "331,458,50,50",
+    "roiBack": "305,431,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -56,8 +56,17 @@
   {
     "itemName": "rs_sp",
     "imageName": "rs_rs_sp.png",
-    "roiFront": "368,537,48,47",
-    "roiBack": "0,265,1072,454",
+    "roiFront": "368,540,50,50",
+    "roiBack": "339,510,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "rs_ur",
+    "imageName": "rs_rs_ur.png",
+    "roiFront": "375,628,50,50",
+    "roiBack": "348,602,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -146,8 +155,8 @@
   {
     "itemName": "rs_ur",
     "imageName": "rs_rs_ur.png",
-    "roiFront": "377,627,49,46",
-    "roiBack": "0,265,1072,454",
+    "roiFront": "149,623,56,58",
+    "roiBack": "136,603,88,95",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

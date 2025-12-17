@@ -617,6 +617,41 @@ class Minitouch(Connection):
         builder.up().commit()
         self.minitouch_send()
 
+    @retry
+    def draw_minitouch(self, points: list):
+        """
+        Draw through given points.
+        Args: points: List of points [(x1, y1), (x2, y2), ...]
+        """
+        if len(points) < 2:
+            logger.warning('Draw needs at least 2 points')
+            return
+
+        builder = self.minitouch_builder
+
+        # click down at the first point
+        builder.down(*points[0]).commit()
+        self.minitouch_send()
+        
+
+        for i in range(len(points) - 1):
+            # insert intermediate points for smooth movement
+            segment_points = insert_swipe(
+                p0=points[i], 
+                p3=points[i + 1]
+            )
+            
+            # move through all intermediate points in the segment
+            for point in segment_points[1:]:
+                builder.move(*point).commit().wait(10)
+            
+        # send all move commands at once
+        self.minitouch_send()
+        
+        # lift up at the last point
+        builder.up().commit()
+        self.minitouch_send()
+
 if __name__ == '__main__':
     mm = Minitouch(config='oas1')
     mm.click_minitouch(200, 150)

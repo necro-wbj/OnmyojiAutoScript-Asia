@@ -18,13 +18,14 @@ from module.atom.list import RuleList
 from module.atom.ocr import RuleOcr
 from module.base.decorator import run_once
 from module.base.timer import Timer
-from module.exception import (GameNotRunningError, GamePageUnknownError)
 from module.logger import logger
 from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
 from tasks.GameUi.assets import GameUiAssets
 from tasks.GameUi.page import Page, PageRegistry, page_main, random_click
 from tasks.Restart.assets import RestartAssets
 from tasks.SixRealms.assets import SixRealmsAssets
+from module.exception import (GameNotRunningError, GamePageUnknownError, RequestHumanTakeover)
+from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.base_task import BaseTask
 from tasks.ActivityShikigami.assets import ActivityShikigamiAssets
 
@@ -337,12 +338,43 @@ class GameUi(BaseTask, GameUiAssets):
             operated = self.click(target, interval=interval)
         return operated
 
+    # ------------------------------------------------------------------------------------------------------------------
+    # 下面的这些是一些特殊的页面，需要额外处理
+    # ------------------------------------------------------------------------------------------------------------------
+
+    def main_goto_daily(self):
+        """
+        无法直接一步到花合战，需要先到主页，然后再到花合战
+        :return:
+        """
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_CHECK_DAILY):
+                break
+            if self.appear_then_click(self.I_BACK_BLUE):
+                continue
+            if self.appear_then_click(self.I_MAIN_GOTO_DAILY, interval=1):
+                continue
+            # here check there is not in main "I_CHECK_MAIN"
+            if self.appear(self.I_CHECK_MAIN):
+                logger.info('err here should go daily')
+                continue
+            if self.ocr_appear_click(self.O_CLICK_CLOSE_1, interval=1):
+                continue
+            if self.ocr_appear_click(self.O_CLICK_CLOSE_2, interval=1):
+                continue
+            # make ocr slow to prevent lag
+            logger.info('wait 1 s to prevent lag')
+            time.sleep(1)
+        logger.info('Page arrive: Daily')
+        time.sleep(1)
+        return
 
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config('oas2')
+    c = Config('oas1')
     d = Device(c)
     game = GameUi(config=c, device=d)
     game.ui_get_current_page()

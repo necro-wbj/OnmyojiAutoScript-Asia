@@ -294,7 +294,7 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         """
         设置下次运行时间  当然这个也是可以重写的
         :param target: 可以自定义的下次运行时间
-        :param server: True
+        :param server: 這個會根據server_update的時間來設定下次運行時間，優先度最高
         :param success: 判断是成功的还是失败的时间间隔
         :param task: 任务名称，大驼峰的
         :param finish: 是完成任务后的时间为基准还是开始任务的时间为基准

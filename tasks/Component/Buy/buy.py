@@ -25,21 +25,29 @@ class Buy(BaseTask, BuyAssets):
         :param start_click: 开始点击
         :return:
         """
+        try_click_count = 0
         while 1:
             self.screenshot()
+            if try_click_count >= 5:
+                logger.warning(f'Buy_one failed, try_click_count: {try_click_count}')
+                return False
 
             if self.appear(check_image):
                 break
 
             if isinstance(start_click, RuleImage):
                 if self.appear_then_click(start_click, interval=1):
+                    try_click_count += 1
                     continue
             elif isinstance(start_click, RuleOcr):
                 if self.ocr_appear_click(start_click, interval=1):
+                    try_click_count += 1
                     continue
             elif isinstance(start_click, RuleClick):
                 if self.click(start_click, interval=1):
+                    try_click_count += 1
                     continue
+        # TODO: set a timer to timeout while
         while 1:
             self.screenshot()
 

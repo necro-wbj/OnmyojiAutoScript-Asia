@@ -20,8 +20,8 @@
   {
     "itemName": "d_start",
     "imageName": "d_d_start.png",
-    "roiFront": "1101,534,120,129",
-    "roiBack": "1101,534,120,129",
+    "roiFront": "1110,549,111,94",
+    "roiBack": "1110,549,111,94",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "出发"

@@ -179,6 +179,8 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
                 break
             if check_timer.reached():
                 logger.warning('There is no any luck msg')
+                # 關閉吉聞頁
+                self.ui_click_until_disappear(self.I_CLOSE_BLESS)
                 break
 
         self.ui_click(self.I_UI_BACK_RED, self.I_CHECK_MAIN)

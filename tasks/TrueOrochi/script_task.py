@@ -2,7 +2,7 @@
 # @author runhey
 # github https://github.com/runhey
 from time import sleep
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 
 from module.logger import logger
 from module.exception import TaskEnd, GameStuckError
@@ -16,13 +16,20 @@ from tasks.Orochi.script_task import ScriptTask as OrochiScriptTask
 from tasks.Orochi.config import Layer
 from tasks.GameUi.page import page_main, page_soul_zones, page_shikigami_records
 from tasks.TrueOrochi.assets import TrueOrochiAssets
+from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 
 
-class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
+class ScriptTask(OrochiScriptTask, TrueOrochiAssets, SwitchSoul):
 
     def run(self):
     
         conf = self.config.true_orochi.true_orochi_config
+
+        # 周一重置真蛇次数
+        now = datetime.now()
+        day_of_week = now.weekday()
+        if day_of_week == 0:
+            conf.current_success = 0
 
         if conf.current_success >= 2:
             # 超过两次就说明这周打完了没有必要再打了
@@ -45,9 +52,8 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
         self.ui_get_current_page()
         self.ui_goto(page_soul_zones)
         self.orochi_enter()
-        sleep(0.5)
         battle = self.check_true_orochi(True)
-        if not battle:
+        if (not battle) and (self.config.true_orochi.true_orochi_config.find_true_orochi == True):
             logger.warning('Not find true orochi')
             logger.warning('Try to battle orochi for ten times')
 
@@ -89,6 +95,28 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
         # 如果有真蛇，那么就开始战斗
         logger.hr('True Orochi Battle')
         conf.current_success += 1
+        #update current_success count
+        cu, re, total = self.O_TRUE_OROCHI_REMAIN.ocr(self.device.image)
+        loop_count = 20
+        while loop_count:
+            loop_count -= 1
+            self.screenshot()
+            if self.appear_then_click(self.I_FIND_TS):
+                continue
+            cu, re, total = self.O_TRUE_OROCHI_REMAIN.ocr(self.device.image)
+            logger.info(f'O_TRUE_OROCHI_REMAIN cu{cu} re{re} total{total}')
+            if total != 2:
+                logger.warning('total is not 2')
+                continue
+            number_challenge = cu
+            # number_challenge is how many times you already challenge 2/2, 1/2
+            if 0 < number_challenge <= 2:
+                logger.info(f'Challenge number: {number_challenge}')
+                conf.current_success = re + 1
+                break
+            if loop_count <= 1:
+                logger.warning('loop_count is 1 OCR failed')
+                break
         while 1:
             self.screenshot()
             if self.appear(self.I_ST_CREATE_ROOM):
@@ -96,13 +124,6 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
             if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
                 continue
             if self.appear_then_click(self.I_ST_FIRE, interval=4):
-                # 修正已经挑战的次数, 注意这个是战斗开始之前的次数
-                current, current_success, total = self.O_TIMES.ocr(self.device.image)
-                if current_success < 0 or current_success > 2:
-                    continue
-                logger.info(f'current: {current}, current_success: {current_success}, total: {total}')
-                conf.current_success = current_success
-                self.config.save()
                 continue
             if self.appear_then_click(self.I_FIND_TS, interval=1):
                 continue
@@ -150,6 +171,7 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
                         break
                     if self.appear_then_click(self.I_GREED_GHOST, interval=1):
                         continue
+                    # TODO RENEWW I_ST_FRAME
                     if self.appear_then_click(self.I_ST_FRAME, interval=1):
                         continue
                 break
@@ -185,25 +207,21 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
         :param current_success: 这周的成功次数
         :return:
         """
-        now = datetime.now()
-        now_year, now_week_number, now_weekday = now.isocalendar()
-        if battle:
-            next_run = now + self.config.true_orochi.scheduler.success_interval
-        else:
-            next_run = now + self.config.true_orochi.scheduler.failure_interval
-        next_run_year, next_run_week_number, next_run_weekday = next_run.isocalendar()
-        # 如果下次运行的时间是下一周，那么就重置成功次数
-        if now_week_number != next_run_week_number:
-            logger.info('Reset current_success')
-            self.config.true_orochi.true_orochi_config.current_success = 0
-        else:
-            # 如果不是下一周，那么就加一
-            logger.info('Add current_success by 1')
-            self.config.true_orochi.true_orochi_config.current_success += 1
-            self.config.true_orochi.true_orochi_config.current_success = min(2, self.config.true_orochi.true_orochi_config.current_success)
-        self.config.save()
-        self.set_next_run(task='TrueOrochi', target=next_run)
-        # self.set_next_run('TrueOrochi', finish=True, success=True)
+        # now = datetime.now()
+        # now_year, now_week_number, now_weekday = now.isocalendar()
+        # if battle:
+        #     next_run = now + self.config.true_orochi.scheduler.success_interval
+        # else:
+        #     next_run = now + self.config.true_orochi.scheduler.failure_interval
+        # next_run_year, next_run_week_number, next_run_weekday = next_run.isocalendar()
+        # # 如果下次运行的时间是下一周，那么就重置成功次数
+        # if now_week_number != next_run_week_number:
+        #     self.config.true_orochi.true_orochi_config.current_success = 0
+        # else:
+        #     # 如果不是下一周，那么就加一
+        #     self.config.true_orochi.true_orochi_config.current_success += 1
+        # self.set_next_run(task='TrueOrochi', target=next_run)
+        self.set_next_run('TrueOrochi', finish=True, success=True)
 
     def run_true_orochi(self) -> bool:
         pass

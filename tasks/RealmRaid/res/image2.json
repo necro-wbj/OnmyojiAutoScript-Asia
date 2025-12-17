@@ -29,8 +29,8 @@
   {
     "itemName": "rr_person",
     "imageName": "res_rr_person.png",
-    "roiFront": "1203,236,56,100",
-    "roiBack": "1203,236,56,155",
+    "roiFront": "1203,236,51,95",
+    "roiBack": "1193,225,74,168",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "个人"
