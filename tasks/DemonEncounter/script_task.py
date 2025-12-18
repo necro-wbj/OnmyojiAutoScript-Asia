@@ -265,7 +265,6 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         # 少人的極逢魔BOSS 會超過10分鐘
         self.device.stuck_timer_long = Timer(900, count=900).start()
         preset_switched = False
-        config = self.con
         while True:
             self.screenshot()
             if self.appear(self.I_BOSS_DONE_CHECK):
