@@ -16,7 +16,7 @@ class AnalyzeType(str, Enum):
 
 class PostDiagnotor(GlobalGameAssets, SoulsTidyAssets):
     def handle(self, e: Exception, command: str, image: np.ndarray) -> AnalyzeType:
-        if self.I_ST_SOUL_OVERFLOW.match(image) and \
+        if self.I_ST_OVERFLOW.match(image) and \
                 (self.I_UI_CONFIRM_SAMLL.match(image) or self.I_UI_GOTIT_SMALL.match(image)):
             logger.warning(f"Detect soul overflow, command: {command}")
             return AnalyzeType.SoulOverflow
