@@ -15,6 +15,7 @@ from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_area_boss, page_shikigami_records
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.AreaBoss.assets import AreaBossAssets
+from tasks.AreaBoss.config_boss import AreaBossFloor
 import re
 from module.base.timer import Timer
 from module.logger import logger
@@ -150,7 +151,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         self.wait_until_appear(self.I_AB_CLOSE_RED)
         self.ui_click(self.I_AB_CLOSE_RED, self.I_FILTER)
 
-    def boss_fight(self, battle: RuleImage, ultra: bool = False) -> bool:
+    def boss_fight(self, battle: RuleImage, ultra: bool = False, fileter_open: bool = True) -> bool:
         """
             完成挑战一个鬼王的全流程
             从打开筛选界面开始 到关闭鬼王详情界面结束
@@ -162,9 +163,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                     False       挑战失败
         @rtype:
         """
-        if not self.appear(self.I_AB_FILTER_OPENED):
+        reward_floor = self.config.area_boss.boss.reward_floor
+        if fileter_open and not self.appear(self.I_AB_FILTER_OPENED):
             self.open_filter()
-
         # 如果打不开鬼王详情界面,直接退出
         if not self.open_boss_detail(battle, 3):
             return False
@@ -177,17 +178,24 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         if ultra:
             if not self.get_difficulty():
                 # 判断是否能切换到极地鬼
-                if not self.appear(self.I_AB_DIFFICULTY_NORMAL):
+                if not self.appear(self.I_AB_DIFFICULTY_NORMAL) and self.config.area_boss.boss.Attack_60:
                     self.switch_to_level_60()
                     if not self.start_fight():
                         logger.warning("you are so weakness!")
                         self.wait_until_appear(self.I_AB_CLOSE_RED)
                         self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=3)
                         return False
+                else:
+                    self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=3)
+                    return False
                 # 切换到 极地鬼
-                self.switch_difficulty(True)
+            self.switch_difficulty(True)
 
-            self.switch_to_floor_1()
+            # 调整悬赏层数
+            match reward_floor:
+                case AreaBossFloor.ONE: self.switch_to_floor_1()
+                case AreaBossFloor.TEN: self.switch_to_floor_10()
+                case AreaBossFloor.DEFAULT: logger.info("Not change floor")
         result = True
         if not self.start_fight():
             result = False
