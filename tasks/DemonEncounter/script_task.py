@@ -519,7 +519,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             time.sleep(0.5)
 
     def _battle(self, target_click):
-        config = self.con
+        config = self.conf
         #if click more than 5 times, then return
         click_count = 0
         boss_find_count = 0

@@ -32,7 +32,7 @@
     "roiFront": "1131,573,100,100",
     "roiBack": "1085,536,165,161",
     "method": "Template matching",
-    "threshold": 0.7,
+    "threshold": 0.8,
     "description": "点击战斗"
   },
   {

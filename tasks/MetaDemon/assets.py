@@ -55,7 +55,7 @@ class MetaDemonAssets:
 	# 寻找鬼王 
 	I_FIND_DEMON = RuleImage(roi_front=(1140,582,86,81), roi_back=(1102,546,132,133), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_find_demon.png")
 	# 点击战斗 
-	I_BATTLE_DEMON = RuleImage(roi_front=(1131,573,100,100), roi_back=(1085,536,165,161), threshold=0.7, method="Template matching", file="./tasks/MetaDemon/md/md_battle_demon.png")
+	I_BATTLE_DEMON = RuleImage(roi_front=(1131,573,100,100), roi_back=(1085,536,165,161), threshold=0.8, method="Template matching", file="./tasks/MetaDemon/md/md_battle_demon.png")
 	# description 
 	I_BOSS_EMPTY = RuleImage(roi_front=(44,134,88,85), roi_back=(44,134,88,85), threshold=0.7, method="Template matching", file="./tasks/MetaDemon/md/md_boss_empty.png")
 	# 集结 
