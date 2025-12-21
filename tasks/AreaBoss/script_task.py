@@ -435,53 +435,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         bossName = re.sub(r"[\'\[\]]", "", str([result.ocr_text for result in ocrName]))
         return bossName
 
-    def get_hot_in_reward(self):
-        """
-            返回挑战人数最多的悬赏鬼王
-        @return:    index
-        @rtype:
-        """
-        self.switch_to_reward()
-        lst = []
-        boosName = []
-        num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_1)
-        lst.append(num)
-        self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
-        #
-        self.open_filter()
-        num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_2)
-        lst.append(num)
-        self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
-        #
-        self.open_filter()
-        num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_3)
-        lst.append(num)
-        self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
-        #
-        self.open_filter()
-        for i in range(random.randint(1, 3)):
-            self.swipe(self.S_AB_FILTER_UP)
-        self.wait_until_appear(self.C_AB_BOSS_REWARD_PHOTO_MINUS_2, wait_time=1)
-        num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_MINUS_2)
-        lst.append(num)
-        self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
-        #
-        self.open_filter()
-        for i in range(random.randint(1, 3)):
-            self.swipe(self.S_AB_FILTER_UP)
-        self.wait_until_appear(self.C_AB_BOSS_REWARD_PHOTO_MINUS_1, wait_time=1)
-        num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_MINUS_1)
-        lst.append(num)
-        self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
-
-        index = 0
-        num = 0
-        for idx, val in enumerate(lst):
-            if val > num:
-                index = idx
-                num = val
-        return index
-
     def get_hot_in_reward_people_num(self):
         """
             返回挑战人数最多的悬赏鬼王人数
@@ -682,6 +635,19 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         # 如果是在19:00-21:00之间则返回True
         else:
             return True
+        
+    def check_common_chars(self, bossName, name):
+        # 将两个字符串转为集合，去除重复的字符
+        set_boss = set(bossName)
+        set_name = set(name)
+
+        # 计算交集，判断交集的元素个数
+        common_chars = set_boss & set_name  # & 是集合的交集运算符
+
+        if len(common_chars) >= 2:
+            return 1
+        else:
+            return 0  # 如果交集的字符少于2个，可以根据需要返回其他值
 
 if __name__ == '__main__':
     from module.config.config import Config
