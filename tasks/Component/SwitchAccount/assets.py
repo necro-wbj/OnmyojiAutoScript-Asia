@@ -10,6 +10,13 @@ from module.atom.list import RuleList
 class SwitchAccountAssets: 
 
 
+	# Swipe Rule Assets
+	# 登录界面 服务器列表的手指向左滑动 
+	S_SA_SVR_SWIPE_LEFT = RuleSwipe(roi_front=(730,460,30,21), roi_back=(470,410,26,21), mode="default", name="sa_svr_swipe_left")
+	# 登录界面 账号列表的手指向上滑动 
+	S_SA_ACCOUNT_LIST_UP = RuleSwipe(roi_front=(600,520,30,20), roi_back=(750,270,30,20), mode="default", name="sa_account_list_up")
+
+
 	# Click Rule Assets
 	# 账号下拉菜单 
 	C_SA_LOGIN_FORM_DROPDOWN_BTN = RuleClick(roi_front=(470,280,350,100), roi_back=(470,280,350,100), name="sa_login_form_dropdown_btn")
@@ -48,13 +55,6 @@ class SwitchAccountAssets:
 	O_SA_ACCOUNT_ACCOUNT_SELECTED = RuleOcr(roi=(460,280,370,50), area=(460,280,370,50), mode="SINGLE", method="Default", keyword="", name="sa_account_account_selected")
 	# 登录界面 用户中心(区别于游戏内用户中心) 账户名 
 	O_SA_LOGIN_FORM_USER_CENTER_ACCOUNT = RuleOcr(roi=(290,185,290,50), area=(290,185,290,50), mode="SINGLE", method="Default", keyword="", name="sa_login_form_user_center_account")
-
-
-	# Swipe Rule Assets
-	# 登录界面 服务器列表的手指向左滑动 
-	S_SA_SVR_SWIPE_LEFT = RuleSwipe(roi_front=(730,460,30,21), roi_back=(470,410,26,21), mode="default", name="sa_svr_swipe_left")
-	# 登录界面 账号列表的手指向上滑动 
-	S_SA_ACCOUNT_LIST_UP = RuleSwipe(roi_front=(600,520,30,20), roi_back=(750,270,30,20), mode="default", name="sa_account_list_up")
 
 
 	# Image Rule Assets
