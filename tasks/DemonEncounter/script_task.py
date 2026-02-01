@@ -572,7 +572,8 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
                         break
                     if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
                         continue
-                    if self.appear_then_click(self.I_BOSS_BACK_WHITE, interval=1):
+                    if self.wait_until_stable(self.I_BOSS_BACK_WHITE, timer=Timer(3)):
+                        self.appear_then_click(self.I_BOSS_BACK_WHITE, interval=1)
                         continue
                 # 返回到封魔主界面
             if boss_find_count >= 4:

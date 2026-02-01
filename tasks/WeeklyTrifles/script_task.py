@@ -191,7 +191,9 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
                 if self.appear(self.I_WT_SE_SHARE):
                     continue
                 logger.warning('This week has not been obtained')
-                self.ui_click(self.I_UI_BACK_BLUE, self.I_CHECK_MAIN)
+                # self.ui_click(self.I_UI_BACK_BLUE, self.I_CHECK_MAIN)
+                self.ui_get_current_page()
+                self.ui_goto(page_main)
                 return
         logger.info('Enter secret')
         # 判断是否已经领取

@@ -71,7 +71,7 @@ class DemonEncounterAssets:
 	# 式神录 
 	I_DE_SHI_RECORDS = RuleImage(roi_front=(789,639,48,48), roi_back=(789,639,48,48), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_shi_records.png")
 	# 左下角小指针 
-	I_DE_LOCATION = RuleImage(roi_front=(26,653,44,47), roi_back=(26,653,44,47), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_location.png")
+	I_DE_LOCATION = RuleImage(roi_front=(26,653,44,47), roi_back=(20,650,60,60), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_location.png")
 	# 逢魔蓝票 
 	I_MYSTERY_AMULET = RuleImage(roi_front=(596,314,84,82), roi_back=(581,294,115,116), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_mystery_amulet.png")
 	# 逢魔体力 

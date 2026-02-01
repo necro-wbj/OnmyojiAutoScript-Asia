@@ -75,7 +75,7 @@
     "itemName": "check_duel",
     "imageName": "page_check_duel.png",
     "roiFront": "110,10,64,38",
-    "roiBack": "79,1,110,74",
+    "roiBack": "79,1,202,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "鬥技"
@@ -120,7 +120,7 @@
     "itemName": "check_draft_duel",
     "imageName": "page_check_draft_duel.png",
     "roiFront": "96,10,121,39",
-    "roiBack": "96,10,121,39",
+    "roiBack": "79,1,202,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
