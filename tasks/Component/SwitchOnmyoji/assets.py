@@ -12,18 +12,18 @@ class SwitchOnmyojiAssets:
 
 	# Image Rule Assets
 	# 晴明战标志 
-	I_SEIMI_BATTLE = RuleImage(roi_front=(263,435,60,75), roi_back=(263,435,60,75), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchOnmyoji/so/so_qm_zhan.png")
+	I_SEIMI_BATTLE = RuleImage(roi_front=(253,429,79,78), roi_back=(147,388,222,153), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchOnmyoji/so/so_seimi_battle.png")
 	# 神乐战标志 
-	I_KAGURA_BATTLE = RuleImage(roi_front=(520,434,60,75), roi_back=(520,434,60,75), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchOnmyoji/so/so_sl_zhan.png")
+	I_KAGURA_BATTLE = RuleImage(roi_front=(509,428,79,78), roi_back=(401,394,222,153), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchOnmyoji/so/so_kagura_battle.png")
 	# 源博雅战标志 
-	I_HIROMASA_BATTLE = RuleImage(roi_front=(775,435,60,75), roi_back=(775,435,60,75), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchOnmyoji/so/so_yby_zhan.png")
+	I_HIROMASA_BATTLE = RuleImage(roi_front=(761,427,79,78), roi_back=(657,396,222,153), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchOnmyoji/so/so_hiromasa_battle.png")
 	# 八百比丘尼战标志 
-	I_YAO_BIKUNI_BATTLE = RuleImage(roi_front=(1030,437,60,75), roi_back=(1030,437,60,75), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchOnmyoji/so/so_bbbqn_zhan.png")
+	I_YAO_BIKUNI_BATTLE = RuleImage(roi_front=(1017,428,79,78), roi_back=(910,387,222,153), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchOnmyoji/so/so_yao_bikuni_battle.png")
 	# 阴阳师交替按钮 
-	I_ONMYOJI_SWITCH = RuleImage(roi_front=(32,380,52,42), roi_back=(32,380,52,42), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchOnmyoji/so/so_jiaoti.png")
+	I_ONMYOJI_SWITCH = RuleImage(roi_front=(39,385,40,33), roi_back=(19,362,80,91), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchOnmyoji/so/so_onmyoji_switch.png")
 	# 阴阳术阴阳师页面标志 
-	I_ONMYOJI_CHECK = RuleImage(roi_front=(80,615,58,67), roi_back=(80,615,58,67), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchOnmyoji/so/so_yinyangshi.png")
+	I_ONMYOJI_CHECK = RuleImage(roi_front=(67,622,82,58), roi_back=(58,608,100,88), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchOnmyoji/so/so_onmyoji_check.png")
 	# 阴阳术英杰页面标志 
-	I_HERO_CHECK = RuleImage(roi_front=(80,615,58,67), roi_back=(80,615,58,67), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchOnmyoji/so/so_yingjie.png")
+	I_HERO_CHECK = RuleImage(roi_front=(70,624,75,55), roi_back=(60,602,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchOnmyoji/so/so_hero_check.png")
 
 
