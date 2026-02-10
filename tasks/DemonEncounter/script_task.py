@@ -73,7 +73,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         # 周一 鬼灵歌姬
         if today == 0:
             # 获取group,team
-            if best_soul_config.enable and best_demon_boss_config.best_demon_kiryou_select:
+            if best_soul_config.enable and best_demon_boss_config.best_demon_kiryou_utahime_select:
                 group, team = best_soul_config.best_demon_kiryou_utahime.split(",")
                 logger.info(f'Best demon boss kiryou group: {group}, team: {team}')
             else:
@@ -128,7 +128,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         # 周一 鬼灵歌姬 補充
         if today == 0:
             # 获取group,team
-            if best_soul_config.enable and best_demon_boss_config.best_demon_kiryou_select:
+            if best_soul_config.enable and best_demon_boss_config.best_demon_kiryou_utahime_select:
                 group, team = best_soul_config.best_demon_kiryou_utahime_supplementary.split(",")
                 logger.info(f'Best demon boss kiryou supplementary group: {group}, team: {team}')
             else:
