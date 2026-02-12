@@ -2,8 +2,8 @@
   {
     "itemName": "d_team",
     "imageName": "duel_d_team.png",
-    "roiFront": "813,288,34,74",
-    "roiBack": "785,259,115,119",
+    "roiFront": "821,301,34,74",
+    "roiBack": "785,259,115,146",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击阵容"
@@ -38,8 +38,8 @@
   {
     "itemName": "d_auto_entry",
     "imageName": "duel_d_auto_entry.png",
-    "roiFront": "30,127,66,62",
-    "roiBack": "20,119,115,111",
+    "roiFront": "16,115,66,62",
+    "roiBack": "6,87,129,143",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "自动上阵"
@@ -47,8 +47,8 @@
   {
     "itemName": "d_help",
     "imageName": "duel_d_help.png",
-    "roiFront": "719,434,32,30",
-    "roiBack": "680,400,80,80",
+    "roiFront": "783,520,32,30",
+    "roiBack": "680,400,210,207",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "主界面的感叹号"
@@ -56,8 +56,8 @@
   {
     "itemName": "d_prepare",
     "imageName": "duel_d_prepare.png",
-    "roiFront": "1127,541,100,100",
-    "roiBack": "1127,541,100,100",
+    "roiFront": "1127,541,74,83",
+    "roiBack": "1127,541,152,178",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "准备"
@@ -101,8 +101,8 @@
   {
     "itemName": "d_celeb_star",
     "imageName": "duel_d_celeb_star.png",
-    "roiFront": "586,456,30,32",
-    "roiBack": "574,444,53,54",
+    "roiFront": "648,456,30,32",
+    "roiBack": "520,444,241,54",
     "method": "Template matching",
     "threshold": 0.75,
     "description": "名士的星星"
@@ -110,8 +110,8 @@
   {
     "itemName": "d_celeb_honor",
     "imageName": "duel_d_celeb_honor.png",
-    "roiFront": "665,531,25,30",
-    "roiBack": "652,517,52,53",
+    "roiFront": "253,663,25,30",
+    "roiBack": "1,483,846,236",
     "method": "Template matching",
     "threshold": 0.75,
     "description": "名士专属"
@@ -155,8 +155,8 @@
   {
     "itemName": "ban",
     "imageName": "duel_ban.png",
-    "roiFront": "1112,537,100,100",
-    "roiBack": "1112,537,100,100",
+    "roiFront": "1134,572,88,56",
+    "roiBack": "1073,517,196,183",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "禁用"

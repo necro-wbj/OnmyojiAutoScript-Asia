@@ -119,10 +119,15 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
         con = self._config.exploration_config
         if con.buff_gold_50_click or con.buff_gold_100_click or con.buff_exp_50_click or con.buff_exp_100_click:
             self.open_buff()
-            self.gold_50(is_open=False)
-            self.gold_100(is_open=False)
-            self.exp_50(is_open=False)
-            self.exp_100(is_open=False)
+            
+            if con.buff_gold_50_click:
+                self.gold_50(is_open=False)
+            if con.buff_gold_100_click:
+                self.gold_100(is_open=False)
+            if con.buff_exp_50_click:
+                self.exp_50(is_open=False)
+            if con.buff_exp_100_click:
+                self.exp_100(is_open=False)
             self.close_buff()
         self.set_next_run(task='Exploration', success=True, finish=False)
         raise TaskEnd
@@ -318,10 +323,14 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
         self.ui_goto(page_main)
         if con.buff_gold_50_click or con.buff_gold_100_click or con.buff_exp_50_click or con.buff_exp_100_click:
             self.open_buff()
-            self.gold_50(is_open=False)
-            self.gold_100(is_open=False)
-            self.exp_50(is_open=False)
-            self.exp_100(is_open=False)
+            if con.buff_gold_50_click:
+                self.gold_50(is_open=False)
+            if con.buff_gold_100_click:
+                self.gold_100(is_open=False)
+            if con.buff_exp_50_click:
+                self.exp_50(is_open=False)
+            if con.buff_exp_100_click:
+                self.exp_100(is_open=False)
             self.close_buff()
 
         # 设置下次执行行时间

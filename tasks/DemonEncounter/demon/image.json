@@ -48,7 +48,7 @@
     "itemName": "de_location",
     "imageName": "demon_de_location.png",
     "roiFront": "26,653,44,47",
-    "roiBack": "26,653,44,47",
+    "roiBack": "20,650,60,60",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "左下角小指针"

@@ -10,57 +10,20 @@ from module.atom.list import RuleList
 class SixRealmsAssets: 
 
 
-	# Click Rule Assets
+	# Image Rule Assets
 	# description 
-	C_MAIN_ANIMATE_KEEP = RuleClick(roi_front=(565,7,100,215), roi_back=(565,7,100,215), name="main_animate_keep")
-	# description 
-	C_STORE_ANIMATE_KEEP = RuleClick(roi_front=(825,87,317,466), roi_back=(825,87,317,466), name="store_animate_keep")
+	I_L103_EXIT = RuleImage(roi_front=(1171,587,69,70), roi_back=(1078,538,195,180), threshold=0.8, method="Template matching", file="./tasks/SixRealms/l103/l103_exit.png")
 
 
 	# Image Rule Assets
-	# 大boss挑战 
-	I_BOSS_FIRE = RuleImage(roi_front=(1128,576,100,100), roi_back=(1091,557,156,147), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_fire.png")
 	# description 
-	I_BOSS_TEAM_LOCK = RuleImage(roi_front=(1139,493,21,21), roi_back=(1130,487,38,43), threshold=0.95, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_team_lock.png")
+	I_NPC_COMMON = RuleImage(roi_front=(718,232,36,40), roi_back=(684,208,100,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/l104/l104_npc_common.png")
+	# 点击挑战 
+	I_NPC_FIRE = RuleImage(roi_front=(1129,585,100,100), roi_back=(1080,551,174,144), threshold=0.8, method="Template matching", file="./tasks/SixRealms/l104/l104_npc_fire.png")
 	# description 
-	I_BOSS_TEAM_UNLOCK = RuleImage(roi_front=(1138,497,22,21), roi_back=(1127,491,40,41), threshold=0.95, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_team_unlock.png")
+	I_BATTLE_TEAM_UNLOCK = RuleImage(roi_front=(962,676,21,21), roi_back=(943,655,64,60), threshold=0.8, method="Template matching", file="./tasks/SixRealms/l104/l104_battle_team_unlock.png")
 	# description 
-	I_BOSS_SKIP = RuleImage(roi_front=(1131,13,100,42), roi_back=(1113,5,136,62), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_skip.png")
-	# description 
-	I_BOSS_USE_DOUBLE = RuleImage(roi_front=(669,417,126,53), roi_back=(651,407,164,71), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_use_double.png")
-	# 御神获得经验 
-	I_BOSS_GET_EXP = RuleImage(roi_front=(561,109,171,45), roi_back=(492,86,281,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_get_exp.png")
-	# description 
-	I_BOSS_SHARE = RuleImage(roi_front=(1090,604,70,74), roi_back=(1074,587,100,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_share.png")
-	# 结算的椒图 
-	I_BOSS_SHUTU = RuleImage(roi_front=(108,141,173,122), roi_back=(108,141,173,122), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_shutu.png")
-	# description 
-	I_BOSS_BATTLE_AGAIN = RuleImage(roi_front=(435,403,173,64), roi_back=(409,390,212,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_battle_again.png")
-	# description 
-	I_BOSS_BATTLE_GIVEUP = RuleImage(roi_front=(671,399,175,59), roi_back=(649,381,219,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_battle_giveup.png")
-
-
-	# Click Rule Assets
-	# 左边的 
-	C_NPC_FIRE_LEFT = RuleClick(roi_front=(423,203,153,193), roi_back=(423,203,153,193), name="npc_fire_left")
-	# description 
-	C_NPC_FIRE_RIGHT = RuleClick(roi_front=(740,248,181,180), roi_back=(740,248,181,180), name="npc_fire_right")
-	# 中间的精英 
-	C_NPC_FIRE_CENTER = RuleClick(roi_front=(620,188,174,217), roi_back=(620,188,174,217), name="npc_fire_center")
-	# 默认的 
-	C_ISLAND_ENTER = RuleClick(roi_front=(0,0,100,100), roi_back=(0,0,100,100), name="island_enter")
-	# 右数第一个 
-	C_ISLAND_ENTER_1 = RuleClick(roi_front=(1012,349,136,221), roi_back=(1012,349,136,221), name="island_enter_1")
-	# description 
-	C_ISLAND_ENTER_2 = RuleClick(roi_front=(825,341,143,224), roi_back=(825,341,143,224), name="island_enter_2")
-	# description 
-	C_ISLAND_ENTER_3 = RuleClick(roi_front=(694,338,115,222), roi_back=(694,338,115,222), name="island_enter_3")
-	# description 
-	C_ISLAND_ENTER_4 = RuleClick(roi_front=(501,323,141,243), roi_back=(501,323,141,243), name="island_enter_4")
-	# description 
-	C_ISLAND_ENTER_5 = RuleClick(roi_front=(319,332,149,237), roi_back=(319,332,149,237), name="island_enter_5")
-	# description 
-	C_ISLAND_ENTER_6 = RuleClick(roi_front=(162,265,136,302), roi_back=(162,265,136,302), name="island_enter_6")
+	I_BATTLE_TEAM_LOCK = RuleImage(roi_front=(961,675,21,23), roi_back=(949,662,48,50), threshold=0.8, method="Template matching", file="./tasks/SixRealms/l104/l104_battle_team_lock.png")
 
 
 	# Image Rule Assets
@@ -100,17 +63,43 @@ class SixRealmsAssets:
 	I_ISLAND_TAG_FLAG = RuleImage(roi_front=(543,601,100,100), roi_back=(543,601,100,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_island_tag_flag.png")
 	# 暂时离开六道之门 
 	I_EXIT_SIXREALMS = RuleImage(roi_front=(507.5,308,100,100), roi_back=(507.5,308,100,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_exit_sixrealms.png")
+	# 选择一个式神加入征伐队伍 
+	I_SELECT_SHIKIGAMI_AND_CONFIRM = RuleImage(roi_front=(499,238,151,57), roi_back=(479,213,199,113), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_select_shikigami_and_confirm.png")
 
 
-	# Ocr Rule Assets
-	# Ocr-description 
-	O_OCR_MAP = RuleOcr(roi=(144,227,989,376), area=(144,227,989,376), mode="Full", method="Default", keyword="", name="ocr_map")
-	# Ocr-description 
-	O_ISLAND_NAME = RuleOcr(roi=(88,17,148,49), area=(88,17,148,49), mode="Single", method="Default", keyword="", name="island_name")
-	# 有多少钱 
-	O_COIN_NUM = RuleOcr(roi=(1171,23,59,31), area=(1171,23,59,31), mode="Digit", method="Default", keyword="", name="coin_num")
-	# Ocr-description 
-	O_SKILL_REFRESH = RuleOcr(roi=(1172,684,100,31), area=(1172,684,100,31), mode="Single", method="Default", keyword="", name="skill_refresh")
+	# Swipe Rule Assets
+	# 征伐队伍选择界面底部阵容上拉 
+	S_TEAM_SWIPE_UP = RuleSwipe(roi_front=(520,571,93,98), roi_back=(589,180,100,100), mode="default", name="team_swipe_up")
+
+
+	# Click Rule Assets
+	# description 
+	C_MAIN_ANIMATE_KEEP = RuleClick(roi_front=(565,7,100,215), roi_back=(565,7,100,215), name="main_animate_keep")
+	# description 
+	C_STORE_ANIMATE_KEEP = RuleClick(roi_front=(825,87,317,466), roi_back=(825,87,317,466), name="store_animate_keep")
+
+
+	# Click Rule Assets
+	# 左边的 
+	C_NPC_FIRE_LEFT = RuleClick(roi_front=(423,203,153,193), roi_back=(423,203,153,193), name="npc_fire_left")
+	# description 
+	C_NPC_FIRE_RIGHT = RuleClick(roi_front=(740,248,181,180), roi_back=(740,248,181,180), name="npc_fire_right")
+	# 中间的精英 
+	C_NPC_FIRE_CENTER = RuleClick(roi_front=(620,188,174,217), roi_back=(620,188,174,217), name="npc_fire_center")
+	# 默认的 
+	C_ISLAND_ENTER = RuleClick(roi_front=(0,0,100,100), roi_back=(0,0,100,100), name="island_enter")
+	# 右数第一个 
+	C_ISLAND_ENTER_1 = RuleClick(roi_front=(1012,349,136,221), roi_back=(1012,349,136,221), name="island_enter_1")
+	# description 
+	C_ISLAND_ENTER_2 = RuleClick(roi_front=(825,341,143,224), roi_back=(825,341,143,224), name="island_enter_2")
+	# description 
+	C_ISLAND_ENTER_3 = RuleClick(roi_front=(694,338,115,222), roi_back=(694,338,115,222), name="island_enter_3")
+	# description 
+	C_ISLAND_ENTER_4 = RuleClick(roi_front=(501,323,141,243), roi_back=(501,323,141,243), name="island_enter_4")
+	# description 
+	C_ISLAND_ENTER_5 = RuleClick(roi_front=(319,332,149,237), roi_back=(319,332,149,237), name="island_enter_5")
+	# description 
+	C_ISLAND_ENTER_6 = RuleClick(roi_front=(162,265,136,302), roi_back=(162,265,136,302), name="island_enter_6")
 
 
 	# Image Rule Assets
@@ -140,6 +129,40 @@ class SixRealmsAssets:
 	I_SKILL105 = RuleImage(roi_front=(178,187,80,69), roi_back=(112,149,779,151), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_skill105.png")
 
 
+	# Ocr Rule Assets
+	# Ocr-description 
+	O_OCR_MAP = RuleOcr(roi=(144,227,989,376), area=(144,227,989,376), mode="Full", method="Default", keyword="", name="ocr_map")
+	# Ocr-description 
+	O_ISLAND_NAME = RuleOcr(roi=(88,17,148,49), area=(88,17,148,49), mode="Single", method="Default", keyword="", name="island_name")
+	# 有多少钱 
+	O_COIN_NUM = RuleOcr(roi=(1171,23,59,31), area=(1171,23,59,31), mode="Digit", method="Default", keyword="", name="coin_num")
+	# Ocr-description 
+	O_SKILL_REFRESH = RuleOcr(roi=(1172,684,100,31), area=(1172,684,100,31), mode="Single", method="Default", keyword="", name="skill_refresh")
+
+
+	# Image Rule Assets
+	# 大boss挑战 
+	I_BOSS_FIRE = RuleImage(roi_front=(1128,576,100,100), roi_back=(1091,557,156,147), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_fire.png")
+	# description 
+	I_BOSS_TEAM_LOCK = RuleImage(roi_front=(1139,493,21,21), roi_back=(1130,487,38,43), threshold=0.95, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_team_lock.png")
+	# description 
+	I_BOSS_TEAM_UNLOCK = RuleImage(roi_front=(1138,497,22,21), roi_back=(1127,491,40,41), threshold=0.95, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_team_unlock.png")
+	# description 
+	I_BOSS_SKIP = RuleImage(roi_front=(1131,13,100,42), roi_back=(1113,5,136,62), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_skip.png")
+	# description 
+	I_BOSS_USE_DOUBLE = RuleImage(roi_front=(669,417,126,53), roi_back=(651,407,164,71), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_use_double.png")
+	# 御神获得经验 
+	I_BOSS_GET_EXP = RuleImage(roi_front=(561,109,171,45), roi_back=(492,86,281,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_get_exp.png")
+	# description 
+	I_BOSS_SHARE = RuleImage(roi_front=(1090,604,70,74), roi_back=(1074,587,100,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_share.png")
+	# 结算的椒图 
+	I_BOSS_SHUTU = RuleImage(roi_front=(108,141,173,122), roi_back=(108,141,173,122), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_shutu.png")
+	# description 
+	I_BOSS_BATTLE_AGAIN = RuleImage(roi_front=(435,403,173,64), roi_back=(409,390,212,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_battle_again.png")
+	# description 
+	I_BOSS_BATTLE_GIVEUP = RuleImage(roi_front=(671,399,175,59), roi_back=(649,381,219,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_battle_giveup.png")
+
+
 	# Image Rule Assets
 	# 宁息刷新 
 	I_STORE_REFRESH = RuleImage(roi_front=(545,596,46,47), roi_back=(519,568,100,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/l101/l101_store_refresh.png")
@@ -165,21 +188,5 @@ class SixRealmsAssets:
 	I_IMITATE_1 = RuleImage(roi_front=(839,194,59,44), roi_back=(794,174,358,268), threshold=0.8, method="Template matching", file="./tasks/SixRealms/l102/l102_imitate_1.png")
 	# description 
 	I_IMITATE_SUCCESS = RuleImage(roi_front=(535,143,209,54), roi_back=(429,122,414,100), threshold=0.7, method="Template matching", file="./tasks/SixRealms/l102/l102_imitate_success.png")
-
-
-	# Image Rule Assets
-	# description 
-	I_L103_EXIT = RuleImage(roi_front=(1171,587,69,70), roi_back=(1078,538,195,180), threshold=0.8, method="Template matching", file="./tasks/SixRealms/l103/l103_exit.png")
-
-
-	# Image Rule Assets
-	# description 
-	I_NPC_COMMON = RuleImage(roi_front=(718,232,36,40), roi_back=(684,208,100,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/l104/l104_npc_common.png")
-	# 点击挑战 
-	I_NPC_FIRE = RuleImage(roi_front=(1129,585,100,100), roi_back=(1080,551,174,144), threshold=0.8, method="Template matching", file="./tasks/SixRealms/l104/l104_npc_fire.png")
-	# description 
-	I_BATTLE_TEAM_UNLOCK = RuleImage(roi_front=(962,676,21,21), roi_back=(943,655,64,60), threshold=0.8, method="Template matching", file="./tasks/SixRealms/l104/l104_battle_team_unlock.png")
-	# description 
-	I_BATTLE_TEAM_LOCK = RuleImage(roi_front=(961,675,21,23), roi_back=(949,662,48,50), threshold=0.8, method="Template matching", file="./tasks/SixRealms/l104/l104_battle_team_lock.png")
 
 

@@ -10,8 +10,8 @@ from tasks.Component.config_base import ConfigBase
 
 class PetsConfig(ConfigBase):
     # 其乐融融
-    pets_happy: bool = Field(default=True)
-    # 大餐
+    # pets_happy: bool = Field(default=True)
+    # 快速喂养
     pets_feast: bool = Field(default=True)
     # 打魂十 拿寵物獎勵
     pets_fight_orochi: bool = Field(default=False)

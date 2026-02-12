@@ -24,7 +24,7 @@ from tasks.Component.BaseActivity.config_activity import ApMode
 from tasks.ActivityShikigami.assets import ActivityShikigamiAssets
 from tasks.GameUi.page import page_main, page_shikigami_records
 from tasks.GameUi.game_ui import GameUi
-import tasks.GameUi.page as game
+import tasks.ActivityShikigami.page as game
 from typing import Any
 
 

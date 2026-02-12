@@ -10,44 +10,6 @@ from module.atom.list import RuleList
 class ReplaceShikigamiAssets: 
 
 
-	# Click Rule Assets
-	# description 
-	C_SHIKIGAMI_SWITCH_1 = RuleClick(roi_front=(31,618,66,64), roi_back=(31,618,66,64), name="shikigami_switch_1")
-	# description 
-	C_SHIKIGAMI_LEFT_1 = RuleClick(roi_front=(163,487,100,179), roi_back=(163,487,100,179), name="shikigami_left_1")
-	# description 
-	C_SHIKIGAMI_LEFT_2 = RuleClick(roi_front=(295,487,100,178), roi_back=(295,487,100,178), name="shikigami_left_2")
-	# description 
-	C_SHIKIGAMI_LEFT_3 = RuleClick(roi_front=(436,492,100,178), roi_back=(436,492,100,178), name="shikigami_left_3")
-	# description 
-	C_SHIKIGAMI_LEFT_4 = RuleClick(roi_front=(571,493,100,174), roi_back=(571,493,100,174), name="shikigami_left_4")
-	# description 
-	C_SHIKIGAMI_LEFT_5 = RuleClick(roi_front=(704,492,100,176), roi_back=(704,492,100,176), name="shikigami_left_5")
-	# description 
-	C_SHIKIGAMI_LEFT_6 = RuleClick(roi_front=(839,487,100,182), roi_back=(839,487,100,182), name="shikigami_left_6")
-	# description 
-	C_SHIKIGAMI_LEFT_7 = RuleClick(roi_front=(977,493,100,171), roi_back=(977,493,100,171), name="shikigami_left_7")
-	# description 
-	C_SHIKIGAMI_LEFT_8 = RuleClick(roi_front=(1033,490,100,180), roi_back=(1033,490,100,180), name="shikigami_left_8")
-
-
-	# Image Rule Assets
-	# description 
-	I_DETECT_EMPTY_1 = RuleImage(roi_front=(64,262,100,100), roi_back=(38,227,158,177), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_1.png")
-	# description 
-	I_DETECT_EMPTY_2 = RuleImage(roi_front=(281,263,100,100), roi_back=(238,234,178,168), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_2.png")
-	# description 
-	I_DETECT_EMPTY_3 = RuleImage(roi_front=(495,263,100,100), roi_back=(470,234,150,150), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_3.png")
-	# description 
-	I_DETECT_EMPTY_4 = RuleImage(roi_front=(703,256,100,100), roi_back=(681,229,157,174), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_4.png")
-	# description 
-	I_DETECT_EMPTY_5 = RuleImage(roi_front=(914,257,100,100), roi_back=(872,221,198,190), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_5.png")
-	# description 
-	I_DETECT_EMPTY_6 = RuleImage(roi_front=(1135,253,100,100), roi_back=(1091,229,156,159), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_6.png")
-	# description 
-	I_NEW = RuleImage(roi_front=(0,0,100,100), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/image_name.png")
-
-
 	# Image Rule Assets
 	# description 
 	I_RS_NO_ADD = RuleImage(roi_front=(276,222,100,212), roi_back=(28,181,1232,293), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_no_add.png")
@@ -87,6 +49,44 @@ class ReplaceShikigamiAssets:
 	I_RS_UR = RuleImage(roi_front=(149,623,56,58), roi_back=(136,603,88,95), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_ur.png")
 	# description 
 	I_RS_UR_SELECTED = RuleImage(roi_front=(36,620,54,58), roi_back=(14,601,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_ur_selected.png")
+
+
+	# Image Rule Assets
+	# description 
+	I_DETECT_EMPTY_1 = RuleImage(roi_front=(64,262,100,100), roi_back=(38,227,158,177), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_1.png")
+	# description 
+	I_DETECT_EMPTY_2 = RuleImage(roi_front=(281,263,100,100), roi_back=(238,234,178,168), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_2.png")
+	# description 
+	I_DETECT_EMPTY_3 = RuleImage(roi_front=(495,263,100,100), roi_back=(470,234,150,150), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_3.png")
+	# description 
+	I_DETECT_EMPTY_4 = RuleImage(roi_front=(703,256,100,100), roi_back=(681,229,157,174), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_4.png")
+	# description 
+	I_DETECT_EMPTY_5 = RuleImage(roi_front=(914,257,100,100), roi_back=(872,221,198,190), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_5.png")
+	# description 
+	I_DETECT_EMPTY_6 = RuleImage(roi_front=(1135,253,100,100), roi_back=(1091,229,156,159), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_6.png")
+	# description 
+	I_NEW = RuleImage(roi_front=(0,0,100,100), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/image_name.png")
+
+
+	# Click Rule Assets
+	# description 
+	C_SHIKIGAMI_SWITCH_1 = RuleClick(roi_front=(31,618,66,64), roi_back=(31,618,66,64), name="shikigami_switch_1")
+	# description 
+	C_SHIKIGAMI_LEFT_1 = RuleClick(roi_front=(163,487,100,179), roi_back=(163,487,100,179), name="shikigami_left_1")
+	# description 
+	C_SHIKIGAMI_LEFT_2 = RuleClick(roi_front=(295,487,100,178), roi_back=(295,487,100,178), name="shikigami_left_2")
+	# description 
+	C_SHIKIGAMI_LEFT_3 = RuleClick(roi_front=(436,492,100,178), roi_back=(436,492,100,178), name="shikigami_left_3")
+	# description 
+	C_SHIKIGAMI_LEFT_4 = RuleClick(roi_front=(571,493,100,174), roi_back=(571,493,100,174), name="shikigami_left_4")
+	# description 
+	C_SHIKIGAMI_LEFT_5 = RuleClick(roi_front=(704,492,100,176), roi_back=(704,492,100,176), name="shikigami_left_5")
+	# description 
+	C_SHIKIGAMI_LEFT_6 = RuleClick(roi_front=(839,487,100,182), roi_back=(839,487,100,182), name="shikigami_left_6")
+	# description 
+	C_SHIKIGAMI_LEFT_7 = RuleClick(roi_front=(977,493,100,171), roi_back=(977,493,100,171), name="shikigami_left_7")
+	# description 
+	C_SHIKIGAMI_LEFT_8 = RuleClick(roi_front=(1033,490,100,180), roi_back=(1033,490,100,180), name="shikigami_left_8")
 
 
 	# Image Rule Assets

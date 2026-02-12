@@ -10,6 +10,11 @@ from module.atom.list import RuleList
 class KekkaiActivationAssets: 
 
 
+	# Swipe Rule Assets
+	# description 
+	S_CARDS_SWIPE = RuleSwipe(roi_front=(178,401,23,23), roi_back=(176,168,29,24), mode="default", name="cards_swipe")
+
+
 	# Click Rule Assets
 	# 切换卡的种类 
 	C_A_SELECT_CARD_LIST = RuleClick(roi_front=(352,99,172,53), roi_back=(352,99,172,53), name="a_select_card_list")
@@ -22,16 +27,6 @@ class KekkaiActivationAssets:
 	O_CARD_ALL_TIME = RuleOcr(roi=(926,262,95,31), area=(926,262,95,31), mode="Duration", method="Default", keyword="", name="card_all_time")
 	# 识别结界卡每小时收益 
 	O_CHECK_CARD_NUMBER = RuleOcr(roi=(305,153,107,481), area=(305,153,107,481), mode="Single", method="Default", keyword="", name="check_card_number")
-
-
-	# Swipe Rule Assets
-	# description 
-	S_CARDS_SWIPE = RuleSwipe(roi_front=(178,401,23,23), roi_back=(176,168,29,24), mode="default", name="cards_swipe")
-
-
-	# Click Rule Assets
-	# 收穫結界卡 
-	C_A_HARVEST_CARD = RuleClick(roi_front=(892,152,57,56), roi_back=(892,152,57,56), name="a_harvest_card")
 
 
 	# Image Rule Assets
@@ -90,6 +85,11 @@ class KekkaiActivationAssets:
 	# Image Rule Assets
 	# 用于判断是否滑到底了 
 	I_AA_SWIPE_BLOCK = RuleImage(roi_front=(124,622,35,32), roi_back=(117,612,50,51), threshold=0.9, method="Template matching", file="./tasks/KekkaiActivation/a/a_aa_swipe_block.png")
+
+
+	# Click Rule Assets
+	# 收穫結界卡 
+	C_A_HARVEST_CARD = RuleClick(roi_front=(892,152,57,56), roi_back=(892,152,57,56), name="a_harvest_card")
 
 
 	# Image Rule Assets

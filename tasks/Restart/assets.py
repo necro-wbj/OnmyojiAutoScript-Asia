@@ -22,7 +22,7 @@ class RestartAssets:
 	# 邮件小图标 
 	I_HARVEST_MAIL = RuleImage(roi_front=(337,505,37,25), roi_back=(38,465,880,89), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_mail.png")
 	# 全部收取 
-	I_HARVEST_MAIL_ALL = RuleImage(roi_front=(69,589,64,57), roi_back=(28,572,115,123), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_mail_all.png")
+	I_HARVEST_MAIL_ALL = RuleImage(roi_front=(69,579,80,67), roi_back=(28,551,142,144), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_mail_all.png")
 	# 有些邮件需要点击一次 
 	I_HARVEST_MAIL_OPEN = RuleImage(roi_front=(163,367,45,48), roi_back=(139,86,100,487), threshold=0.9, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_mail_open.png")
 	# 确认收取邮件 
@@ -64,12 +64,9 @@ class RestartAssets:
 	# 特殊邮件打开状态 
 	I_SPECIAL_MAIL_OPEN = RuleImage(roi_front=(1201,380,55,110), roi_back=(1190,348,79,162), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_special_mail_open.png")
 	# 一键已读所有邮件 
-	I_READ_ALL_MAIL = RuleImage(roi_front=(155,603,166,44), roi_back=(149,588,182,72), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_read_all_mail.png")
-
-
-	# Click Rule Assets
-	# 相同服务器多个角色选择界面,点击空白区域 确认登录 
-	C_LOGIN_ENSURE_LOGIN_CHARACTER_IN_SAME_SVR = RuleClick(roi_front=(600,240,500,400), roi_back=(600,240,500,400), name="login_ensure_login_character_in_same_svr")
+	I_READ_ALL_MAIL = RuleImage(roi_front=(180,605,130,35), roi_back=(149,588,182,72), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_read_all_mail.png")
+	# 邮件红点 
+	I_MAIL_RED_POINT = RuleImage(roi_front=(1229,200,16,21), roi_back=(1159,189,100,317), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_mail_red_point.png")
 
 
 	# Image Rule Assets
@@ -113,6 +110,11 @@ class RestartAssets:
 	I_EARLY_SERVER_CANCEL = RuleImage(roi_front=(435,404,172,56), roi_back=(435,404,172,56), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_early_server_cancel.png")
 	# 取消继续战斗 
 	I_CANCEL_BATTLE = RuleImage(roi_front=(471,395,129,55), roi_back=(367,227,545,296), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_cancel_battle.png")
+
+
+	# Click Rule Assets
+	# 相同服务器多个角色选择界面,点击空白区域 确认登录 
+	C_LOGIN_ENSURE_LOGIN_CHARACTER_IN_SAME_SVR = RuleClick(roi_front=(600,240,500,400), roi_back=(600,240,500,400), name="login_ensure_login_character_in_same_svr")
 
 
 	# Ocr Rule Assets

@@ -2,11 +2,16 @@
 # @author runhey
 # github https://github.com/runhey
 import time
+
+import importlib
+from pathlib import Path
+
 from datetime import datetime
 from time import sleep
 
 import random
 from collections import deque
+from module.atom.click import RuleClick
 from module.atom.gif import RuleGif
 from module.atom.image import RuleImage
 from module.atom.list import RuleList
@@ -14,8 +19,9 @@ from module.atom.ocr import RuleOcr
 from module.base.decorator import run_once
 from module.base.timer import Timer
 from module.logger import logger
+from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
 from tasks.GameUi.assets import GameUiAssets
-from tasks.GameUi.page import *
+from tasks.GameUi.page import Page, PageRegistry, page_main, random_click
 from tasks.Restart.assets import RestartAssets
 from tasks.SixRealms.assets import SixRealmsAssets
 from module.exception import (GameNotRunningError, GamePageUnknownError, RequestHumanTakeover)
@@ -26,26 +32,6 @@ from tasks.ActivityShikigami.assets import ActivityShikigamiAssets
 
 class GameUi(BaseTask, GameUiAssets):
     ui_current: Page = None
-    ui_pages = [
-        # 登录
-        page_login,
-        # 主页
-        page_main, page_summon, page_exploration, page_town,
-        # 探索的
-        page_awake_zones, page_soul_zones, page_realm_raid, page_goryou_realm, page_delegation,
-        page_secret_zones, page_area_boss, page_heian_kitan, page_six_gates, page_bondling_fairyland,
-        page_kekkai_toppa,
-        # 町中的
-        page_duel, page_demon_encounter, page_hunt, page_hunt_kirin, page_draft_duel, page_hyakkisen,
-        # 庭院里面的
-        page_shikigami_records, page_onmyodo, page_friends, page_daily, page_mall, page_guild, page_team,
-        page_collection, page_act_list,
-        # 爬塔活动
-        page_act_list_climb_act, page_climb_act, page_climb_act_2, page_climb_act_pass, page_climb_act_ap,
-        page_climb_act_boss, page_climb_act_buff, page_climb_act_ap100,
-        # 战斗
-        page_battle, page_reward, page_failed
-    ]
     ui_close = [GameUiAssets.I_BACK_MALL, GeneralBattleAssets.I_CONFIRM,
                 BaseTask.I_UI_BACK_RED, BaseTask.I_UI_BACK_YELLOW,
                 GameUiAssets.I_BACK_FRIENDS, GameUiAssets.I_BACK_DAILY,
@@ -54,33 +40,30 @@ class GameUi(BaseTask, GameUiAssets):
                 ActivityShikigamiAssets.I_SKIP_BUTTON, ActivityShikigamiAssets.I_RED_EXIT, BaseTask.I_UI_BACK_BLUE,
                 ActivityShikigamiAssets.I_RED_EXIT_2]
 
-    def home_explore(self) -> bool:
-        """
-        使用ocr识别到探索按钮并点击
-        :return:
-        """
-        while 1:
-            self.screenshot()
-            if self.ocr_appear_click(self.O_HOME_EXPLORE, interval=2):
-                continue
-            if self.appear(self.I_BACK_BLUE, threshold=0.6):
-                break
-        logger.info(f'Click {self.O_HOME_EXPLORE.name}')
-        return True
+    def __init__(self, config, device):
+        super().__init__(config, device)
+        # 初始化时动态导入所有 page 模块
+        self._import_all_pages()
 
-    def explore_home(self) -> bool:
-        """
-
-        :return:
-        """
-        while 1:
-            self.screenshot()
-            if self.appear_then_click(self.I_BACK_BLUE, threshold=0.6, interval=2):
+    @staticmethod
+    def _import_all_pages():
+        """动态加载 tasks/**/page.py"""
+        base_dir = Path(__file__).resolve().parent.parent  # tasks 目录
+        for task_dir in base_dir.iterdir():
+            if not task_dir.is_dir():
                 continue
-            if self.appear(self.I_HOME_SHIKIKAMI, threshold=0.6):
-                break
-        logger.info(f'Click {self.I_HOME_SHIKIKAMI.name}')
-        return True
+            page_file = task_dir / "page.py"
+            if not page_file.exists():
+                continue
+            module_name = f"tasks.{task_dir.name}.page"
+            spec = importlib.util.spec_from_file_location(module_name, page_file)
+            if spec and spec.loader:
+                module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(module)
+
+    @property
+    def ui_pages(self) -> list[Page]:
+        return PageRegistry.all()
 
     def ui_page_appear(self, page: Page, skip_first_screenshot: bool = True, interval: float = None):
         """
@@ -112,23 +95,6 @@ class GameUi(BaseTask, GameUiAssets):
             skip_first_screenshot = False
         return False
 
-    def ensure_scroll_open(self):
-        """
-        判断庭院界面卷轴是否打开
-        """
-        return self.appear(RestartAssets.I_LOGIN_SCROOLL_CLOSE)
-
-    def ensure_button_execute(self, button):
-        """
-        确保button执行
-        """
-        if isinstance(button, RuleImage) and self.appear(button):
-            return True
-        elif callable(button) and button():
-            return True
-        else:
-            return False
-
     def ui_get_current_page(self, skip_first_screenshot=True) -> Page:
         """
         获取当前页面
@@ -155,7 +121,7 @@ class GameUi(BaseTask, GameUiAssets):
         while 1:
             self.maybe_screenshot(skip_first_screenshot)
             skip_first_screenshot = False
-            # 如果20S还没有到底，那么就抛出异常
+            # 如果10S还没有到底，那么就抛出异常
             if timeout.reached():
                 break
             # Known pages
@@ -169,6 +135,9 @@ class GameUi(BaseTask, GameUiAssets):
             # Try to close unknown page
             if self.try_close_unknown_page():
                 timeout = Timer(10, count=20).start()
+            else:
+                # entirely unknown page, click safe random area
+                self.click(random_click(), interval=4)
             # wait to ui
             sleep(0.3)
             app_check()
@@ -225,7 +194,13 @@ class GameUi(BaseTask, GameUiAssets):
         sorted_paths = sorted(paths.items(), key=lambda kv: len(kv[1]))
         return sorted_paths
 
-    def ui_goto(self, destination: Page, confirm_wait=0, skip_first_screenshot=True, timeout: int = 60):
+    def ui_goto_page(self, dest_page: Page, confirm_wait=0, skip_first_screenshot=True, timeout: int = 60) -> bool:
+        """前往指定page, 自动调用获取当前页面方法, 其他参数同ui_goto
+        """
+        self.ui_get_current_page()
+        return self.ui_goto(dest_page, confirm_wait, skip_first_screenshot, timeout)
+
+    def ui_goto(self, destination: Page, confirm_wait=0, skip_first_screenshot=True, timeout: int = 60) -> bool:
         """
         Args:
             destination (Page):
@@ -261,6 +236,7 @@ class GameUi(BaseTask, GameUiAssets):
             if not found:
                 if close_unknown_timer.reached_and_reset():
                     self.try_close_unknown_page(skip_screenshot=False)
+                    self.ui_current = None
         else:
             logger.error(f'Cannot goto page[{destination}], timeout[{timeout}s] reached')
         return False
@@ -394,12 +370,11 @@ class GameUi(BaseTask, GameUiAssets):
         time.sleep(1)
         return
 
-
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config('oas2')
+    c = Config('oas1')
     d = Device(c)
     game = GameUi(config=c, device=d)
     game.ui_get_current_page()

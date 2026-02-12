@@ -260,6 +260,9 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             time_exp = Timer(12)
             time_exp.start()
             while 1:
+                if time_exp.reached():
+                    logger.warning('Extract exp box timeout')
+                    break
                 self.screenshot()
                 # 如果出现结界皮肤， 表示收取好了
                 if self.appear(self.I_REALM_SHIN) and not self.appear(self.I_BOX_EXP, threshold=0.6):
@@ -298,9 +301,6 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                 if self.appear_then_click(self.I_EXP_EXTRACT, interval=1):
                     continue
 
-                if time_exp.reached():
-                    logger.warning('Extract exp box timeout')
-                    break
             _exit_to_realm()
 
         self.screenshot()
@@ -732,6 +732,8 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             if self.appear_then_click(self.I_UI_BACK_RED, interval=1):
                 continue
             if self.appear_then_click(self.I_UI_BACK_BLUE, interval=1):
+                continue
+            if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=1):
                 continue
 
     def back_realm(self):

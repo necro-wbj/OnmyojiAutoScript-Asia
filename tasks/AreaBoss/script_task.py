@@ -7,12 +7,15 @@ from datetime import timedelta, datetime, time
 import cv2
 import numpy as np
 import random
+import re
+from module.atom.click import RuleClick
 from tasks.base_task import BaseTask
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_area_boss, page_shikigami_records
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.AreaBoss.assets import AreaBossAssets
+from tasks.AreaBoss.config_boss import AreaBossFloor
 import re
 from module.base.timer import Timer
 from module.logger import logger
@@ -49,12 +52,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         self.ui_get_current_page()
         self.ui_goto(page_area_boss)
 
-        self.open_filter()
-        # 以挑战鬼王数量
+        # 已挑战鬼王数量
         boss_fought = 0
         if con.boss_reward:
-            self.fight_reward_boss()
-            boss_fought += 1
+            if self.fight_reward_boss():  # 挑战成功则加一
+                boss_fought += 1
 
         self.open_filter()
         # 切换到对应集合(热门/收藏)
@@ -149,7 +151,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         self.wait_until_appear(self.I_AB_CLOSE_RED)
         self.ui_click(self.I_AB_CLOSE_RED, self.I_FILTER)
 
-    def boss_fight(self, battle: RuleImage, ultra: bool = False) -> bool:
+    def boss_fight(self, battle: RuleImage, ultra: bool = False, fileter_open: bool = True) -> bool:
         """
             完成挑战一个鬼王的全流程
             从打开筛选界面开始 到关闭鬼王详情界面结束
@@ -161,9 +163,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                     False       挑战失败
         @rtype:
         """
-        if not self.appear(self.I_AB_FILTER_OPENED):
+        reward_floor = self.config.area_boss.boss.reward_floor
+        if fileter_open and not self.appear(self.I_AB_FILTER_OPENED):
             self.open_filter()
-
         # 如果打不开鬼王详情界面,直接退出
         if not self.open_boss_detail(battle, 3):
             return False
@@ -176,17 +178,24 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         if ultra:
             if not self.get_difficulty():
                 # 判断是否能切换到极地鬼
-                if not self.appear(self.I_AB_DIFFICULTY_NORMAL):
+                if not self.appear(self.I_AB_DIFFICULTY_NORMAL) and self.config.area_boss.boss.Attack_60:
                     self.switch_to_level_60()
                     if not self.start_fight():
                         logger.warning("you are so weakness!")
                         self.wait_until_appear(self.I_AB_CLOSE_RED)
                         self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=3)
                         return False
+                else:
+                    self.ui_click_until_disappear(self.I_AB_CLOSE_RED, interval=3)
+                    return False
                 # 切换到 极地鬼
-                self.switch_difficulty(True)
+            self.switch_difficulty(True)
 
-            self.switch_to_floor_1()
+            # 调整悬赏层数
+            match reward_floor:
+                case AreaBossFloor.ONE: self.switch_to_floor_1()
+                case AreaBossFloor.TEN: self.switch_to_floor_10()
+                case AreaBossFloor.DEFAULT: logger.info("Not change floor")
         result = True
         if not self.start_fight():
             result = False
@@ -320,34 +329,103 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                 self.wait_until_appear(self.I_AB_JI_FLOOR_TEN, False, 1)
 
     def fight_reward_boss(self):
-        logger.info(f"now run fight_reward_boss")
-        index = self.get_hot_in_reward()
-        logger.info(f"index: {index}")
-        max_people_num = self.get_hot_in_reward_people_num()
-        logger.info(f"max_people_num: {max_people_num}")
-        if self.open_hot_in_reward_people_num(max_people_num):
-            logger.info("open hottest boss success")
-            return self.boss_fight_already_open(True)
-        self.open_filter()
+        BOSS_REWARD_PHOTO1 = [self.C_AB_BOSS_REWARD_PHOTO_1, self.C_AB_BOSS_REWARD_PHOTO_2, self.C_AB_BOSS_REWARD_PHOTO_3]
+        BOSS_REWARD_PHOTO2 = [self.C_AB_BOSS_REWARD_PHOTO_MINUS_2, self.C_AB_BOSS_REWARD_PHOTO_MINUS_1]
+        need_open_filter, boss_name, photo = self.get_hot_in_reward()  # 获取挑战人数最多的Boss的名字
+        if photo is None or boss_name == '声望不够':
+            return False
+        # 不需要打开筛选界面说明直接找到了目标boss, 直接挑战
+        if not need_open_filter:
+            return self.boss_fight(photo, True, fileter_open=False)
         # 滑动到最顶层
-        if index < 3:
-            logger.info("swipe to top")
-            for i in range(random.randint(1, 3)):
-                self.swipe(self.S_AB_FILTER_DOWN)
-        #
-        if index == 0:
-            return self.boss_fight(self.C_AB_BOSS_REWARD_PHOTO_1, True)
-        elif index == 1:
-            return self.boss_fight(self.C_AB_BOSS_REWARD_PHOTO_2, True)
-        elif index == 2:
-            return self.boss_fight(self.C_AB_BOSS_REWARD_PHOTO_3, True)
-        # 保证滑动到最底部
+        logger.info("Swipe to top")
+        for i in range(random.randint(1, 3)):
+            self.swipe(self.S_AB_FILTER_DOWN)
+        # 遍历所有boss找到名称一致的即目前挑战人数最多的
+        for PHOTO in BOSS_REWARD_PHOTO1:
+            self.open_filter()
+            name = self.get_bossName(PHOTO)
+            if self.check_common_chars(str(name), boss_name):
+                return self.boss_fight(PHOTO, True, fileter_open=False)
+            self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
+        # 倒数一和二
         for i in range(random.randint(1, 3)):
             self.swipe(self.S_AB_FILTER_UP)
-        if index == 3:
-            return self.boss_fight(self.C_AB_BOSS_REWARD_PHOTO_MINUS_2, True)
-        elif index == 4:
-            return self.boss_fight(self.C_AB_BOSS_REWARD_PHOTO_MINUS_1, True)
+        for PHOTO in BOSS_REWARD_PHOTO2:
+            self.open_filter()
+            name = self.get_bossName(PHOTO)
+            if self.check_common_chars(str(name), boss_name):
+                return self.boss_fight(PHOTO, True, fileter_open=False)
+            self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
+        self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
+
+    def get_hot_in_reward(self):
+        """
+            返回挑战人数最多的悬赏鬼王
+        @return: 是否打开筛选界面, boss名称, boss图片的click
+        @rtype:
+        """
+        self.switch_to_reward()
+        boss_configs = [
+            {"photo": self.C_AB_BOSS_REWARD_PHOTO_1, "need_swipe": False},
+            {"photo": self.C_AB_BOSS_REWARD_PHOTO_2, "need_swipe": False},
+            {"photo": self.C_AB_BOSS_REWARD_PHOTO_3, "need_swipe": False},
+            {"photo": self.C_AB_BOSS_REWARD_PHOTO_MINUS_2, "need_swipe": True},
+            {"photo": self.C_AB_BOSS_REWARD_PHOTO_MINUS_1, "need_swipe": True},
+        ]
+
+        def check_boss(photo: RuleClick):
+            """
+            检查boss是否满足条件
+            :param photo:
+            :return: 是否满足条件, 挑战数量, boss名称
+            """
+            self.open_filter()
+            num = self.get_num_challenge(photo) or 0
+            if not num:
+                name = '声望不够'
+            else:
+                name = self.get_bossName(photo)
+                if num >= 20000 and not self.appear(self.I_AB_NUM_CHALLENGE_RAIL):
+                    logger.info("The number of challenges is enough")
+                    return True, num, name
+            # 没找到满足的则关闭boss页面
+            self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
+            return False, num, name
+
+        mx_challenge_boss_name = None
+        mx_challenge_num = 0
+        photo = None
+        # 遍历所有boss配置, 找挑战人数最多的boss
+        for cfg in boss_configs:
+            if cfg["need_swipe"]:
+                self.open_filter()
+                for _ in range(random.randint(1, 3)):
+                    self.swipe(self.S_AB_FILTER_UP)
+                self.wait_until_appear(cfg["photo"], wait_time=1)
+            ret, challenge_num, boss_name = check_boss(cfg["photo"])
+            if ret:  # 直接找到满足条件的, 则不需要打开筛选界面直接挑战即可
+                return False, boss_name, cfg["photo"]
+            if challenge_num > mx_challenge_num:
+                mx_challenge_num = challenge_num
+                mx_challenge_boss_name = boss_name
+                photo = cfg['photo']
+                logger.attr(mx_challenge_num, f'Select:{boss_name},{photo.name}')
+        return True, mx_challenge_boss_name if mx_challenge_boss_name else '声望不够', photo if mx_challenge_boss_name else None
+
+    def get_num_challenge(self, click_area):
+        """
+            获取鬼王挑战人数
+        @param click_area: 鬼王相应的挑战按钮
+        @type click_area:
+        @return:
+        @rtype:
+        """
+        # 如果鬼王不可挑战(未解锁),限制3次尝试打开鬼王详情界面
+        if not self.open_boss_detail(click_area, 3):
+            logger.info("%s unavailable", str(click_area))
+            return 0
+        return self.O_AB_NUM_OF_CHALLENGE.ocr_digit(self.device.image)
 
     def get_bossName(self, click_area):
         """
@@ -364,53 +442,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         ocrName = self.O_AB_BOSS_NAME.detect_and_ocr(self.device.image)
         bossName = re.sub(r"[\'\[\]]", "", str([result.ocr_text for result in ocrName]))
         return bossName
-
-    def get_hot_in_reward(self):
-        """
-            返回挑战人数最多的悬赏鬼王
-        @return:    index
-        @rtype:
-        """
-        self.switch_to_reward()
-        lst = []
-        boosName = []
-        num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_1)
-        lst.append(num)
-        self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
-        #
-        self.open_filter()
-        num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_2)
-        lst.append(num)
-        self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
-        #
-        self.open_filter()
-        num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_3)
-        lst.append(num)
-        self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
-        #
-        self.open_filter()
-        for i in range(random.randint(1, 3)):
-            self.swipe(self.S_AB_FILTER_UP)
-        self.wait_until_appear(self.C_AB_BOSS_REWARD_PHOTO_MINUS_2, wait_time=1)
-        num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_MINUS_2)
-        lst.append(num)
-        self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
-        #
-        self.open_filter()
-        for i in range(random.randint(1, 3)):
-            self.swipe(self.S_AB_FILTER_UP)
-        self.wait_until_appear(self.C_AB_BOSS_REWARD_PHOTO_MINUS_1, wait_time=1)
-        num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_MINUS_1)
-        lst.append(num)
-        self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
-
-        index = 0
-        num = 0
-        for idx, val in enumerate(lst):
-            if val > num:
-                index = idx
-                num = val
-        return index
 
     def get_hot_in_reward_people_num(self):
         """
@@ -557,6 +588,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         pass
 
     def open_filter(self):
+        """打开筛选界面"""
         logger.info("openFilter")
         self.ui_click(self.I_FILTER, self.I_AB_FILTER_OPENED, interval=3)
 
@@ -579,6 +611,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                 continue
 
     def switch_to_reward(self):
+        self.open_filter()
         logger.info("switch_to_reward")
         while 1:
             self.screenshot()
@@ -610,6 +643,19 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         # 如果是在19:00-21:00之间则返回True
         else:
             return True
+        
+    def check_common_chars(self, bossName, name):
+        # 将两个字符串转为集合，去除重复的字符
+        set_boss = set(bossName)
+        set_name = set(name)
+
+        # 计算交集，判断交集的元素个数
+        common_chars = set_boss & set_name  # & 是集合的交集运算符
+
+        if len(common_chars) >= 2:
+            return 1
+        else:
+            return 0  # 如果交集的字符少于2个，可以根据需要返回其他值
 
 if __name__ == '__main__':
     from module.config.config import Config

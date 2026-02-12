@@ -9,10 +9,6 @@ import cv2
 import numpy as np
 from module.atom.ocr import RuleOcr
 
-import cv2
-import numpy as np
-from module.atom.ocr import RuleOcr
-
 from module.logger import logger
 from module.exception import TaskEnd
 from module.base.timer import Timer
@@ -20,13 +16,13 @@ from module.base.timer import Timer
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main, page_duel
+from tasks.GameUi.page import page_main, page_duel, page_shikigami_records
 from tasks.Duel.config import Duel, Onmyoji
 from tasks.Duel.assets import DuelAssets
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
-from tasks.GameUi.page import page_main, page_team, page_shikigami_records
 import os
 from module.atom.image import RuleImage
+from tasks.GlobalGame.assets import GlobalGameAssets as GGA
 """ 斗技 """
 
 
@@ -95,6 +91,10 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
         duel_week_over = False
         while 1:
             self.screenshot()
+            # 关闭恭喜晋升段位页面
+            if self.appear_then_click(GGA.I_UI_BACK_RED):
+                continue
+            # 若顯示練習按鈕，表示並非斗技時間
             if self.appear(self.I_BATTLE_WITH_TRAIN, interval=1):
                 logger.info('Not Duel time')
                 break
@@ -186,11 +186,9 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
         logger.info('Souls Switch start')
         while 1:
             self.screenshot()
-            logger.info(f"click_count: {click_count}")
             if click_count >= 4:
                 break
             if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
-                logger.info('Click I_D_TEAM too fast meet lock member msg')
                 continue
             if self.appear_then_click(self.I_D_TEAM, interval=1):
                 continue
@@ -275,7 +273,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
             return True
         return False
 
-    def check_score(self) -> int or None:
+    def check_score(self) -> int | None:
         """
         检查是否达到目标分数
         :param target: 目标分数
@@ -291,7 +289,8 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
                     self.battle_lose_copy = self.battle_lose_count
                     self.current_score -= 100
                 else:
-                    self.current_score = self.current_score
+                    # no change
+                    pass
             else:
                 self.current_score = self.O_D_SCORE.ocr(self.device.image)
                 if self.current_score > 10000:
@@ -483,6 +482,9 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
         swipe_timer.start()
         while 1:
             self.screenshot()
+            # 收取奖励
+            if self.ui_reward_appear_click(True):
+                continue
             if self.appear_then_click(self.I_D_BATTLE_DATA, action=self.C_D_BATTLE_DATA, interval=0.6):
                 continue
             if self.appear(self.I_FALSE):
