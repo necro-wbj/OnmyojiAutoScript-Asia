@@ -1,8 +1,8 @@
 [
   {
     "itemName": "d_honor",
-    "roiFront": "149,659,131,31",
-    "roiBack": "149,659,131,31",
+    "roiFront": "233,643,99,31",
+    "roiBack": "233,643,99,31",
     "mode": "DigitCounter",
     "method": "Default",
     "keyword": "",
@@ -10,8 +10,8 @@
   },
   {
     "itemName": "d_score",
-    "roiFront": "701,509,61,33",
-    "roiBack": "701,509,61,33",
+    "roiFront": "235,642,93,33",
+    "roiBack": "235,642,93,33",
     "mode": "Digit",
     "method": "Default",
     "keyword": "",
@@ -19,8 +19,8 @@
   },
   {
     "itemName": "d_celeb_star",
-    "roiFront": "690,451,77,37",
-    "roiBack": "690,451,77,37",
+    "roiFront": "678,451,89,37",
+    "roiBack": "678,451,89,37",
     "mode": "Digit",
     "method": "Default",
     "keyword": "",

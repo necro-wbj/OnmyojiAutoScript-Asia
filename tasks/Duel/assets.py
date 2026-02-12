@@ -46,7 +46,7 @@ class DuelAssets:
 
 	# Image Rule Assets
 	# 点击阵容 
-	I_D_TEAM = RuleImage(roi_front=(813,288,34,74), roi_back=(785,259,115,119), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_team.png")
+	I_D_TEAM = RuleImage(roi_front=(821,301,34,74), roi_back=(785,259,115,146), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_team.png")
 	# 一键切换所有的御魂 
 	I_D_TEAM_SWTICH = RuleImage(roi_front=(1082,85,38,41), roi_back=(1082,85,38,41), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_team_swtich.png")
 	# description 
@@ -54,11 +54,11 @@ class DuelAssets:
 	# 战斗带保护的 
 	I_D_BATTLE_PROTECT = RuleImage(roi_front=(1153,578,100,100), roi_back=(1118,553,155,149), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_battle_protect.png")
 	# 自动上阵 
-	I_D_AUTO_ENTRY = RuleImage(roi_front=(30,127,66,62), roi_back=(20,119,115,111), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_auto_entry.png")
+	I_D_AUTO_ENTRY = RuleImage(roi_front=(16,115,66,62), roi_back=(6,87,129,143), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_auto_entry.png")
 	# 主界面的感叹号 
-	I_D_HELP = RuleImage(roi_front=(719,434,32,30), roi_back=(680,400,80,80), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_help.png")
+	I_D_HELP = RuleImage(roi_front=(783,520,32,30), roi_back=(680,400,210,207), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_help.png")
 	# 准备 
-	I_D_PREPARE = RuleImage(roi_front=(1127,541,100,100), roi_back=(1127,541,100,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_prepare.png")
+	I_D_PREPARE = RuleImage(roi_front=(1127,541,74,83), roi_back=(1127,541,152,178), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_prepare.png")
 	# 战斗数据 
 	I_D_BATTLE_DATA = RuleImage(roi_front=(1068,610,38,60), roi_back=(1068,610,38,60), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_battle_data.png")
 	# 胜利 
@@ -68,9 +68,9 @@ class DuelAssets:
 	# 战 
 	I_D_WORD_BATTLE = RuleImage(roi_front=(612,41,54,54), roi_back=(612,41,54,54), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_word_battle.png")
 	# 名士的星星 
-	I_D_CELEB_STAR = RuleImage(roi_front=(586,456,30,32), roi_back=(574,444,53,54), threshold=0.75, method="Template matching", file="./tasks/Duel/duel/duel_d_celeb_star.png")
+	I_D_CELEB_STAR = RuleImage(roi_front=(648,456,30,32), roi_back=(520,444,241,54), threshold=0.75, method="Template matching", file="./tasks/Duel/duel/duel_d_celeb_star.png")
 	# 名士专属 
-	I_D_CELEB_HONOR = RuleImage(roi_front=(665,531,25,30), roi_back=(652,517,52,53), threshold=0.75, method="Template matching", file="./tasks/Duel/duel/duel_d_celeb_honor.png")
+	I_D_CELEB_HONOR = RuleImage(roi_front=(253,663,25,30), roi_back=(1,483,846,236), threshold=0.75, method="Template matching", file="./tasks/Duel/duel/duel_d_celeb_honor.png")
 	# 练 
 	I_BATTLE_WITH_TRAIN = RuleImage(roi_front=(1161,588,78,81), roi_back=(1114,547,163,172), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_battle_with_train.png")
 	# 练2 
@@ -80,7 +80,7 @@ class DuelAssets:
 	# 活动的战斗按钮 
 	I_D_BATTLE2 = RuleImage(roi_front=(1171,592,69,78), roi_back=(1119,566,154,143), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_d_battle2.png")
 	# 禁用 
-	I_BAN = RuleImage(roi_front=(1112,537,100,100), roi_back=(1112,537,100,100), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_ban.png")
+	I_BAN = RuleImage(roi_front=(1134,572,88,56), roi_back=(1134,572,88,56), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/duel_ban.png")
 	# 左上角的退出 
 	I_DUEL_EXIT = RuleImage(roi_front=(14,12,43,41), roi_back=(14,12,43,41), threshold=0.8, method="Template matching", file="./tasks/Duel/duel/gb_exit.png")
 
@@ -94,11 +94,11 @@ class DuelAssets:
 
 	# Ocr Rule Assets
 	# 荣誉 
-	O_D_HONOR = RuleOcr(roi=(149,659,131,31), area=(149,659,131,31), mode="DigitCounter", method="Default", keyword="", name="d_honor")
+	O_D_HONOR = RuleOcr(roi=(233,643,99,31), area=(233,643,99,31), mode="DigitCounter", method="Default", keyword="", name="d_honor")
 	# 分数 
-	O_D_SCORE = RuleOcr(roi=(701,509,61,33), area=(701,509,61,33), mode="Digit", method="Default", keyword="", name="d_score")
+	O_D_SCORE = RuleOcr(roi=(235,642,93,33), area=(235,642,93,33), mode="Digit", method="Default", keyword="", name="d_score")
 	# 名士星星数 
-	O_D_CELEB_STAR = RuleOcr(roi=(690,451,77,37), area=(690,451,77,37), mode="Digit", method="Default", keyword="", name="d_celeb_star")
+	O_D_CELEB_STAR = RuleOcr(roi=(678,451,89,37), area=(678,451,89,37), mode="Digit", method="Default", keyword="", name="d_celeb_star")
 	# 手動 
 	O_D_HAND = RuleOcr(roi=(31,639,63,45), area=(31,639,63,45), mode="Single", method="Default", keyword="手動", name="d_hand")
 	# 自動 

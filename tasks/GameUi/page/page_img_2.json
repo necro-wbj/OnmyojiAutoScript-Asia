@@ -74,7 +74,7 @@
   {
     "itemName": "check_duel",
     "imageName": "page_check_duel.png",
-    "roiFront": "110,10,64,38",
+    "roiFront": "154,19,64,38",
     "roiBack": "79,1,202,100",
     "method": "Template matching",
     "threshold": 0.8,
