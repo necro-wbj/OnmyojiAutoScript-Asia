@@ -10,17 +10,9 @@ from module.atom.list import RuleList
 class BuyAssets: 
 
 
-	# Image Rule Assets
-	# 拉满 
-	I_BUY_PLUS = RuleImage(roi_front=(759,422,50,58), roi_back=(746,397,98,156), threshold=0.8, method="Template matching", file="./tasks/Component/Buy/buy/buy_buy_plus.png")
-	# 加一个 
-	I_BUY_ADD = RuleImage(roi_front=(671,428,51,54), roi_back=(645,412,111,141), threshold=0.8, method="Template matching", file="./tasks/Component/Buy/buy/buy_buy_add.png")
-	# 减 
-	I_BUY_SUB = RuleImage(roi_front=(467,429,50,48), roi_back=(452,412,85,147), threshold=0.8, method="Template matching", file="./tasks/Component/Buy/buy/buy_buy_sub.png")
-	# 出现用魂玉购买 
-	I_BUY_RMB = RuleImage(roi_front=(610,532,35,32), roi_back=(548,483,178,119), threshold=0.8, method="Template matching", file="./tasks/Component/Buy/buy/buy_buy_rmb.png")
-	# 购买成功 
-	I_BUY_SUCCESS = RuleImage(roi_front=(512,53,261,44), roi_back=(449,0,405,167), threshold=0.8, method="Template matching", file="./tasks/Component/Buy/buy/buy_buy_success.png")
+	# Ocr Rule Assets
+	# Ocr-description 
+	O_BUY_NUMBER = RuleOcr(roi=(578,416,52,82), area=(578,416,52,82), mode="Digit", method="Default", keyword="", name="buy_number")
 
 
 	# Click Rule Assets
@@ -32,8 +24,16 @@ class BuyAssets:
 	C_BUY_CANCEL = RuleClick(roi_front=(121,2,100,22), roi_back=(121,2,100,22), name="buy_cancel")
 
 
-	# Ocr Rule Assets
-	# Ocr-description 
-	O_BUY_NUMBER = RuleOcr(roi=(578,416,52,82), area=(578,416,52,82), mode="Digit", method="Default", keyword="", name="buy_number")
+	# Image Rule Assets
+	# 拉满 
+	I_BUY_PLUS = RuleImage(roi_front=(759,422,50,58), roi_back=(746,397,98,156), threshold=0.8, method="Template matching", file="./tasks/Component/Buy/buy/buy_buy_plus.png")
+	# 加一个 
+	I_BUY_ADD = RuleImage(roi_front=(671,428,51,54), roi_back=(645,412,111,141), threshold=0.8, method="Template matching", file="./tasks/Component/Buy/buy/buy_buy_add.png")
+	# 减 
+	I_BUY_SUB = RuleImage(roi_front=(467,429,50,48), roi_back=(452,412,85,147), threshold=0.8, method="Template matching", file="./tasks/Component/Buy/buy/buy_buy_sub.png")
+	# 出现用魂玉购买 
+	I_BUY_RMB = RuleImage(roi_front=(610,532,35,32), roi_back=(548,483,178,119), threshold=0.8, method="Template matching", file="./tasks/Component/Buy/buy/buy_buy_rmb.png")
+	# 购买成功 
+	I_BUY_SUCCESS = RuleImage(roi_front=(512,53,261,44), roi_back=(449,0,405,167), threshold=0.8, method="Template matching", file="./tasks/Component/Buy/buy/buy_buy_success.png")
 
 

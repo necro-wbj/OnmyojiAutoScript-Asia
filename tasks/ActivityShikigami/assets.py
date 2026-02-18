@@ -10,24 +10,38 @@ from module.atom.list import RuleList
 class ActivityShikigamiAssets: 
 
 
-	# Image Rule Assets
-	# description 
-	I_N_BATTLE = RuleImage(roi_front=(131,164,86,86), roi_back=(119,50,1075,635), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/0110/0110_n_battle.png")
-	# description 
-	I_N_CONFIRM = RuleImage(roi_front=(670,402,176,63), roi_back=(670,402,176,63), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/0110/0110_n_confirm.png")
-	# description 
-	I_C_CONFIRM1 = RuleImage(roi_front=(560,341,37,38), roi_back=(560,341,37,38), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/0110/0110_c_confirm1.png")
+	# Ocr Rule Assets
+	# 体力的数量检测 
+	O_REMAIN_AP = RuleOcr(roi=(910,18,62,28), area=(910,18,62,28), mode="DigitCounter", method="Default", keyword="", name="remain_ap")
+	# 活动体力的剩余检测 
+	O_REMAIN_AP_ACTIVITY = RuleOcr(roi=(534,18,70,28), area=(534,18,70,28), mode="DigitCounter", method="Default", keyword="", name="remain_ap_activity")
+	# 还有多少次购买体力的机会 
+	O_REMAIN_BUY = RuleOcr(roi=(808,531,39,42), area=(808,531,39,42), mode="DigitCounter", method="Default", keyword="", name="remain_buy")
+	# 活动票数（没有百分比） 
+	O_REMAIN_AP_ACTIVITY2 = RuleOcr(roi=(558,18,47,29), area=(558,18,47,29), mode="Digit", method="Default", keyword="", name="remain_ap_activity2")
+	# 从左侧进入战斗 
+	O_ENTRY_ACTIVITY = RuleOcr(roi=(70,103,98,32), area=(70,103,98,32), mode="Single", method="Default", keyword=".守平.", name="entry_activity")
+	# boss剩餘攻擊次數 
+	O_REMAIN_BOSS = RuleOcr(roi=(1113,669,131,31), area=(1099,659,162,52), mode="DigitCounter", method="Default", keyword="", name="remain_boss")
+	# 挑戰 
+	O_FIRE = RuleOcr(roi=(1137,599,83,44), area=(1129,570,100,100), mode="Single", method="Default", keyword="挑戰", name="fire")
+	# 100體活動門票檢測 
+	O_REMAIN_AP100 = RuleOcr(roi=(922,21,112,39), area=(913,8,131,62), mode="Digit", method="Default", keyword="", name="remain_ap100")
+	# 進入100體活動標識 
+	O_ENTER_AP100 = RuleOcr(roi=(72,187,95,32), area=(7,172,256,108), mode="Single", method="Default", keyword="將靈魂試煉", name="enter_ap100")
 
 
 	# Click Rule Assets
 	# description 
-	C_CLICK1 = RuleClick(roi_front=(120,138,130,75), roi_back=(120,138,130,75), name="click1")
+	C_RANDOM_LEFT = RuleClick(roi_front=(17,69,132,599), roi_back=(17,70,137,599), name="random_left")
 	# description 
-	C_CLICK2 = RuleClick(roi_front=(121,234,125,81), roi_back=(121,234,125,81), name="click2")
+	C_RANDOM_RIGHT = RuleClick(roi_front=(1133,55,131,638), roi_back=(1131,55,133,638), name="random_right")
 	# description 
-	C_CLICK3 = RuleClick(roi_front=(126,337,118,77), roi_back=(126,337,118,77), name="click3")
+	C_RANDOM_TOP = RuleClick(roi_front=(84,49,1159,93), roi_back=(85,46,1159,101), name="random_top")
 	# description 
-	C_CLICK4 = RuleClick(roi_front=(124,438,126,77), roi_back=(124,438,126,77), name="click4")
+	C_RANDOM_BOTTOM = RuleClick(roi_front=(179,577,972,100), roi_back=(179,579,972,100), name="random_bottom")
+	# description 
+	C_RANDOM_ALL = RuleClick(roi_front=(42,94,1207,543), roi_back=(42,94,1207,543), name="random_all")
 
 
 	# Image Rule Assets
@@ -99,35 +113,21 @@ class ActivityShikigamiAssets:
 
 	# Click Rule Assets
 	# description 
-	C_RANDOM_LEFT = RuleClick(roi_front=(17,69,132,599), roi_back=(17,70,137,599), name="random_left")
+	C_CLICK1 = RuleClick(roi_front=(120,138,130,75), roi_back=(120,138,130,75), name="click1")
 	# description 
-	C_RANDOM_RIGHT = RuleClick(roi_front=(1133,55,131,638), roi_back=(1131,55,133,638), name="random_right")
+	C_CLICK2 = RuleClick(roi_front=(121,234,125,81), roi_back=(121,234,125,81), name="click2")
 	# description 
-	C_RANDOM_TOP = RuleClick(roi_front=(84,49,1159,93), roi_back=(85,46,1159,101), name="random_top")
+	C_CLICK3 = RuleClick(roi_front=(126,337,118,77), roi_back=(126,337,118,77), name="click3")
 	# description 
-	C_RANDOM_BOTTOM = RuleClick(roi_front=(179,577,972,100), roi_back=(179,579,972,100), name="random_bottom")
-	# description 
-	C_RANDOM_ALL = RuleClick(roi_front=(42,94,1207,543), roi_back=(42,94,1207,543), name="random_all")
+	C_CLICK4 = RuleClick(roi_front=(124,438,126,77), roi_back=(124,438,126,77), name="click4")
 
 
-	# Ocr Rule Assets
-	# 体力的数量检测 
-	O_REMAIN_AP = RuleOcr(roi=(910,18,62,28), area=(910,18,62,28), mode="DigitCounter", method="Default", keyword="", name="remain_ap")
-	# 活动体力的剩余检测 
-	O_REMAIN_AP_ACTIVITY = RuleOcr(roi=(534,18,70,28), area=(534,18,70,28), mode="DigitCounter", method="Default", keyword="", name="remain_ap_activity")
-	# 还有多少次购买体力的机会 
-	O_REMAIN_BUY = RuleOcr(roi=(808,531,39,42), area=(808,531,39,42), mode="DigitCounter", method="Default", keyword="", name="remain_buy")
-	# 活动票数（没有百分比） 
-	O_REMAIN_AP_ACTIVITY2 = RuleOcr(roi=(558,18,47,29), area=(558,18,47,29), mode="Digit", method="Default", keyword="", name="remain_ap_activity2")
-	# 从左侧进入战斗 
-	O_ENTRY_ACTIVITY = RuleOcr(roi=(70,103,98,32), area=(70,103,98,32), mode="Single", method="Default", keyword=".守平.", name="entry_activity")
-	# boss剩餘攻擊次數 
-	O_REMAIN_BOSS = RuleOcr(roi=(1113,669,131,31), area=(1099,659,162,52), mode="DigitCounter", method="Default", keyword="", name="remain_boss")
-	# 挑戰 
-	O_FIRE = RuleOcr(roi=(1137,599,83,44), area=(1129,570,100,100), mode="Single", method="Default", keyword="挑戰", name="fire")
-	# 100體活動門票檢測 
-	O_REMAIN_AP100 = RuleOcr(roi=(922,21,112,39), area=(913,8,131,62), mode="Digit", method="Default", keyword="", name="remain_ap100")
-	# 進入100體活動標識 
-	O_ENTER_AP100 = RuleOcr(roi=(72,187,95,32), area=(7,172,256,108), mode="Single", method="Default", keyword="將靈魂試煉", name="enter_ap100")
+	# Image Rule Assets
+	# description 
+	I_N_BATTLE = RuleImage(roi_front=(131,164,86,86), roi_back=(119,50,1075,635), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/0110/0110_n_battle.png")
+	# description 
+	I_N_CONFIRM = RuleImage(roi_front=(670,402,176,63), roi_back=(670,402,176,63), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/0110/0110_n_confirm.png")
+	# description 
+	I_C_CONFIRM1 = RuleImage(roi_front=(560,341,37,38), roi_back=(560,341,37,38), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/0110/0110_c_confirm1.png")
 
 
