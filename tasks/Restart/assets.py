@@ -69,22 +69,6 @@ class RestartAssets:
 	I_MAIL_RED_POINT = RuleImage(roi_front=(1229,200,16,21), roi_back=(1159,189,100,317), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_mail_red_point.png")
 
 
-	# Ocr Rule Assets
-	# 正在连接服务器 
-	O_LOGIN_NETWORK = RuleOcr(roi=(534,649,189,39), area=(210,492,100,100), mode="Single", method="Default", keyword="正在连接服务器", name="login_network")
-	# 進入遊戲 
-	O_LOGIN_ENTER_GAME = RuleOcr(roi=(558,573,161,44), area=(545,560,191,73), mode="Single", method="Default", keyword="進入..", name="login_enter_game")
-	# 点击屏幕跳过 
-	O_LOGIN_SKIP_1 = RuleOcr(roi=(1046,35,130,37), area=(1046,35,130,37), mode="Single", method="Default", keyword="点击屏幕跳过", name="login_skip_1")
-	# 登录指定角色，默认第一个 
-	O_LOGIN_SPECIFIC_SERVE = RuleOcr(roi=(110,120,350,600), area=(110,120,350,600), mode="Full", method="Default", keyword="", name="login_specific_serve")
-
-
-	# Click Rule Assets
-	# 相同服务器多个角色选择界面,点击空白区域 确认登录 
-	C_LOGIN_ENSURE_LOGIN_CHARACTER_IN_SAME_SVR = RuleClick(roi_front=(600,240,500,400), roi_back=(600,240,500,400), name="login_ensure_login_character_in_same_svr")
-
-
 	# Image Rule Assets
 	# 庭院卷轴打开 
 	I_LOGIN_SCROOLL_OPEN = RuleImage(roi_front=(1208,609,33,83), roi_back=(1208,609,33,83), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_scrooll_open.png")
@@ -126,5 +110,21 @@ class RestartAssets:
 	I_EARLY_SERVER_CANCEL = RuleImage(roi_front=(435,404,172,56), roi_back=(435,404,172,56), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_early_server_cancel.png")
 	# 取消继续战斗 
 	I_CANCEL_BATTLE = RuleImage(roi_front=(471,395,129,55), roi_back=(367,227,545,296), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_cancel_battle.png")
+
+
+	# Click Rule Assets
+	# 相同服务器多个角色选择界面,点击空白区域 确认登录 
+	C_LOGIN_ENSURE_LOGIN_CHARACTER_IN_SAME_SVR = RuleClick(roi_front=(600,240,500,400), roi_back=(600,240,500,400), name="login_ensure_login_character_in_same_svr")
+
+
+	# Ocr Rule Assets
+	# 正在连接服务器 
+	O_LOGIN_NETWORK = RuleOcr(roi=(534,649,189,39), area=(210,492,100,100), mode="Single", method="Default", keyword="正在连接服务器", name="login_network")
+	# 進入遊戲 
+	O_LOGIN_ENTER_GAME = RuleOcr(roi=(558,573,161,44), area=(545,560,191,73), mode="Single", method="Default", keyword="進入..", name="login_enter_game")
+	# 点击屏幕跳过 
+	O_LOGIN_SKIP_1 = RuleOcr(roi=(1046,35,130,37), area=(1046,35,130,37), mode="Single", method="Default", keyword="点击屏幕跳过", name="login_skip_1")
+	# 登录指定角色，默认第一个 
+	O_LOGIN_SPECIFIC_SERVE = RuleOcr(roi=(110,120,350,600), area=(110,120,350,600), mode="Full", method="Default", keyword="", name="login_specific_serve")
 
 

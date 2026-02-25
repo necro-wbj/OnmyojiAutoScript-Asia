@@ -10,12 +10,6 @@ from module.atom.list import RuleList
 class EternitySeaAssets: 
 
 
-	# List Rule Assets
-	# 这个是御魂界面选择不同层数的 
-	L_LAYER_LIST = RuleList(folder="./tasks/EternitySea/res", direction="vertical", mode="ocr", roi_back=(138,130,359,430), size=(41, 91), 
-					 array=["壹", "贰", "参", "肆"])
-
-
 	# Image Rule Assets
 	# 选择永生之海 
 	I_ETERNITY_SEA = RuleImage(roi_front=(1139,93,127,416), roi_back=(1139,93,127,416), threshold=0.8, method="Template matching", file="./tasks/EternitySea/res/res_eternity_sea.png")
@@ -31,5 +25,11 @@ class EternitySeaAssets:
 	I_PET_PRESENT = RuleImage(roi_front=(873,184,62,147), roi_back=(873,184,62,147), threshold=0.8, method="Template matching", file="./tasks/EternitySea/res/res_pet_present.png")
 	# description 
 	I_BACK_BOTTOM = RuleImage(roi_front=(1126,49,46,45), roi_back=(1126,49,46,45), threshold=0.8, method="Template matching", file="./tasks/EternitySea/res/res_back_bottom.png")
+
+
+	# List Rule Assets
+	# 这个是御魂界面选择不同层数的 
+	L_LAYER_LIST = RuleList(folder="./tasks/EternitySea/res", direction="vertical", mode="ocr", roi_back=(138,130,359,430), size=(41, 91), 
+					 array=["壹", "贰", "参", "肆"])
 
 
