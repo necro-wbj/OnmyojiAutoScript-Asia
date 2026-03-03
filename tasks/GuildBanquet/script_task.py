@@ -55,6 +55,7 @@ class ScriptTask(GameUi, GuildBanquetAssets):
             logger.info("Start guild banquet!")
             self.device.stuck_record_add('BATTLE_STATUS_S')
         else:
+            logger.info("no find I_FLAG")
             # 如果没有找到FLAG，并且没超过晚上10点，可能是宴会时间没开始，5分钟后尝试再次查找，超过10点则直接退出
             if self.check_runtime():
                 time_now = datetime.now()
@@ -62,6 +63,7 @@ class ScriptTask(GameUi, GuildBanquetAssets):
                 self.set_next_run(task='GuildBanquet',
                               finish=True,
                               target=time_later)
+            
             self.ui_get_current_page()
             self.ui_goto(page_main)
             raise TaskEnd
@@ -117,11 +119,11 @@ class ScriptTask(GameUi, GuildBanquetAssets):
     
     def check_runtime(self) -> bool:
         """
-        检查时间, 一般寮不会晚上10点再开吧。。。。。
+        检查时间, 一般寮不会晚上11点再开吧。。。。。
         """
 
-        # 如果当日时间超过22点，说明配置时间可能出错，设置下次失败运行时间
-        if datetime.now().hour >= 22:
+        # 如果当日时间超过23点，说明配置时间可能出错，设置下次失败运行时间
+        if datetime.now().hour >= 23:
             self.set_next_run(task="GuildBanquet", success=False)
             logger.error("Guild banquet time config error, set next run fail")
             return False
