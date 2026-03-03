@@ -10,8 +10,8 @@
   },
   {
     "itemName": "d_score",
-    "roiFront": "235,642,93,33",
-    "roiBack": "235,642,93,33",
+    "roiFront": "606,480,47,33",
+    "roiBack": "606,480,47,33",
     "mode": "Digit",
     "method": "Default",
     "keyword": "",

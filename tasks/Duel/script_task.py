@@ -297,6 +297,9 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
                     # 识别错误分数超过一万, 去掉最高位
                     logger.warning('Recognition error, score is too high')
                     self.current_score = int(str(self.current_score)[1:])
+                if self.current_score > 3000:
+                    logger.warning('Recognition error, score is too high')
+                    self.current_score = 3000
             logger.info(f'battle score: {self.current_score}')
             return self.current_score
 
