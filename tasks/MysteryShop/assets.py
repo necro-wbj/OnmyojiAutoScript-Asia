@@ -11,19 +11,6 @@ class MysteryShopAssets:
 
 
 	# Image Rule Assets
-	# 进入 
-	I_ME_ENTER = RuleImage(roi_front=(52,494,59,44), roi_back=(52,494,59,44), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_me_enter.png")
-	# 点击分享 
-	I_MS_SHARE = RuleImage(roi_front=(24,571,100,100), roi_back=(24,571,100,100), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_share.png")
-	# 上一个 
-	I_MS_BEFORE = RuleImage(roi_front=(25,317,39,52), roi_back=(25,317,39,52), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_before.png")
-	# 下一个 
-	I_MS_NEXT = RuleImage(roi_front=(1226,315,36,53), roi_back=(1226,315,36,53), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_next.png")
-	# 分享 
-	I_INVITE_ENSURE = RuleImage(roi_front=(711,545,127,60), roi_back=(711,545,127,60), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_invite_ensure.png")
-
-
-	# Image Rule Assets
 	# 蓝票 
 	I_MS_BLUE = RuleImage(roi_front=(850,379,117,98), roi_back=(179,81,829,471), threshold=0.7, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_blue.png")
 	# 黑蛋 
@@ -61,5 +48,18 @@ class MysteryShopAssets:
 	O_MS_FRIEND = RuleOcr(roi=(1017,660,58,38), area=(1017,660,58,38), mode="Single", method="Default", keyword="", name="ms_friend")
 	# 记录购买多少个的 
 	O_MS_RECORDS = RuleOcr(roi=(324,638,44,36), area=(324,638,44,36), mode="Digit", method="Default", keyword="", name="ms_records")
+
+
+	# Image Rule Assets
+	# 进入 
+	I_ME_ENTER = RuleImage(roi_front=(52,494,59,44), roi_back=(52,494,59,44), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_me_enter.png")
+	# 点击分享 
+	I_MS_SHARE = RuleImage(roi_front=(24,571,100,100), roi_back=(24,571,100,100), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_share.png")
+	# 上一个 
+	I_MS_BEFORE = RuleImage(roi_front=(25,317,39,52), roi_back=(25,317,39,52), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_before.png")
+	# 下一个 
+	I_MS_NEXT = RuleImage(roi_front=(1226,315,36,53), roi_back=(1226,315,36,53), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_ms_next.png")
+	# 分享 
+	I_INVITE_ENSURE = RuleImage(roi_front=(711,545,127,60), roi_back=(711,545,127,60), threshold=0.8, method="Template matching", file="./tasks/MysteryShop/ms/ms_invite_ensure.png")
 
 
