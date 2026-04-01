@@ -10,6 +10,11 @@ from module.atom.list import RuleList
 class GeneralBuffAssets: 
 
 
+	# Swipe Rule Assets
+	# description 
+	S_BUFF_UP = RuleSwipe(roi_front=(397,124,456,35), roi_back=(447,457,386,37), mode="default", name="buff_up")
+
+
 	# Image Rule Assets
 	# 庭院左上角的加成 
 	I_BUFF_1 = RuleImage(roi_front=(363,32,32,46), roi_back=(344,14,128,76), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBuff/gb/gb_buff_1.png")
@@ -31,11 +36,6 @@ class GeneralBuffAssets:
 	I_CLOSE_RED = RuleImage(roi_front=(774,143,21,21), roi_back=(764,134,38,369), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBuff/gb/gb_close_red.png")
 	# 用来判定是否点击的那个 
 	I_CLOUD = RuleImage(roi_front=(357,505,65,38), roi_back=(313,484,158,75), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBuff/gb/gb_cloud.png")
-
-
-	# Swipe Rule Assets
-	# description 
-	S_BUFF_UP = RuleSwipe(roi_front=(397,124,456,35), roi_back=(447,457,386,37), mode="default", name="buff_up")
 
 
 	# Ocr Rule Assets

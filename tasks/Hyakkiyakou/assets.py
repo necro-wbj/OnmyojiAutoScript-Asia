@@ -10,6 +10,18 @@ from module.atom.list import RuleList
 class HyakkiyakouAssets: 
 
 
+	# Click Rule Assets
+	# description 
+	C_CLICK = RuleClick(roi_front=(26,250,33,100), roi_back=(26,250,33,100), name="click")
+
+
+	# Swipe Rule Assets
+	# description 
+	S_TSWIPE = RuleSwipe(roi_front=(421,521,21,91), roi_back=(273,516,23,100), mode="default", name="tswipe")
+	# description 
+	S_TBACK = RuleSwipe(roi_front=(259,515,21,100), roi_back=(993,521,22,100), mode="default", name="tback")
+
+
 	# Image Rule Assets
 	# 缘结之庭 
 	I_TPAGE_1 = RuleImage(roi_front=(238,504,221,123), roi_back=(121,480,950,166), threshold=0.7, method="Template matching", file="./tasks/Hyakkiyakou/train/train_tpage_1.png")
@@ -45,25 +57,6 @@ class HyakkiyakouAssets:
 	I_CHECK_RUN = RuleImage(roi_front=(95,598,92,45), roi_back=(68,578,143,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/train/train_check_run.png")
 
 
-	# Swipe Rule Assets
-	# description 
-	S_TSWIPE = RuleSwipe(roi_front=(421,521,21,91), roi_back=(273,516,23,100), mode="default", name="tswipe")
-	# description 
-	S_TBACK = RuleSwipe(roi_front=(259,515,21,100), roi_back=(993,521,22,100), mode="default", name="tback")
-
-
-	# Click Rule Assets
-	# description 
-	C_CLICK = RuleClick(roi_front=(26,250,33,100), roi_back=(26,250,33,100), name="click")
-
-
-	# Swipe Rule Assets
-	# description 
-	S_BEAN_05TO10 = RuleSwipe(roi_front=(390,648,21,22), roi_back=(577,647,21,23), mode="default", name="bean_05to10")
-	# description 
-	S_BEAN_10TO05 = RuleSwipe(roi_front=(565,647,24,24), roi_back=(390,647,22,22), mode="default", name="bean_10to05")
-
-
 	# Image Rule Assets
 	# 左边概率up 
 	I_HYA_STATE_BUFF06 = RuleImage(roi_front=(331,7,126,41), roi_back=(137,1,342,66), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hya_state_buff06.png")
@@ -78,30 +71,24 @@ class HyakkiyakouAssets:
 
 
 	# Image Rule Assets
+	# 邀请按钮 
+	I_HINVITE = RuleImage(roi_front=(139,593,63,39), roi_back=(105,535,129,147), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hinvite.png")
+	# 进入 
+	I_HACCESS = RuleImage(roi_front=(1059,554,100,100), roi_back=(1059,554,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_haccess.png")
+	# 开始 
+	I_HSTART = RuleImage(roi_front=(1119,555,100,100), roi_back=(1119,555,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hstart.png")
+	# 押注 
+	I_HSELECTED = RuleImage(roi_front=(980,265,41,44), roi_back=(226,53,836,348), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hselected.png")
+	# 结束 
+	I_HEND = RuleImage(roi_front=(81,164,86,299), roi_back=(81,164,86,299), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hend.png")
+	# 冰冻 
+	I_HFREEZE = RuleImage(roi_front=(1092,665,187,54), roi_back=(1092,665,187,54), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hfreeze.png")
 	# description 
-	I_BEAN0 = RuleImage(roi_front=(150,648,13,22), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean0.png")
+	I_HTITLE = RuleImage(roi_front=(578,21,134,48), roi_back=(578,21,134,48), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_htitle.png")
 	# description 
-	I_BEAN1 = RuleImage(roi_front=(134,648,11,22), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean1.png")
-	# description 
-	I_BEAN2 = RuleImage(roi_front=(134,649,14,21), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean2.png")
-	# description 
-	I_BEAN3 = RuleImage(roi_front=(134,649,14,21), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean3.png")
-	# description 
-	I_BEAN4 = RuleImage(roi_front=(135,647,13,23), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean4.png")
-	# description 
-	I_BEAN5 = RuleImage(roi_front=(135,649,13,22), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean5.png")
-	# description 
-	I_BEAN6 = RuleImage(roi_front=(132,649,15,21), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean6.png")
-	# description 
-	I_BEAN7 = RuleImage(roi_front=(133,648,15,22), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean7.png")
-	# description 
-	I_BEAN8 = RuleImage(roi_front=(132,646,14,23), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean8.png")
-	# description 
-	I_BEAN9 = RuleImage(roi_front=(133,649,15,21), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean9.png")
-	# description 
-	I_BEAN05 = RuleImage(roi_front=(387,640,32,35), roi_back=(371,631,86,52), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean05.png")
-	# description 
-	I_BEAN10 = RuleImage(roi_front=(560,640,32,35), roi_back=(531,634,72,47), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean10.png")
+	I_HCLOSE_RED = RuleImage(roi_front=(1056,177,54,54), roi_back=(1056,177,54,54), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hclose_red.png")
+	# 回归任务 
+	I_ENSURE_RECALL = RuleImage(roi_front=(1060,145,66,62), roi_back=(877,72,307,211), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_ensure_recall.png")
 
 
 	# Click Rule Assets
@@ -138,54 +125,37 @@ class HyakkiyakouAssets:
 
 
 	# Image Rule Assets
-	# 邀请按钮 
-	I_HINVITE = RuleImage(roi_front=(139,593,63,39), roi_back=(105,535,129,147), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hinvite.png")
-	# 进入 
-	I_HACCESS = RuleImage(roi_front=(1059,554,100,100), roi_back=(1059,554,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_haccess.png")
-	# 开始 
-	I_HSTART = RuleImage(roi_front=(1119,555,100,100), roi_back=(1119,555,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hstart.png")
-	# 押注 
-	I_HSELECTED = RuleImage(roi_front=(980,265,41,44), roi_back=(226,53,836,348), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hselected.png")
-	# 结束 
-	I_HEND = RuleImage(roi_front=(81,164,86,299), roi_back=(81,164,86,299), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hend.png")
-	# 冰冻 
-	I_HFREEZE = RuleImage(roi_front=(1092,665,187,54), roi_back=(1092,665,187,54), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hfreeze.png")
 	# description 
-	I_HTITLE = RuleImage(roi_front=(578,21,134,48), roi_back=(578,21,134,48), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_htitle.png")
+	I_BEAN0 = RuleImage(roi_front=(150,648,13,22), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean0.png")
 	# description 
-	I_HCLOSE_RED = RuleImage(roi_front=(1056,177,54,54), roi_back=(1056,177,54,54), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_hclose_red.png")
-	# 回归任务 
-	I_ENSURE_RECALL = RuleImage(roi_front=(1060,145,66,62), roi_back=(877,72,307,211), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_ensure_recall.png")
+	I_BEAN1 = RuleImage(roi_front=(134,648,11,22), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean1.png")
+	# description 
+	I_BEAN2 = RuleImage(roi_front=(134,649,14,21), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean2.png")
+	# description 
+	I_BEAN3 = RuleImage(roi_front=(134,649,14,21), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean3.png")
+	# description 
+	I_BEAN4 = RuleImage(roi_front=(135,647,13,23), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean4.png")
+	# description 
+	I_BEAN5 = RuleImage(roi_front=(135,649,13,22), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean5.png")
+	# description 
+	I_BEAN6 = RuleImage(roi_front=(132,649,15,21), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean6.png")
+	# description 
+	I_BEAN7 = RuleImage(roi_front=(133,648,15,22), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean7.png")
+	# description 
+	I_BEAN8 = RuleImage(roi_front=(132,646,14,23), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean8.png")
+	# description 
+	I_BEAN9 = RuleImage(roi_front=(133,649,15,21), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean9.png")
+	# description 
+	I_BEAN05 = RuleImage(roi_front=(387,640,32,35), roi_back=(371,631,86,52), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean05.png")
+	# description 
+	I_BEAN10 = RuleImage(roi_front=(560,640,32,35), roi_back=(531,634,72,47), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_bean10.png")
 
 
-	# Ocr Rule Assets
-	# 最坏的情况下来判断豆子的数量 
-	O_BEAN_NUMBER = RuleOcr(roi=(119,645,45,29), area=(119,645,45,29), mode="Digit", method="Default", keyword="", name="bean_number")
-
-
-	# Image Rule Assets
+	# Swipe Rule Assets
 	# description 
-	I_FRIEND_SAME_1 = RuleImage(roi_front=(349,124,83,50), roi_back=(132,120,300,70), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_same_1.png")
+	S_BEAN_05TO10 = RuleSwipe(roi_front=(390,648,21,22), roi_back=(577,647,21,23), mode="default", name="bean_05to10")
 	# description 
-	I_FRIEND_REMOTE_1 = RuleImage(roi_front=(444,127,81,46), roi_back=(132,120,300,70), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_remote_1.png")
-	# description 
-	I_FRIEND_SAME_2 = RuleImage(roi_front=(355,125,80,47), roi_back=(132,120,300,70), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_same_2.png")
-	# description 
-	I_FRIEND_REMOTE_2 = RuleImage(roi_front=(440,122,89,56), roi_back=(132,120,300,70), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_remote_2.png")
-	# 回归活动使用 
-	I_FRIEND_SAME_1_RECALL = RuleImage(roi_front=(167,123,106,62), roi_back=(132,120,300,70), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_same_1.png")
-	# 回归活动使用 
-	I_FRIEND_REMOTE_1_RECALL = RuleImage(roi_front=(288,123,106,56), roi_back=(132,120,300,70), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_remote_1.png")
-	# 回归活动使用 
-	I_FRIEND_SAME_2_RECALL = RuleImage(roi_front=(168,126,100,60), roi_back=(132,120,300,70), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_same_2.png")
-	# 回归活动使用 
-	I_FRIEND_REMOTE_2_RECALL = RuleImage(roi_front=(296,122,100,56), roi_back=(132,120,300,70), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_remote_2.png")
-	# 寮 
-	I_FRIEND_RYOU_1 = RuleImage(roi_front=(537,126,80,45), roi_back=(132,120,300,70), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_ryou_1.png")
-	# description 
-	I_FRIEND_RYOU_2 = RuleImage(roi_front=(536,127,80,45), roi_back=(132,120,300,70), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_ryou_2.png")
-	# 判断是否进入邀请页面 
-	I_CHECK_INVITATION = RuleImage(roi_front=(629,140,272,57), roi_back=(308,113,826,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_check_invitation.png")
+	S_BEAN_10TO05 = RuleSwipe(roi_front=(565,647,24,24), roi_back=(390,647,22,22), mode="default", name="bean_10to05")
 
 
 	# Image Rule Assets
@@ -229,5 +199,35 @@ class HyakkiyakouAssets:
 	I_RESR_8 = RuleImage(roi_front=(638,13,33,47), roi_back=(638,13,33,47), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_resr_8.png")
 	# description 
 	I_RESR_9 = RuleImage(roi_front=(638,12,32,47), roi_back=(638,12,32,47), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_resr_9.png")
+
+
+	# Ocr Rule Assets
+	# 最坏的情况下来判断豆子的数量 
+	O_BEAN_NUMBER = RuleOcr(roi=(119,645,45,29), area=(119,645,45,29), mode="Digit", method="Default", keyword="", name="bean_number")
+
+
+	# Image Rule Assets
+	# description 
+	I_FRIEND_SAME_1 = RuleImage(roi_front=(349,124,83,50), roi_back=(132,120,300,70), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_same_1.png")
+	# description 
+	I_FRIEND_REMOTE_1 = RuleImage(roi_front=(444,127,81,46), roi_back=(132,120,300,70), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_remote_1.png")
+	# description 
+	I_FRIEND_SAME_2 = RuleImage(roi_front=(355,125,80,47), roi_back=(132,120,300,70), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_same_2.png")
+	# description 
+	I_FRIEND_REMOTE_2 = RuleImage(roi_front=(440,122,89,56), roi_back=(132,120,300,70), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_remote_2.png")
+	# 回归活动使用 
+	I_FRIEND_SAME_1_RECALL = RuleImage(roi_front=(167,123,106,62), roi_back=(132,120,300,70), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_same_1.png")
+	# 回归活动使用 
+	I_FRIEND_REMOTE_1_RECALL = RuleImage(roi_front=(288,123,106,56), roi_back=(132,120,300,70), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_remote_1.png")
+	# 回归活动使用 
+	I_FRIEND_SAME_2_RECALL = RuleImage(roi_front=(168,126,100,60), roi_back=(132,120,300,70), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_same_2.png")
+	# 回归活动使用 
+	I_FRIEND_REMOTE_2_RECALL = RuleImage(roi_front=(296,122,100,56), roi_back=(132,120,300,70), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_remote_2.png")
+	# 寮 
+	I_FRIEND_RYOU_1 = RuleImage(roi_front=(537,126,80,45), roi_back=(132,120,300,70), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_ryou_1.png")
+	# description 
+	I_FRIEND_RYOU_2 = RuleImage(roi_front=(536,127,80,45), roi_back=(132,120,300,70), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_friend_ryou_2.png")
+	# 判断是否进入邀请页面 
+	I_CHECK_INVITATION = RuleImage(roi_front=(629,140,272,57), roi_back=(308,113,826,100), threshold=0.8, method="Template matching", file="./tasks/Hyakkiyakou/hya/hya_check_invitation.png")
 
 

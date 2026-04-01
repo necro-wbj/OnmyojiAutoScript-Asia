@@ -11,6 +11,19 @@ class GeneralInviteAssets:
 
 
 	# Image Rule Assets
+	# description 
+	I_GI_EMOJI_1 = RuleImage(roi_front=(30,531,46,45), roi_back=(12,512,83,94), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_emoji_1.png")
+	# description 
+	I_GI_EMOJI_2 = RuleImage(roi_front=(27,622,55,51), roi_back=(27,622,55,51), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_emoji_2.png")
+	# 判断是不是在庭院界面 
+	I_GI_HOME = RuleImage(roi_front=(361,34,34,46), roi_back=(361,34,34,46), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_home.png")
+	# 判断是不是在探索界面 
+	I_GI_EXPLORE = RuleImage(roi_front=(1138,119,41,48), roi_back=(1138,119,41,48), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_explore.png")
+	# 協戰隊伍 
+	I_GI_TEAM = RuleImage(roi_front=(94,25,123,38), roi_back=(94,25,123,38), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_team.png")
+
+
+	# Image Rule Assets
 	# 中间的邀请图片 
 	I_ADD_1 = RuleImage(roi_front=(596,241,114,51), roi_back=(569,196,186,161), threshold=0.9, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_add_1.png")
 	# 最右边的邀请 
@@ -95,19 +108,6 @@ class GeneralInviteAssets:
 	I_BACK_YELLOW_SEA = RuleImage(roi_front=(31,16,42,42), roi_back=(31,16,42,42), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_back_yellow_sea.png")
 	# 识别到寄养邀请 
 	I_I_ACCEPT_JY = RuleImage(roi_front=(248,258,46,25), roi_back=(231,205,75,326), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_i_accept_jy.png")
-
-
-	# Image Rule Assets
-	# description 
-	I_GI_EMOJI_1 = RuleImage(roi_front=(30,531,46,45), roi_back=(12,512,83,94), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_emoji_1.png")
-	# description 
-	I_GI_EMOJI_2 = RuleImage(roi_front=(27,622,55,51), roi_back=(27,622,55,51), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_emoji_2.png")
-	# 判断是不是在庭院界面 
-	I_GI_HOME = RuleImage(roi_front=(361,34,34,46), roi_back=(361,34,34,46), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_home.png")
-	# 判断是不是在探索界面 
-	I_GI_EXPLORE = RuleImage(roi_front=(1138,119,41,48), roi_back=(1138,119,41,48), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_explore.png")
-	# 協戰隊伍 
-	I_GI_TEAM = RuleImage(roi_front=(94,25,123,38), roi_back=(94,25,123,38), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_team.png")
 
 
 	# Ocr Rule Assets

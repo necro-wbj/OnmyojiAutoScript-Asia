@@ -11,6 +11,17 @@ class FrogBossAssets:
 
 
 	# Image Rule Assets
+	# in frog boss page 
+	I_FROG_BOSS_IN = RuleImage(roi_front=(552,1,141,42), roi_back=(552,1,141,42), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_frog_boss_in.png")
+	# frog_boss_enter 
+	I_FROG_BOSS_ENTER = RuleImage(roi_front=(1181,153,59,54), roi_back=(1181,153,59,54), threshold=0.6, method="Template matching", file="./tasks/FrogBoss/fb/fb_frog_boss_enter.png")
+	# frog_boss_town_enter 
+	I_FROG_BOSS_TOWN_ENTER = RuleImage(roi_front=(122,263,110,33), roi_back=(122,263,500,33), threshold=0.6, method="Template matching", file="./tasks/FrogBoss/fb/fb_frog_boss_town_enter.png")
+	# 休息中 
+	I_FROG_BOSS_REST = RuleImage(roi_front=(510,274,169,64), roi_back=(492,260,220,113), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_frog_boss_rest.png")
+
+
+	# Image Rule Assets
 	# 左边竞猜 
 	I_BET_LEFT = RuleImage(roi_front=(95,308,145,100), roi_back=(58,248,245,195), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_bet_left.png")
 	# 右边竞猜 
@@ -39,17 +50,6 @@ class FrogBossAssets:
 	I_BET_FAILURE = RuleImage(roi_front=(496,252,269,72), roi_back=(439,220,400,152), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_bet_failure.png")
 	# description 
 	I_BET_SUCCESS = RuleImage(roi_front=(512,264,260,73), roi_back=(433,214,418,151), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_bet_success.png")
-
-
-	# Image Rule Assets
-	# in frog boss page 
-	I_FROG_BOSS_IN = RuleImage(roi_front=(552,1,141,42), roi_back=(552,1,141,42), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_frog_boss_in.png")
-	# frog_boss_enter 
-	I_FROG_BOSS_ENTER = RuleImage(roi_front=(1181,153,59,54), roi_back=(1181,153,59,54), threshold=0.6, method="Template matching", file="./tasks/FrogBoss/fb/fb_frog_boss_enter.png")
-	# frog_boss_town_enter 
-	I_FROG_BOSS_TOWN_ENTER = RuleImage(roi_front=(122,263,110,33), roi_back=(122,263,500,33), threshold=0.6, method="Template matching", file="./tasks/FrogBoss/fb/fb_frog_boss_town_enter.png")
-	# 休息中 
-	I_FROG_BOSS_REST = RuleImage(roi_front=(510,274,169,64), roi_back=(492,260,220,113), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_frog_boss_rest.png")
 
 
 	# Ocr Rule Assets

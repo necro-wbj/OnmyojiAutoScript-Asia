@@ -10,13 +10,6 @@ from module.atom.list import RuleList
 class SwitchAccountAssets: 
 
 
-	# Swipe Rule Assets
-	# 登录界面 服务器列表的手指向左滑动 
-	S_SA_SVR_SWIPE_LEFT = RuleSwipe(roi_front=(730,460,30,21), roi_back=(470,410,26,21), mode="default", name="sa_svr_swipe_left")
-	# 登录界面 账号列表的手指向上滑动 
-	S_SA_ACCOUNT_LIST_UP = RuleSwipe(roi_front=(600,520,30,20), roi_back=(750,270,30,20), mode="default", name="sa_account_list_up")
-
-
 	# Click Rule Assets
 	# 账号下拉菜单 
 	C_SA_LOGIN_FORM_DROPDOWN_BTN = RuleClick(roi_front=(470,280,350,100), roi_back=(470,280,350,100), name="sa_login_form_dropdown_btn")
@@ -40,6 +33,13 @@ class SwitchAccountAssets:
 	C_SA_EG_PROFILE_PHOTO = RuleClick(roi_front=(35,35,55,55), roi_back=(35,35,55,55), name="sa_eg_profile_photo")
 	# 选择服务器界面 底部角色名 列表---与ocr.json中同名对象区域一致 
 	C_SA_SELECT_SVR_CHARACTER_LIST = RuleClick(roi_front=(205,570,815,40), roi_back=(205,570,815,40), name="sa_select_svr_character_list")
+
+
+	# Swipe Rule Assets
+	# 登录界面 服务器列表的手指向左滑动 
+	S_SA_SVR_SWIPE_LEFT = RuleSwipe(roi_front=(730,460,30,21), roi_back=(470,410,26,21), mode="default", name="sa_svr_swipe_left")
+	# 登录界面 账号列表的手指向上滑动 
+	S_SA_ACCOUNT_LIST_UP = RuleSwipe(roi_front=(600,520,30,20), roi_back=(750,270,30,20), mode="default", name="sa_account_list_up")
 
 
 	# Ocr Rule Assets

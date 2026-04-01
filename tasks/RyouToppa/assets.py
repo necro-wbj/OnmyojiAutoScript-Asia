@@ -10,6 +10,11 @@ from module.atom.list import RuleList
 class RyouToppaAssets: 
 
 
+	# Click Rule Assets
+	# 选择第一个寮 
+	C_SELECT_FIRST_RYOU = RuleClick(roi_front=(1148,138,21,22), roi_back=(1148,138,21,22), name="select_first_ryou")
+
+
 	# Image Rule Assets
 	# 寮突 
 	I_RYOU_TOPPA = RuleImage(roi_front=(1216,366,31,87), roi_back=(1191,352,78,200), threshold=0.6, method="Template matching", file="./tasks/RyouToppa/res/res_ryou_toppa.png")
@@ -33,23 +38,9 @@ class RyouToppaAssets:
 	I_WAIT_START_RYOU_TOPPA = RuleImage(roi_front=(460,583,357,40.33333333333326), roi_back=(460,583,357,40.33333333333326), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/res/res_wait_start_ryou_toppa.png")
 
 
-	# Click Rule Assets
-	# 选择第一个寮 
-	C_SELECT_FIRST_RYOU = RuleClick(roi_front=(1148,138,21,22), roi_back=(1148,138,21,22), name="select_first_ryou")
-
-
 	# Ocr Rule Assets
 	# 寮突破进攻机会数 
 	O_NUMBER = RuleOcr(roi=(271,560,48,31), area=(271,560,48,31), mode="DigitCounter", method="Default", keyword="", name="number")
-
-
-	# Image Rule Assets
-	# description 
-	I_TOPPA_RECORD = RuleImage(roi_front=(66,628,64,39), roi_back=(66,628,64,39), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/dev/res_toppa_record.png")
-	# description 
-	I_TOPPA_LOCK_TEAM = RuleImage(roi_front=(203,602,26,32), roi_back=(203,602,26,32), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/dev/dev_toppa_lock_team.png")
-	# description 
-	I_TOPPA_UNLOCK_TEAM = RuleImage(roi_front=(202,603,25,31), roi_back=(202,603,25,31), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/dev/dev_toppa_unlock_team.png")
 
 
 	# Click Rule Assets
@@ -106,6 +97,15 @@ class RyouToppaAssets:
 	I_AREA_7_FINISHED_NEW = RuleImage(roi_front=(643,543,100,100), roi_back=(420,530,326,127), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/dev/finished_2.png")
 	# 区域8已攻破新 
 	I_AREA_8_FINISHED_NEW = RuleImage(roi_front=(983,541,100,100), roi_back=(756,530,327,124), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/dev/finished_2.png")
+
+
+	# Image Rule Assets
+	# description 
+	I_TOPPA_RECORD = RuleImage(roi_front=(66,628,64,39), roi_back=(66,628,64,39), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/dev/res_toppa_record.png")
+	# description 
+	I_TOPPA_LOCK_TEAM = RuleImage(roi_front=(203,602,26,32), roi_back=(203,602,26,32), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/dev/dev_toppa_lock_team.png")
+	# description 
+	I_TOPPA_UNLOCK_TEAM = RuleImage(roi_front=(202,603,25,31), roi_back=(202,603,25,31), threshold=0.8, method="Template matching", file="./tasks/RyouToppa/dev/dev_toppa_unlock_team.png")
 
 
 	# Image Rule Assets

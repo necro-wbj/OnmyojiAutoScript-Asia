@@ -11,6 +11,41 @@ class DelegationAssets:
 
 
 	# Image Rule Assets
+	# description 
+	I_REWARDS_DONE = RuleImage(roi_front=(982,303,149,60), roi_back=(982,303,149,60), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_rewards_done.png")
+	# description 
+	I_REWARDS_CHAT = RuleImage(roi_front=(1171,124,48,65), roi_back=(1171,124,48,65), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_rewards_chat.png")
+	# 完美达成 
+	I_REWARDS_GET = RuleImage(roi_front=(444,78,100,100), roi_back=(444,78,100,100), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_rewards_get.png")
+	# description 
+	I_REWARDS_MIN = RuleImage(roi_front=(840,131,44,58), roi_back=(840,131,44,58), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_rewards_min.png")
+	# 差强人意 
+	I_REWARDS_FALSE = RuleImage(roi_front=(430,72,100,100), roi_back=(430,72,100,100), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_rewards_false.png")
+	# description 
+	I_CHAT_1 = RuleImage(roi_front=(735,350,318,100), roi_back=(651,161,601,391), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_chat_1.png")
+	# description 
+	I_CHAT_2 = RuleImage(roi_front=(721,384,325,100), roi_back=(721,384,325,100), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_chat_2.png")
+
+
+	# Ocr Rule Assets
+	# 完成 
+	O_D_DONE = RuleOcr(roi=(675,129,441,517), area=(675,129,441,517), mode="Full", method="Default", keyword="完成", name="d_done")
+
+
+	# Click Rule Assets
+	# description 
+	C_D_1 = RuleClick(roi_front=(162,496,100,166), roi_back=(162,496,100,166), name="d_1")
+	# description 
+	C_D_2 = RuleClick(roi_front=(293,493,100,170), roi_back=(293,493,100,170), name="d_2")
+	# description 
+	C_D_3 = RuleClick(roi_front=(427,492,100,170), roi_back=(427,492,100,170), name="d_3")
+	# description 
+	C_D_4 = RuleClick(roi_front=(563,493,100,174), roi_back=(563,493,100,174), name="d_4")
+	# description 
+	C_D_5 = RuleClick(roi_front=(695,491,100,178), roi_back=(695,491,100,178), name="d_5")
+
+
+	# Image Rule Assets
 	# 委派式神 
 	I_D_CONFIRM = RuleImage(roi_front=(979,302,152,62), roi_back=(979,302,152,62), threshold=0.8, method="Template matching", file="./tasks/Delegation/d/d_d_confirm.png")
 	# 再考虑下 
@@ -33,43 +68,8 @@ class DelegationAssets:
 	I_D_BACK = RuleImage(roi_front=(940,415,138,51), roi_back=(940,415,138,51), threshold=0.8, method="Template matching", file="./tasks/Delegation/d/d_d_back.png")
 
 
-	# Click Rule Assets
-	# description 
-	C_D_1 = RuleClick(roi_front=(162,496,100,166), roi_back=(162,496,100,166), name="d_1")
-	# description 
-	C_D_2 = RuleClick(roi_front=(293,493,100,170), roi_back=(293,493,100,170), name="d_2")
-	# description 
-	C_D_3 = RuleClick(roi_front=(427,492,100,170), roi_back=(427,492,100,170), name="d_3")
-	# description 
-	C_D_4 = RuleClick(roi_front=(563,493,100,174), roi_back=(563,493,100,174), name="d_4")
-	# description 
-	C_D_5 = RuleClick(roi_front=(695,491,100,178), roi_back=(695,491,100,178), name="d_5")
-
-
 	# Ocr Rule Assets
 	# 委派的名字 
 	O_D_NAME = RuleOcr(roi=(766,127,509,529), area=(766,127,509,529), mode="Full", method="Default", keyword="彌助的畫", name="d_name")
-
-
-	# Image Rule Assets
-	# description 
-	I_REWARDS_DONE = RuleImage(roi_front=(982,303,149,60), roi_back=(982,303,149,60), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_rewards_done.png")
-	# description 
-	I_REWARDS_CHAT = RuleImage(roi_front=(1171,124,48,65), roi_back=(1171,124,48,65), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_rewards_chat.png")
-	# 完美达成 
-	I_REWARDS_GET = RuleImage(roi_front=(444,78,100,100), roi_back=(444,78,100,100), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_rewards_get.png")
-	# description 
-	I_REWARDS_MIN = RuleImage(roi_front=(840,131,44,58), roi_back=(840,131,44,58), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_rewards_min.png")
-	# 差强人意 
-	I_REWARDS_FALSE = RuleImage(roi_front=(430,72,100,100), roi_back=(430,72,100,100), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_rewards_false.png")
-	# description 
-	I_CHAT_1 = RuleImage(roi_front=(735,350,318,100), roi_back=(651,161,601,391), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_chat_1.png")
-	# description 
-	I_CHAT_2 = RuleImage(roi_front=(721,384,325,100), roi_back=(721,384,325,100), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_chat_2.png")
-
-
-	# Ocr Rule Assets
-	# 完成 
-	O_D_DONE = RuleOcr(roi=(675,129,441,517), area=(675,129,441,517), mode="Full", method="Default", keyword="完成", name="d_done")
 
 

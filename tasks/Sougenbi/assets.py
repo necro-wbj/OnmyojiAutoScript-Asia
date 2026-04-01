@@ -10,6 +10,15 @@ from module.atom.list import RuleList
 class SougenbiAssets: 
 
 
+	# Click Rule Assets
+	# description 
+	C_C_GREED = RuleClick(roi_front=(172,144,299,100), roi_back=(172,144,299,100), name="c_greed")
+	# description 
+	C_C_ANGER = RuleClick(roi_front=(165,289,307,100), roi_back=(165,289,307,100), name="c_anger")
+	# description 
+	C_C_FOOLERY = RuleClick(roi_front=(166,435,303,100), roi_back=(166,435,303,100), name="c_foolery")
+
+
 	# Image Rule Assets
 	# 进入业原火 
 	I_S_SOUGENBI = RuleImage(roi_front=(405,97,301,414), roi_back=(405,97,301,414), threshold=0.8, method="Template matching", file="./tasks/Sougenbi/s/s_s_sougenbi.png")
@@ -33,15 +42,6 @@ class SougenbiAssets:
 	I_S_FIRE_ANGER = RuleImage(roi_front=(1131,643,21,30), roi_back=(1122,636,40,42), threshold=0.8, method="Template matching", file="./tasks/Sougenbi/s/s_s_fire_anger.png")
 	# 痴 
 	I_S_FIRE_FOOLERY = RuleImage(roi_front=(1130,641,22,31), roi_back=(1117,627,46,55), threshold=0.8, method="Template matching", file="./tasks/Sougenbi/s/s_s_fire_foolery.png")
-
-
-	# Click Rule Assets
-	# description 
-	C_C_GREED = RuleClick(roi_front=(172,144,299,100), roi_back=(172,144,299,100), name="c_greed")
-	# description 
-	C_C_ANGER = RuleClick(roi_front=(165,289,307,100), roi_back=(165,289,307,100), name="c_anger")
-	# description 
-	C_C_FOOLERY = RuleClick(roi_front=(166,435,303,100), roi_back=(166,435,303,100), name="c_foolery")
 
 
 	# Ocr Rule Assets
