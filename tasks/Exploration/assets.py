@@ -10,43 +10,6 @@ from module.atom.list import RuleList
 class ExplorationAssets: 
 
 
-	# Ocr Rule Assets
-	# 识别当前显示的章节 
-	O_E_EXPLORATION_LEVEL_NUMBER = RuleOcr(roi=(1079,193,147,467), area=(1079,193,147,467), mode="Full", method="Default", keyword="", name="e_exploration_level_number")
-	# 候补出战的数量 
-	O_E_ALTERNATE_NUMBER = RuleOcr(roi=(1092,122,69,32), area=(1092,122,69,32), mode="DigitCounter", method="Default", keyword="", name="e_alternate_number")
-	# 探索右上角 突破卷的数量 
-	O_REALM_RAID_NUMBER = RuleOcr(roi=(739,11,78,37), area=(739,11,78,37), mode="DigitCounter", method="Default", keyword="", name="realm_raid_number")
-	# （点出困难28时候）探索右上角 突破卷的数量 
-	O_REALM_RAID_NUMBER1 = RuleOcr(roi=(936,10,82,36), area=(936,10,82,36), mode="DigitCounter", method="Default", keyword="", name="realm_raid_number1")
-
-
-	# Swipe Rule Assets
-	# 向上滑动章节 
-	S_SWIPE_LEVEL_UP = RuleSwipe(roi_front=(1142,328,21,21), roi_back=(1143,444,21,21), mode="default", name="swipe_level_up")
-	# 向下滑动章节 
-	S_SWIPE_LEVEL_DOWN = RuleSwipe(roi_front=(1143,486,21,21), roi_back=(1143,367,21,23), mode="default", name="swipe_level_down")
-	# 往左滑动 
-	S_SWIPE_BACKGROUND_RIGHT = RuleSwipe(roi_front=(1093,148,21,21), roi_back=(397,140,21,21), mode="default", name="swipe_background_right")
-	# 往右滑动 
-	S_SWIPE_BACKGROUND_LEFT = RuleSwipe(roi_front=(420,142,21,21), roi_back=(1183,146,21,21), mode="default", name="swipe_background_left")
-	# 滑动狗粮选择界面 
-	S_SWIPE_SHIKI_TO_LEFT = RuleSwipe(roi_front=(890,587,21,21), roi_back=(351,584,21,21), mode="default", name="swipe_shiki_to_left")
-	# 滑动一个式神的宽度 
-	S_SWIPE_SHIKI_TO_LEFT_ONE = RuleSwipe(roi_front=(977,582,21,21), roi_back=(889,584,21,22), mode="default", name="swipe_shiki_to_left_one")
-
-
-	# Long Click Rule Assets
-	# description 
-	L_ROTATE_1 = RuleLongClick(roi_front=(516,582,22,21), roi_back=(516,582,22,21), duration=1500, name="rotate_1")
-	# description 
-	L_ROTATE_2 = RuleLongClick(roi_front=(650,587,21,21), roi_back=(650,587,21,21), duration=1500, name="rotate_2")
-	# description 
-	L_ROTATE_3 = RuleLongClick(roi_front=(785,587,21,21), roi_back=(785,587,21,21), duration=1500, name="rotate_3")
-	# description 
-	L_ROTATE_4 = RuleLongClick(roi_front=(921,590,21,21), roi_back=(921,590,21,21), duration=1500, name="rotate_4")
-
-
 	# Click Rule Assets
 	# 点击设置按钮 
 	C_CLICK_SETTINGS = RuleClick(roi_front=(55,662,21,21), roi_back=(55,662,21,21), name="click_settings")
@@ -66,6 +29,21 @@ class ExplorationAssets:
 	C_CLICK_ROTATE_4 = RuleClick(roi_front=(921,590,21,21), roi_back=(921,590,21,21), name="click_rotate_4")
 	# 随机点 
 	C_SAFE_RANDOM = RuleClick(roi_front=(0,0,111,12), roi_back=(0,0,111,12), name="safe_random")
+
+
+	# Swipe Rule Assets
+	# 向上滑动章节 
+	S_SWIPE_LEVEL_UP = RuleSwipe(roi_front=(1142,328,21,21), roi_back=(1143,444,21,21), mode="default", name="swipe_level_up")
+	# 向下滑动章节 
+	S_SWIPE_LEVEL_DOWN = RuleSwipe(roi_front=(1143,486,21,21), roi_back=(1143,367,21,23), mode="default", name="swipe_level_down")
+	# 往左滑动 
+	S_SWIPE_BACKGROUND_RIGHT = RuleSwipe(roi_front=(1093,148,21,21), roi_back=(397,140,21,21), mode="default", name="swipe_background_right")
+	# 往右滑动 
+	S_SWIPE_BACKGROUND_LEFT = RuleSwipe(roi_front=(420,142,21,21), roi_back=(1183,146,21,21), mode="default", name="swipe_background_left")
+	# 滑动狗粮选择界面 
+	S_SWIPE_SHIKI_TO_LEFT = RuleSwipe(roi_front=(890,587,21,21), roi_back=(351,584,21,21), mode="default", name="swipe_shiki_to_left")
+	# 滑动一个式神的宽度 
+	S_SWIPE_SHIKI_TO_LEFT_ONE = RuleSwipe(roi_front=(977,582,21,21), roi_back=(889,584,21,22), mode="default", name="swipe_shiki_to_left_one")
 
 
 	# Image Rule Assets
@@ -117,6 +95,28 @@ class ExplorationAssets:
 	I_EXP_CREATE_TEAM = RuleImage(roi_front=(590,514,122,52), roi_back=(543,490,192,100), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_exp_create_team.png")
 	# 创建确认 
 	I_EXP_CREATE_ENSURE = RuleImage(roi_front=(534,486,218,59), roi_back=(516,475,244,85), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_exp_create_ensure.png")
+
+
+	# Long Click Rule Assets
+	# description 
+	L_ROTATE_1 = RuleLongClick(roi_front=(516,582,22,21), roi_back=(516,582,22,21), duration=1500, name="rotate_1")
+	# description 
+	L_ROTATE_2 = RuleLongClick(roi_front=(650,587,21,21), roi_back=(650,587,21,21), duration=1500, name="rotate_2")
+	# description 
+	L_ROTATE_3 = RuleLongClick(roi_front=(785,587,21,21), roi_back=(785,587,21,21), duration=1500, name="rotate_3")
+	# description 
+	L_ROTATE_4 = RuleLongClick(roi_front=(921,590,21,21), roi_back=(921,590,21,21), duration=1500, name="rotate_4")
+
+
+	# Ocr Rule Assets
+	# 识别当前显示的章节 
+	O_E_EXPLORATION_LEVEL_NUMBER = RuleOcr(roi=(1079,193,147,467), area=(1079,193,147,467), mode="Full", method="Default", keyword="", name="e_exploration_level_number")
+	# 候补出战的数量 
+	O_E_ALTERNATE_NUMBER = RuleOcr(roi=(1092,122,69,32), area=(1092,122,69,32), mode="DigitCounter", method="Default", keyword="", name="e_alternate_number")
+	# 探索右上角 突破卷的数量 
+	O_REALM_RAID_NUMBER = RuleOcr(roi=(739,11,78,37), area=(739,11,78,37), mode="DigitCounter", method="Default", keyword="", name="realm_raid_number")
+	# （点出困难28时候）探索右上角 突破卷的数量 
+	O_REALM_RAID_NUMBER1 = RuleOcr(roi=(936,10,82,36), area=(936,10,82,36), mode="DigitCounter", method="Default", keyword="", name="realm_raid_number1")
 
 
 	# Image Rule Assets

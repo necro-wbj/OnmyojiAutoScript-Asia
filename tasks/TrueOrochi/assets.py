@@ -10,11 +10,6 @@ from module.atom.list import RuleList
 class TrueOrochiAssets: 
 
 
-	# Ocr Rule Assets
-	# 真蛇剩餘次數 
-	O_TRUE_OROCHI_REMAIN = RuleOcr(roi=(454,387,50,26), area=(454,387,50,26), mode="DigitCounter", method="Default", keyword="", name="true_orochi_remain")
-
-
 	# Click Rule Assets
 	# description 
 	C_ST_GREEN_1 = RuleClick(roi_front=(210,395,46,66), roi_back=(210,395,46,66), name="st_green_1")
@@ -63,5 +58,10 @@ class TrueOrochiAssets:
 	I_ST_CREATE_ROOM = RuleImage(roi_front=(528,482,223,62), roi_back=(528,482,223,62), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_st_create_room.png")
 	# 头像框 
 	I_ST_FRAME = RuleImage(roi_front=(571,442,135,65), roi_back=(571,442,135,65), threshold=0.8, method="Template matching", file="./tasks/TrueOrochi/st/st_st_frame.png")
+
+
+	# Ocr Rule Assets
+	# 真蛇剩餘次數 
+	O_TRUE_OROCHI_REMAIN = RuleOcr(roi=(454,387,50,26), area=(454,387,50,26), mode="DigitCounter", method="Default", keyword="", name="true_orochi_remain")
 
 

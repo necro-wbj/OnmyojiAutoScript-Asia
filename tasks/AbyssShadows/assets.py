@@ -10,11 +10,6 @@ from module.atom.list import RuleList
 class AbyssShadowsAssets: 
 
 
-	# Swipe Rule Assets
-	# 滑到狭间 
-	S_TO_ABBSY_SHADOWS = RuleSwipe(roi_front=(752,395,62,66), roi_back=(758,193,62,48), mode="default", name="to_abbsy_shadows")
-
-
 	# List Rule Assets
 	# 这个是当前活跃的竂活动列表界面 
 	L_RYOU_ACTIVITY_LIST = RuleList(folder="./tasks/AbyssShadows/res", direction="vertical", mode="ocr", roi_back=(35,157,37,250), size=(42, 27), 
@@ -52,6 +47,11 @@ class AbyssShadowsAssets:
 	C_ABYSS_FOX = RuleClick(roi_front=(822,184,49,144), roi_back=(789,130,148,249), name="abyss_fox")
 	# 狭间_黑豹入口 
 	C_ABYSS_LEOPARD = RuleClick(roi_front=(1140,190,50,162), roi_back=(1093,143,138,297), name="abyss_leopard")
+
+
+	# Swipe Rule Assets
+	# 滑到狭间 
+	S_TO_ABBSY_SHADOWS = RuleSwipe(roi_front=(752,395,62,66), roi_back=(758,193,62,48), mode="default", name="to_abbsy_shadows")
 
 
 	# Image Rule Assets

@@ -10,11 +10,6 @@ from module.atom.list import RuleList
 class KittyShopAssets: 
 
 
-	# Swipe Rule Assets
-	# description 
-	S_SELECTION = RuleSwipe(roi_front=(720,241,21,258), roi_back=(459,234,22,270), mode="default", name="selection")
-
-
 	# Click Rule Assets
 	# description 
 	C_SELECT_1 = RuleClick(roi_front=(225,215,242,303), roi_back=(225,215,242,303), name="select_1")
@@ -34,6 +29,11 @@ class KittyShopAssets:
 	C_RUN_4 = RuleClick(roi_front=(731,572,170,142), roi_back=(731,572,170,142), name="run_4")
 	# description 
 	C_RUN_5 = RuleClick(roi_front=(900,571,165,136), roi_back=(900,571,165,136), name="run_5")
+
+
+	# Swipe Rule Assets
+	# description 
+	S_SELECTION = RuleSwipe(roi_front=(720,241,21,258), roi_back=(459,234,22,270), mode="default", name="selection")
 
 
 	# Image Rule Assets

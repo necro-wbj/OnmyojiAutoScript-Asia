@@ -10,9 +10,26 @@ from module.atom.list import RuleList
 class DelegationAssets: 
 
 
+	# Image Rule Assets
+	# description 
+	I_REWARDS_DONE = RuleImage(roi_front=(982,303,149,60), roi_back=(982,303,149,60), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_rewards_done.png")
+	# description 
+	I_REWARDS_CHAT = RuleImage(roi_front=(1171,124,48,65), roi_back=(1171,124,48,65), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_rewards_chat.png")
+	# 完美达成 
+	I_REWARDS_GET = RuleImage(roi_front=(444,78,100,100), roi_back=(444,78,100,100), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_rewards_get.png")
+	# description 
+	I_REWARDS_MIN = RuleImage(roi_front=(840,131,44,58), roi_back=(840,131,44,58), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_rewards_min.png")
+	# 差强人意 
+	I_REWARDS_FALSE = RuleImage(roi_front=(430,72,100,100), roi_back=(430,72,100,100), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_rewards_false.png")
+	# description 
+	I_CHAT_1 = RuleImage(roi_front=(735,350,318,100), roi_back=(651,161,601,391), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_chat_1.png")
+	# description 
+	I_CHAT_2 = RuleImage(roi_front=(721,384,325,100), roi_back=(721,384,325,100), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_chat_2.png")
+
+
 	# Ocr Rule Assets
-	# 委派的名字 
-	O_D_NAME = RuleOcr(roi=(766,127,509,529), area=(766,127,509,529), mode="Full", method="Default", keyword="彌助的畫", name="d_name")
+	# 完成 
+	O_D_DONE = RuleOcr(roi=(675,129,441,517), area=(675,129,441,517), mode="Full", method="Default", keyword="完成", name="d_done")
 
 
 	# Click Rule Assets
@@ -52,24 +69,7 @@ class DelegationAssets:
 
 
 	# Ocr Rule Assets
-	# 完成 
-	O_D_DONE = RuleOcr(roi=(675,129,441,517), area=(675,129,441,517), mode="Full", method="Default", keyword="完成", name="d_done")
-
-
-	# Image Rule Assets
-	# description 
-	I_REWARDS_DONE = RuleImage(roi_front=(982,303,149,60), roi_back=(982,303,149,60), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_rewards_done.png")
-	# description 
-	I_REWARDS_CHAT = RuleImage(roi_front=(1171,124,48,65), roi_back=(1171,124,48,65), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_rewards_chat.png")
-	# 完美达成 
-	I_REWARDS_GET = RuleImage(roi_front=(444,78,100,100), roi_back=(444,78,100,100), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_rewards_get.png")
-	# description 
-	I_REWARDS_MIN = RuleImage(roi_front=(840,131,44,58), roi_back=(840,131,44,58), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_rewards_min.png")
-	# 差强人意 
-	I_REWARDS_FALSE = RuleImage(roi_front=(430,72,100,100), roi_back=(430,72,100,100), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_rewards_false.png")
-	# description 
-	I_CHAT_1 = RuleImage(roi_front=(735,350,318,100), roi_back=(651,161,601,391), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_chat_1.png")
-	# description 
-	I_CHAT_2 = RuleImage(roi_front=(721,384,325,100), roi_back=(721,384,325,100), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_chat_2.png")
+	# 委派的名字 
+	O_D_NAME = RuleOcr(roi=(766,127,509,529), area=(766,127,509,529), mode="Full", method="Default", keyword="彌助的畫", name="d_name")
 
 

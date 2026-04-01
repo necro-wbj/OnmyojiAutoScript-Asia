@@ -10,11 +10,6 @@ from module.atom.list import RuleList
 class GoryouRealmAssets: 
 
 
-	# Ocr Rule Assets
-	# 多少张票 
-	O_GR_TICKET = RuleOcr(roi=(920,21,100,41), area=(920,21,100,41), mode="Digit", method="Default", keyword="", name="gr_ticket")
-
-
 	# Click Rule Assets
 	# description 
 	C_GR_C_1 = RuleClick(roi_front=(95,105,224,548), roi_back=(95,105,224,548), name="gr_c_1")
@@ -33,5 +28,10 @@ class GoryouRealmAssets:
 	I_GR_LOCK = RuleImage(roi_front=(559,564,27,32), roi_back=(559,564,27,32), threshold=0.8, method="Template matching", file="./tasks/GoryouRealm/gr/gr_gr_lock.png")
 	# description 
 	I_GR_UNLOCK = RuleImage(roi_front=(556,562,26,33), roi_back=(556,562,26,33), threshold=0.8, method="Template matching", file="./tasks/GoryouRealm/gr/gr_gr_unlock.png")
+
+
+	# Ocr Rule Assets
+	# 多少张票 
+	O_GR_TICKET = RuleOcr(roi=(920,21,100,41), area=(920,21,100,41), mode="Digit", method="Default", keyword="", name="gr_ticket")
 
 

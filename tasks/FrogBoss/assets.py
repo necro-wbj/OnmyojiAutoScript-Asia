@@ -10,15 +10,6 @@ from module.atom.list import RuleList
 class FrogBossAssets: 
 
 
-	# Ocr Rule Assets
-	# Ocr-description 
-	O_LEFT_COUNT = RuleOcr(roi=(143,496,69,31), area=(143,496,69,31), mode="Digit", method="Default", keyword="", name="left_count")
-	# Ocr-description 
-	O_RIGHT_COUNT = RuleOcr(roi=(1105,497,77,32), area=(1105,497,77,32), mode="Digit", method="Default", keyword="", name="right_count")
-	# Ocr-description 
-	O_TIME_REMAIN = RuleOcr(roi=(594,564,91,35), area=(594,564,91,35), mode="Duration", method="Default", keyword="", name="time_remain")
-
-
 	# Image Rule Assets
 	# in frog boss page 
 	I_FROG_BOSS_IN = RuleImage(roi_front=(552,1,141,42), roi_back=(552,1,141,42), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_frog_boss_in.png")
@@ -59,5 +50,14 @@ class FrogBossAssets:
 	I_BET_FAILURE = RuleImage(roi_front=(496,252,269,72), roi_back=(439,220,400,152), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_bet_failure.png")
 	# description 
 	I_BET_SUCCESS = RuleImage(roi_front=(512,264,260,73), roi_back=(433,214,418,151), threshold=0.8, method="Template matching", file="./tasks/FrogBoss/fb/fb_bet_success.png")
+
+
+	# Ocr Rule Assets
+	# Ocr-description 
+	O_LEFT_COUNT = RuleOcr(roi=(143,496,69,31), area=(143,496,69,31), mode="Digit", method="Default", keyword="", name="left_count")
+	# Ocr-description 
+	O_RIGHT_COUNT = RuleOcr(roi=(1105,497,77,32), area=(1105,497,77,32), mode="Digit", method="Default", keyword="", name="right_count")
+	# Ocr-description 
+	O_TIME_REMAIN = RuleOcr(roi=(594,564,91,35), area=(594,564,91,35), mode="Duration", method="Default", keyword="", name="time_remain")
 
 
