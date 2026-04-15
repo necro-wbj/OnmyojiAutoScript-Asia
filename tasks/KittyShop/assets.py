@@ -31,11 +31,6 @@ class KittyShopAssets:
 	C_RUN_5 = RuleClick(roi_front=(900,571,165,136), roi_back=(900,571,165,136), name="run_5")
 
 
-	# Swipe Rule Assets
-	# description 
-	S_SELECTION = RuleSwipe(roi_front=(720,241,21,258), roi_back=(459,234,22,270), mode="default", name="selection")
-
-
 	# Image Rule Assets
 	# 进入经营 
 	I_GO1 = RuleImage(roi_front=(350,136,46,185), roi_back=(315,76,100,342), threshold=0.8, method="Template matching", file="./tasks/KittyShop/ks/ks_go1.png")
@@ -69,5 +64,10 @@ class KittyShopAssets:
 	I_MAIN_BUSY_5 = RuleImage(roi_front=(961,626,64,24), roi_back=(900,571,165,136), threshold=0.8, method="Template matching", file="./tasks/KittyShop/ks/ks_main_busy_5.png")
 	# 结算 
 	I_MAIN_FINSH = RuleImage(roi_front=(764,16,52,42), roi_back=(740,1,100,100), threshold=0.8, method="Template matching", file="./tasks/KittyShop/ks/ks_main_finsh.png")
+
+
+	# Swipe Rule Assets
+	# description 
+	S_SELECTION = RuleSwipe(roi_front=(720,241,21,258), roi_back=(459,234,22,270), mode="default", name="selection")
 
 

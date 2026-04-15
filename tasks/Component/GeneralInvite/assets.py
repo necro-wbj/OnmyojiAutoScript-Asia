@@ -23,6 +23,27 @@ class GeneralInviteAssets:
 	I_GI_TEAM = RuleImage(roi_front=(94,25,123,38), roi_back=(94,25,123,38), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_gi_team.png")
 
 
+	# Ocr Rule Assets
+	# Ocr-description 
+	O_TIME_1 = RuleOcr(roi=(541,12,96,33), area=(541,12,96,33), mode="Single", method="Default", keyword="", name="time_1")
+	# 永生之海判断时间 
+	O_TIME_2 = RuleOcr(roi=(538,70,100,34), area=(538,70,100,34), mode="Single", method="Default", keyword="", name="time_2")
+	# 上方好友列表的左边第一个（一般是好友） 
+	O_F_LIST_1 = RuleOcr(roi=(346,94,98,41), area=(346,94,98,41), mode="Single", method="Default", keyword="", name="f_list_1")
+	# Ocr-description 
+	O_F_LIST_2 = RuleOcr(roi=(463,94,97,43), area=(463,94,97,43), mode="Single", method="Default", keyword="", name="f_list_2")
+	# Ocr-description 
+	O_F_LIST_3 = RuleOcr(roi=(580,87,91,51), area=(580,87,91,51), mode="Single", method="Default", keyword="", name="f_list_3")
+	# Ocr-description 
+	O_F_LIST_4 = RuleOcr(roi=(688,91,74,45), area=(688,91,74,45), mode="Single", method="Default", keyword="", name="f_list_4")
+	# 寻找左侧的好友 
+	O_FRIEND_NAME_1 = RuleOcr(roi=(434,185,189,345), area=(434,185,189,345), mode="Full", method="Default", keyword="", name="friend_name_1")
+	# 寻找右侧的好友 
+	O_FRIEND_NAME_2 = RuleOcr(roi=(729,184,196,346), area=(729,184,196,346), mode="Full", method="Default", keyword="", name="friend_name_2")
+	# Ocr-description 
+	O_ONLINE = RuleOcr(roi=(790,102,124,42), area=(0,0,100,100), mode="Single", method="Default", keyword="", name="online")
+
+
 	# Image Rule Assets
 	# 中间的邀请图片 
 	I_ADD_1 = RuleImage(roi_front=(596,241,114,51), roi_back=(569,196,186,161), threshold=0.9, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_add_1.png")
@@ -108,26 +129,5 @@ class GeneralInviteAssets:
 	I_BACK_YELLOW_SEA = RuleImage(roi_front=(31,16,42,42), roi_back=(31,16,42,42), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_back_yellow_sea.png")
 	# 识别到寄养邀请 
 	I_I_ACCEPT_JY = RuleImage(roi_front=(248,258,46,25), roi_back=(231,205,75,326), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralInvite/gi/gi_i_accept_jy.png")
-
-
-	# Ocr Rule Assets
-	# Ocr-description 
-	O_TIME_1 = RuleOcr(roi=(541,12,96,33), area=(541,12,96,33), mode="Single", method="Default", keyword="", name="time_1")
-	# 永生之海判断时间 
-	O_TIME_2 = RuleOcr(roi=(538,70,100,34), area=(538,70,100,34), mode="Single", method="Default", keyword="", name="time_2")
-	# 上方好友列表的左边第一个（一般是好友） 
-	O_F_LIST_1 = RuleOcr(roi=(346,94,98,41), area=(346,94,98,41), mode="Single", method="Default", keyword="", name="f_list_1")
-	# Ocr-description 
-	O_F_LIST_2 = RuleOcr(roi=(463,94,97,43), area=(463,94,97,43), mode="Single", method="Default", keyword="", name="f_list_2")
-	# Ocr-description 
-	O_F_LIST_3 = RuleOcr(roi=(580,87,91,51), area=(580,87,91,51), mode="Single", method="Default", keyword="", name="f_list_3")
-	# Ocr-description 
-	O_F_LIST_4 = RuleOcr(roi=(688,91,74,45), area=(688,91,74,45), mode="Single", method="Default", keyword="", name="f_list_4")
-	# 寻找左侧的好友 
-	O_FRIEND_NAME_1 = RuleOcr(roi=(434,185,189,345), area=(434,185,189,345), mode="Full", method="Default", keyword="", name="friend_name_1")
-	# 寻找右侧的好友 
-	O_FRIEND_NAME_2 = RuleOcr(roi=(729,184,196,346), area=(729,184,196,346), mode="Full", method="Default", keyword="", name="friend_name_2")
-	# Ocr-description 
-	O_ONLINE = RuleOcr(roi=(790,102,124,42), area=(0,0,100,100), mode="Single", method="Default", keyword="", name="online")
 
 

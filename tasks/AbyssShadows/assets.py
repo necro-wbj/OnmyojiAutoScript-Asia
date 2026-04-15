@@ -49,11 +49,6 @@ class AbyssShadowsAssets:
 	C_ABYSS_LEOPARD = RuleClick(roi_front=(1140,190,50,162), roi_back=(1093,143,138,297), name="abyss_leopard")
 
 
-	# Swipe Rule Assets
-	# 滑到狭间 
-	S_TO_ABBSY_SHADOWS = RuleSwipe(roi_front=(752,395,62,66), roi_back=(758,193,62,48), mode="default", name="to_abbsy_shadows")
-
-
 	# Image Rule Assets
 	# 阴阳竂->神社 
 	I_RYOU_SHENSHE = RuleImage(roi_front=(872,659,62,25), roi_back=(872,659,62,25), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_ryou_shenshe.png")
@@ -101,5 +96,10 @@ class AbyssShadowsAssets:
 	I_WAIT_TO_START = RuleImage(roi_front=(588,64,70,26), roi_back=(588,64,70,26), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_wait_to_start.png")
 	# description 
 	I_EQUIPPING = RuleImage(roi_front=(1126,545,100,83), roi_back=(1126,545,100,83), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_equipping.png")
+
+
+	# Swipe Rule Assets
+	# 滑到狭间 
+	S_TO_ABBSY_SHADOWS = RuleSwipe(roi_front=(752,395,62,66), roi_back=(758,193,62,48), mode="default", name="to_abbsy_shadows")
 
 

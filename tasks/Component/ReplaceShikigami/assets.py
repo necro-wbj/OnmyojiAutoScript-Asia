@@ -10,6 +10,32 @@ from module.atom.list import RuleList
 class ReplaceShikigamiAssets: 
 
 
+	# Image Rule Assets
+	# description 
+	I_DETECT_EMPTY_1 = RuleImage(roi_front=(64,262,100,100), roi_back=(38,227,158,177), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_1.png")
+	# description 
+	I_DETECT_EMPTY_2 = RuleImage(roi_front=(281,263,100,100), roi_back=(238,234,178,168), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_2.png")
+	# description 
+	I_DETECT_EMPTY_3 = RuleImage(roi_front=(495,263,100,100), roi_back=(470,234,150,150), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_3.png")
+	# description 
+	I_DETECT_EMPTY_4 = RuleImage(roi_front=(703,256,100,100), roi_back=(681,229,157,174), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_4.png")
+	# description 
+	I_DETECT_EMPTY_5 = RuleImage(roi_front=(914,257,100,100), roi_back=(872,221,198,190), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_5.png")
+	# description 
+	I_DETECT_EMPTY_6 = RuleImage(roi_front=(1135,253,100,100), roi_back=(1091,229,156,159), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_6.png")
+	# description 
+	I_NEW = RuleImage(roi_front=(0,0,100,100), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/image_name.png")
+
+
+	# Image Rule Assets
+	# 小一个尺寸的 确认按钮 
+	I_U_CONFIRM_SMALL = RuleImage(roi_front=(672,513,131,60), roi_back=(672,513,131,60), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/utilize_u_confirm_small.png")
+	# 候补式神确认 
+	I_U_CONFIRM_ALTERNATE = RuleImage(roi_front=(692,407,134,47), roi_back=(692,407,134,47), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_u_confirm_alternate.png")
+	# 候补式神圆圈 
+	I_U_CIRCLE_ALTERNATE = RuleImage(roi_front=(535,339,41,43), roi_back=(535,339,41,43), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_u_circle_alternate.png")
+
+
 	# Click Rule Assets
 	# description 
 	C_SHIKIGAMI_SWITCH_1 = RuleClick(roi_front=(31,618,66,64), roi_back=(31,618,66,64), name="shikigami_switch_1")
@@ -29,23 +55,6 @@ class ReplaceShikigamiAssets:
 	C_SHIKIGAMI_LEFT_7 = RuleClick(roi_front=(977,493,100,171), roi_back=(977,493,100,171), name="shikigami_left_7")
 	# description 
 	C_SHIKIGAMI_LEFT_8 = RuleClick(roi_front=(1033,490,100,180), roi_back=(1033,490,100,180), name="shikigami_left_8")
-
-
-	# Image Rule Assets
-	# description 
-	I_DETECT_EMPTY_1 = RuleImage(roi_front=(64,262,100,100), roi_back=(38,227,158,177), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_1.png")
-	# description 
-	I_DETECT_EMPTY_2 = RuleImage(roi_front=(281,263,100,100), roi_back=(238,234,178,168), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_2.png")
-	# description 
-	I_DETECT_EMPTY_3 = RuleImage(roi_front=(495,263,100,100), roi_back=(470,234,150,150), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_3.png")
-	# description 
-	I_DETECT_EMPTY_4 = RuleImage(roi_front=(703,256,100,100), roi_back=(681,229,157,174), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_4.png")
-	# description 
-	I_DETECT_EMPTY_5 = RuleImage(roi_front=(914,257,100,100), roi_back=(872,221,198,190), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_5.png")
-	# description 
-	I_DETECT_EMPTY_6 = RuleImage(roi_front=(1135,253,100,100), roi_back=(1091,229,156,159), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_6.png")
-	# description 
-	I_NEW = RuleImage(roi_front=(0,0,100,100), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/image_name.png")
 
 
 	# Image Rule Assets
@@ -87,14 +96,5 @@ class ReplaceShikigamiAssets:
 	I_RS_UR = RuleImage(roi_front=(149,623,56,58), roi_back=(136,603,88,95), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_ur.png")
 	# description 
 	I_RS_UR_SELECTED = RuleImage(roi_front=(36,620,54,58), roi_back=(14,601,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_ur_selected.png")
-
-
-	# Image Rule Assets
-	# 小一个尺寸的 确认按钮 
-	I_U_CONFIRM_SMALL = RuleImage(roi_front=(672,513,131,60), roi_back=(672,513,131,60), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/utilize_u_confirm_small.png")
-	# 候补式神确认 
-	I_U_CONFIRM_ALTERNATE = RuleImage(roi_front=(692,407,134,47), roi_back=(692,407,134,47), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_u_confirm_alternate.png")
-	# 候补式神圆圈 
-	I_U_CIRCLE_ALTERNATE = RuleImage(roi_front=(535,339,41,43), roi_back=(535,339,41,43), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_u_circle_alternate.png")
 
 

@@ -11,6 +11,32 @@ class KekkaiUtilizeAssets:
 
 
 	# Image Rule Assets
+	# 寮信息 
+	I_GUILD_INFO = RuleImage(roi_front=(1157,599,97,91), roi_back=(1157,599,97,91), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/ku/ku_guild_info.png")
+	# 寮结界 
+	I_GUILD_REALM = RuleImage(roi_front=(1065,620,67,61), roi_back=(1065,620,67,61), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/ku/ku_guild_realm.png")
+	# 祈愿 
+	I_GUILD_WISH = RuleImage(roi_front=(965,622,60,63), roi_back=(965,622,60,63), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/ku/ku_guild_wish.png")
+	# 神灶 
+	I_GUILD_SHIRNE = RuleImage(roi_front=(872,624,60,62), roi_back=(872,624,60,62), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/ku/ku_guild_shirne.png")
+	# 寮体力 
+	I_GUILD_AP = RuleImage(roi_front=(483,314,22,22), roi_back=(290,224,894,345), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/ku/ku_guild_ap.png")
+	# 寮资金 
+	I_GUILD_ASSETS = RuleImage(roi_front=(315,311,23,28), roi_back=(290,224,894,345), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/ku/ku_guild_assets.png")
+	# 领取寮资金 
+	I_GUILD_ASSETS_RECEIVE = RuleImage(roi_front=(565,426,144,63), roi_back=(565,426,144,63), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/ku/ku_guild_assets_receive.png")
+	# 收起的寮活动横幅 
+	I_GUILD_COLLAPSE = RuleImage(roi_front=(28,159,19,22), roi_back=(12,125,88,101), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/ku/ku_guild_collapse.png")
+	# 展开的寮活动横幅 
+	I_GUILD_EXPAND = RuleImage(roi_front=(264,162,16,18), roi_back=(212,102,110,124), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/ku/ku_guild_expand.png")
+
+
+	# Swipe Rule Assets
+	# 移动寻找寮体力 
+	S_GUILD_FIND_AP = RuleSwipe(roi_front=(420,546,40,40), roi_back=(8,546,40,40), mode="default", name="guild_find_ap")
+
+
+	# Image Rule Assets
 	# 育成 
 	I_SHI_GROWN = RuleImage(roi_front=(596.3333333333333,291.3333333333333,35,38), roi_back=(526.6666666666666,251.33333333333331,181,198), threshold=0.6, method="Template matching", file="./tasks/KekkaiUtilize/realm/realm_shi_grown.png")
 	# 结界卡 
@@ -37,30 +63,13 @@ class KekkaiUtilizeAssets:
 	I_PLANT_TREE_CLOSE = RuleImage(roi_front=(777,91,36,34), roi_back=(711,52,169,125), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/realm/realm_plant_tree_close.png")
 
 
-	# Swipe Rule Assets
-	# 移动寻找寮体力 
-	S_GUILD_FIND_AP = RuleSwipe(roi_front=(420,546,40,40), roi_back=(8,546,40,40), mode="default", name="guild_find_ap")
-
-
-	# Image Rule Assets
-	# 寮信息 
-	I_GUILD_INFO = RuleImage(roi_front=(1157,599,97,91), roi_back=(1157,599,97,91), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/ku/ku_guild_info.png")
-	# 寮结界 
-	I_GUILD_REALM = RuleImage(roi_front=(1065,620,67,61), roi_back=(1065,620,67,61), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/ku/ku_guild_realm.png")
-	# 祈愿 
-	I_GUILD_WISH = RuleImage(roi_front=(965,622,60,63), roi_back=(965,622,60,63), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/ku/ku_guild_wish.png")
-	# 神灶 
-	I_GUILD_SHIRNE = RuleImage(roi_front=(872,624,60,62), roi_back=(872,624,60,62), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/ku/ku_guild_shirne.png")
-	# 寮体力 
-	I_GUILD_AP = RuleImage(roi_front=(483,314,22,22), roi_back=(290,224,894,345), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/ku/ku_guild_ap.png")
-	# 寮资金 
-	I_GUILD_ASSETS = RuleImage(roi_front=(315,311,23,28), roi_back=(290,224,894,345), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/ku/ku_guild_assets.png")
-	# 领取寮资金 
-	I_GUILD_ASSETS_RECEIVE = RuleImage(roi_front=(565,426,144,63), roi_back=(565,426,144,63), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/ku/ku_guild_assets_receive.png")
-	# 收起的寮活动横幅 
-	I_GUILD_COLLAPSE = RuleImage(roi_front=(28,159,19,22), roi_back=(12,125,88,101), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/ku/ku_guild_collapse.png")
-	# 展开的寮活动横幅 
-	I_GUILD_EXPAND = RuleImage(roi_front=(264,162,16,18), roi_back=(212,102,110,124), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/ku/ku_guild_expand.png")
+	# Ocr Rule Assets
+	# 这个寄养的剩余时间 
+	O_UTILIZE_RES_TIME = RuleOcr(roi=(1140,117,100,30), area=(1140,117,100,30), mode="Duration", method="Default", keyword="", name="utilize_res_time")
+	# 今日已领取经验 
+	O_BOX_EXP = RuleOcr(roi=(654,538,179,39), area=(654,538,179,39), mode="DigitCounter", method="Default", keyword="", name="box_exp")
+	# 斗鱼或太古寄养数目 
+	O_CARD_NUM = RuleOcr(roi=(800,421,150,33), area=(800,421,150,33), mode="Single", method="Default", keyword="", name="card_num")
 
 
 	# Click Rule Assets
@@ -74,32 +83,6 @@ class KekkaiUtilizeAssets:
 	C_SELECT_REALM_4 = RuleClick(roi_front=(300,520,200,50), roi_back=(300,520,200,50), name="select_realm_4")
 	# 点击识别到的卡(用识别到的坐标填充作用) 
 	C_SELECT_CARD = RuleClick(roi_front=(0,0,0,0), roi_back=(0,0,0,0), name="select_card")
-
-
-	# Image Rule Assets
-	# 太阴6 
-	I_U_MOON_6 = RuleImage(roi_front=(548,194,54,54), roi_back=(540,189,68,404), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_u_moon_6.png")
-	# description 
-	I_U_MOON_5 = RuleImage(roi_front=(548,205,48,46), roi_back=(540,196,66,407), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_u_moon_5.png")
-	# description 
-	I_U_MOON_4 = RuleImage(roi_front=(548,309,49,50), roi_back=(533,167,81,437), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_u_moon_4.png")
-	# description 
-	I_U_MOON_3 = RuleImage(roi_front=(549,305,53,53), roi_back=(535,173,77,430), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_u_moon_3.png")
-	# description 
-	I_U_MOON_2 = RuleImage(roi_front=(552,313,46,44), roi_back=(542,174,81,437), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_u_moon_2.png")
-	# description 
-	I_CHECK_FRIEND_REALM_1 = RuleImage(roi_front=(1059,17,90,21), roi_back=(844,4,421,65), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_check_friend_realm_1.png")
-	# description 
-	I_CHECK_FRIEND_REALM_2 = RuleImage(roi_front=(590,143,44,52), roi_back=(538,106,161,158), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_check_friend_realm_2.png")
-	# 好友寄养 
-	I_CHECK_FRIEND_REALM_3 = RuleImage(roi_front=(900,23,22,120), roi_back=(884,11,271,160), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_check_friend_realm_3.png")
-
-
-	# Swipe Rule Assets
-	# 向下滑动 
-	S_U_UP = RuleSwipe(roi_front=(247,520,100,1), roi_back=(247,104,100,1), mode="default", name="u_up")
-	# 滑动到底部 
-	S_U_END = RuleSwipe(roi_front=(175,179,26,26), roi_back=(164,518,49,102), mode="default", name="u_end")
 
 
 	# Image Rule Assets
@@ -151,12 +134,29 @@ class KekkaiUtilizeAssets:
 	I_SELECT_REALM_ON_4 = RuleImage(roi_front=(607,516,21,59), roi_back=(607,516,21,59), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/select_realm_on_4.png")
 
 
-	# Ocr Rule Assets
-	# 这个寄养的剩余时间 
-	O_UTILIZE_RES_TIME = RuleOcr(roi=(1140,117,100,30), area=(1140,117,100,30), mode="Duration", method="Default", keyword="", name="utilize_res_time")
-	# 今日已领取经验 
-	O_BOX_EXP = RuleOcr(roi=(654,538,179,39), area=(654,538,179,39), mode="DigitCounter", method="Default", keyword="", name="box_exp")
-	# 斗鱼或太古寄养数目 
-	O_CARD_NUM = RuleOcr(roi=(800,421,150,33), area=(800,421,150,33), mode="Single", method="Default", keyword="", name="card_num")
+	# Image Rule Assets
+	# 太阴6 
+	I_U_MOON_6 = RuleImage(roi_front=(548,194,54,54), roi_back=(540,189,68,404), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_u_moon_6.png")
+	# description 
+	I_U_MOON_5 = RuleImage(roi_front=(548,205,48,46), roi_back=(540,196,66,407), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_u_moon_5.png")
+	# description 
+	I_U_MOON_4 = RuleImage(roi_front=(548,309,49,50), roi_back=(533,167,81,437), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_u_moon_4.png")
+	# description 
+	I_U_MOON_3 = RuleImage(roi_front=(549,305,53,53), roi_back=(535,173,77,430), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_u_moon_3.png")
+	# description 
+	I_U_MOON_2 = RuleImage(roi_front=(552,313,46,44), roi_back=(542,174,81,437), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_u_moon_2.png")
+	# description 
+	I_CHECK_FRIEND_REALM_1 = RuleImage(roi_front=(1059,17,90,21), roi_back=(844,4,421,65), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_check_friend_realm_1.png")
+	# description 
+	I_CHECK_FRIEND_REALM_2 = RuleImage(roi_front=(590,143,44,52), roi_back=(538,106,161,158), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_check_friend_realm_2.png")
+	# 好友寄养 
+	I_CHECK_FRIEND_REALM_3 = RuleImage(roi_front=(900,23,22,120), roi_back=(884,11,271,160), threshold=0.8, method="Template matching", file="./tasks/KekkaiUtilize/utilize/utilize_check_friend_realm_3.png")
+
+
+	# Swipe Rule Assets
+	# 向下滑动 
+	S_U_UP = RuleSwipe(roi_front=(247,520,100,1), roi_back=(247,104,100,1), mode="default", name="u_up")
+	# 滑动到底部 
+	S_U_END = RuleSwipe(roi_front=(175,179,26,26), roi_back=(164,518,49,102), mode="default", name="u_end")
 
 

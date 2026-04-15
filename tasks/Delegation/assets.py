@@ -10,6 +10,11 @@ from module.atom.list import RuleList
 class DelegationAssets: 
 
 
+	# Ocr Rule Assets
+	# 完成 
+	O_D_DONE = RuleOcr(roi=(675,129,441,517), area=(675,129,441,517), mode="Full", method="Default", keyword="完成", name="d_done")
+
+
 	# Image Rule Assets
 	# description 
 	I_REWARDS_DONE = RuleImage(roi_front=(982,303,149,60), roi_back=(982,303,149,60), threshold=0.8, method="Template matching", file="./tasks/Delegation/rewards/rewards_rewards_done.png")
@@ -28,8 +33,8 @@ class DelegationAssets:
 
 
 	# Ocr Rule Assets
-	# 完成 
-	O_D_DONE = RuleOcr(roi=(675,129,441,517), area=(675,129,441,517), mode="Full", method="Default", keyword="完成", name="d_done")
+	# 委派的名字 
+	O_D_NAME = RuleOcr(roi=(766,127,509,529), area=(766,127,509,529), mode="Full", method="Default", keyword="彌助的畫", name="d_name")
 
 
 	# Click Rule Assets
@@ -66,10 +71,5 @@ class DelegationAssets:
 	I_D_SELECT_5 = RuleImage(roi_front=(767,593,41,40), roi_back=(721,556,103,86), threshold=0.7, method="Template matching", file="./tasks/Delegation/d/d_d_select_5.png")
 	# 返回 
 	I_D_BACK = RuleImage(roi_front=(940,415,138,51), roi_back=(940,415,138,51), threshold=0.8, method="Template matching", file="./tasks/Delegation/d/d_d_back.png")
-
-
-	# Ocr Rule Assets
-	# 委派的名字 
-	O_D_NAME = RuleOcr(roi=(766,127,509,529), area=(766,127,509,529), mode="Full", method="Default", keyword="彌助的畫", name="d_name")
 
 

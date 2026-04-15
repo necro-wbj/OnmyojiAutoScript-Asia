@@ -10,15 +10,15 @@ from module.atom.list import RuleList
 class EvoZoneAssets: 
 
 
+	# Ocr Rule Assets
+	# Ocr-description 
+	O_O_TEST_OCR = RuleOcr(roi=(126,136,360,491), area=(126,136,360,491), mode="Full", method="Default", keyword="", name="o_test_ocr")
+
+
 	# List Rule Assets
 	# 这个是觉醒界面选择不同层数的 
 	L_LAYER_LIST = RuleList(folder="./tasks/EvoZone/res", direction="vertical", mode="ocr", roi_back=(138,130,359,500), size=(44, 88), 
 					 array=["壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖", "拾"])
-
-
-	# Ocr Rule Assets
-	# Ocr-description 
-	O_O_TEST_OCR = RuleOcr(roi=(126,136,360,491), area=(126,136,360,491), mode="Full", method="Default", keyword="", name="o_test_ocr")
 
 
 	# Image Rule Assets

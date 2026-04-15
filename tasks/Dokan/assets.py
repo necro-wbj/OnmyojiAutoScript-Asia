@@ -11,15 +11,32 @@ class DokanAssets:
 
 
 	# List Rule Assets
-	# 这个是当前活跃的竂活动列表界面 
-	L_RYOU_ACTIVITY_LIST = RuleList(folder="./tasks/Dokan/res", direction="vertical", mode="ocr", roi_back=(20,150,170,400), size=(42, 27), 
-					 array=["道馆", "首领", "狭间"])
-
-
-	# List Rule Assets
 	# 前往按钮列表 
 	L_GOTO_CHEERING = RuleList(folder="./tasks/Dokan/res", direction="vertical", mode="ocr", roi_back=(950,172,54,324), size=(53, 62), 
 					 array=["前往"])
+
+
+	# Ocr Rule Assets
+	# 道馆地图里找文字：万 
+	O_DOKAN_MAP = RuleOcr(roi=(270,130,740,460), area=(270,130,740,460), mode="Full", method="Default", keyword="万", name="dokan_map")
+	# 道馆里找文字：后开战 
+	O_DOKAN_GATHERING = RuleOcr(roi=(535,75,211,29), area=(535,75,211,29), mode="Single", method="Default", keyword="开战", name="dokan_gathering")
+	# 道馆里找文字：剩余突破时间 
+	O_DOKAN_ATTACKING = RuleOcr(roi=(1122,546,92,51), area=(1122,546,92,51), mode="Single", method="Default", keyword="剩余", name="dokan_attacking")
+	# 道馆里找文字：后挑战馆主 
+	O_DOKAN_BOSS_WAITING = RuleOcr(roi=(603,148,130,32), area=(603,148,130,32), mode="Single", method="Default", keyword="馆主", name="dokan_boss_waiting")
+	# 查找道馆时,右侧边栏中的赏金 
+	O_DOKAN_RIGHTPAD_BOUNTY = RuleOcr(roi=(0,0,0,0), area=(0,0,0,0), mode="Single", method="Default", keyword="", name="dokan_rightpad_bounty")
+	# 查找道馆时,中间卡片上防守人数 
+	O_DOKAN_CENTER_PEOPLE_NUMBER = RuleOcr(roi=(0,0,0,0), area=(0,0,0,0), mode="Full", method="Default", keyword="", name="dokan_center_people_number")
+	# 道馆失败CD 
+	O_DOKEN_FAIL_CD = RuleOcr(roi=(1066,499,193,31), area=(1061,490,207,47), mode="Full", method="Default", keyword="", name="doken_fail_cd")
+
+
+	# List Rule Assets
+	# 这个是当前活跃的竂活动列表界面 
+	L_RYOU_ACTIVITY_LIST = RuleList(folder="./tasks/Dokan/res", direction="vertical", mode="ocr", roi_back=(20,150,170,400), size=(42, 27), 
+					 array=["道馆", "首领", "狭间"])
 
 
 	# Click Rule Assets
@@ -43,11 +60,6 @@ class DokanAssets:
 	C_DOKAN_REFRESH = RuleClick(roi_front=(1140,630,40,30), roi_back=(1140,630,40,30), name="dokan_refresh")
 	# 道馆战斗时,左上角 退出按钮区域 
 	C_DOKAN_BATTLE_QUIT_AREA = RuleClick(roi_front=(10,36,50,14), roi_back=(10,36,50,14), name="dokan_battle_quit_area")
-
-
-	# Swipe Rule Assets
-	# 道馆选择界面 右侧侧边栏 手指向上滑动 
-	S_DOKAN_LIST_UP = RuleSwipe(roi_front=(1100,420,30,21), roi_back=(1240,240,30,21), mode="default", name="dokan_list_up")
 
 
 	# Image Rule Assets
@@ -173,20 +185,8 @@ class DokanAssets:
 	I_RYOU_DOKAN_CHEERING_GRAY = RuleImage(roi_front=(65,601,71,33), roi_back=(44,568,112,100), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_cheering_gray.png")
 
 
-	# Ocr Rule Assets
-	# 道馆地图里找文字：万 
-	O_DOKAN_MAP = RuleOcr(roi=(270,130,740,460), area=(270,130,740,460), mode="Full", method="Default", keyword="万", name="dokan_map")
-	# 道馆里找文字：后开战 
-	O_DOKAN_GATHERING = RuleOcr(roi=(535,75,211,29), area=(535,75,211,29), mode="Single", method="Default", keyword="开战", name="dokan_gathering")
-	# 道馆里找文字：剩余突破时间 
-	O_DOKAN_ATTACKING = RuleOcr(roi=(1122,546,92,51), area=(1122,546,92,51), mode="Single", method="Default", keyword="剩余", name="dokan_attacking")
-	# 道馆里找文字：后挑战馆主 
-	O_DOKAN_BOSS_WAITING = RuleOcr(roi=(603,148,130,32), area=(603,148,130,32), mode="Single", method="Default", keyword="馆主", name="dokan_boss_waiting")
-	# 查找道馆时,右侧边栏中的赏金 
-	O_DOKAN_RIGHTPAD_BOUNTY = RuleOcr(roi=(0,0,0,0), area=(0,0,0,0), mode="Single", method="Default", keyword="", name="dokan_rightpad_bounty")
-	# 查找道馆时,中间卡片上防守人数 
-	O_DOKAN_CENTER_PEOPLE_NUMBER = RuleOcr(roi=(0,0,0,0), area=(0,0,0,0), mode="Full", method="Default", keyword="", name="dokan_center_people_number")
-	# 道馆失败CD 
-	O_DOKEN_FAIL_CD = RuleOcr(roi=(1066,499,193,31), area=(1061,490,207,47), mode="Full", method="Default", keyword="", name="doken_fail_cd")
+	# Swipe Rule Assets
+	# 道馆选择界面 右侧侧边栏 手指向上滑动 
+	S_DOKAN_LIST_UP = RuleSwipe(roi_front=(1100,420,30,21), roi_back=(1240,240,30,21), mode="default", name="dokan_list_up")
 
 

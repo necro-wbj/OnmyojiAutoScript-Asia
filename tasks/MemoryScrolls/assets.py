@@ -29,15 +29,6 @@ class MemoryScrollsAssets:
 	C_MS_DOUBLE_SCROLLS_2 = RuleClick(roi_front=(714,128,464,397), roi_back=(714,128,464,397), name="ms_double_scrolls_2")
 
 
-	# Swipe Rule Assets
-	# 小碎片拉满 
-	S_MS_SWIPE_S = RuleSwipe(roi_front=(838,199,37,27), roi_back=(1176,171,80,81), mode="default", name="ms_swipe_s")
-	# 中碎片拉满 
-	S_MS_SWIPE_M = RuleSwipe(roi_front=(838,352,37,23), roi_back=(1176,326,83,84), mode="default", name="ms_swipe_m")
-	# 大碎片拉满 
-	S_MS_SWIPE_L = RuleSwipe(roi_front=(839,503,34,25), roi_back=(1175,473,78,85), mode="default", name="ms_swipe_l")
-
-
 	# Image Rule Assets
 	# 进入绘卷主界面 
 	I_MS_ENTER = RuleImage(roi_front=(1169,155,24,55), roi_back=(1169,155,24,55), threshold=0.5, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_enter.png")
@@ -69,5 +60,14 @@ class MemoryScrollsAssets:
 	I_MS_FRAGMENT_S_VERIFICATION = RuleImage(roi_front=(522,318,100,100), roi_back=(522,318,100,100), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_fragment_s_verification.png")
 	# 双绘卷进入按钮 
 	I_MS_DOUBLE_SCROLLS_ENTER = RuleImage(roi_front=(565,586,154,40), roi_back=(565,586,154,40), threshold=0.8, method="Template matching", file="./tasks/MemoryScrolls/ms/ms_ms_double_scrolls_enter.png")
+
+
+	# Swipe Rule Assets
+	# 小碎片拉满 
+	S_MS_SWIPE_S = RuleSwipe(roi_front=(838,199,37,27), roi_back=(1176,171,80,81), mode="default", name="ms_swipe_s")
+	# 中碎片拉满 
+	S_MS_SWIPE_M = RuleSwipe(roi_front=(838,352,37,23), roi_back=(1176,326,83,84), mode="default", name="ms_swipe_m")
+	# 大碎片拉满 
+	S_MS_SWIPE_L = RuleSwipe(roi_front=(839,503,34,25), roi_back=(1175,473,78,85), mode="default", name="ms_swipe_l")
 
 

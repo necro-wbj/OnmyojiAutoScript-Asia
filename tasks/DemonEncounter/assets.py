@@ -10,6 +10,13 @@ from module.atom.list import RuleList
 class DemonEncounterAssets: 
 
 
+	# Ocr Rule Assets
+	# 人數 
+	O_DE_BOSS_PEOPLE = RuleOcr(roi=(880,591,100,35), area=(880,591,100,35), mode="DigitCounter", method="Default", keyword="", name="de_boss_people")
+	# 極逢魔人數 
+	O_DE_BEST_BOSS_PEOPLE = RuleOcr(roi=(900,565,100,35), area=(900,565,100,35), mode="DigitCounter", method="Default", keyword="", name="de_best_boss_people")
+
+
 	# Click Rule Assets
 	# description 
 	C_DM_BOSS_CLICK = RuleClick(roi_front=(593,274,100,100), roi_back=(593,274,100,100), name="dm_boss_click")
@@ -53,10 +60,30 @@ class DemonEncounterAssets:
 
 
 	# Ocr Rule Assets
-	# 人數 
-	O_DE_BOSS_PEOPLE = RuleOcr(roi=(880,591,100,35), area=(880,591,100,35), mode="DigitCounter", method="Default", keyword="", name="de_boss_people")
-	# 極逢魔人數 
-	O_DE_BEST_BOSS_PEOPLE = RuleOcr(roi=(900,565,100,35), area=(900,565,100,35), mode="DigitCounter", method="Default", keyword="", name="de_best_boss_people")
+	# 1/3 
+	O_LETTER_COUNT = RuleOcr(roi=(480,133,55,34), area=(480,133,55,34), mode="DigitCounter", method="Default", keyword="", name="letter_count")
+	# 问题 
+	O_LETTER_QUESTION = RuleOcr(roi=(427,164,447,100), area=(427,164,447,100), mode="Single", method="Default", keyword="", name="letter_question")
+	# 回答一 
+	O_LETTER_ANSWER_1 = RuleOcr(roi=(424,261,450,74), area=(424,261,450,74), mode="Single", method="Default", keyword="", name="letter_answer_1")
+	# 回答二 
+	O_LETTER_ANSWER_2 = RuleOcr(roi=(428,350,438,74), area=(428,350,438,74), mode="Single", method="Default", keyword="", name="letter_answer_2")
+	# 回答三 
+	O_LETTER_ANSWER_3 = RuleOcr(roi=(428,439,443,72), area=(428,439,443,72), mode="Single", method="Default", keyword="", name="letter_answer_3")
+
+
+	# Click Rule Assets
+	# description 
+	C_ANSWER_1 = RuleClick(roi_front=(430,264,440,67), roi_back=(430,264,440,67), name="answer_1")
+	# description 
+	C_ANSWER_2 = RuleClick(roi_front=(428,351,438,70), roi_back=(428,351,438,70), name="answer_2")
+	# description 
+	C_ANSWER_3 = RuleClick(roi_front=(434,435,437,65), roi_back=(434,435,437,65), name="answer_3")
+
+
+	# Ocr Rule Assets
+	# 计数已经开启多少的 
+	O_DE_COUNTER = RuleOcr(roi=(1204,685,48,34), area=(1204,685,48,34), mode="DigitCounter", method="Default", keyword="", name="de_counter")
 
 
 	# Image Rule Assets
@@ -120,32 +147,5 @@ class DemonEncounterAssets:
 	I_SUSHI = RuleImage(roi_front=(602,318,72,54), roi_back=(581,294,115,116), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_sushi.png")
 	# 50勾玉购买 
 	I_JADE_50 = RuleImage(roi_front=(593,425,84,46), roi_back=(548,405,182,83), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_jade_50.png")
-
-
-	# Ocr Rule Assets
-	# 计数已经开启多少的 
-	O_DE_COUNTER = RuleOcr(roi=(1204,685,48,34), area=(1204,685,48,34), mode="DigitCounter", method="Default", keyword="", name="de_counter")
-
-
-	# Click Rule Assets
-	# description 
-	C_ANSWER_1 = RuleClick(roi_front=(430,264,440,67), roi_back=(430,264,440,67), name="answer_1")
-	# description 
-	C_ANSWER_2 = RuleClick(roi_front=(428,351,438,70), roi_back=(428,351,438,70), name="answer_2")
-	# description 
-	C_ANSWER_3 = RuleClick(roi_front=(434,435,437,65), roi_back=(434,435,437,65), name="answer_3")
-
-
-	# Ocr Rule Assets
-	# 1/3 
-	O_LETTER_COUNT = RuleOcr(roi=(480,133,55,34), area=(480,133,55,34), mode="DigitCounter", method="Default", keyword="", name="letter_count")
-	# 问题 
-	O_LETTER_QUESTION = RuleOcr(roi=(427,164,447,100), area=(427,164,447,100), mode="Single", method="Default", keyword="", name="letter_question")
-	# 回答一 
-	O_LETTER_ANSWER_1 = RuleOcr(roi=(424,261,450,74), area=(424,261,450,74), mode="Single", method="Default", keyword="", name="letter_answer_1")
-	# 回答二 
-	O_LETTER_ANSWER_2 = RuleOcr(roi=(428,350,438,74), area=(428,350,438,74), mode="Single", method="Default", keyword="", name="letter_answer_2")
-	# 回答三 
-	O_LETTER_ANSWER_3 = RuleOcr(roi=(428,439,443,72), area=(428,439,443,72), mode="Single", method="Default", keyword="", name="letter_answer_3")
 
 
