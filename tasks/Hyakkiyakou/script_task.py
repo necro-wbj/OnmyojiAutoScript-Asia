@@ -123,6 +123,8 @@ class ScriptTask(GameUi, HyaSlave, SwitchOnmyoji):
         limit_time = self._config.hyakkiyakou_config.hya_limit_time
         self.limit_time: timedelta = timedelta(hours=limit_time.hour, minutes=limit_time.minute,
                                                seconds=limit_time.second)
+        # check screenshot method is OK before start
+        self.fast_screenshot(screenshot=self._config.debug_config.hya_screenshot_method)
         self.ui_goto_page(page_onmyodo)
         self.switch_onmyoji(self._config.hyakkiyakou_config.hya_onmyoji)
         self.ui_goto_page(page_hyakkiyakou)

@@ -25,10 +25,15 @@ class HyaDevice(BaseTask):
     3. 考虑JIT加速
     我宣布世界上最好的 Linux 系统是 Windows
     """
-    hya_screenshot_interval = Timer(0.2)  # 300ms
-    hya_fs_check_timer = Timer(3 * 60)  # 五分钟跑不完就应该是出问题了
+    hya_screenshot_interval = Timer(0.2).start()  # 300ms
+    hya_fs_check_timer = Timer(3 * 60).start()  # 五分钟跑不完就应该是出问题了
 
     def fast_screenshot(self, screenshot: ScreenshotMethod):
+        if not self.hya_screenshot_interval.started():
+            self.hya_screenshot_interval.start()
+        if not self.hya_fs_check_timer.started():
+            self.hya_fs_check_timer.start()
+
         self.hya_screenshot_interval.wait()
         self.hya_screenshot_interval.reset()
         self.device.image = self.device.screenshot_window_background() if screenshot == ScreenshotMethod.WINDOW_BACKGROUND else self.device.screenshot_nemu_ipc()
@@ -37,7 +42,7 @@ class HyaDevice(BaseTask):
             raise RequestHumanTakeover('Screenshot image is black, try again')
         if self.hya_fs_check_timer.reached():
             logger.error('Fast screenshot check timer reached')
-            logger.error('Five minutes have not ended, the game is probably stuck, please check the game')
+            logger.error('Five minutes have ended, the game is probably stuck, please check the game')
             raise GameStuckError
         if self.config.script.error.save_error:
             self.device.screenshot_deque.append({'time': datetime.now(), 'image': self.device.image})
@@ -58,7 +63,7 @@ class HyaDevice(BaseTask):
         @param interval: ms
         @return:
         """
-        self.hya_screenshot_interval = Timer(interval / 1000.)
+        self.hya_screenshot_interval = Timer(interval / 1000.).start()
 
 
 if __name__ == '__main__':

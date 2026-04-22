@@ -1,8 +1,6 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
-import re
-
 from enum import Enum
 from cached_property import cached_property
 from anytree import NodeMixin, RenderTree, PreOrderIter
@@ -10,10 +8,10 @@ from win32api import GetSystemMetrics, SendMessage, MAKELONG, PostMessage
 from win32print import GetDeviceCaps
 from win32process import GetWindowThreadProcessId
 from win32gui import (GetWindowText, EnumWindows, FindWindow, FindWindowEx,
-                      IsWindow, GetWindowRect, GetWindowDC, DeleteObject,
+                      IsWindow, GetWindowRect,
                       SetForegroundWindow, IsWindowVisible, GetDC, GetParent,
                       EnumChildWindows)
-from win32con import (SRCCOPY, DESKTOPHORZRES, DESKTOPVERTRES, WM_LBUTTONUP,
+from win32con import (DESKTOPHORZRES, DESKTOPVERTRES, WM_LBUTTONUP,
                       WM_LBUTTONDOWN, WM_ACTIVATE, WA_ACTIVE, MK_LBUTTON,
                       WM_NCHITTEST, WM_SETCURSOR, HTCLIENT, WM_MOUSEMOVE)
 from module.config.config import Config
@@ -304,7 +302,10 @@ class Handle:
         children_num = len(self.root_node.children)
         if children_num == 1:  #
             name = self.root_node.children[0].name
+            logger.info(name)
             if name == 'MuMuPlayer':
+                return EmulatorFamily.FAMILY_MUMU
+            elif name == 'MuMuNxDevice':
                 return EmulatorFamily.FAMILY_MUMU
             elif name == 'NemuPlayer':
                 return EmulatorFamily.FAMILY_MUMU
@@ -339,15 +340,12 @@ class Handle:
         :return:  出错返回None
         """
         if self.emulator_family == EmulatorFamily.FAMILY_MUMU:
-            # 使用正则匹配12 来判定是不是mumu12这并不是一个好的方法
-            name = self.root_node.children[0].name
-            num = self.root_node.children[0].num
-            if name == 'MuMuPlayer':
-                logger.info('The emulator is MuMu模拟器12')
-                return num
-            elif name == 'NemuPlayer':
-                logger.info('The emulator is MuMu模拟器')
-                return num
+            # MuMu不同版本子窗口命名不同，优先选内容窗口句柄，避免抓到根窗口(含边框和标题栏)。
+            mumu_window_names = ['MuMuNxDevice', 'NemuPlayer', 'MuMuPlayer', 'nemudisplay']
+            for node in PreOrderIter(self.root_node):
+                if node.name in mumu_window_names:
+                    logger.info(f'The emulator is MuMu, use screenshot handle: {node.name}[{node.num}]')
+                    return node.num
         # 夜神
         elif self.emulator_family == EmulatorFamily.FAMILY_NOX:
             try:
@@ -372,7 +370,7 @@ class Handle:
         return self.root_node.num
 
     @cached_property
-    def screenshot_size(self) -> tuple or None:
+    def screenshot_size(self) -> tuple | None:
         """
         第一个是width 第二个是heigth
         2023.7.1 在高缩放的设备上应该输出1280X720

@@ -1,7 +1,7 @@
 [
   {
     "itemName": "seimi_battle",
-    "imageName": "so_seimi_battle.png",
+    "imageName": "so_qm_zhan.png",
     "roiFront": "253,429,79,78",
     "roiBack": "147,388,222,153",
     "method": "Template matching",
@@ -10,7 +10,7 @@
   },
   {
     "itemName": "kagura_battle",
-    "imageName": "so_kagura_battle.png",
+    "imageName": "so_sl_zhan.png",
     "roiFront": "509,428,79,78",
     "roiBack": "401,394,222,153",
     "method": "Template matching",
@@ -19,7 +19,7 @@
   },
   {
     "itemName": "hiromasa_battle",
-    "imageName": "so_hiromasa_battle.png",
+    "imageName": "so_yby_zhan.png",
     "roiFront": "761,427,79,78",
     "roiBack": "657,396,222,153",
     "method": "Template matching",
@@ -28,7 +28,7 @@
   },
   {
     "itemName": "yao_bikuni_battle",
-    "imageName": "so_yao_bikuni_battle.png",
+    "imageName": "so_bbbqn_zhan.png",
     "roiFront": "1017,428,79,78",
     "roiBack": "910,387,222,153",
     "method": "Template matching",
@@ -37,7 +37,7 @@
   },
   {
     "itemName": "onmyoji_switch",
-    "imageName": "so_onmyoji_switch.png",
+    "imageName": "so_jiaoti.png",
     "roiFront": "39,385,40,33",
     "roiBack": "19,362,80,91",
     "method": "Template matching",
@@ -46,7 +46,7 @@
   },
   {
     "itemName": "onmyoji_check",
-    "imageName": "so_onmyoji_check.png",
+    "imageName": "so_yinyangshi.png",
     "roiFront": "67,622,82,58",
     "roiBack": "58,608,100,88",
     "method": "Template matching",
@@ -55,7 +55,7 @@
   },
   {
     "itemName": "hero_check",
-    "imageName": "so_hero_check.png",
+    "imageName": "so_yingjie.png",
     "roiFront": "70,624,75,55",
     "roiBack": "60,602,100,100",
     "method": "Template matching",

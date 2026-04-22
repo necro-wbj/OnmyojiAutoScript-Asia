@@ -44,6 +44,20 @@ class Window(Handle):
         :return:
         """
         widthScreen, heightScreen = self.screenshot_size
+        screen_rect = GetWindowRect(self.screenshot_handle_num)
+        logger.info(
+            f'[SCREENSHOT_DEBUG] handle={self.screenshot_handle_num}, '
+            f'window_rect={screen_rect}, screenshot_size=({widthScreen}, {heightScreen})'
+        )
+
+        if self.emulator_family == EmulatorFamily.FAMILY_MUMU and len(self.control_handle_list) >= 2:
+            root_rect = GetWindowRect(self.control_handle_list[0])
+            child_rect = GetWindowRect(self.control_handle_list[1])
+            logger.info(
+                f'[SCREENSHOT_DEBUG] mumu_root_rect={root_rect}, '
+                f'mumu_child_rect={child_rect}'
+            )
+
         # 返回句柄窗口的设备环境，覆盖整个窗口，包括非客户区，标题栏，菜单，边框
         hwndDc = GetWindowDC(self.screenshot_handle_num)
         # 创建设备描述表
@@ -63,8 +77,16 @@ class Window(Handle):
         signedIntsArray = saveBitMap.GetBitmapBits(True)
         imgSrceen = frombuffer(signedIntsArray, dtype='uint8')
         imgSrceen.shape = (heightScreen, widthScreen, 4)
+        logger.info(f'[SCREENSHOT_DEBUG] raw_bgra_shape={imgSrceen.shape}')
         # 这点很重要 在alas中图片以np.ndarray（RGB）的顺序存储。但是opencv是以BGR
         imgSrceen = cv2.cvtColor(imgSrceen, cv2.COLOR_BGR2RGB)
+        logger.info(f'[SCREENSHOT_DEBUG] output_rgb_shape={imgSrceen.shape}')
+
+        if (imgSrceen.shape[1], imgSrceen.shape[0]) != (1280, 720):
+            logger.warning(
+                f'[SCREENSHOT_DEBUG] expected 1280x720 but got '
+                f'{imgSrceen.shape[1]}x{imgSrceen.shape[0]}'
+            )
         # imgSrceen = cv2.resize(imgSrceen, (win_size[0], win_size[1]))
         # 很奇怪的
 
