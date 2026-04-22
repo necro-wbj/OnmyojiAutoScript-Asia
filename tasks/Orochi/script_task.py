@@ -485,7 +485,11 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                 continue
             if self.appear(self.I_UI_CONFIRM_SAMLL):
                 self.click(self.I_UI_CONFIRM_SAMLL)
-                logger.info('too much souls')
+                logger.info('confirm small')
+                continue
+            if self.appear(self.I_UI_GOTIT_SMALL):
+                self.click(self.I_UI_GOTIT_SMALL)
+                logger.info('too much soul')
                 continue
             if self.appear(self.I_GREED_GHOST):
                 # 贪吃鬼
@@ -504,7 +508,11 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                         continue
                     if self.appear(self.I_UI_CONFIRM_SAMLL):
                         self.click(self.I_UI_CONFIRM_SAMLL)
-                        logger.info('too much souls')
+                        logger.info('confirm small')
+                        continue
+                    if self.appear(self.I_UI_GOTIT_SMALL):
+                        self.click(self.I_UI_GOTIT_SMALL)
+                        logger.info('too much soul')
                         continue
                     action_click = random.choice([self.C_REWARD_1, self.C_REWARD_2, self.C_REWARD_3])
                     if not self.appear(self.I_GREED_GHOST):
@@ -520,7 +528,11 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                     self.screenshot()
                     if self.appear(self.I_UI_CONFIRM_SAMLL):
                         self.click(self.I_UI_CONFIRM_SAMLL)
-                        logger.info('too much souls')
+                        logger.info('confirm small')
+                        continue
+                    if self.appear(self.I_UI_GOTIT_SMALL):
+                        self.click(self.I_UI_GOTIT_SMALL)
+                        logger.info('too much soul')
                         continue
                     action_click = random.choice([self.C_REWARD_1, self.C_REWARD_2, self.C_REWARD_3])
                     if self.appear_then_click(self.I_REWARD, action=action_click, interval=1.5):
