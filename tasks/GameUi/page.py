@@ -53,6 +53,7 @@ page_login = Page(G.I_CHECK_LOGIN_FORM)
 # Main Home 主页
 page_main = Page(G.I_CHECK_MAIN)
 page_main.additional = [G.I_AD_CLOSE_RED, G.I_BACK_FRIENDS, RestartAssets.I_CANCEL_BATTLE,
+                        G.I_BACK_Y, G.I_DLC_CLOSE, G.I_BACK_YOLLOW,
                         RestartAssets.I_LOGIN_SCROOLL_CLOSE]
 # 召唤summon
 page_summon = Page(G.I_CHECK_SUMMON)
@@ -173,10 +174,10 @@ page_main.link(button=G.I_MAIN_GOTO_DAILY, destination=page_daily)
 from tasks.DailyTrifles.assets import DailyTriflesAssets
 
 # 商店 mall
-page_mall = Page(check_button=[G.I_CHECK_MALL, DailyTriflesAssets.I_ROOM_GIFT])
-page_mall.additional = [G.I_AD_CLOSE_RED, G.I_BACK_Y, G.I_DLC_CLOSE, G.I_BACK_YOLLOW]
+page_mall = Page(check_button=[DailyTriflesAssets.I_ROOM_GIFT])
+# page_mall.additional = [G.I_AD_CLOSE_RED, G.I_BACK_Y, G.I_DLC_CLOSE, G.I_BACK_YOLLOW]
 page_mall.link(button=G.I_BACK_BLUE, destination=page_main)
-page_mall.link(button=G.I_BACK_YOLLOW, destination=page_main)
+# page_mall.link(button=G.I_BACK_YOLLOW, destination=page_main)
 page_main.link(button=G.I_MAIN_GOTO_MALL, destination=page_mall)
 # 阴阳寮 guild
 page_guild = Page(G.I_CHECK_GUILD)
