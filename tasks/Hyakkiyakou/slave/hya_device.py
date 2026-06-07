@@ -25,14 +25,15 @@ class HyaDevice(BaseTask):
     3. 考虑JIT加速
     我宣布世界上最好的 Linux 系统是 Windows
     """
-    hya_screenshot_interval = Timer(0.2).start()  # 300ms
-    hya_fs_check_timer = Timer(3 * 60).start()  # 五分钟跑不完就应该是出问题了
+    hya_screenshot_interval = None  # Lazy init: Timer(0.2)
+    hya_fs_check_timer = None  # Lazy init: Timer(3 * 60)
 
     def fast_screenshot(self, screenshot: ScreenshotMethod):
-        if not self.hya_screenshot_interval.started():
-            self.hya_screenshot_interval.start()
-        if not self.hya_fs_check_timer.started():
-            self.hya_fs_check_timer.start()
+        # Lazy initialize timers on first use
+        if self.hya_screenshot_interval is None:
+            self.hya_screenshot_interval = Timer(0.2).start()
+        if self.hya_fs_check_timer is None:
+            self.hya_fs_check_timer = Timer(3 * 60).start()
 
         self.hya_screenshot_interval.wait()
         self.hya_screenshot_interval.reset()

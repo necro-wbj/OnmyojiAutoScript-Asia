@@ -144,3 +144,88 @@ OAS 基於碧藍航線腳本 [AzurLaneAutoScript](https://github.com/LmeSzinc/Az
 
 ### 社群
 Discord：<https://discord.gg/zNRdjZNmzZ>
+
+---
+
+## 任務狀態總覽 Task Status
+
+> 最後更新：2026-06-07  
+> ✅ 正常可用　⚠️ 部分可用 / 待驗證　❌ 已知問題 / 不可用
+
+### 日常任务
+
+| 任务名称 | 状态 | 说明 / 正常执行时间 |
+|---|---|---|
+| DailyTrifles（每日琐事） | ✅ | 2026/06/07 PASS |
+| AreaBoss（地域鬼王） | ✅ | 2026/06/07 PASS |
+| GoldYoukai（金币妖怪） | ⚠️ | 待验证 |
+| ExperienceYoukai（经验妖怪） | ⚠️ | 待验证 |
+| Nian（年兽） | ⚠️ | 待验证 |
+| TalismanPass（花合战） | ⚠️ | 待验证 |
+| DemonEncounter（逢魔之时） | ✅ | 2026/06/07 PASS |
+| Pets（小猫咪） | ⚠️ | 待验证 |
+| SoulsTidy（御魂整理） | ✅ | 2026/06/07 PASS |
+| Delegation（式神委派） | ⚠️ | 待验证 |
+| WantedQuests（悬赏封印） | ✅ | 2026/06/07 PASS |
+| Tako（石距） | ⚠️ | 待验证 |
+
+### 御魂副本
+
+| 任务名称 | 状态 | 说明 / 正常执行时间 |
+|---|---|---|
+| Orochi（八岐大蛇） | ✅ | 2026/06/07 PASS |
+| Sougenbi（业原火） | ⚠️ | 待验证 |
+| FallenSun（日轮之陨） | ⚠️ | 待验证 |
+| EternitySea（永生之海） | ⚠️ | 待验证 |
+| SixRealms（六道之门） | ⚠️ | 待验证 |
+
+### 肝帝专属
+
+| 任务名称 | 状态 | 说明 / 正常执行时间 |
+|---|---|---|
+| BondlingFairyland（契灵之境） | ⚠️ | 待验证 |
+| EvoZone（觉醒副本） | ⚠️ | 待验证 |
+| GoryouRealm（御灵之境） | ⚠️ | 待验证 |
+| Exploration（探索） | ⚠️ | 待验证 |
+| Hyakkiyakou（百鬼夜行） | ⚠️ | 待验证 |
+| HeroTest（英杰试炼） | ⚠️ | 待验证 |
+| FindJade（寻找协作任务） | ⚠️ | 待验证 |
+| MemoryScrolls（绘卷） | ⚠️ | 待验证 |
+
+### 阴阳寮
+
+| 任务名称 | 状态 | 说明 / 正常执行时间 |
+|---|---|---|
+| KekkaiUtilize（结界蹭卡） | ✅ | 2026/06/07 PASS |
+| KekkaiActivation（结界挂卡） | ✅ | 2026/06/07 PASS |
+| RealmRaid（个人突破） | ⚠️ | 待验证 |
+| RyouToppa（寮突破） | ⚠️ | 待验证 |
+| Dokan（道馆） | ⚠️ | 待验证 |
+| CollectiveMissions（集体任务） | ⚠️ | 待验证 |
+| Hunt（狩猎战） | ⚠️ | 待验证 |
+| AbyssShadows（狭间暗域） | ⚠️ | 待验证 |
+| GuildBanquet（寮宴会） | ⚠️ | 待验证 |
+| DemonRetreat（首领退治） | ⚠️ | 待验证 |
+
+### 每周任务
+
+| 任务名称 | 状态 | 说明 / 正常执行时间 |
+|---|---|---|
+| TrueOrochi（真八岐大蛇） | ⚠️ | 待验证 |
+| RichMan（大富翁） | ⚠️ | 待验证 |
+| Secret（秘闻副本） | ✅ | 2026/06/07 PASS |
+| WeeklyTrifles（每周琐事） | ⚠️ | 待验证 |
+| MysteryShop（神秘商店） | ⚠️ | 待验证 |
+| Duel（斗技） | ✅ | 2026/06/07 PASS |
+
+### 限时活动
+
+| 任务名称 | 状态 | 说明 / 正常执行时间 |
+|---|---|---|
+| ActivityShikigami（当期爬塔） | ⚠️ | 待验证 |
+| MetaDemon（超鬼王） | ⚠️ | 待验证 |
+| FrogBoss（对弈竞猜） | ⚠️ | 待验证 |
+| FloatParade（花车巡游） | ⚠️ | 待验证 |
+| Quiz（智力竞赛） | ⚠️ | 待验证 |
+| KittyShop（猫咪铺子） | ⚠️ | 待验证 |
+| DyeTrials（灵染试炼） | ⚠️ | 待验证 |

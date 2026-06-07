@@ -535,14 +535,16 @@ class Script:
                 continue
 
             # Run
-            logger.info(f'Scheduler: Start task `{task}`')
+            task_zh = I18n.trans_zh_cn(task)
+            task_log_name = f'{task} ({task_zh})' if task_zh != task else task
+            logger.info(f'Scheduler: Start task `{task_log_name}`')
             self.device.stuck_record_clear()
             self.device.click_record_clear()
-            logger.hr(task, level=0)
+            logger.hr(task_log_name, level=0)
             self.config.model.running_task = task
             success = self.run(inflection.camelize(task))
             self.config.model.running_task = ''
-            logger.info(f'Scheduler: End task `{task}`')
+            logger.info(f'Scheduler: End task `{task_log_name}`')
             self.is_first_task = False
 
             # Check failures

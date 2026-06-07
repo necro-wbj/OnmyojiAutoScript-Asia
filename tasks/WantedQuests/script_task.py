@@ -76,7 +76,14 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             if error_count > 3:
                 logger.warning('failed too many times, exit')
                 break
+            if self.current_count >= 30:
+                logger.error(f'current count {self.current_count} >= 20, exit')
+                raise Exception('current count >= 20, exit')
             cu, re, total, area = self.find_wq(self.device.image)
+            logger.info(f"find_wq result: current {cu} remain {re} total {total} area {area}")
+            if re == -2:
+                logger.info("only completed wanted quests remained")
+                break
             if re == -1:
                 error_count += 1
                 # 没找到任务 尝试上滑
@@ -382,8 +389,13 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         while 1:
             self.screenshot()
             if self.appear(self.I_TRACE_TRUE):
+                logger.info('Trace page detected, stop clicking wanted entry')
+                break
+            if not self.is_wq_remained():
+                logger.warning('is_wq_remained=False before trace page appears, stop clicking wanted entry')
                 break
             if self.click(ocr, interval=1):
+                logger.info('Clicked wanted entry, waiting for trace page')
                 continue
         if not self.appear(self.I_GOTO_1):
             # 如果没有出现 '前往'按钮， 那就是这个可能是神秘任务但是没有解锁
@@ -471,14 +483,15 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             success = self.run_general_battle(self.battle_config)
         while 1:
             self.screenshot()
-            if self.appear(self.I_CHECK_EXPLORATION):
+            if self.appear(self.I_CHECK_SECRET_ZONES):
                 break
             if self.appear_then_click(self.I_UI_BACK_RED, interval=1):
                 continue
             if self.appear_then_click(self.I_UI_BACK_BLUE, interval=1.5):
                 continue
-            if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=1):
-                continue
+        self.ui_get_current_page()
+        self.ui_goto(page_exploration)
+        self.wait_until_stable(self.I_CHECK_EXPLORATION)
         logger.info('Secret mission finished')
 
     def invite_random(self, add_button: RuleImage):
@@ -487,6 +500,17 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             return False
         self.ui_click(add_button, self.I_WQ_INVITE_ENSURE, interval=2.5)
         logger.info('enter invite form')
+        self.screenshot()
+        invite_random_friend_ocr = {
+            'button': str(add_button),
+            'column_1': self.O_WQ_INVITE_COLUMN_1.ocr(self.device.image),
+            'column_2': self.O_WQ_INVITE_COLUMN_2.ocr(self.device.image),
+        }
+        records = getattr(self, 'invite_random_friend_ocr_records', None)
+        if records is None:
+            self.invite_random_friend_ocr_records = []
+        self.invite_random_friend_ocr_records.append(invite_random_friend_ocr)
+        logger.info('invite random friend ocr: %s', invite_random_friend_ocr)
         sleep(1)
         self.click(self.I_WQ_FRIEND_1)
         sleep(0.4)
@@ -534,6 +558,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             return False
         typeMask = 15
         typeMask = CooperationSelectMask[(self.get_config()).cooperation_type.value]
+        specific_name_retry_limit = 3
         for item in ret:
             # 该任务是需要邀请的任务类型
             if not (item['type'] & typeMask):
@@ -554,11 +579,18 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                 name = name_all
             logger.warning("find cooperationType %s ,start invite %s", item['type'], name)
             while index < 5:
+                if name and index >= specific_name_retry_limit:
+                    logger.warning("friend %s not found after %d attempts, fallback to random invite",
+                                   name, specific_name_retry_limit)
+                    name = None
                 if self.cooperation_invite(item['inviteBtn'], name):
                     item['inviteResult'] = True
                     index = 5
                     continue
-                logger.info("%s not found,Wait 20s,%d invitations left", name, 5 - index - 1)
+                if name:
+                    logger.info("%s not found,Wait 20s,%d invitations left", name, 5 - index - 1)
+                else:
+                    logger.info("random invite failed,Wait 20s,%d invitations left", 5 - index - 1)
                 index += 1
                 sleep(20) if index < 5 else sleep(0)
                 # NOTE 等待过程如果出现协作邀请 将会卡住 为了防止卡住
@@ -571,13 +603,16 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                     self.trace_one(item['inviteBtn'])
         return ret
 
-    def cooperation_invite(self, btn: RuleImage, name: str):
+    def cooperation_invite(self, btn: RuleImage, name: str = None):
         """
             单个协作任务邀请
         @param btn:
         @param name:
         @return:
         """
+        if not name:
+            return self.invite_random(btn)
+
         self.ui_click(btn, stop=self.I_WQ_INVITE_ENSURE, interval=2.5)
 
         # 选人
@@ -774,25 +809,32 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         reg_progress = re.compile(r'^(\d+)([7/])(\d+)$')
         # 没有检测到斜杠，符合格式：前N位与后N位相同,表示已完成
         reg_XX = re.compile(r'^(\d+)\1$')
+        # 过滤掉协或者未知悬赏等其他无用字符
+        reg_other = re.compile(r'[?？协边]')
+        completed_only = False
         for index, res in enumerate(res_list):
             if reg_fengyin.match(res.ocr_text):
                 continue
             if reg_time.match(res.ocr_text):
+                continue
+            if reg_other.search(res.ocr_text):
                 continue
             if (match := reg_progress.match(res.ocr_text)):
                 spliter_index = match.start(2)
                 xywh = calc_xywh(res.box)
                 self.O_WQ_TEXT_ALL.area = xywh
                 cu, re, total = int(res.ocr_text[:spliter_index]), 1, int(res.ocr_text[spliter_index + 1:])
+                logger.info(f'Matched: {res.ocr_text}')
                 # 识别结果规范性检查
                 if total > 14:
                     logger.warning("Total number of wanted quests is greater than 14")
                     total = total % 10
                 if cu > total:
                     logger.warning('Current number of wanted quests is greater than total number')
-                    cu = cu % 10
+                    cu = cu // 10
                 if cu == total:
                     # 该任务已完成，一般是悬赏任务，邀请人没有做导致的
+                    completed_only = True
                     continue
                 return cu, re, total, xywh
             # 例如：1414 66 1212
@@ -801,13 +843,17 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             # 什么都没匹配上，判断上一个识别结果如果为悬赏封印，那么认为该识别结果错误，尝试执行一次
             last_index = (index - 1) if index > 0 else 0
             if reg_fengyin.match(res_list[last_index].ocr_text):
+                logger.warning('find_wq fallback hit: progress OCR missing, use last fengyin area to try once')
+                logger.info(f'find_wq fallback detail: last_text={res_list[last_index].ocr_text}, current_text={res.ocr_text}')
                 return 0, 1, 3, calc_xywh(res_list[last_index].box)
 
+        if completed_only:
+            return -2, -2, -2, [0, 0, 0, 0]
         return -1, -1, -1, [0, 0, 0, 0]
 
     def is_wq_remained(self):
         # 检测是否还存在任务
-        return self.appear(self.I_WQ_LIST_TOP_BOTTOM_CHECK)
+        return self.appear(self.O_WQ_WANTED)
 
 
 

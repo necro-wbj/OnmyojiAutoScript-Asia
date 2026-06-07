@@ -249,7 +249,7 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
             self.click(self.L_ROTATE_1)
             self.device.click_record_clear()
 
-        self.appear_then_click(self.I_E_SURE_BUTTON)
+        self.ui_click_until_disappear(self.I_E_SURE_BUTTON)
 
     # 找up按钮
     def search_up_fight(self, up_type: UpType = None):
@@ -350,7 +350,7 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
         if datetime.now() - self.start_time >= self.limit_time:
             logger.info('Exploration time limit out')
             return True
-        self.activate_realm_raid(self._config.scrolls, self._config.exploration_config)
+        # self.activate_realm_raid(self._config.scrolls, self._config.exploration_config)
         return False
 
     def quit_explore(self):

@@ -92,8 +92,8 @@
   {
     "itemName": "check_friends",
     "imageName": "page_check_friends.png",
-    "roiFront": "1011,592,133,60",
-    "roiBack": "1011,592,133,60",
+    "roiFront": "1039,599,80,41",
+    "roiBack": "997,577,166,92",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"

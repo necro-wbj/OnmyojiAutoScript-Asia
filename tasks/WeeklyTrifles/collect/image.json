@@ -47,8 +47,8 @@
   {
     "itemName": "wt_collect_wechat",
     "imageName": "collect_wt_collect_wechat.png",
-    "roiFront": "1062,618,70,63",
-    "roiBack": "900,618,200,63",
+    "roiFront": "904,625,46,48",
+    "roiBack": "777,607,441,84",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "微信分享"

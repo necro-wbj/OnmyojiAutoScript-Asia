@@ -60,10 +60,10 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
         # 用于ui加载,防止还在加载过程中导致准备界面识别失败,最多等待2秒
         wait_in_prepare_timer = Timer(aisa_ui_wait_time).start()
         while not self.is_in_prepare() and not wait_in_prepare_timer.reached():
-            logger.info('Wait to enter the preparation page')
+            logger.info('Wait to enter the preparation page GeneralBattle')
             time.sleep(0.5)
         confed = False
-        need_battle_timer = Timer(2)
+        need_battle_timer = Timer(10)
         # 如果不在准备界面,想设置也设置不了,只能直接开始战斗
         while self.is_in_prepare():
             # 配置了锁定阵容则启动超时器

@@ -156,6 +156,14 @@ class RuleImage:
             logger.error(f"Template image is invalid: {mat.shape}") #检测模板尺寸，不合法则不进行匹配，避免两次截图画面完全相同造成模板不合法
             return True  # 如果模板图像无效，直接返回 True
 
+        if source is None or source.shape[0] == 0 or source.shape[1] == 0:
+            logger.warning(f"Source image is invalid for {self.name}: {None if source is None else source.shape}")
+            return False
+
+        if source.shape[0] < mat.shape[0] or source.shape[1] < mat.shape[1]:
+            logger.warning(f"Skip {self.name}: source {source.shape[:2]} smaller than template {mat.shape[:2]}")
+            return False
+
         res = cv2.matchTemplate(source, mat, cv2.TM_CCOEFF_NORMED)
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)  # 最小匹配度，最大匹配度，最小匹配度的坐标，最大匹配度的坐标
         if self.debug_mode:
@@ -187,6 +195,12 @@ class RuleImage:
             raise Exception(f"unknown method {self.method}")
         source = self.corp(image)
         mat = self.image
+        if source is None or mat is None:
+            return []
+        if source.shape[0] == 0 or source.shape[1] == 0 or mat.shape[0] == 0 or mat.shape[1] == 0:
+            return []
+        if source.shape[0] < mat.shape[0] or source.shape[1] < mat.shape[1]:
+            return []
         results = cv2.matchTemplate(source, mat, cv2.TM_CCOEFF_NORMED)
         locations = np.where(results >= threshold)
         matches = []
@@ -214,6 +228,12 @@ class RuleImage:
             raise Exception(f"unknown method {self.method}")
         source = self.corp(image)
         mat = self.image
+        if source is None or mat is None:
+            return []
+        if source.shape[0] == 0 or source.shape[1] == 0 or mat.shape[0] == 0 or mat.shape[1] == 0:
+            return []
+        if source.shape[0] < mat.shape[0] or source.shape[1] < mat.shape[1]:
+            return []
         results = cv2.matchTemplate(source, mat, cv2.TM_CCOEFF_NORMED)
         locations = np.where(results >= threshold)
         matches = []

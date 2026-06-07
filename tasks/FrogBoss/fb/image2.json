@@ -12,7 +12,7 @@
     "itemName": "frog_boss_enter",
     "imageName": "fb_frog_boss_enter.png",
     "roiFront": "1181,153,59,54",
-    "roiBack": "1181,153,59,54",
+    "roiBack": "1155,123,97,449",
     "method": "Template matching",
     "threshold": 0.6,
     "description": "frog_boss_enter"

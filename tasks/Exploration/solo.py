@@ -455,7 +455,7 @@ class ScriptTask(SoloExploration):
                 self.run_member()
             case _:
                 self.run_solo()
-
+        self.activate_realm_raid(self._config.scrolls, self._config.exploration_config)
         self.post_process()
 
 

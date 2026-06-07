@@ -10,10 +10,11 @@ from module.base.timer import Timer
 
 from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_main, page_collection, page_area_boss, page_secret_zones, page_summon, random_click
+from tasks.Restart.assets import RestartAssets
 from tasks.WeeklyTrifles.config import Trifles
 from tasks.WeeklyTrifles.assets import WeeklyTriflesAssets
 
-class ScriptTask(GameUi, WeeklyTriflesAssets):
+class ScriptTask(GameUi, WeeklyTriflesAssets, RestartAssets):
 
     def run(self):
         con = self.config.weekly_trifles.trifles
@@ -72,6 +73,8 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
             self.screenshot()
             if self.appear(self.I_WT_COLLECT):
                 break
+            if self.appear_then_click(self.I_LOGIN_DOWNLOAD_DRAW, interval=1):
+                continue
             if self.appear_then_click(self.I_WT_SHIKIAGMI, interval=1):
                 continue
             if self.appear_then_click(self.I_WT_SCROLL, interval=1):
@@ -216,6 +219,7 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
             if self.appear_then_click(self.I_UI_BACK_RED, interval=1):
                 continue
             if self.appear_then_click(self.I_UI_BACK_BLUE, interval=1):
+                self.wait_until_stable(self.I_UI_BACK_BLUE, skip_first_screenshot=True, timer=Timer(3))
                 continue
             if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=1):
                 continue
