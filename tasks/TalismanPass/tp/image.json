@@ -11,8 +11,8 @@
   {
     "itemName": "red_point_task",
     "imageName": "tp_red_point_task.png",
-    "roiFront": "1226,312,23,24",
-    "roiBack": "1226,312,23,24",
+    "roiFront": "1229,297,23,24",
+    "roiBack": "1217,284,46,52",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "任务 的右上方红点"
@@ -20,8 +20,8 @@
   {
     "itemName": "red_point_day",
     "imageName": "tp_red_point_day.png",
-    "roiFront": "632,157,23,26",
-    "roiBack": "632,157,23,26",
+    "roiFront": "639,157,23,26",
+    "roiBack": "622,145,47,58",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "今日 的右上方红点"
@@ -29,8 +29,8 @@
   {
     "itemName": "red_point_week",
     "imageName": "tp_red_point_week.png",
-    "roiFront": "795,156,24,25",
-    "roiBack": "795,156,24,25",
+    "roiFront": "800,153,24,25",
+    "roiBack": "786,147,48,40",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "本周 的右上方红点"
@@ -38,8 +38,8 @@
   {
     "itemName": "red_point_level",
     "imageName": "tp_red_point_level.png",
-    "roiFront": "1222,174,21,22",
-    "roiBack": "1214,165,40,43",
+    "roiFront": "1226,165,21,22",
+    "roiBack": "1214,154,41,54",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "等级奖励"
@@ -50,7 +50,7 @@
     "roiFront": "203,435,122,59",
     "roiBack": "203,435,122,59",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.6,
     "description": "选择一号奖励"
   },
   {
@@ -59,7 +59,7 @@
     "roiFront": "577,435,122,55",
     "roiBack": "577,435,122,55",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.6,
     "description": "选择二号奖励"
   },
   {
@@ -68,7 +68,7 @@
     "roiFront": "967,433,109,61",
     "roiBack": "967,433,109,61",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.6,
     "description": "选择三号奖励"
   },
   {

@@ -89,7 +89,7 @@ class ScriptTask(GameUi, TalismanPassAssets):
         :return:
         """
         self.screenshot()
-        if self.appear(self.I_TP_GOTO) or self.appear(self.I_TP_EXP):
+        if self.appear(self.I_TP_GOTO) or self.appear(self.I_TP_EXP) or self.appear(self.I_CHECK_DAILY):
             return True
         return False
     

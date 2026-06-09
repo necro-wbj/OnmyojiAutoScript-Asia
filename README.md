@@ -156,24 +156,24 @@ Discord：<https://discord.gg/zNRdjZNmzZ>
 
 | 任务名称 | 状态 | 说明 / 正常执行时间 |
 |---|---|---|
-| DailyTrifles（每日琐事） | PASS | 2026/06/07 PASS |
-| AreaBoss（地域鬼王） | PASS | 2026/06/07 PASS |
+| DailyTrifles（每日琐事） | PASS | 2026/06/09 PASS |
+| AreaBoss（地域鬼王） | PASS | 2026/06/09 PASS |
 | GoldYoukai（金币妖怪） | PENDING | 待验证 |
 | ExperienceYoukai（经验妖怪） | PENDING | 待验证 |
 | Nian（年兽） | PENDING | 待验证 |
-| TalismanPass（花合战） | PENDING | 待验证 |
-| DemonEncounter（逢魔之时） | PASS | 2026/06/07 PASS |
+| TalismanPass（花合战） | PASS |  |
+| DemonEncounter（逢魔之时） | PASS | 2026/06/09 PASS |
 | Pets（小猫咪） | PENDING | 待验证 |
-| SoulsTidy（御魂整理） | PASS | 2026/06/07 PASS |
+| SoulsTidy（御魂整理） | PASS | 2026/06/09 PASS |
 | Delegation（式神委派） | PENDING | 待验证 |
-| WantedQuests（悬赏封印） | PASS | 2026/06/07 PASS |
+| WantedQuests（悬赏封印） | PASS | 2026/06/09 PASS |
 | Tako（石距） | PENDING | 待验证 |
 
 ### 御魂副本
 
 | 任务名称 | 状态 | 说明 / 正常执行时间 |
 |---|---|---|
-| Orochi（八岐大蛇） | PASS | 2026/06/07 PASS |
+| Orochi（八岐大蛇） | PASS | 2026/06/09 PASS |
 | Sougenbi（业原火） | PENDING | 待验证 |
 | FallenSun（日轮之陨） | PENDING | 待验证 |
 | EternitySea（永生之海） | PENDING | 待验证 |
@@ -196,10 +196,10 @@ Discord：<https://discord.gg/zNRdjZNmzZ>
 
 | 任务名称 | 状态 | 说明 / 正常执行时间 |
 |---|---|---|
-| KekkaiUtilize（结界蹭卡） | PASS | 2026/06/07 PASS |
-| KekkaiActivation（结界挂卡） | PASS | 2026/06/07 PASS |
-| RealmRaid（个人突破） | PENDING | 待验证 |
-| RyouToppa（寮突破） | PENDING | 待验证 |
+| KekkaiUtilize（结界蹭卡） | PASS | 2026/06/09 PASS |
+| KekkaiActivation（结界挂卡） | PASS | 2026/06/09 PASS |
+| RealmRaid（个人突破） | PASS |  |
+| RyouToppa（寮突破） | PASS |  |
 | Dokan（道馆） | PENDING | 待验证 |
 | CollectiveMissions（集体任务） | PENDING | 待验证 |
 | Hunt（狩猎战） | PENDING | 待验证 |
@@ -213,10 +213,10 @@ Discord：<https://discord.gg/zNRdjZNmzZ>
 |---|---|---|
 | TrueOrochi（真八岐大蛇） | PENDING | 待验证 |
 | RichMan（大富翁） | PENDING | 待验证 |
-| Secret（秘闻副本） | PASS | 2026/06/07 PASS |
+| Secret（秘闻副本） | PASS | 2026/06/09 PASS |
 | WeeklyTrifles（每周琐事） | PENDING | 待验证 |
 | MysteryShop（神秘商店） | PENDING | 待验证 |
-| Duel（斗技） | PASS | 2026/06/07 PASS |
+| Duel（斗技） | PASS | 2026/06/09 PASS |
 
 ### 限时活动
 
