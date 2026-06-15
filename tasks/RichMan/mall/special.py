@@ -29,12 +29,15 @@ class Special(Buy, MallNavbar):
         while 1:
             self.screenshot()
             if not totem_bought and self.appear(self.I_SP_BUY_TOTEM):
+                logger.hr('Buy totem', 3)
                 self._special_totom(con.totem_pass)
                 totem_bought = True
             if not medium_bought and self.appear(self.I_SP_BUY_MEDIUM):
+                logger.hr('Buy medium', 3)
                 self._special_medium(con.medium_bondling_discs)
                 medium_bought = True
             if not low_bought and self.appear(self.I_SP_BUY_LOW):
+                logger.hr('Buy low', 3)
                 self._special_low(con.low_bondling_discs)
                 low_bought = True
 

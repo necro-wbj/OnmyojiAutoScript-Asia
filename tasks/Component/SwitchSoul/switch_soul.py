@@ -323,7 +323,7 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
         while 1:
             self.screenshot()
             self.O_SS_TEAM_NAME.keyword = found_team
-            if self.ocr_appear_click(self.O_SS_TEAM_NAME):
+            if self.ocr_appear(self.O_SS_TEAM_NAME):
                 break
         logger.info(f'Select team {found_team} from list {team_names}')
         # 切换御魂

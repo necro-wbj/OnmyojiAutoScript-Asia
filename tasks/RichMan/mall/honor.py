@@ -31,9 +31,11 @@ class Honor(Special):
         while 1:
             self.screenshot()
             if not mystery_bought and con.mystery_amulet and self.appear(self.I_HONOR_BLUE):
+                logger.hr('Buy blue mystery amulet', 3)
                 self._honor_mystery_amulet(con.mystery_amulet)
                 mystery_bought = True
             if not black_bought and con.black_daruma_scrap and self.appear(self.I_HONOR_BLACK):
+                logger.hr('Buy black daruma scrap', 3)
                 self._honor_black_daruma_scrap(con.black_daruma_scrap)
                 black_bought = True
 

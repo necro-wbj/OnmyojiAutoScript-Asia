@@ -56,7 +56,7 @@ class Bondlings(Buy, MallNavbar):
             logger.info('Buy number is 0')
             return
         self.screenshot()
-
+        # TODO: SOULS SELL OUT IT WILL BUY STONE INSTEAD, NEED TO FIX. DUE TO POSITION CHANGE.
         # if buy_button.name == 'BONDLINGS_BL_BUY_SOULS':
         #     if self.appear(self.I_ME_SOULS_NEW):
         #         # 契灵御魂已经买光

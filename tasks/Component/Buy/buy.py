@@ -48,6 +48,7 @@ class Buy(BaseTask, BuyAssets):
                     try_click_count += 1
                     continue
         # TODO: set a timer to timeout while
+        buy_one_count = 0
         while 1:
             self.screenshot()
 
@@ -80,6 +81,10 @@ class Buy(BaseTask, BuyAssets):
                 break
 
             if self.click(self.C_BUY_ONE, interval=2.8):
+                buy_one_count += 1
+                if buy_one_count >= 5:
+                    logger.warning(f'Buy_one clicked {buy_one_count} times without reward, treat as success')
+                    break
                 continue
 
         return True

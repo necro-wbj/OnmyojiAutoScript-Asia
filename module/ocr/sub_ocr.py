@@ -222,6 +222,7 @@ class Quantity(BaseCor):
         result = super().after_process(result)
         result = result.replace('I', '1').replace('D', '0').replace('S', '5')
         result = result.replace('B', '8').replace('？', '2').replace('?', '2').replace('d', '6')
+        result = result.replace('萬', '万').replace('億', '亿')
         result = [char
                   for char in result
                   if char.isdigit() or char == '.' or char == '/' or char == '万' or char == '亿' or char == '千']
@@ -230,6 +231,8 @@ class Quantity(BaseCor):
         if '/' in result:
             result_split = result.split('/')
             result = result_split[0]
+        if not result or not any(c.isdigit() for c in result):
+            return 0
         result = cn2an.cn2an(result, 'smart')
 
         try:

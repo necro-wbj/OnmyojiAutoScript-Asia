@@ -44,7 +44,7 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
             self.ui_get_current_page()
             self.ui_goto(page_mall, confirm_wait=2.5)
             self.ui_click(self.I_MALL_SCCALES, self.I_MALL_SCCALES_CHECK)
-            self.ui_click(self.I_MALL_BONDLINGS_SURE, self.I_MALL_BONDLINGS_ON)
+            self.ui_click(self.I_MALL_BONDLINGS_SURE, self.I_MALL_BONDLINGS_CHECK)
 
             MAX_COUNT = cong.bondling_check.limit_num
             cu, re, total = self.O_BL_CHECK_MONEY.ocr(self.device.image)

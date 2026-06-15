@@ -22,16 +22,26 @@ class Mall(Medal, Charisma, Honor, Consignment, Scales, Bondlings):
         self.ui_goto(page_mall, confirm_wait=2.5)
 
         # 寄售屋
+        logger.hr('Consignment', 3)
         self.execute_consignment()
         # 蛇皮
+        logger.hr('Scales', 3)
         self.execute_scales()
         # 契灵
+        logger.hr('Bondlings', 3)
         self.execute_bondlings()
 
         # 杂货铺
+        logger.hr('Special', 3)
         self.execute_special()
+        # 功勋商店
+        logger.hr('Honor', 3)
         self.execute_honor()
+        # 友情点商店
+        logger.hr('Friendship Points', 3)
         self.execute_friendship()
+        # 徽章商店
+        logger.hr('Medal', 3)
         self.execute_medal()
         # aisa server not support
         # self.execute_charisma()

@@ -11,8 +11,8 @@
   {
     "itemName": "guild_store",
     "imageName": "guild_guild_store.png",
-    "roiFront": "403,418,212,161",
-    "roiBack": "403,418,212,161",
+    "roiFront": "425,425,161,132",
+    "roiBack": "394,372,229,231",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "功勋商店"
@@ -65,8 +65,8 @@
   {
     "itemName": "guild_check_scrap",
     "imageName": "guild_guild_check_scrap.png",
-    "roiFront": "592,249,90,88",
-    "roiBack": "592,249,90,88",
+    "roiFront": "603,257,73,70",
+    "roiBack": "583,238,112,111",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "购买检查"

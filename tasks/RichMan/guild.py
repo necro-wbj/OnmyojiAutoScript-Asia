@@ -112,7 +112,10 @@ class Guild(Buy, GameUi, RichManAssets):
 
     def check_remain(self, image: RuleImage) -> int:
         self.screenshot()
-        self.appear(image)
+        if not self.appear(image):
+            logger.warning(f'check_remain: image not found, skip')
+            logger.warning(f'沒找到图片 {image.file}, 可能是因为图片阈值过高或者roi不对，请检查后重试')
+            return 0
         self.O_GUILD_REMAIN.roi[0] = image.roi_front[0] - 38
         self.O_GUILD_REMAIN.roi[1] = image.roi_front[1] + 83
         logger.info(f'Image roi {image.roi_front}')

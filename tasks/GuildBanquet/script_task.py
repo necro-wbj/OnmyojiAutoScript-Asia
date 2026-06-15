@@ -48,14 +48,30 @@ class ScriptTask(GameUi, GuildBanquetAssets):
         self.ui_get_current_page()
         self.ui_goto(page_guild)
         
-        if self.appear(self.I_FLAG):
+        # wait I_FLAG for 5 sec with retry
+        flag_found = False
+        max_retries = 5
+        retry_interval = 1
+        
+        for retry in range(max_retries):
+            self.screenshot()
+            if self.appear(self.I_FLAG):
+                flag_found = True
+                logger.info(f"I_FLAG found on retry {retry + 1}")
+                break
+            else:
+                if retry < max_retries - 1:
+                    logger.debug(f"I_FLAG not found, retrying {retry + 1}/{max_retries}...")
+                    time.sleep(retry_interval)
+        
+        if flag_found:
             wait_count = 0
             wait_timer = Timer(230)
             wait_timer.start()
             logger.info("Start guild banquet!")
             self.device.stuck_record_add('BATTLE_STATUS_S')
         else:
-            logger.info("no find I_FLAG")
+            logger.info("no find I_FLAG after retries")
             # 如果没有找到FLAG，并且没超过晚上10点，可能是宴会时间没开始，5分钟后尝试再次查找，超过10点则直接退出
             if self.check_runtime():
                 time_now = datetime.now()

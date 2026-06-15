@@ -1,9 +1,9 @@
 [
   {
     "itemName": "guild_total",
-    "roiFront": "942,16,94,27",
-    "roiBack": "942,16,94,27",
-    "mode": "Quantity",
+    "roiFront": "934,12,119,34",
+    "roiBack": "934,12,119,34",
+    "mode": "Digit",
     "method": "Default",
     "keyword": "",
     "description": "总的功勋"

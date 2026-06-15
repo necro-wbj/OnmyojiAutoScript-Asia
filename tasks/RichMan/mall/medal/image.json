@@ -3,7 +3,7 @@
     "itemName": "me_black",
     "imageName": "medal_me_black.png",
     "roiFront": "631,152,130,120",
-    "roiBack": "165,121,859,431",
+    "roiBack": "114,102,914,490",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "黑蛋"
@@ -12,7 +12,7 @@
     "itemName": "me_blue",
     "imageName": "medal_me_blue.png",
     "roiFront": "176,148,138,126",
-    "roiBack": "139,115,887,464",
+    "roiBack": "114,102,914,490",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "蓝票"
@@ -21,7 +21,7 @@
     "itemName": "me_ap",
     "imageName": "medal_me_ap.png",
     "roiFront": "842,395,145,123",
-    "roiBack": "156,111,862,454",
+    "roiBack": "114,102,914,490",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "体力"
@@ -30,7 +30,7 @@
     "itemName": "me_souls",
     "imageName": "medal_me_souls.png",
     "roiFront": "173,391,148,133",
-    "roiBack": "121,116,898,476",
+    "roiBack": "114,102,914,490",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "随机御魂"
@@ -39,7 +39,7 @@
     "itemName": "me_white",
     "imageName": "medal_me_white.png",
     "roiFront": "399,391,142,131",
-    "roiBack": "115,114,908,452",
+    "roiBack": "114,102,914,490",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "白蛋"
@@ -48,7 +48,7 @@
     "itemName": "me_challenge_pass",
     "imageName": "medal_me_challenge_pass.png",
     "roiFront": "618,390,146,129",
-    "roiBack": "114,102,914,478",
+    "roiBack": "114,102,914,490",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "御灵挑战券"
@@ -57,7 +57,7 @@
     "itemName": "me_red",
     "imageName": "medal_me_red.png",
     "roiFront": "847,146,137,129",
-    "roiBack": "141,129,864,454",
+    "roiBack": "114,102,914,490",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "红蛋"
@@ -66,7 +66,7 @@
     "itemName": "me_broken",
     "imageName": "medal_me_broken.png",
     "roiFront": "398,144,143,116",
-    "roiBack": "146,116,866,475",
+    "roiBack": "114,102,914,490",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "破碎的咒符"
@@ -74,8 +74,8 @@
   {
     "itemName": "me_check_black",
     "imageName": "medal_me_check_black.png",
-    "roiFront": "585,230,100,100",
-    "roiBack": "585,230,100,100",
+    "roiFront": "595,235,90,90",
+    "roiBack": "551,193,174,188",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "购买检查"
@@ -83,8 +83,8 @@
   {
     "itemName": "me_check_blue",
     "imageName": "medal_me_check_blue.png",
-    "roiFront": "587,238,100,100",
-    "roiBack": "587,238,100,100",
+    "roiFront": "602,251,78,79",
+    "roiBack": "551,193,174,188",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "购买检查"
@@ -92,8 +92,8 @@
   {
     "itemName": "me_check_ap",
     "imageName": "medal_me_check_ap.png",
-    "roiFront": "588,242,100,100",
-    "roiBack": "588,242,100,100",
+    "roiFront": "603,253,74,72",
+    "roiBack": "551,193,174,188",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "购买检查"
@@ -101,8 +101,8 @@
   {
     "itemName": "me_check_souls",
     "imageName": "medal_me_check_souls.png",
-    "roiFront": "590,257,100,100",
-    "roiBack": "590,257,100,100",
+    "roiFront": "603,265,73,76",
+    "roiBack": "551,193,174,188",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "购买检查"

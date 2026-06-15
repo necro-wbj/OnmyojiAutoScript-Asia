@@ -20,7 +20,7 @@
   {
     "itemName": "sou_switch_1",
     "imageName": "ss_sou_switch_1.png",
-    "roiFront": "971,149,34,32",
+    "roiFront": "969,146,40,39",
     "roiBack": "962,141,51,48",
     "method": "Template matching",
     "threshold": 0.8,
@@ -29,7 +29,7 @@
   {
     "itemName": "sou_switch_2",
     "imageName": "ss_sou_switch_2.png",
-    "roiFront": "967,296,42,39",
+    "roiFront": "967,296,45,39",
     "roiBack": "961,292,54,49",
     "method": "Template matching",
     "threshold": 0.8,
@@ -56,7 +56,7 @@
   {
     "itemName": "sou_switch_sure",
     "imageName": "ss_sou_switch_sure.png",
-    "roiFront": "668,401,180,61",
+    "roiFront": "721,410,75,43",
     "roiBack": "668,401,180,61",
     "method": "Template matching",
     "threshold": 0.8,
@@ -155,8 +155,8 @@
   {
     "itemName": "check_block",
     "imageName": "ss_check_block.png",
-    "roiFront": "572,408,137,49",
-    "roiBack": "572,408,137,49",
+    "roiFront": "604,411,74,40",
+    "roiBack": "552,402,174,62",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "误触点到式神检查"

@@ -71,6 +71,13 @@
 
 > 若你有更佳的策略（例如某副本的更穩流程/更快判斷），歡迎 PR 以具體改動為準確依據。
 
+### 近期更新（2026-06-14）
+- **RichMan 商城穩定性**：調整多個商店入口、側欄切頁、商品模板 ROI 與 OCR 區域，降低誤判與重複點擊。
+- **Scales / Medal 資產同步**：補齊首領御魂新模板命名與對應資產，並同步 medal 檢查框範圍。
+- **購買容錯**：`buy_one` 增加連點保底退出邏輯，避免特殊情況下長時間卡在購買確認流程。
+- **OCR 兼容性**：數量解析補充繁簡字處理（萬/亿）與無數字場景防護，降低 OCR 異常中斷風險。
+- **任務可觀測性**：多個商城流程加入關鍵階段日誌，便於定位卡點與回歸驗證。
+
 ---
 
 - [Alas](https://github.com/LmeSzinc/AzurLaneAutoScript): 碧蓝航线的自动化脚本
@@ -149,31 +156,31 @@ Discord：<https://discord.gg/zNRdjZNmzZ>
 
 ## 任務狀態總覽 Task Status
 
-> 最後更新：2026-06-07  
+> 最後更新：2026-06-14  
 > PASS 正常可用　PENDING 部分可用 / 待驗證　FAIL 已知問題 / 不可用
 
 ### 日常任务
 
 | 任务名称 | 状态 | 说明 / 正常执行时间 |
 |---|---|---|
-| DailyTrifles（每日琐事） | PASS | 2026/06/09 PASS |
-| AreaBoss（地域鬼王） | PASS | 2026/06/09 PASS |
+| DailyTrifles（每日琐事） | PASS | 2026/06/14 PASS |
+| AreaBoss（地域鬼王） | PASS | 2026/06/14 PASS |
 | GoldYoukai（金币妖怪） | PENDING | 待验证 |
 | ExperienceYoukai（经验妖怪） | PENDING | 待验证 |
 | Nian（年兽） | PENDING | 待验证 |
-| TalismanPass（花合战） | PASS |  |
-| DemonEncounter（逢魔之时） | PASS | 2026/06/09 PASS |
+| TalismanPass（花合战） | PASS | 2026/06/14 PASS |
+| DemonEncounter（逢魔之时） | PASS | 2026/06/14 PASS |
 | Pets（小猫咪） | PENDING | 待验证 |
-| SoulsTidy（御魂整理） | PASS | 2026/06/09 PASS |
+| SoulsTidy（御魂整理） | PASS | 2026/06/14 PASS |
 | Delegation（式神委派） | PENDING | 待验证 |
-| WantedQuests（悬赏封印） | PASS | 2026/06/09 PASS |
+| WantedQuests（悬赏封印） | PASS | 2026/06/14 PASS |
 | Tako（石距） | PENDING | 待验证 |
 
 ### 御魂副本
 
 | 任务名称 | 状态 | 说明 / 正常执行时间 |
 |---|---|---|
-| Orochi（八岐大蛇） | PASS | 2026/06/09 PASS |
+| Orochi（八岐大蛇） | PASS | 2026/06/14 PASS |
 | Sougenbi（业原火） | PENDING | 待验证 |
 | FallenSun（日轮之陨） | PENDING | 待验证 |
 | EternitySea（永生之海） | PENDING | 待验证 |
@@ -187,7 +194,7 @@ Discord：<https://discord.gg/zNRdjZNmzZ>
 | EvoZone（觉醒副本） | PENDING | 待验证 |
 | GoryouRealm（御灵之境） | PENDING | 待验证 |
 | Exploration（探索） | PENDING | 待验证 |
-| Hyakkiyakou（百鬼夜行） | PENDING | 待验证 |
+| Hyakkiyakou（百鬼夜行） | PASS | 2026/06/14 PASS |
 | HeroTest（英杰试炼） | PENDING | 待验证 |
 | FindJade（寻找协作任务） | PENDING | 待验证 |
 | MemoryScrolls（绘卷） | PENDING | 待验证 |
@@ -196,27 +203,27 @@ Discord：<https://discord.gg/zNRdjZNmzZ>
 
 | 任务名称 | 状态 | 说明 / 正常执行时间 |
 |---|---|---|
-| KekkaiUtilize（结界蹭卡） | PASS | 2026/06/09 PASS |
-| KekkaiActivation（结界挂卡） | PASS | 2026/06/09 PASS |
-| RealmRaid（个人突破） | PASS |  |
-| RyouToppa（寮突破） | PASS |  |
+| KekkaiUtilize（结界蹭卡） | PASS | 2026/06/14 PASS |
+| KekkaiActivation（结界挂卡） | PASS | 2026/06/14 PASS |
+| RealmRaid（个人突破） | PASS | 2026/06/14 PASS |
+| RyouToppa（寮突破） | PASS | 2026/06/14 PASS |
 | Dokan（道馆） | PENDING | 待验证 |
 | CollectiveMissions（集体任务） | PENDING | 待验证 |
-| Hunt（狩猎战） | PENDING | 待验证 |
+| Hunt（狩猎战） | PASS | 2026/06/14 PASS |
 | AbyssShadows（狭间暗域） | PENDING | 待验证 |
-| GuildBanquet（寮宴会） | PENDING | 待验证 |
+| GuildBanquet（寮宴会） | PASS | 2026/06/14 PASS |
 | DemonRetreat（首领退治） | PENDING | 待验证 |
 
 ### 每周任务
 
 | 任务名称 | 状态 | 说明 / 正常执行时间 |
 |---|---|---|
-| TrueOrochi（真八岐大蛇） | PENDING | 待验证 |
-| RichMan（大富翁） | PENDING | 待验证 |
-| Secret（秘闻副本） | PASS | 2026/06/09 PASS |
-| WeeklyTrifles（每周琐事） | PENDING | 待验证 |
+| TrueOrochi（真八岐大蛇） | PASS | 2026/06/13 PASS |
+| RichMan（大富翁） | PASS | 2026/06/14 PASS |
+| Secret（秘闻副本） | PASS | 2026/06/14 PASS |
+| WeeklyTrifles（每周琐事） | PASS | 2026/06/13 PASS |
 | MysteryShop（神秘商店） | PENDING | 待验证 |
-| Duel（斗技） | PASS | 2026/06/09 PASS |
+| Duel（斗技） | PASS | 2026/06/14 PASS |
 
 ### 限时活动
 

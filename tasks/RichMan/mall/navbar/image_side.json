@@ -2,8 +2,8 @@
   {
     "itemName": "side_sure_special",
     "imageName": "navbar_side_sure_special.png",
-    "roiFront": "1172,91,70,74",
-    "roiBack": "1172,91,70,74",
+    "roiFront": "1189,97,43,68",
+    "roiBack": "1172,91,79,88",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "特殊"
@@ -11,8 +11,8 @@
   {
     "itemName": "side_check_special",
     "imageName": "navbar_side_check_special.png",
-    "roiFront": "102,7,42,42",
-    "roiBack": "102,7,42,42",
+    "roiFront": "150,9,42,42",
+    "roiBack": "132,1,82,57",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "特殊"
@@ -20,8 +20,8 @@
   {
     "itemName": "side_suer_honor",
     "imageName": "navbar_side_suer_honor.png",
-    "roiFront": "1180,191,59,60",
-    "roiBack": "1150,159,103,132",
+    "roiFront": "1191,195,41,75",
+    "roiBack": "1150,159,107,132",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "荣誉"
@@ -29,8 +29,8 @@
   {
     "itemName": "side_check_honor",
     "imageName": "navbar_side_check_honor.png",
-    "roiFront": "694,12,41,42",
-    "roiBack": "694,12,41,42",
+    "roiFront": "724,12,38,42",
+    "roiBack": "678,3,134,64",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "荣誉"
@@ -38,7 +38,7 @@
   {
     "itemName": "side_sure_friends",
     "imageName": "navbar_side_sure_friends.png",
-    "roiFront": "1190,287,43,52",
+    "roiFront": "1190,292,38,81",
     "roiBack": "1163,258,93,126",
     "method": "Template matching",
     "threshold": 0.7,
@@ -47,8 +47,8 @@
   {
     "itemName": "side_check_friends",
     "imageName": "navbar_side_check_friends.png",
-    "roiFront": "890,8,39,43",
-    "roiBack": "890,8,39,43",
+    "roiFront": "909,8,38,43",
+    "roiBack": "887,1,78,62",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "友情点"
@@ -57,7 +57,7 @@
     "itemName": "side_sure_medal",
     "imageName": "navbar_side_sure_medal.png",
     "roiFront": "1190,404,39,62",
-    "roiBack": "1156,352,112,128",
+    "roiBack": "1156,352,112,171",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "勋章"
@@ -65,7 +65,7 @@
   {
     "itemName": "side_check_medal",
     "imageName": "navbar_side_check_medal.png",
-    "roiFront": "665,6,40,44",
+    "roiFront": "536,7,40,44",
     "roiBack": "453,1,476,58",
     "method": "Template matching",
     "threshold": 0.7,

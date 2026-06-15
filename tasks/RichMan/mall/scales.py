@@ -30,21 +30,26 @@ class Scales(Buy, MallNavbar):
         # 海国御魂
         self._scales_sea(con.picture_book_scrap, con.picture_book_rule)
 
-
-    def _scales_buy_confirm(self, start_click, number: int = None):
+    def _scales_buy_confirm(self, start_click, number: int = None) -> bool:
+        start_click_count = 0
         while 1:
             self.screenshot()
             if self.appear(self.I_BUY_PLUS):
                 break
             if self.appear(self.I_SCA_SELECT_1) and self.appear(self.I_SCA_SELECT_2):
-                return
+                return True
             if self.appear_then_click(start_click, interval=1):
+                start_click_count += 1
+                if start_click_count >= 8:
+                    logger.warning(f'Scales buy confirm failed, click {start_click.name} too many times')
+                    return False
                 continue
         # 设置购买的数量
         if number is None:
             self.appear_then_click(self.I_BUY_PLUS, interval=0.4)
             time.sleep(0.5)
             self.appear_then_click(self.I_BUY_PLUS, interval=0.4)
+            return True
         else:
             # 四次截图数字都一样，就可以退出了
             number_record = []
@@ -61,10 +66,13 @@ class Scales(Buy, MallNavbar):
 
                 if self.appear_then_click(self.I_BUY_ADD, interval=0.6):
                     continue
+            return True
 
     def _scales_buy_more(self, start_click, number: int = None):
         # 重写
-        self._scales_buy_confirm(start_click, number)
+        if not self._scales_buy_confirm(start_click, number):
+            logger.warning('Scales buy aborted before confirm')
+            return
 
         # 购买确认
         while 1:
@@ -86,7 +94,9 @@ class Scales(Buy, MallNavbar):
                 continue
 
     def _scales_buy_sea_more(self, start_click, number: int = None):
-        self._scales_buy_confirm(start_click, number)
+        if not self._scales_buy_confirm(start_click, number):
+            logger.warning('Scales sea buy aborted before confirm')
+            return
         while 1:
             self.screenshot()
             if self.appear(self.I_SCA_SELECT_1):
@@ -236,13 +246,19 @@ class Scales(Buy, MallNavbar):
         # 选择购买的御魂和位置
         logger.info(f'Scales demon buy {buy_number} {buy_class} in {buy_position} position')
         match_class = {
-            DemonClass.TSUCHIGUMO: self.I_SCA_DEMON_BOSS_1,  # 土蜘蛛
-            DemonClass.OBOROGURUMA: self.I_SCA_DEMON_BOSS_2,  # 胧车
-            DemonClass.ODOKURO: self.I_SCA_DEMON_BOSS_3,  #
-            DemonClass.NAMAZU: self.I_SCA_DEMON_BOSS_4,  # 鲶鱼
-            DemonClass.SHINKIRO: self.I_SCA_DEMON_BOSS_5,  # 神木鸟
-            DemonClass.GHOSTLY_SONGSTRESS: self.I_SCA_DEMON_BOSS_6,  # 歌姬
-            DemonClass.BOSS_7: self.I_SCA_DEMON_BOSS_7,  # 夜荒魂
+            DemonClass.TSUCHIGUMO: self.I_SCA_DEMON_BOSS_TZZ,  # 土蜘蛛
+            DemonClass.OBOROGURUMA: self.I_SCA_DEMON_BOSS_LC,  # 胧车
+            DemonClass.ODOKURO: self.I_SCA_DEMON_BOSS_HKL,  # 荒骷髅
+            DemonClass.NAMAZU: self.I_SCA_DEMON_BOSS_DZN,  # 地震鲶
+            DemonClass.SHINKIRO: self.I_SCA_DEMON_BOSS_SQL,  # 蜃气楼
+            DemonClass.GHOSTLY_SONGSTRESS: self.I_SCA_DEMON_BOSS_GLGJ,  # 鬼灵歌姬
+            DemonClass.BOSS_7: self.I_SCA_DEMON_BOSS_YHH,  # 夜荒魂
+            DemonClass.DAOHE_SUIJIAN: self.I_SCA_DEMON_BOSS_DHSJ,  # 稻荷穗箭
+            DemonClass.FANGYUAN_CHUI: self.I_SCA_DEMON_BOSS_FYC,  # 纺缘锤
+            DemonClass.YUEZHI_SHI: self.I_SCA_DEMON_BOSS_YZS,  # 月之石
+            DemonClass.YUYAN_XINGPAN: self.I_SCA_DEMON_BOSS_YYXP,  # 预言星盘
+            DemonClass.TIANYU_YUZHAN: self.I_SCA_DEMON_BOSS_TYYZ,  # 天羽羽斩
+            DemonClass.BAZHI_JING: self.I_SCA_DEMON_BOSS_BZJ,  # 八咫镜
         }
         match_position = {
             1: self.C_SCA_DEMON_1,
@@ -263,7 +279,29 @@ class Scales(Buy, MallNavbar):
         target_class = match_class[buy_class]
         target_position = match_position[buy_position]
         target_number = match_number[buy_position]
-        self.ui_click(self.I_SCA_DEMON_SOULS, target_class)
+        # 1) 先点击首领御魂入口，直到入口按钮消失
+        while 1:
+            self.screenshot()
+            if not self.appear(self.I_SCA_DEMON_SOULS):
+                break
+            if self.appear_then_click(self.I_SCA_DEMON_SOULS, interval=0.8):
+                continue
+
+        # 2) 搜索目标御魂，未找到则上滑继续找，找到后点击
+        find_count = 0
+        logger.info(f'Scales demon find target class: {target_class}')
+        while 1:
+            self.screenshot()
+            if self.appear_then_click(target_class, interval=0.8):
+                break
+            self.swipe(self.S_SP_DOWN)
+            time.sleep(3)
+            find_count += 1
+            if find_count >= 12:
+                logger.warning(f'Can not find target demon class: {buy_class}')
+                return
+
+        # 选中目标后，点击兑换按钮
         self.ui_click(target_class, self.I_SCA_DEMON_BUY)
         # self.ui_click(target_position, self.I_SCA_DEMON_BUY)
         while 1:

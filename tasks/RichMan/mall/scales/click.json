@@ -37,8 +37,8 @@
   },
   {
     "itemName": "sca_souls_get",
-    "roiFront": "116,70,952,100",
-    "roiBack": "116,70,952,100",
+    "roiFront": "168,1,952,46",
+    "roiBack": "168,1,952,46",
     "description": "点击魂外部"
   },
   {
