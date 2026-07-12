@@ -163,24 +163,24 @@ Discord：<https://discord.gg/zNRdjZNmzZ>
 
 | 任务名称 | 状态 | 说明 / 正常执行时间 |
 |---|---|---|
-| DailyTrifles（每日琐事） | PASS | 2026/06/14 PASS |
-| AreaBoss（地域鬼王） | PASS | 2026/06/14 PASS |
+| DailyTrifles（每日琐事） | PASS | 2026/07/12 PASS |
+| AreaBoss（地域鬼王） | PASS | 2026/07/12 PASS |
 | GoldYoukai（金币妖怪） | PENDING | 待验证 |
 | ExperienceYoukai（经验妖怪） | PENDING | 待验证 |
 | Nian（年兽） | PENDING | 待验证 |
-| TalismanPass（花合战） | PASS | 2026/06/14 PASS |
-| DemonEncounter（逢魔之时） | PASS | 2026/06/14 PASS |
+| TalismanPass（花合战） | PASS | 2026/07/12 PASS |
+| DemonEncounter（逢魔之时） | PASS | 2026/07/12 PASS |
 | Pets（小猫咪） | PENDING | 待验证 |
 | SoulsTidy（御魂整理） | PASS | 2026/06/14 PASS |
 | Delegation（式神委派） | PENDING | 待验证 |
-| WantedQuests（悬赏封印） | PASS | 2026/06/14 PASS |
+| WantedQuests（悬赏封印） | PASS | 2026/07/12 PASS |
 | Tako（石距） | PENDING | 待验证 |
 
 ### 御魂副本
 
 | 任务名称 | 状态 | 说明 / 正常执行时间 |
 |---|---|---|
-| Orochi（八岐大蛇） | PASS | 2026/06/14 PASS |
+| Orochi（八岐大蛇） | PASS | 2026/07/12 PASS |
 | Sougenbi（业原火） | PENDING | 待验证 |
 | FallenSun（日轮之陨） | PENDING | 待验证 |
 | EternitySea（永生之海） | PENDING | 待验证 |
@@ -203,15 +203,15 @@ Discord：<https://discord.gg/zNRdjZNmzZ>
 
 | 任务名称 | 状态 | 说明 / 正常执行时间 |
 |---|---|---|
-| KekkaiUtilize（结界蹭卡） | PASS | 2026/06/14 PASS |
-| KekkaiActivation（结界挂卡） | PASS | 2026/06/14 PASS |
-| RealmRaid（个人突破） | PASS | 2026/06/14 PASS |
-| RyouToppa（寮突破） | PASS | 2026/06/14 PASS |
+| KekkaiUtilize（结界蹭卡） | PASS | 2026/07/12 PASS |
+| KekkaiActivation（结界挂卡） | PASS | 2026/07/12 PASS |
+| RealmRaid（个人突破） | PASS | 2026/07/12 PASS |
+| RyouToppa（寮突破） | PASS | 2026/07/12 PASS |
 | Dokan（道馆） | PENDING | 待验证 |
 | CollectiveMissions（集体任务） | PENDING | 待验证 |
-| Hunt（狩猎战） | PASS | 2026/06/14 PASS |
+| Hunt（狩猎战） | PASS | 2026/07/12 PASS |
 | AbyssShadows（狭间暗域） | PENDING | 待验证 |
-| GuildBanquet（寮宴会） | PASS | 2026/06/14 PASS |
+| GuildBanquet（寮宴会） | PASS | 2026/07/12 PASS |
 | DemonRetreat（首领退治） | PENDING | 待验证 |
 
 ### 每周任务
@@ -219,11 +219,11 @@ Discord：<https://discord.gg/zNRdjZNmzZ>
 | 任务名称 | 状态 | 说明 / 正常执行时间 |
 |---|---|---|
 | TrueOrochi（真八岐大蛇） | PASS | 2026/06/13 PASS |
-| RichMan（大富翁） | PASS | 2026/06/14 PASS |
-| Secret（秘闻副本） | PASS | 2026/06/14 PASS |
-| WeeklyTrifles（每周琐事） | PASS | 2026/06/13 PASS |
+| RichMan（大富翁） | PASS | 2026/07/12 PASS |
+| Secret（秘闻副本） | PASS | 2026/07/12 PASS |
+| WeeklyTrifles（每周琐事） | PASS | 2026/07/12 FIX PASS |
 | MysteryShop（神秘商店） | PENDING | 待验证 |
-| Duel（斗技） | PASS | 2026/06/14 PASS |
+| Duel（斗技） | PASS | 2026/07/12 PASS |
 
 ### 限时活动
 

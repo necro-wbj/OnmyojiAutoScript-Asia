@@ -36,6 +36,24 @@ class LanternClass(Enum):
 class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
     conf: DemonEncounter = None
 
+    def _parse_group_team(self, raw_value: str, config_name: str):
+        value = str(raw_value or '').strip()
+        if not value:
+            logger.info('%s is empty, skip soul switch', config_name)
+            return None, None
+        parts = [p.strip() for p in value.split(',', 1)]
+        if len(parts) != 2:
+            logger.warning('%s format invalid: %s, expected "group,team", skip soul switch', config_name, raw_value)
+            return None, None
+        group, team = parts
+        if not group or not team:
+            logger.info('%s has empty group/team, skip soul switch', config_name)
+            return None, None
+        if group == '-1' and team == '-1':
+            logger.info('%s disabled by -1,-1, skip soul switch', config_name)
+            return None, None
+        return group, team
+
     def run(self):
         self.conf = self.config.demon_encounter
         if not self.check_time():
@@ -74,50 +92,86 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         if today == 0:
             # 获取group,team
             if best_soul_config.enable and best_demon_boss_config.best_demon_kiryou_utahime_select:
-                group, team = best_soul_config.best_demon_kiryou_utahime.split(",")
+                group, team = self._parse_group_team(
+                    best_soul_config.best_demon_kiryou_utahime,
+                    'best_demon_kiryou_utahime'
+                )
                 logger.info(f'Best demon boss kiryou group: {group}, team: {team}')
             else:
-                group, team = soul_config.demon_kiryou_utahime.split(",")
+                group, team = self._parse_group_team(
+                    soul_config.demon_kiryou_utahime,
+                    'demon_kiryou_utahime'
+                )
                 logger.info(f'Normal demon boss kiryou group: {group}, team: {team}')
         # 周二 极蜃气楼
         elif today == 1:
             if best_soul_config.enable and best_demon_boss_config.best_demon_shinkirou_select:
-                group, team = best_soul_config.best_demon_shinkirou.split(",")
+                group, team = self._parse_group_team(
+                    best_soul_config.best_demon_shinkirou,
+                    'best_demon_shinkirou'
+                )
                 logger.info(f'Best demon boss shinkirou group: {group}, team: {team}')
             else:
-                group, team = soul_config.demon_shinkirou.split(",")
+                group, team = self._parse_group_team(
+                    soul_config.demon_shinkirou,
+                    'demon_shinkirou'
+                )
                 logger.info(f'Normal demon boss shinkirou group: {group}, team: {team}')
         # 周三 土蜘蛛
         elif today == 2:
             if best_soul_config.enable and best_demon_boss_config.best_demon_tsuchigumo_select:
-                group, team = best_soul_config.best_demon_tsuchigumo.split(",")
+                group, team = self._parse_group_team(
+                    best_soul_config.best_demon_tsuchigumo,
+                    'best_demon_tsuchigumo'
+                )
                 logger.info(f'Best demon boss tsuchigumo group: {group}, team: {team}')
             else:
-                group, team = soul_config.demon_tsuchigumo.split(",")
+                group, team = self._parse_group_team(
+                    soul_config.demon_tsuchigumo,
+                    'demon_tsuchigumo'
+                )
                 logger.info(f'Normal demon boss tsuchigumo group: {group}, team: {team}')
         # 周四 荒骷髅
         elif today == 3:
             if best_soul_config.enable and best_demon_boss_config.best_demon_gashadokuro_select:
-                group, team = best_soul_config.best_demon_gashadokuro.split(",")
+                group, team = self._parse_group_team(
+                    best_soul_config.best_demon_gashadokuro,
+                    'best_demon_gashadokuro'
+                )
                 logger.info(f'Best demon boss gashadokuro group: {group}, team: {team}')
             else:
-                group, team = soul_config.demon_gashadokuro.split(",")
+                group, team = self._parse_group_team(
+                    soul_config.demon_gashadokuro,
+                    'demon_gashadokuro'
+                )
                 logger.info(f'Normal demon boss gashadokuro group: {group}, team: {team}')
         # 周五 地震鲇
         elif today == 4:
             if best_soul_config.enable and best_demon_boss_config.best_demon_namazu_select:
-                group, team = best_soul_config.best_demon_namazu.split(",")
+                group, team = self._parse_group_team(
+                    best_soul_config.best_demon_namazu,
+                    'best_demon_namazu'
+                )
                 logger.info(f'Best demon boss namazu group: {group}, team: {team}')
             else:
-                group, team = soul_config.demon_namazu.split(",")
+                group, team = self._parse_group_team(
+                    soul_config.demon_namazu,
+                    'demon_namazu'
+                )
                 logger.info(f'Normal demon boss namazu group: {group}, team: {team}')
         # 周六 胧车
         elif today == 5:
-            group, team = soul_config.demon_oboroguruma.split(",")
+            group, team = self._parse_group_team(
+                soul_config.demon_oboroguruma,
+                'demon_oboroguruma'
+            )
             logger.info(f'Normal demon boss oboroguruma group: {group}, team: {team}')
         # 周日 夜荒魂
         elif today == 6:
-            group, team = soul_config.demon_nightly_aramitama.split(",")
+            group, team = self._parse_group_team(
+                soul_config.demon_nightly_aramitama,
+                'demon_nightly_aramitama'
+            )
             logger.info(f'Normal demon boss nightly aramitama group: {group}, team: {team}')
         if group and team:
             # if group and team only number then use index switch
@@ -129,10 +183,16 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         if today == 0:
             # 获取group,team
             if best_soul_config.enable and best_demon_boss_config.best_demon_kiryou_utahime_select:
-                group, team = best_soul_config.best_demon_kiryou_utahime_supplementary.split(",")
+                group, team = self._parse_group_team(
+                    best_soul_config.best_demon_kiryou_utahime_supplementary,
+                    'best_demon_kiryou_utahime_supplementary'
+                )
                 logger.info(f'Best demon boss kiryou supplementary group: {group}, team: {team}')
             else:
-                group, team = soul_config.demon_kiryou_utahime_supplementary.split(",")
+                group, team = self._parse_group_team(
+                    soul_config.demon_kiryou_utahime_supplementary,
+                    'demon_kiryou_utahime_supplementary'
+                )
                 logger.info(f'Normal demon boss kiryou supplementary group: {group}, team: {team}')
             if group and team:
                 # if group and team only number then use index switch

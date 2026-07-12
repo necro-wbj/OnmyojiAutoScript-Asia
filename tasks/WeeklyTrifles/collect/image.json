@@ -11,8 +11,8 @@
   {
     "itemName": "wt_scroll",
     "imageName": "collect_wt_scroll.png",
-    "roiFront": "1128,615,77,67",
-    "roiBack": "1128,615,77,67",
+    "roiFront": "152,601,100,100",
+    "roiBack": "10,563,350,150",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "点击式神绘卷"

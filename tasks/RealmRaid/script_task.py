@@ -475,7 +475,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
             self.screenshot()
             if not self.appear(self.I_RR_PERSON, threshold=0.8):
                 break
-            if self.appear_then_click(self.I_FIRE, interval=1):
+            if self.appear(self.I_FIRE, threshold=0.8):
+                # FIRE 出现后只处理 FIRE，避免在分区和 FIRE 之间来回点击。
+                self.appear_then_click(self.I_FIRE, interval=1)
                 continue
             if self.click(click, interval=1.8):
                 continue

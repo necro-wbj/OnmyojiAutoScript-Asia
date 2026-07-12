@@ -81,6 +81,20 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                 raise Exception('current count >= 20, exit')
             cu, re, total, area = self.find_wq(self.device.image)
             logger.info(f"find_wq result: current {cu} remain {re} total {total} area {area}")
+            if re == -3:
+                # 完成动画OCR乱码导致无法解析进度，尝试点击该位置领取奖励
+                logger.info('Garbled OCR before 懸賞封印 detected, trying to click for reward')
+                self.O_WQ_TEXT_ALL.area = area
+                self.click(self.O_WQ_TEXT_ALL)
+                sleep(0.8)
+                self.screenshot()
+                if self.appear(self.I_TRACE_TRUE):
+                    # 误点进了追踪详情页，关闭它
+                    logger.info('WQ_TRACE_TRUE appeared after clicking garbled entry, closing')
+                    self.click(self.C_WQ_TRACE_ONE_CLOSE)
+                    sleep(0.5)
+                error_count += 1  # 累计错误计数，防止无限循环处理同一个亂碼位置
+                continue
             if re == -2:
                 logger.info("only completed wanted quests remained")
                 break
@@ -528,6 +542,7 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             return False
         self.ui_click_until_disappear(self.I_INVITE_ENSURE)
         sleep(0.5)
+        return True
 
     def invite_five(self):
         """
@@ -634,19 +649,24 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
                     break
                 # TODO OCR识别到文字 但是没有选中 尝试重新选择  (选择好友时,弹出协作邀请导致选择好友失败)
             # 检测跨服好友按钮是否高亮
-            while 1:
+            switched = False
+            for _ in range(3):
                 self.screenshot()
-                if not self.appear_highlight(self.I_WQ_INVITE_DIFF_SVR_HIGHLIGHT):
-                    self.click(self.I_WQ_INVITE_DIFF_SVR)
-                    continue
-                break
+                if self.appear_highlight(self.I_WQ_INVITE_DIFF_SVR_HIGHLIGHT):
+                    switched = True
+                    break
+                self.click(self.I_WQ_INVITE_DIFF_SVR)
+                sleep(0.3)
+            if not switched:
+                logger.warning("failed to highlight diff server tab, continue with current friend list")
             # 等待好友列表加载
             self.wait_until_appear(self.I_WQ_INVITE_DIFF_SVR_HIGHLIGHT, wait_time=4)
-        # 没有找到需要邀请的人,点击取消 返回悬赏封印界面
+        # 没有找到需要邀请的人,改为随机邀请，避免任务因指定好友不在列表而失败
         if not find:
+            logger.warning("friend %s not found, fallback to random invite", name)
             self.screenshot()
             self.ui_click_until_disappear(self.I_WQ_INVITE_CANCEL, interval=1.5)
-            return False
+            return self.invite_random(btn)
         #
         self.ui_click_until_disappear(self.I_WQ_INVITE_ENSURE, interval=1)
         return True
@@ -812,7 +832,10 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         # 过滤掉协或者未知悬赏等其他无用字符
         reg_other = re.compile(r'[?？协边]')
         completed_only = False
+        garbled_reward_area = None  # 因完成动画OCR乱码导致的 数字+特殊符号 出现在 懸賞封印 之前的位置
+        logger.info(f'find_wq: total detected items={len(res_list)}')
         for index, res in enumerate(res_list):
+            logger.info(f'find_wq [item {index}]: text={res.ocr_text!r} box={res.box}')
             if reg_fengyin.match(res.ocr_text):
                 continue
             if reg_time.match(res.ocr_text):
@@ -840,13 +863,23 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             # 例如：1414 66 1212
             if reg_XX.match(res.ocr_text):
                 continue
-            # 什么都没匹配上，判断上一个识别结果如果为悬赏封印，那么认为该识别结果错误，尝试执行一次
+            # 当前token未匹配，下一个是懸賞封印：可能是完成动画的OCR乱码（如 '12)' '12中'），记录位置供后续尝试领取奖励
+            next_index = index + 1
+            if next_index < len(res_list) and reg_fengyin.match(res_list[next_index].ocr_text):
+                if garbled_reward_area is None:
+                    logger.info(f'find_wq garbled-before-fengyin: text={res.ocr_text!r}, next={res_list[next_index].ocr_text!r}')
+                    garbled_reward_area = calc_xywh(res_list[next_index].box)
+                continue
+            # 什么都没匹配上，判断上一个识别结果如果为悬赏封印，那么认为该识别结果错误
             last_index = (index - 1) if index > 0 else 0
             if reg_fengyin.match(res_list[last_index].ocr_text):
-                logger.warning('find_wq fallback hit: progress OCR missing, use last fengyin area to try once')
+                logger.warning('find_wq fallback hit: progress OCR missing, current OCR text not recognized')
                 logger.info(f'find_wq fallback detail: last_text={res_list[last_index].ocr_text}, current_text={res.ocr_text}')
-                return 0, 1, 3, calc_xywh(res_list[last_index].box)
+                # 不应该硬扣假的进度，而是继续扫描或返回-1
+                continue
 
+        if garbled_reward_area:
+            return -3, -3, -3, garbled_reward_area
         if completed_only:
             return -2, -2, -2, [0, 0, 0, 0]
         return -1, -1, -1, [0, 0, 0, 0]

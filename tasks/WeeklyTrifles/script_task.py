@@ -74,14 +74,17 @@ class ScriptTask(GameUi, WeeklyTriflesAssets, RestartAssets):
             if self.appear(self.I_WT_COLLECT):
                 break
             if self.appear_then_click(self.I_LOGIN_DOWNLOAD_DRAW, interval=1):
+                logger.info('Click download draw')
                 continue
             if self.appear_then_click(self.I_WT_SHIKIAGMI, interval=1):
+                logger.info('Click 式神')
                 continue
             if self.appear_then_click(self.I_WT_SCROLL, interval=1):
+                logger.info('Click 式神绘卷')
                 continue
-        # 确认的是百鬼夜行图
-        self.ui_click(self.I_WT_SCROLL_2, self.I_WT_SCROLL_1)
-        logger.info('Confirm the picture is 百妖风物鉴')
+        # # 确认的是百鬼夜行图
+        # self.ui_click(self.I_WT_SCROLL_2, self.I_WT_SCROLL_1)
+        # logger.info('Confirm the picture is 百妖风物鉴')
         # 点击分享
         while 1:
             self.screenshot()

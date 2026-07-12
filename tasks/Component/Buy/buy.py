@@ -132,7 +132,9 @@ class Buy(BaseTask, BuyAssets):
             ocr_timer.start()
             while 1:
                 self.screenshot()
-
+                if number >10 and self.appear(self.I_BUY_PLUS):
+                    self.appear_then_click(self.I_BUY_PLUS, interval=0.4)
+                    break
                 if self.appear_then_click(self.I_BUY_ADD, interval=0.8):
                     continue
 
