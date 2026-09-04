@@ -11,7 +11,7 @@
   {
     "itemName": "e_exploration_click",
     "imageName": "res_e_exploration_click.png",
-    "roiFront": "1076,601,96,42",
+    "roiFront": "1082,598,110,50",
     "roiBack": "939,555,307,127",
     "method": "Template matching",
     "threshold": 0.8,
