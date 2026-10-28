@@ -10,17 +10,6 @@ from module.atom.list import RuleList
 class EvoZoneAssets: 
 
 
-	# List Rule Assets
-	# 这个是觉醒界面选择不同层数的 
-	L_LAYER_LIST = RuleList(folder="./tasks/EvoZone/res", direction="vertical", mode="ocr", roi_back=(138,130,359,500), size=(44, 88), 
-					 array=["壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖", "拾"])
-
-
-	# Ocr Rule Assets
-	# Ocr-description 
-	O_O_TEST_OCR = RuleOcr(roi=(126,136,360,491), area=(126,136,360,491), mode="Full", method="Default", keyword="", name="o_test_ocr")
-
-
 	# Image Rule Assets
 	# 火麒麟进入 
 	I_FIRE_KIRIN = RuleImage(roi_front=(84,126,217,406), roi_back=(84,126,217,406), threshold=0.8, method="Template matching", file="./tasks/EvoZone/o/o_fire_kirin.png")
@@ -42,5 +31,16 @@ class EvoZoneAssets:
 	I_WATER_KIRIN = RuleImage(roi_front=(671,122,236,420), roi_back=(671,122,236,420), threshold=0.8, method="Template matching", file="./tasks/EvoZone/o/o_water_kirin.png")
 	# 雷麒麟进入 
 	I_LIGHTNING_KIRIN = RuleImage(roi_front=(967,121,239,419), roi_back=(967,121,239,419), threshold=0.8, method="Template matching", file="./tasks/EvoZone/o/o_lightning_kirin.png")
+
+
+	# List Rule Assets
+	# 这个是觉醒界面选择不同层数的 
+	L_LAYER_LIST = RuleList(folder="./tasks/EvoZone/res", direction="vertical", mode="ocr", roi_back=(138,130,359,500), size=(44, 88), 
+					 array=["壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖", "拾"])
+
+
+	# Ocr Rule Assets
+	# Ocr-description 
+	O_O_TEST_OCR = RuleOcr(roi=(126,136,360,491), area=(126,136,360,491), mode="Full", method="Default", keyword="", name="o_test_ocr")
 
 

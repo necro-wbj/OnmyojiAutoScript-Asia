@@ -10,21 +10,40 @@ from module.atom.list import RuleList
 class SwitchSoulAssets: 
 
 
+	# Click Rule Assets
+	# description 
+	C_SOU_GROUP_1 = RuleClick(roi_front=(1086,85,158,67), roi_back=(1086,85,158,67), name="sou_group_1")
+	# description 
+	C_SOU_GROUP_2 = RuleClick(roi_front=(1087,155,162,62), roi_back=(1087,155,162,62), name="sou_group_2")
+	# description 
+	C_SOU_GROUP_3 = RuleClick(roi_front=(1088,226,154,61), roi_back=(1088,226,154,61), name="sou_group_3")
+	# description 
+	C_SOU_GROUP_4 = RuleClick(roi_front=(1087,297,157,59), roi_back=(1087,297,157,59), name="sou_group_4")
+	# description 
+	C_SOU_GROUP_5 = RuleClick(roi_front=(1087,365,154,62), roi_back=(1087,365,154,62), name="sou_group_5")
+	# description 
+	C_SOU_GROUP_6 = RuleClick(roi_front=(1088,437,156,57), roi_back=(1088,437,156,57), name="sou_group_6")
+	# description 
+	C_SOU_GROUP_7 = RuleClick(roi_front=(1090,505,156,62), roi_back=(1090,505,156,62), name="sou_group_7")
+	# 阵容选择按钮位置 
+	C_SOU_TEAM_SELECT = RuleClick(roi_front=(977,157,21,21), roi_back=(977,157,21,21), name="sou_team_select")
+
+
 	# Image Rule Assets
 	# 退出式神录 
 	I_RECORD_SOUL_BACK = RuleImage(roi_front=(19,9,51,44), roi_back=(19,9,51,44), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_record_soul_back.png")
 	# 预设 
 	I_SOUL_PRESET = RuleImage(roi_front=(335,73,90,51), roi_back=(310,57,169,72), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_soul_preset.png")
 	# description 
-	I_SOU_SWITCH_1 = RuleImage(roi_front=(971,149,34,32), roi_back=(962,141,51,48), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_sou_switch_1.png")
+	I_SOU_SWITCH_1 = RuleImage(roi_front=(969,146,40,39), roi_back=(962,141,51,48), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_sou_switch_1.png")
 	# description 
-	I_SOU_SWITCH_2 = RuleImage(roi_front=(967,296,42,39), roi_back=(961,292,54,49), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_sou_switch_2.png")
+	I_SOU_SWITCH_2 = RuleImage(roi_front=(967,296,45,39), roi_back=(961,292,54,49), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_sou_switch_2.png")
 	# description 
 	I_SOU_SWITCH_3 = RuleImage(roi_front=(968,448,41,38), roi_back=(962,442,52,48), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_sou_switch_3.png")
 	# description 
 	I_SOU_SWITCH_4 = RuleImage(roi_front=(967,597,42,25), roi_back=(962,592,53,34), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_sou_switch_4.png")
 	# description 
-	I_SOU_SWITCH_SURE = RuleImage(roi_front=(668,401,180,61), roi_back=(668,401,180,61), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_sou_switch_sure.png")
+	I_SOU_SWITCH_SURE = RuleImage(roi_front=(721,410,75,43), roi_back=(668,401,180,61), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_sou_switch_sure.png")
 	# 用于判断是否在式神录里面 
 	I_SOU_CHECK_IN = RuleImage(roi_front=(269,69,50,49), roi_back=(269,69,50,49), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_sou_check_in.png")
 	# description 
@@ -46,7 +65,14 @@ class SwitchSoulAssets:
 	# 需要切换的预设按钮(颜色深一点) 
 	I_SOU_CLICK_PRESENT = RuleImage(roi_front=(967,305,43,22), roi_back=(965,142,48,480), threshold=0.9, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_sou_click_present.png")
 	# 误触点到式神检查 
-	I_CHECK_BLOCK = RuleImage(roi_front=(572,408,137,49), roi_back=(572,408,137,49), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_check_block.png")
+	I_CHECK_BLOCK = RuleImage(roi_front=(604,411,74,40), roi_back=(552,402,174,62), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_check_block.png")
+
+
+	# Ocr Rule Assets
+	# 隊伍預設分組 
+	O_SS_GROUP_NAME = RuleOcr(roi=(1087,91,155,566), area=(1110,94,116,533), mode="Full", method="Default", keyword="", name="ss_group_name")
+	# 阵容匹配 
+	O_SS_TEAM_NAME = RuleOcr(roi=(573,140,277,481), area=(667,144,32,475), mode="Full", method="Default", keyword="", name="ss_team_name")
 
 
 	# Swipe Rule Assets
@@ -58,31 +84,5 @@ class SwitchSoulAssets:
 	S_SS_TEAM_SWIPE_UP = RuleSwipe(roi_front=(720,439,21,21), roi_back=(717,308,21,21), mode="default", name="ss_team_swipe_up")
 	# 阵容向上滑动 
 	S_SS_TEAM_SWIPE_DOWN = RuleSwipe(roi_front=(709,308,21,21), roi_back=(709,449,21,21), mode="default", name="ss_team_swipe_down")
-
-
-	# Click Rule Assets
-	# description 
-	C_SOU_GROUP_1 = RuleClick(roi_front=(1086,85,158,67), roi_back=(1086,85,158,67), name="sou_group_1")
-	# description 
-	C_SOU_GROUP_2 = RuleClick(roi_front=(1087,155,162,62), roi_back=(1087,155,162,62), name="sou_group_2")
-	# description 
-	C_SOU_GROUP_3 = RuleClick(roi_front=(1088,226,154,61), roi_back=(1088,226,154,61), name="sou_group_3")
-	# description 
-	C_SOU_GROUP_4 = RuleClick(roi_front=(1087,297,157,59), roi_back=(1087,297,157,59), name="sou_group_4")
-	# description 
-	C_SOU_GROUP_5 = RuleClick(roi_front=(1087,365,154,62), roi_back=(1087,365,154,62), name="sou_group_5")
-	# description 
-	C_SOU_GROUP_6 = RuleClick(roi_front=(1088,437,156,57), roi_back=(1088,437,156,57), name="sou_group_6")
-	# description 
-	C_SOU_GROUP_7 = RuleClick(roi_front=(1090,505,156,62), roi_back=(1090,505,156,62), name="sou_group_7")
-	# 阵容选择按钮位置 
-	C_SOU_TEAM_SELECT = RuleClick(roi_front=(977,157,21,21), roi_back=(977,157,21,21), name="sou_team_select")
-
-
-	# Ocr Rule Assets
-	# 隊伍預設分組 
-	O_SS_GROUP_NAME = RuleOcr(roi=(1087,91,155,566), area=(1110,94,116,533), mode="Full", method="Default", keyword="", name="ss_group_name")
-	# 阵容匹配 
-	O_SS_TEAM_NAME = RuleOcr(roi=(573,140,277,481), area=(667,144,32,475), mode="Full", method="Default", keyword="", name="ss_team_name")
 
 

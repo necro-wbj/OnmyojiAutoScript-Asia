@@ -42,7 +42,7 @@ class GameUiAssets:
 	# 庭院卷轴关闭标识 
 	I_MAIN_SCROLL_CLOSE = RuleImage(roi_front=(1181,634,28,39), roi_back=(1162,595,77,112), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_scroll_close.png")
 	# description 
-	I_MAIN_GOTO_EXPLORATION = RuleImage(roi_front=(493,116,45,75), roi_back=(243,100,933,211), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_exploration.png")
+	I_MAIN_GOTO_EXPLORATION = RuleImage(roi_front=(645,135,60,80), roi_back=(243,100,933,211), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_exploration.png")
 	# description 
 	I_CHECK_EXPLORATION = RuleImage(roi_front=(1103,675,23,20), roi_back=(1063,643,91,76), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_exploration.png")
 	# 探索前往觉醒 
@@ -79,7 +79,7 @@ class GameUiAssets:
 	I_CHECK_DELEGATION = RuleImage(roi_front=(839,132,49,45), roi_back=(839,132,49,45), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_delegation.png")
 	# description 
 	I_CHECK_SECRET_ZONES = RuleImage(roi_front=(1145,592,110,119), roi_back=(1145,592,110,119), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_secret_zones.png")
-	# description 
+	# 地域鬼王的式神錄 
 	I_CHECK_AREA_BOSS = RuleImage(roi_front=(1181,502,48,58), roi_back=(1181,502,48,58), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_area_boss.png")
 	# description 
 	I_CHECK_HEIAN_KITAN = RuleImage(roi_front=(27,48,47,39), roi_back=(27,48,47,39), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_heian_kitan.png")
@@ -112,14 +112,10 @@ class GameUiAssets:
 	I_TOWN_GOTO_DRAFT_DUEL = RuleImage(roi_front=(335,159,55,72), roi_back=(170,145,567,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_town_goto_draft_duel.png")
 	# 百鬼奕 
 	I_TOWN_GOTO_HYAKKISEN = RuleImage(roi_front=(192,145,48,67), roi_back=(86,130,447,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_town_goto_hyakkisen.png")
-	# 斗技主界面左上角文字图像 
-	I_CHECK_DUEL = RuleImage(roi_front=(149,16,64,38), roi_back=(133,0,110,74), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_duel.png")
+	# 鬥技 
+	I_CHECK_DUEL = RuleImage(roi_front=(154,19,64,38), roi_back=(79,1,202,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_duel.png")
 	# description 
 	I_CHECK_DEMON_ENCOUNTER = RuleImage(roi_front=(26,658,42,43), roi_back=(2,619,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_demon_encounter.png")
-	# 检查逢魔之时现世逢魔界面 
-	I_CHECK_DEMON_ENCOUNTER_REALWORLD = RuleImage(roi_front=(26,658,42,43), roi_back=(2,619,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_demon_encounter_realworld.png")
-	# 逢魔之时进入现世逢魔 
-	I_DEMON_ENCOUNTER_REALWORLD_GOTO = RuleImage(roi_front=(994,485,106,30), roi_back=(994,485,106,30), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_demon_encounter_realworld.png")
 	# 检查狩猎战界面 
 	I_CHECK_HUNT = RuleImage(roi_front=(575,30,46,25), roi_back=(553,1,81,68), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_check_hunt.png")
 	# 检查狩猎战麒麟界面 
@@ -127,7 +123,7 @@ class GameUiAssets:
 	# description 
 	I_CHECK_HYAKKISEN = RuleImage(roi_front=(1014,607,53,55), roi_back=(986,587,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_hyakkisen.png")
 	# description 
-	I_CHECK_DRAFT_DUEL = RuleImage(roi_front=(1051,612,56,58), roi_back=(1029,594,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_draft_duel.png")
+	I_CHECK_DRAFT_DUEL = RuleImage(roi_front=(96,10,121,39), roi_back=(79,1,202,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_draft_duel.png")
 	# description 
 	I_BACK_YOLLOW = RuleImage(roi_front=(24,16,48,55), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_back_yollow.png")
 	# description 
@@ -142,21 +138,21 @@ class GameUiAssets:
 
 	# Image Rule Assets
 	# 式神录 
-	I_MAIN_GOTO_SHIKIGAMI_RECORDS = RuleImage(roi_front=(1080,590,56,64), roi_back=(1080,590,120,100), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_shikigami_records.png")
-	# description 
-	I_MAIN_GOTO_ONMYODO = RuleImage(roi_front=(960,590,39,36), roi_back=(960,590,120,100), threshold=0.5, method="Template matching", file="./tasks/GameUi/page/page_main_goto_onmyodo.png")
-	# description 
-	I_MAIN_GOTO_FRIENDS = RuleImage(roi_front=(845,590,55,55), roi_back=(845,590,120,100), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_friends.png")
-	# 进入花合战 
-	I_MAIN_GOTO_DAILY = RuleImage(roi_front=(779,612,51,67), roi_back=(754,595,89,97), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_daily.png")
+	I_MAIN_GOTO_SHIKIGAMI_RECORDS = RuleImage(roi_front=(1098,611,56,64), roi_back=(1084,589,93,106), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_shikigami_records.png")
+	# 陰陽術 
+	I_MAIN_GOTO_ONMYODO = RuleImage(roi_front=(992,614,51,60), roi_back=(992,614,51,60), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_onmyodo.png")
+	# 好友 
+	I_MAIN_GOTO_FRIENDS = RuleImage(roi_front=(879,623,55,55), roi_back=(867,606,79,77), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_friends.png")
+	# Main daily 
+	I_MAIN_GOTO_DAILY = RuleImage(roi_front=(760,656,70,28), roi_back=(744,595,98,102), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_daily.png")
 	# description 
 	I_MAIN_GOTO_MALL = RuleImage(roi_front=(663,661,41,22), roi_back=(644,613,81,78), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_mall.png")
 	# description 
-	I_MAIN_GOTO_GUILD = RuleImage(roi_front=(495,590,50,22), roi_back=(495,590,120,100), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_guild.png")
+	I_MAIN_GOTO_GUILD = RuleImage(roi_front=(539,661,58,22), roi_back=(529,615,77,77), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_guild.png")
 	# description 
-	I_MAIN_GOTO_TEAM = RuleImage(roi_front=(395,590,38,48), roi_back=(395,590,120,100), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_team.png")
+	I_MAIN_GOTO_TEAM = RuleImage(roi_front=(437,625,38,48), roi_back=(366,606,192,83), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_team.png")
 	# description 
-	I_MAIN_GOTO_COLLECTION = RuleImage(roi_front=(70,590,36,41), roi_back=(70,590,120,100), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_collection.png")
+	I_MAIN_GOTO_COLLECTION = RuleImage(roi_front=(92,621,36,41), roi_back=(51,596,159,85), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_collection.png")
 	# description 
 	I_CHECK_RECORDS = RuleImage(roi_front=(269,71,55,50), roi_back=(269,71,55,50), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_records.png")
 	# description 
@@ -187,8 +183,6 @@ class GameUiAssets:
 	I_DLC_CLOSE = RuleImage(roi_front=(916,147,24,25), roi_back=(916,147,24,25), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/store_dlc_close.png")
 	# 退出战斗按钮 
 	I_BACK_BATTLE = RuleImage(roi_front=(24,19,40,38), roi_back=(0,0,90,85), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_back_battle.png")
-	# 进入现世逢魔 
-	I_DEMON_ENCOUNTER_REALWORLD = RuleImage(roi_front=(994,485,106,30), roi_back=(994,485,106,30), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_demon_encounter_realworld.png")
 
 
 	# Image Rule Assets
@@ -202,25 +196,21 @@ class GameUiAssets:
 	# description 
 	I_SUMMON_GOTO_MAIN = RuleImage(roi_front=(27,5,49,51), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_summon_goto_main.png")
 	# description 
-	I_CHECK_SUMMON = RuleImage(roi_front=(750,580,30,28), roi_back=(750,580,350,120), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_summon.png")
+	I_CHECK_SUMMON = RuleImage(roi_front=(750,580,30,28), roi_back=(550,500,550,200), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_summon.png")
 	# 就是一个红叉 
 	I_REALM_RAID_GOTO_EXPLORATION = RuleImage(roi_front=(1192,107,36,43), roi_back=(1192,107,36,43), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_realm_raid_goto_exploration.png")
 	# description 
-	I_MAIN_GOTO_TRAVEL = RuleImage(roi_front=(170,590,64,61), roi_back=(170,590,120,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_travel.png")
+	I_MAIN_GOTO_TRAVEL = RuleImage(roi_front=(202,619,64,61), roi_back=(202,619,64,61), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_travel.png")
 	# 珍旅居 
 	I_CHECK_TRAVEL = RuleImage(roi_front=(1134,583,78,77), roi_back=(1134,583,78,77), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_travel.png")
 	# 活动列表页前往活动 
 	I_ACT_LIST_GOTO_ACT = RuleImage(roi_front=(971,506,156,60), roi_back=(925,458,272,166), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_act_list_goto_act.png")
 	# 活动列表页标志 
 	I_CHECK_ACT_LIST = RuleImage(roi_front=(60,617,79,66), roi_back=(19,555,163,164), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_act_list.png")
-	# 英杰试炼左上角标志 
-	I_CHECK_HERO_TEST = RuleImage(roi_front=(148,10,133,48), roi_back=(137,0,157,71), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_hero_test.png")
-	# 探索前往英杰试炼 
-	I_EXPLORATION_GOTO_HERO_TEST = RuleImage(roi_front=(837,630,58,56), roi_back=(7,605,1272,113), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_hero_test.png")
 
 
 	# Image Rule Assets
-	# 寮结界突破右上角 
+	# 突破紀錄 
 	I_KEKKAI_TOPPA = RuleImage(roi_front=(68,630,56,56), roi_back=(68,630,56,56), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_kekkai_toppa.png")
 
 
