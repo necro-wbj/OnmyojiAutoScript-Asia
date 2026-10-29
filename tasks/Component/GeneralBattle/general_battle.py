@@ -66,6 +66,10 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
         need_battle_timer = Timer(10)
         # 如果不在准备界面,想设置也设置不了,只能直接开始战斗
         while self.is_in_prepare():
+            if self.appear_then_click(self.I_DISABLE_7DAYS_DIFF_SOUL, interval=0.6):  # 关闭御魂不一致提示
+                continue
+            if self.appear_then_click(self.I_CONFIRM_CLOSE_DIFF_SOUL, interval=0.6):  # 确认关闭御魂不一致提示
+                continue
             # 配置了锁定阵容则启动超时器
             if config.lock_team_enable and not need_battle_timer.started():
                 need_battle_timer.start()

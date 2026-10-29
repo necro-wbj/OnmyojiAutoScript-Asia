@@ -16,5 +16,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "确认按钮"
+  },
+  {
+    "itemName": "confirm_close_diff_soul",
+    "imageName": "gb_confirm_close_diff_soul.png",
+    "roiFront": "575,408,130,44",
+    "roiBack": "530,380,220,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "关闭御魂不一致提示弹窗"
+  },
+  {
+    "itemName": "disable_7days_diff_soul",
+    "imageName": "gb_disable_7days_diff_soul.png",
+    "roiFront": "509,341,38,38",
+    "roiBack": "489,321,78,78",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "禁用御魂不一致提示7天"
   }
 ]
