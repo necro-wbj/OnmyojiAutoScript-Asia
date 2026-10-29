@@ -10,6 +10,19 @@ from module.atom.list import RuleList
 class GeneralBuffAssets: 
 
 
+	# Ocr Rule Assets
+	# Ocr-description 
+	O_GOLD_50 = RuleOcr(roi=(428,120,338,389), area=(0,0,100,100), mode="Full", method="Default", keyword=".*金幣增加50%", name="gold_50")
+	# Ocr-description 
+	O_GOLD_100 = RuleOcr(roi=(425,118,342,397), area=(0,0,100,100), mode="Full", method="Default", keyword=".*金幣增加100%", name="gold_100")
+	# Ocr-description 
+	O_EXP_50 = RuleOcr(roi=(426,119,335,394), area=(0,0,100,100), mode="Full", method="Default", keyword=".*經驗增加50%", name="exp_50")
+	# Ocr-description 
+	O_EXP_100 = RuleOcr(roi=(421,127,342,388), area=(0,0,100,100), mode="Full", method="Default", keyword=".*經驗增加100%", name="exp_100")
+	# 打开buff加成 
+	O_GB_BUFF_2 = RuleOcr(roi=(348,31,93,51), area=(363,36,29,43), mode="Single", method="Default", keyword="加成", name="gb_buff_2")
+
+
 	# Image Rule Assets
 	# 庭院左上角的加成 
 	I_BUFF_1 = RuleImage(roi_front=(363,32,32,46), roi_back=(344,14,128,76), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBuff/gb/gb_buff_1.png")
@@ -36,18 +49,5 @@ class GeneralBuffAssets:
 	# Swipe Rule Assets
 	# description 
 	S_BUFF_UP = RuleSwipe(roi_front=(397,124,456,35), roi_back=(447,457,386,37), mode="default", name="buff_up")
-
-
-	# Ocr Rule Assets
-	# Ocr-description 
-	O_GOLD_50 = RuleOcr(roi=(428,120,338,389), area=(0,0,100,100), mode="Full", method="Default", keyword=".*金幣增加50%", name="gold_50")
-	# Ocr-description 
-	O_GOLD_100 = RuleOcr(roi=(425,118,342,397), area=(0,0,100,100), mode="Full", method="Default", keyword=".*金幣增加100%", name="gold_100")
-	# Ocr-description 
-	O_EXP_50 = RuleOcr(roi=(426,119,335,394), area=(0,0,100,100), mode="Full", method="Default", keyword=".*經驗增加50%", name="exp_50")
-	# Ocr-description 
-	O_EXP_100 = RuleOcr(roi=(421,127,342,388), area=(0,0,100,100), mode="Full", method="Default", keyword=".*經驗增加100%", name="exp_100")
-	# 打开buff加成 
-	O_GB_BUFF_2 = RuleOcr(roi=(348,31,93,51), area=(363,36,29,43), mode="Single", method="Default", keyword="加成", name="gb_buff_2")
 
 

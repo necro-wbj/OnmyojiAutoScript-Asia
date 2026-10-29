@@ -10,6 +10,15 @@ from module.atom.list import RuleList
 class HeroTestAssets: 
 
 
+	# Ocr Rule Assets
+	# 投喂的体力 
+	O_REMAIN_AP = RuleOcr(roi=(1095,24,123,33), area=(1095,24,123,33), mode="DigitCounter", method="Default", keyword="", name="remain_ap")
+	# 兵藏秘境兵道帖 
+	O_ART_WAR_CARD = RuleOcr(roi=(712,21,98,36), area=(712,21,98,36), mode="DigitCounter", method="Default", keyword="", name="art_war_card")
+	# 兵道帖机密 
+	O_ART_WAR_CARD_PLUS = RuleOcr(roi=(956,25,50,29), area=(956,25,50,29), mode="SINGLE", method="Default", keyword="", name="art_war_card_plus")
+
+
 	# Image Rule Assets
 	# 进入活动第一步 
 	I_ONE = RuleImage(roi_front=(633,106,88,105), roi_back=(633,106,88,105), threshold=0.7, method="Template matching", file="./tasks/HeroTest/as/as_one.png")
@@ -55,14 +64,5 @@ class HeroTestAssets:
 	I_BCMJ_RESET_CLOSE = RuleImage(roi_front=(429,397,186,71), roi_back=(429,397,186,71), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_bcmj_reset_close.png")
 	# 周一点击确认开始挑战 
 	I_START_CHALLENGE = RuleImage(roi_front=(685,407,142,47), roi_back=(685,407,142,47), threshold=0.8, method="Template matching", file="./tasks/HeroTest/as/as_start_challenge.png")
-
-
-	# Ocr Rule Assets
-	# 投喂的体力 
-	O_REMAIN_AP = RuleOcr(roi=(1095,24,123,33), area=(1095,24,123,33), mode="DigitCounter", method="Default", keyword="", name="remain_ap")
-	# 兵藏秘境兵道帖 
-	O_ART_WAR_CARD = RuleOcr(roi=(712,21,98,36), area=(712,21,98,36), mode="DigitCounter", method="Default", keyword="", name="art_war_card")
-	# 兵道帖机密 
-	O_ART_WAR_CARD_PLUS = RuleOcr(roi=(956,25,50,29), area=(956,25,50,29), mode="SINGLE", method="Default", keyword="", name="art_war_card_plus")
 
 
