@@ -10,6 +10,11 @@ from module.atom.list import RuleList
 class DemonEncounterAssets: 
 
 
+	# Click Rule Assets
+	# description 
+	C_DM_BOSS_CLICK = RuleClick(roi_front=(593,274,100,100), roi_back=(593,274,100,100), name="dm_boss_click")
+
+
 	# Image Rule Assets
 	# 地震鲇 
 	I_BOSS_NAMAZU = RuleImage(roi_front=(589,294,100,100), roi_back=(589,294,100,100), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_namazu.png")
@@ -47,16 +52,22 @@ class DemonEncounterAssets:
 	I_BOSS_DONE_CHECK = RuleImage(roi_front=(0,450,100,130), roi_back=(0,450,100,130), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/boss/boss_boss_done_check.png")
 
 
-	# Click Rule Assets
-	# description 
-	C_DM_BOSS_CLICK = RuleClick(roi_front=(593,274,100,100), roi_back=(593,274,100,100), name="dm_boss_click")
-
-
 	# Ocr Rule Assets
 	# 人數 
 	O_DE_BOSS_PEOPLE = RuleOcr(roi=(880,591,100,35), area=(880,591,100,35), mode="DigitCounter", method="Default", keyword="", name="de_boss_people")
 	# 極逢魔人數 
 	O_DE_BEST_BOSS_PEOPLE = RuleOcr(roi=(900,565,100,35), area=(900,565,100,35), mode="DigitCounter", method="Default", keyword="", name="de_best_boss_people")
+
+
+	# Click Rule Assets
+	# 从下开始数第一个 
+	C_DE_1 = RuleClick(roi_front=(1211,478,61,58), roi_back=(1211,478,61,58), name="de_1")
+	# 2 
+	C_DE_2 = RuleClick(roi_front=(1196,409,55,56), roi_back=(1196,409,55,56), name="de_2")
+	# 3 
+	C_DE_3 = RuleClick(roi_front=(1225,344,53,55), roi_back=(1225,344,53,55), name="de_3")
+	# 第四个 
+	C_DE_4 = RuleClick(roi_front=(1200,282,56,53), roi_back=(1200,282,56,53), name="de_4")
 
 
 	# Image Rule Assets
@@ -78,22 +89,6 @@ class DemonEncounterAssets:
 	I_SUSHI = RuleImage(roi_front=(602,318,72,54), roi_back=(581,294,115,116), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_sushi.png")
 	# 50勾玉购买 
 	I_JADE_50 = RuleImage(roi_front=(593,425,84,46), roi_back=(548,405,182,83), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_jade_50.png")
-
-
-	# Click Rule Assets
-	# 从下开始数第一个 
-	C_DE_1 = RuleClick(roi_front=(1211,478,61,58), roi_back=(1211,478,61,58), name="de_1")
-	# 2 
-	C_DE_2 = RuleClick(roi_front=(1196,409,55,56), roi_back=(1196,409,55,56), name="de_2")
-	# 3 
-	C_DE_3 = RuleClick(roi_front=(1225,344,53,55), roi_back=(1225,344,53,55), name="de_3")
-	# 第四个 
-	C_DE_4 = RuleClick(roi_front=(1200,282,56,53), roi_back=(1200,282,56,53), name="de_4")
-
-
-	# Ocr Rule Assets
-	# 计数已经开启多少的 
-	O_DE_COUNTER = RuleOcr(roi=(1204,685,48,34), area=(1204,685,48,34), mode="DigitCounter", method="Default", keyword="", name="de_counter")
 
 
 	# Image Rule Assets
@@ -125,6 +120,11 @@ class DemonEncounterAssets:
 	I_DE_REALM_FIRE = RuleImage(roi_front=(696,421,129,63), roi_back=(162,99,1106,610), threshold=0.8, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_realm_fire.png")
 	# 发现大boss 
 	I_DE_FIND_BOSS = RuleImage(roi_front=(1210,425,29,36), roi_back=(1182,279,93,266), threshold=0.7, method="Template matching", file="./tasks/DemonEncounter/demon/demon_de_find_boss.png")
+
+
+	# Ocr Rule Assets
+	# 计数已经开启多少的 
+	O_DE_COUNTER = RuleOcr(roi=(1204,685,48,34), area=(1204,685,48,34), mode="DigitCounter", method="Default", keyword="", name="de_counter")
 
 
 	# Click Rule Assets

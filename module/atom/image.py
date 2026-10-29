@@ -103,6 +103,10 @@ class RuleImage:
         return self.method == "Template matching"
 
     @cached_property
+    def is_multi_scale_template_match(self) -> bool:
+        return self.method == "Multi-scale template matching"
+
+    @cached_property
     def is_sift_flann(self) -> bool:
         return self.method == "Sift Flann"
 
@@ -145,6 +149,9 @@ class RuleImage:
         if threshold is None:
             threshold = self.threshold
 
+        if self.is_multi_scale_template_match:
+            return self.match_multi_scale(image, threshold, scale_range=(0.7, 1.4))
+
         if not self.is_template_match:
             return self.sift_match(image)
             # raise Exception(f"unknown method {self.method}")
@@ -177,6 +184,70 @@ class RuleImage:
         else:
             if(max_val > 0.6):
                 logger.attr(self.name, f"match faild: {max_val}")
+            return False
+
+    def match_multi_scale(self, image: np.array, threshold: float = None,
+                          scales: list = None, scale_range: tuple = None) -> bool:
+        """
+        多尺度模板匹配，自动尝试多个缩放比例以适应图片大小的变化（例如庭院可以缩放）
+        移植自陆服 module/atom/image.py
+        :param image: 原始截图
+        :param threshold: 匹配阈值
+        :param scales: 缩放比例列表
+        :param scale_range: 缩放范围 (start, end, step)，例如 (0.8, 1.2, 0.1)，step 默认为 0.1
+        :return: 匹配是否成功
+        """
+        if threshold is None:
+            threshold = self.threshold
+
+        if scale_range is not None:
+            start, end = scale_range[:2]
+            step = scale_range[2] if len(scale_range) > 2 else 0.1
+            scales = np.arange(start, end + step / 2, step)
+        if scales is None:
+            scales = [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2]
+        scales = sorted(set(round(float(x), 2) for x in scales))
+
+        source = self.corp(image)
+        mat = self.image
+        if mat is None or mat.shape[0] == 0 or mat.shape[1] == 0:
+            logger.error(f"Template image is invalid: {mat.shape}")
+            return False
+
+        mat_h, mat_w = mat.shape[:2]
+        source_h, source_w = source.shape[:2]
+        best_score = 0
+        best_loc = None
+        best_scale = 1.0
+        best_shape = None
+        for scale in scales:
+            scaled_w = int(mat_w * scale)
+            scaled_h = int(mat_h * scale)
+            # 跳过过小或大于源图的尺度
+            if scaled_w < 10 or scaled_h < 10 or scaled_w > source_w or scaled_h > source_h:
+                continue
+            res = cv2.matchTemplate(source, cv2.resize(mat, (scaled_w, scaled_h)), cv2.TM_CCOEFF_NORMED)
+            res = np.nan_to_num(res, nan=-1.0, posinf=-1.0, neginf=-1.0)
+            _, max_val, _, max_loc = cv2.minMaxLoc(res)
+            if max_val > best_score:
+                best_score = max_val
+                best_loc = max_loc
+                best_scale = scale
+                best_shape = (scaled_w, scaled_h)
+
+        if self.debug_mode:
+            logger.attr(self.name, f'best scale: {best_scale:.2f}, best score: {best_score:.5f}')
+
+        if best_score > threshold and best_loc is not None:
+            logger.attr(self.name, f"match success: {best_score} (scale {best_scale})")
+            self.roi_front[0] = best_loc[0] + self.roi_back[0]
+            self.roi_front[1] = best_loc[1] + self.roi_back[1]
+            self.roi_front[2] = best_shape[0]
+            self.roi_front[3] = best_shape[1]
+            return True
+        else:
+            if best_score > 0.6:
+                logger.attr(self.name, f"match faild: {best_score} (scale {best_scale})")
             return False
 
     def match_all(self, image: np.array, threshold: float = None, roi: list = None) -> list[tuple]:
@@ -278,7 +349,7 @@ class RuleImage:
 
     def test_match(self, image: np.array):
         self.debug_mode = True
-        if self.is_template_match:
+        if self.is_template_match or self.is_multi_scale_template_match:
             return self.match(image)
         if self.is_sift_flann:
             return self.sift_match(image, show=True)

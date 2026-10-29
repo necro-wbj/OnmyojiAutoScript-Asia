@@ -10,6 +10,17 @@ from module.atom.list import RuleList
 class ActivityShikigamiAssets: 
 
 
+	# Click Rule Assets
+	# description 
+	C_CLICK1 = RuleClick(roi_front=(120,138,130,75), roi_back=(120,138,130,75), name="click1")
+	# description 
+	C_CLICK2 = RuleClick(roi_front=(121,234,125,81), roi_back=(121,234,125,81), name="click2")
+	# description 
+	C_CLICK3 = RuleClick(roi_front=(126,337,118,77), roi_back=(126,337,118,77), name="click3")
+	# description 
+	C_CLICK4 = RuleClick(roi_front=(124,438,126,77), roi_back=(124,438,126,77), name="click4")
+
+
 	# Image Rule Assets
 	# description 
 	I_N_BATTLE = RuleImage(roi_front=(131,164,86,86), roi_back=(119,50,1075,635), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/0110/0110_n_battle.png")
@@ -21,13 +32,15 @@ class ActivityShikigamiAssets:
 
 	# Click Rule Assets
 	# description 
-	C_CLICK1 = RuleClick(roi_front=(120,138,130,75), roi_back=(120,138,130,75), name="click1")
+	C_RANDOM_LEFT = RuleClick(roi_front=(17,69,132,599), roi_back=(17,70,137,599), name="random_left")
 	# description 
-	C_CLICK2 = RuleClick(roi_front=(121,234,125,81), roi_back=(121,234,125,81), name="click2")
+	C_RANDOM_RIGHT = RuleClick(roi_front=(1133,55,131,638), roi_back=(1131,55,133,638), name="random_right")
 	# description 
-	C_CLICK3 = RuleClick(roi_front=(126,337,118,77), roi_back=(126,337,118,77), name="click3")
+	C_RANDOM_TOP = RuleClick(roi_front=(84,49,1159,93), roi_back=(85,46,1159,101), name="random_top")
 	# description 
-	C_CLICK4 = RuleClick(roi_front=(124,438,126,77), roi_back=(124,438,126,77), name="click4")
+	C_RANDOM_BOTTOM = RuleClick(roi_front=(179,577,972,100), roi_back=(179,579,972,100), name="random_bottom")
+	# description 
+	C_RANDOM_ALL = RuleClick(roi_front=(42,94,1207,543), roi_back=(42,94,1207,543), name="random_all")
 
 
 	# Image Rule Assets
@@ -95,19 +108,6 @@ class ActivityShikigamiAssets:
 	I_PASS_ACT_LOCAT = RuleImage(roi_front=(1214,395,29,31), roi_back=(1179,373,100,86), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_pass_act_locat.png")
 	# 100体爬塔标识 
 	I_CHECK_AP100 = RuleImage(roi_front=(971,575,96,100), roi_back=(934,537,166,167), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_check_ap100.png")
-
-
-	# Click Rule Assets
-	# description 
-	C_RANDOM_LEFT = RuleClick(roi_front=(17,69,132,599), roi_back=(17,70,137,599), name="random_left")
-	# description 
-	C_RANDOM_RIGHT = RuleClick(roi_front=(1133,55,131,638), roi_back=(1131,55,133,638), name="random_right")
-	# description 
-	C_RANDOM_TOP = RuleClick(roi_front=(84,49,1159,93), roi_back=(85,46,1159,101), name="random_top")
-	# description 
-	C_RANDOM_BOTTOM = RuleClick(roi_front=(179,577,972,100), roi_back=(179,579,972,100), name="random_bottom")
-	# description 
-	C_RANDOM_ALL = RuleClick(roi_front=(42,94,1207,543), roi_back=(42,94,1207,543), name="random_all")
 
 
 	# Ocr Rule Assets
