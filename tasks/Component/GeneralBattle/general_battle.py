@@ -211,6 +211,10 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
             if self.appear(self.I_REWARD_GOLD, threshold=0.8):
                 win = True
                 break
+            # 准备界面加载过慢时 battle_before 会超时跳过, 这里补点准备
+            if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
+                logger.info("Prepare page appeared late, click prepare")
+                continue
             # 如果开启战斗过程随机滑动
             if random_click_swipt_enable:
                 self.random_click_swipt()
