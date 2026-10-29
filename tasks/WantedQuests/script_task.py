@@ -408,7 +408,8 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
             if not self.is_wq_remained():
                 logger.warning('is_wq_remained=False before trace page appears, stop clicking wanted entry')
                 break
-            if self.click(ocr, interval=1):
+            # 追踪页弹出有动画, 间隔太短会在弹出后再点一次入口把追踪页关掉
+            if self.click(ocr, interval=3):
                 logger.info('Clicked wanted entry, waiting for trace page')
                 continue
         if not self.appear(self.I_GOTO_1):
@@ -458,8 +459,13 @@ class ScriptTask(WQExplore, SecretScriptTask, WantedQuestsAssets):
         wq_config = GeneralBattleConfig(lock_team_enable=True)
         self.run_general_battle(config=wq_config)
         self.wait_until_appear(self.I_WQC_FIRE, wait_time=4)
-        self.ui_click_until_disappear(self.I_UI_BACK_RED)
-        # 我忘记了打完后是否需要关闭 挑战界面
+        # 关闭 挑战界面
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_CHECK_EXPLORATION):
+                break
+            if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=1.5):
+                continue
 
     def secret(self, goto, num=1):
         self.ui_click(goto, self.I_WQSE_FIRE)
