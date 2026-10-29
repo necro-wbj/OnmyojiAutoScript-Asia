@@ -307,7 +307,12 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
             if click_failure_count >= 5:
                 logger.warning("Click failure, check your click position")
                 return False
-            if self.is_in_battle(False):
+            # 离开寮突破界面即视为进入战斗, 不依赖准备界面的好友图标识别
+            if not self.appear(self.I_TOPPA_RECORD, threshold=0.85):
+                time.sleep(1)
+                self.screenshot()
+                if self.appear(self.I_TOPPA_RECORD, threshold=0.85):
+                    continue
                 logger.info("Start attach area [%s]" % str(index + 1))
                 return self.run_general_battle(config=self.config.ryou_toppa.general_battle_config)
 
@@ -315,6 +320,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
                 click_failure_count += 1
                 continue
             if self.click(rcl, interval=5):
+                # https://github.com/runhey/OnmyojiAutoScript/issues/1748
+                time.sleep(random.uniform(0, 0.3))
                 click_failure_count += 1
                 continue
 
