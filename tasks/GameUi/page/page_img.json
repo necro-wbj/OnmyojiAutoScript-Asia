@@ -21,8 +21,8 @@
     "itemName": "main_goto_exploration",
     "imageName": "page_main_goto_exploration.png",
     "roiFront": "645,135,60,80",
-    "roiBack": "243,100,933,211",
-    "method": "Template matching",
+    "roiBack": "243,60,933,270",
+    "method": "Multi-scale template matching",
     "threshold": 0.7,
     "description": "description"
   },

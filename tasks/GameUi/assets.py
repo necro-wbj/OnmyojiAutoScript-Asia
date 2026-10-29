@@ -42,7 +42,7 @@ class GameUiAssets:
 	# 庭院卷轴关闭标识 
 	I_MAIN_SCROLL_CLOSE = RuleImage(roi_front=(1181,634,28,39), roi_back=(1162,595,77,112), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_scroll_close.png")
 	# description 
-	I_MAIN_GOTO_EXPLORATION = RuleImage(roi_front=(645,135,60,80), roi_back=(243,100,933,211), threshold=0.7, method="Template matching", file="./tasks/GameUi/page/page_main_goto_exploration.png")
+	I_MAIN_GOTO_EXPLORATION = RuleImage(roi_front=(645,135,60,80), roi_back=(243,60,933,270), threshold=0.7, method="Multi-scale template matching", file="./tasks/GameUi/page/page_main_goto_exploration.png")
 	# description 
 	I_CHECK_EXPLORATION = RuleImage(roi_front=(1103,675,23,20), roi_back=(1063,643,91,76), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_exploration.png")
 	# 探索前往觉醒 
