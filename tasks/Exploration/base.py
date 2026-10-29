@@ -134,6 +134,7 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
 
     # 打开指定的章节：
     def open_expect_level(self):
+        self.switch_to_mainline_tab()
         swipeCount = 0
         while 1:
             # 探索的 config
@@ -154,7 +155,16 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
             if self.appear_then_click(self.I_UI_CONFIRM_SAMLL, interval=1):
                 continue
             self.device.click_record_clear()
-            self.swipe(self.S_SWIPE_LEVEL_UP)
+            # 切回主线 tab 后列表会回到第一章，可见章节都比目标小时要往后滑
+            target_number = self.chapter_number(explorationConfig.exploration_config.exploration_level)
+            visible_numbers = [n for n in map(self.chapter_number, text1) if n is not None]
+            if target_number is not None and visible_numbers and max(visible_numbers) < target_number:
+                # 每次约滑一章，离目标远时连滑几次，避免超过滑动次数上限
+                for _ in range(min(max(target_number - max(visible_numbers) - 1, 1), 5)):
+                    self.swipe(self.S_SWIPE_LEVEL_DOWN)
+                    time.sleep(0.3)
+            else:
+                self.swipe(self.S_SWIPE_LEVEL_UP)
             swipeCount += 1
             debug_info = f"Swiped {swipeCount} times, current exploration level: {text1}"
             logger.info(debug_info)
@@ -181,6 +191,35 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
                 break
 
         return True
+
+    # 探索大地图停在玩法 tab 时切回主线 tab
+    def switch_to_mainline_tab(self):
+        timeout = Timer(10).start()
+        while 1:
+            self.screenshot()
+            if not self.appear(self.I_CHECK_PLAY_TITLE):
+                break
+            if timeout.reached():
+                logger.warning('Switch to mainline tab timeout')
+                break
+            self.click(self.C_CLICK_MAIN_TITLE, interval=1)
+        time.sleep(0.5)
+
+    # 章节名转数字：'第二十八章' -> 28，无法识别返回 None
+    @staticmethod
+    def chapter_number(text: str):
+        digits = {'零': 0, '〇': 0, '一': 1, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9}
+        text = text.strip().removeprefix('第').removesuffix('章')
+        if not text:
+            return None
+        if text.isdigit():
+            return int(text)
+        if '十' in text:
+            tens, _, ones = text.partition('十')
+            if (tens and tens not in digits) or (ones and ones not in digits):
+                return None
+            return digits.get(tens, 1) * 10 + digits.get(ones, 0)
+        return digits.get(text) if len(text) == 1 else None
 
     # 候补：
     def enter_settings_and_do_operations(self):

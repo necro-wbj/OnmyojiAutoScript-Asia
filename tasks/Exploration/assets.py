@@ -68,6 +68,8 @@ class ExplorationAssets:
 	C_CLICK_ROTATE_4 = RuleClick(roi_front=(921,590,21,21), roi_back=(921,590,21,21), name="click_rotate_4")
 	# 随机点 
 	C_SAFE_RANDOM = RuleClick(roi_front=(0,0,111,12), roi_back=(0,0,111,12), name="safe_random")
+	# 点击探索大地图主线tab标题
+	C_CLICK_MAIN_TITLE = RuleClick(roi_front=(1070,174,77,28), roi_back=(1070,174,77,28), name="click_main_title")
 
 
 	# Image Rule Assets
@@ -123,6 +125,8 @@ class ExplorationAssets:
 	I_EXP_ARROW_RIGHT = RuleImage(roi_front=(1240,117,24,21), roi_back=(1178,74,100,100), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_exp_arrow_right.png")
 	# 箭头，打开 
 	I_EXP_ARROW_LEFT = RuleImage(roi_front=(1244,115,18,26), roi_back=(1178,78,100,100), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_exp_arrow_left.png")
+	# 探索大地图玩法tab标题锚点(御魂)
+	I_CHECK_PLAY_TITLE = RuleImage(roi_front=(1068,213,46,26), roi_back=(1060,205,62,42), threshold=0.85, method="Template matching", file="./tasks/Exploration/res/res_check_play_title.png")
 
 
 	# Long Click Rule Assets

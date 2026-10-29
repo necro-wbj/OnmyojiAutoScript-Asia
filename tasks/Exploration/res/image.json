@@ -232,5 +232,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "箭头，打开"
+  },
+  {
+    "itemName": "check_play_title",
+    "imageName": "res_check_play_title.png",
+    "roiFront": "1068,213,46,26",
+    "roiBack": "1060,205,62,42",
+    "method": "Template matching",
+    "threshold": 0.85,
+    "description": "探索大地图玩法tab标题锚点(御魂)"
   }
 ]
