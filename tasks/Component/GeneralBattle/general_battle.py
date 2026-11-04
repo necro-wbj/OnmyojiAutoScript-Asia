@@ -17,6 +17,7 @@ from tasks.Component.GeneralBuff.config_buff import BuffClass
 from tasks.Component.GeneralBuff.general_buff import GeneralBuff
 
 from module.logger import logger
+from tasks.GlobalGame.assets import GlobalGameAssets
 
 
 class GeneralBattle(GeneralBuff, GeneralBattleAssets):
@@ -122,18 +123,20 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
             self.screenshot()
             if self.appear_then_click(self.I_EXIT, interval=1.5):
                 continue
-            if self.appear(self.I_EXIT_ENSURE):
+            if self.appear(GlobalGameAssets.I_UI_CONFIRM) or self.appear(self.I_EXIT_ENSURE):
                 break
         logger.info(f"Click {self.I_EXIT.name}")
 
         # 点击返回确认
         while 1:
             self.screenshot()
+            if self.appear_then_click(GlobalGameAssets.I_UI_CONFIRM, interval=1.5):
+                continue
             if self.appear_then_click(self.I_EXIT_ENSURE, interval=1.5):
                 continue
             if self.appear(self.I_FALSE):
                 break
-        logger.info(f"Click {self.I_EXIT_ENSURE.name}")
+        logger.info(f"Click {GlobalGameAssets.I_UI_CONFIRM.name}")
 
         # 点击失败确认
         self.wait_until_appear(self.I_FALSE)
@@ -164,12 +167,14 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
             self.screenshot()
             if self.appear_then_click(self.I_EXIT, interval=1.5):
                 continue
-            if self.appear(self.I_EXIT_ENSURE):
+            if self.appear(GlobalGameAssets.I_UI_CONFIRM) or self.appear(self.I_EXIT_ENSURE):
                 break
 
         # 点击返回确认
         while 1:
             self.screenshot()
+            if self.appear_then_click(GlobalGameAssets.I_UI_CONFIRM, interval=1.5):
+                continue
             if self.appear_then_click(self.I_EXIT_ENSURE, interval=1.5):
                 continue
             if self.appear_then_click(self.I_FALSE, interval=1.5):
