@@ -56,11 +56,18 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
         """
         战斗前设置
         """
-        aisa_ui_wait_time = 5
-        # 用于ui加载,防止还在加载过程中导致准备界面识别失败,最多等待2秒
+        aisa_ui_wait_time = 15
+        # 用于ui加载,防止还在加载过程中导致准备界面识别失败
+        # 亚服加载可能超过5秒, 等到出现准备界面或已在战斗中才继续, 最多等待15秒
+        # 各任务重写的 battle_wait 不会点准备, 不能太早放弃
         wait_in_prepare_timer = Timer(aisa_ui_wait_time).start()
-        while not self.is_in_prepare() and not wait_in_prepare_timer.reached():
-            logger.info('Wait to enter the preparation page GeneralBattle')
+        logger.info('Wait to enter the preparation page GeneralBattle')
+        while not wait_in_prepare_timer.reached():
+            if self.is_in_prepare():
+                break
+            if self.is_in_real_battle(False) or self.appear(self.I_WIN) or self.appear(self.I_DE_WIN) \
+                    or self.appear(self.I_FALSE) or self.appear(self.I_REWARD):
+                break
             time.sleep(0.5)
         confed = False
         need_battle_timer = Timer(10)
