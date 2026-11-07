@@ -394,21 +394,49 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
 
     def quit_explore(self):
         logger.info('Quit explore')
+        self.device.click_record_remove(self.S_SWIPE_BACKGROUND_RIGHT.name)
         boss_timer = Timer(15)
         boss_timer.start()
+        # click_yellow_button = 0 #用于保证只点一次左上返回按钮，不要直接触发连点回到主界面
+        
         while 1:
             self.screenshot()
-            if self.appear(self.I_UI_BACK_RED) and self.appear(self.I_E_EXPLORATION_CLICK):
+            
+            # 探索章节标题界面
+            if self.appear(self.I_UI_BACK_YELLOW) and self.appear(self.I_E_EXPLORATION_CLICK):
                 break
+            # 探索大世界界面
+            if self.appear(self.I_CHECK_EXPLORATION) and not self.appear(self.I_E_SETTINGS_BUTTON):
+                break
+  
+            # 防止BOSS打完箱子刚落地，脚本就手快点退出了
+            if self.appear_then_click(self.I_BATTLE_REWARD, interval=1.5):
+                logger.info("Found battle reward during exit, picking it up.")
+                boss_timer.reset()
+                continue
+
             if boss_timer.reached():
-                # https://github.com/runhey/OnmyojiAutoScript/issues/548
-                logger.warning('Exit immediately after the boss battle')
-                break
+                logger.warning('Exit timeout, force clicking back button')
+                boss_timer.reset()
+                self.click(self.I_UI_BACK_BLUE)
+                continue
+
             if self.appear_then_click(self.I_E_EXIT_CONFIRM, interval=0.8):
                 continue
+            if self.appear(self.I_BACK_YOLLOW):
+                self.screenshot()
+                # https://github.com/runhey/OnmyojiAutoScript/issues/1935
+                if not self.appear(self.I_BACK_YOLLOW) or self.appear(self.I_E_EXPLORATION_CLICK):
+                    continue
+                is_main = (
+                        self.appear(self.I_E_SETTINGS_BUTTON)
+                        or self.appear(self.I_E_AUTO_ROTATE_ON)
+                        or self.appear(self.I_E_AUTO_ROTATE_OFF)
+                )
+                if is_main and self.click(self.I_BACK_YOLLOW, interval=3.5):
+                    continue
+            
             if self.appear(self.I_EXPLORATION_TITLE) or self.appear(self.I_CHECK_EXPLORATION):
-                continue
-            if self.appear_then_click(self.I_UI_BACK_BLUE, interval=3.5):
                 continue
 
     def fire(self, button) -> bool:
