@@ -236,8 +236,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
         如果没有票了，那么就返回False
         :return:
         """
-        # 21点后、次日5点前无限进攻机会
-        if datetime.now().hour >= 21 or datetime.now().hour <= 5:
+        # 21点后、次日5点前无限进攻机会 (05:00 起要看次数, 不能用 <= 5)
+        if datetime.now().hour >= 21 or datetime.now().hour < 5:
             return True
         self.wait_until_appear(self.I_TOPPA_RECORD)
         self.screenshot()
@@ -283,6 +283,22 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
             self.device.swipe_adb(p1, p2, duration=duration)
             time.sleep(2)
 
+    def wait_leave_toppa(self, timeout: float) -> bool:
+        """
+        等待离开寮突破界面(进入准备或战斗)
+        :return: 离开返回 True, 超时仍在寮突破界面返回 False
+        """
+        timer = Timer(timeout).start()
+        while not timer.reached():
+            self.screenshot()
+            if not self.appear(self.I_TOPPA_RECORD, threshold=0.85):
+                time.sleep(1)
+                self.screenshot()
+                if not self.appear(self.I_TOPPA_RECORD, threshold=0.85):
+                    return True
+            time.sleep(0.5)
+        return False
+
     def attack_area(self, index: int):
         """
         :return: 战斗成功(True) or 战斗失败(False) or 区域不可用（False） or 没有进攻机会（设定下次运行并退出）
@@ -302,11 +318,20 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
         # self.ui_click(rcl, stop=RealmRaidAssets.I_FIRE, interval=2)
         # 塔塔开！
         click_failure_count = 0
+        fire_clicked = False
         while True:
             self.screenshot()
             if click_failure_count >= 5:
+                # 进攻已点下但载入较慢时, 再等几秒确认是否已离开寮突破界面
+                if fire_clicked and self.wait_leave_toppa(timeout=8):
+                    logger.info("Start attach area [%s]" % str(index + 1))
+                    return self.run_general_battle(config=self.config.ryou_toppa.general_battle_config)
                 logger.warning("Click failure, check your click position")
                 return False
+            # 上一场结算画面可能还没退回寮突破界面, 未点进攻前不能当作进入战斗
+            if not fire_clicked and not self.appear(self.I_TOPPA_RECORD, threshold=0.85):
+                time.sleep(0.5)
+                continue
             # 离开寮突破界面即视为进入战斗, 不依赖准备界面的好友图标识别
             if not self.appear(self.I_TOPPA_RECORD, threshold=0.85):
                 time.sleep(1)
@@ -317,6 +342,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
                 return self.run_general_battle(config=self.config.ryou_toppa.general_battle_config)
 
             if self.appear_then_click(RealmRaidAssets.I_FIRE, interval=2, threshold=0.8):
+                fire_clicked = True
                 click_failure_count += 1
                 continue
             if self.click(rcl, interval=5):
