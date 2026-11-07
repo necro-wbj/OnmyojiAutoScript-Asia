@@ -6,12 +6,7 @@
 
 - 原庫：`runhey/OnmyojiAutoScript`，本地 remote 名稱為 `upstream`，同步以 `upstream/dev` 為準。
 - 本專案：`necro-wbj/OnmyojiAutoScript-Asia`（`origin`）。
-
-## 修正問題前
-
-- 先 `git fetch upstream`，查原庫（`upstream/dev`）有沒有修過同一個問題。有的話優先 cherry-pick 或等下次同步，不要另寫一版。
-- 不影響日常使用、且原庫近期很可能會修的小問題，可以考慮等同步，不一定要自己修。
-- 原庫已修但暫時無法 cherry-pick（例如依賴尚未同步的架構）時，本地暫時修正要盡量沿用原庫的資產名稱、ROI、檔名與寫法，讓之後同步時可以直接採用原庫版本。commit 訊息註明對應的原庫 commit。
+- 修正任何問題前，先用 `check-upstream-fix` skill 查原庫是否已修過。
 
 ## 修改原則（減少合併衝突）
 
