@@ -238,6 +238,8 @@ class GameUi(BaseTask, GameUiAssets):
                     self.try_close_unknown_page(skip_screenshot=False)
                     self.ui_current = None
         else:
+            if found:
+                return True
             logger.error(f'Cannot goto page[{destination}], timeout[{timeout}s] reached')
         return False
 
@@ -264,7 +266,8 @@ class GameUi(BaseTask, GameUiAssets):
         """
         for i, current_page in enumerate(path):
             if timeout_timer.reached():
-                return False
+                # 已抵达目标页时不因超时判失败, 否则会误关目标页
+                return self.ui_current == path[-1]
             # 当前页不等于路径中对应页, 尝试下一页
             if self.ui_current != current_page:
                 continue
@@ -295,12 +298,13 @@ class GameUi(BaseTask, GameUiAssets):
                 # 当前页面不是对应路径的页面, 则尝试下一个页面
                 if self.ui_current != current_page:
                     continue
-            max_wait_timer.reset()
-            while not max_wait_timer.reached():
+            # 式神录等页面载入较慢(黑屏读取), 等待时间不足会误点返回离开目标页
+            arrive_timer = Timer(12).start()
+            while not arrive_timer.reached():
                 if timeout_timer.reached():
                     return False
                 if self.ui_wait_until_appear(next_page, timeout=2.5, skip_first_screenshot=False):
-                    logger.info(f'[{max_wait_timer.current():.1f}s]Page arrived {next_page}')
+                    logger.info(f'[{arrive_timer.current():.1f}s]Page arrived {next_page}')
                     self.ui_current = next_page
                     break
             else:
