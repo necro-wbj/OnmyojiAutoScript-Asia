@@ -85,6 +85,8 @@ class KekkaiActivationAssets:
 	I_A_HARVEST_FISH_3 = RuleImage(roi_front=(891,165,57,39), roi_back=(854,128,154,174), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_harvest_fish_3.png")
 	# 胧车  
 	I_A_HARVEST_OBOROGURUMA = RuleImage(roi_front=(891,165,57,39), roi_back=(854,128,154,174), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_harvest_oboroguruma.png")
+	# 口水蛙
+	I_A_HARVEST_FROG = RuleImage(roi_front=(896,150,46,42), roi_back=(854,121,165,174), threshold=0.8, method="Template matching", file="./tasks/KekkaiActivation/a/a_a_harvest_frog.png")
 
 
 	# Image Rule Assets

@@ -223,5 +223,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "胧车 "
+  },
+  {
+    "itemName": "a_harvest_frog",
+    "imageName": "a_a_harvest_frog.png",
+    "roiFront": "896,150,46,42",
+    "roiBack": "854,121,165,174",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "口水蛙 "
   }
 ]
