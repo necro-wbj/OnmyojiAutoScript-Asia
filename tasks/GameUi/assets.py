@@ -128,6 +128,12 @@ class GameUiAssets:
 	I_BACK_YOLLOW = RuleImage(roi_front=(24,16,48,55), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_back_yollow.png")
 	# description 
 	I_DEMON_ENCOUNTER_GOTO_TOWN = RuleImage(roi_front=(28,20,56,52), roi_back=(3,4,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_demon_encounter_goto_town.png")
+	# 逢魔之时新页面标志 
+	I_CHECK_DEMON_ENCOUNTER_2 = RuleImage(roi_front=(501,441,53,122), roi_back=(358,326,370,288), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_demon_encounter_2.png")
+	# 检查逢魔之时现世逢魔界面(移植自mine) 
+	I_CHECK_DEMON_ENCOUNTER_REALWORLD = RuleImage(roi_front=(26,658,42,43), roi_back=(2,619,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_demon_encounter_realworld.png")
+	# 进入现世逢魔(移植自mine) 
+	I_DEMON_ENCOUNTER_REALWORLD_GOTO = RuleImage(roi_front=(994,485,106,30), roi_back=(994,485,106,30), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_demon_encounter_realworld.png")
 	# description 
 	I_TOWN_GOTO_HYAKKIYAKOU = RuleImage(roi_front=(880,165,53,69), roi_back=(827,149,148,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_town_goto_hyakkiyakou.png")
 	# description 

@@ -144,6 +144,33 @@
     "description": "description"
   },
   {
+    "itemName": "check_demon_encounter_2",
+    "imageName": "page_check_demon_encounter_2.png",
+    "roiFront": "501,441,53,122",
+    "roiBack": "358,326,370,288",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "逢魔之时新页面标志"
+  },
+  {
+    "itemName": "check_demon_encounter_realworld",
+    "imageName": "page_check_demon_encounter_realworld.png",
+    "roiFront": "26,658,42,43",
+    "roiBack": "2,619,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "检查逢魔之时现世逢魔界面(移植自mine)"
+  },
+  {
+    "itemName": "demon_encounter_realworld_goto",
+    "imageName": "page_demon_encounter_realworld.png",
+    "roiFront": "994,485,106,30",
+    "roiBack": "994,485,106,30",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "进入现世逢魔(移植自mine)"
+  },
+  {
     "itemName": "town_goto_hyakkiyakou",
     "imageName": "page_town_goto_hyakkiyakou.png",
     "roiFront": "880,165,53,69",

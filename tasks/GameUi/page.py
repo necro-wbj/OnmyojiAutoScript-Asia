@@ -128,9 +128,13 @@ page_duel = Page(G.I_CHECK_DUEL)
 page_duel.link(button=G.I_BACK_YOLLOW, destination=page_town)
 page_town.link(button=G.I_TOWN_GOTO_DUEL, destination=page_duel)
 # 逢魔之时 demon_encounter
-page_demon_encounter = Page(G.I_CHECK_DEMON_ENCOUNTER)
-page_demon_encounter.link(button=G.I_DEMON_ENCOUNTER_GOTO_TOWN, destination=page_town)
+page_demon_encounter = Page(G.I_CHECK_DEMON_ENCOUNTER_2)
+page_demon_encounter.link(button=GGA.I_UI_BACK_YELLOW, destination=page_town)
 page_town.link(button=G.I_TOWN_GOTO_DEMON_ENCOUNTER, destination=page_demon_encounter)
+# 逢魔之时现世逢魔 demon_encounter_realworld
+page_demon_encounter_realworld = Page(G.I_CHECK_DEMON_ENCOUNTER_REALWORLD)
+page_demon_encounter_realworld.link(button=GGA.I_UI_BACK_YELLOW, destination=page_demon_encounter)
+page_demon_encounter.link(button=G.I_DEMON_ENCOUNTER_REALWORLD_GOTO, destination=page_demon_encounter_realworld)
 # 狩猎战 hunt
 page_hunt = Page(G.I_CHECK_HUNT)
 page_hunt.link(button=G.I_BACK_BL, destination=page_town)
