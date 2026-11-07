@@ -62,8 +62,17 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
         点击预设
         :return:
         """
+        timer = Timer(10).start()
         while 1:
             self.screenshot()
+            # 页面误判(例如刚点返回离开式神录)时预设按钮永远不会出现, 重新进入式神录
+            if timer.reached() and hasattr(self, 'ui_goto'):
+                from tasks.GameUi.page import page_shikigami_records
+                logger.warning('Preset button not found, re-enter shikigami records')
+                self.ui_get_current_page()
+                self.ui_goto(page_shikigami_records)
+                timer.reset()
+                continue
             if self.appear(self.I_SOU_SWITCH_1):
                 break
             if self.appear(self.I_SOU_SWITCH_2):
