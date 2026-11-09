@@ -2,7 +2,7 @@
   "name": "layer_list",
   "direction": "vertical",
   "type": "ocr",
-  "roiBack": "273,130,52,500",
+  "roiBack": "126,107,79,593",
   "description": "这个是御魂界面选择不同层数的",
   "list": [
     {

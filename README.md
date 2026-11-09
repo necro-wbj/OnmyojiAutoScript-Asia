@@ -180,7 +180,7 @@ Discord：<https://discord.gg/zNRdjZNmzZ>
 
 | 任务名称 | 状态 | 说明 / 正常执行时间 |
 |---|---|---|
-| Orochi（八岐大蛇） | PASS | 2026/07/12 PASS |
+| Orochi（八岐大蛇） | PASS | 2026/11/10 PASS |
 | Sougenbi（业原火） | PENDING | 待验证 |
 | FallenSun（日轮之陨） | PENDING | 待验证 |
 | EternitySea（永生之海） | PENDING | 待验证 |
