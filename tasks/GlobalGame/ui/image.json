@@ -20,11 +20,11 @@
   {
     "itemName": "ui_reward",
     "imageName": "ui_ui_reward.png",
-    "roiFront": "482,198,317,42",
-    "roiBack": "464,142,350,145",
+    "roiFront": "516,120,248,72",
+    "roiBack": "480,60,320,280",
     "method": "Template matching",
     "threshold": 0.73,
-    "description": "'取得獎勵' 四个大字"
+    "description": "'獲得獎勵' 四個大字（亞服獎勵彈窗標題）"
   },
   {
     "itemName": "ui_back_red",
