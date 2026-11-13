@@ -96,18 +96,19 @@ class GeneralClimb(ConfigBase):
                     return time(hour=0, minute=30, second=0)
         return value
 
-    @validator('ap_limit', pre=True, always=True)
-    def reset_game_max(cls, value):
-        def_value = int(300)
-        if isinstance(value, str):
-            try:
-                return int(value)
-            except ValueError:
-                logger.warning('Invalid ap_limit value. Expected format: int')
-                return def_value
-        elif isinstance(value, int):
-            return def_value
-        return def_value
+    # 原庫已移除: 傳入 int 時一律還原成 300, 導致 GUI 無法修改 ap_limit
+    # @validator('ap_limit', pre=True, always=True)
+    # def reset_game_max(cls, value):
+    #     def_value = int(300)
+    #     if isinstance(value, str):
+    #         try:
+    #             return int(value)
+    #         except ValueError:
+    #             logger.warning('Invalid ap_limit value. Expected format: int')
+    #             return def_value
+    #     elif isinstance(value, int):
+    #         return def_value
+    #     return def_value
 
     # 适用于活动爬塔仅有游戏体力的情况
     # @field_validator('ap_mode', mode='after')
