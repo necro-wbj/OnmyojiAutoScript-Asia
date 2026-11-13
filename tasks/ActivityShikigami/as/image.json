@@ -2,11 +2,119 @@
   {
     "itemName": "shi",
     "imageName": "as_shi.png",
-    "roiFront": "1183,319,47,38",
+    "roiFront": "1183,222,47,38",
     "roiBack": "1164,134,83,318",
     "method": "Template matching",
     "threshold": 0.7,
-    "description": "进入活动"
+    "description": "【城鎮主畫面】右側「拾光永恆」活動入口圖示，點擊進入活動主頁"
+  },
+  {
+    "itemName": "check_shi",
+    "imageName": "as_check_shi.png",
+    "roiFront": "152,20,130,38",
+    "roiBack": "130,5,190,70",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "【活動主頁檢查】左上標題「拾光永恆」，用來確認目前在活動主頁"
+  },
+  {
+    "itemName": "battle",
+    "imageName": "as_battle.png",
+    "roiFront": "321,176,77,98",
+    "roiBack": "269,107,342,315",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "【活動主頁】左側「戰鬥 迴響 瓦地」入口，點擊進入「互地迴響」頁面"
+  },
+  {
+    "itemName": "check_battle",
+    "imageName": "as_check_battle.png",
+    "roiFront": "152,20,130,38",
+    "roiBack": "130,5,190,70",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "【互地迴響頁檢查】左上標題「互地迴響」，用來確認已進入 battle 之後的頁面"
+  },
+  {
+    "itemName": "battle_1",
+    "imageName": "as_battle_1.png",
+    "roiFront": "12,98,160,34",
+    "roiBack": "0,85,280,60",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "【互地迴響頁】左側紅色「戰鬥 虛無精銳」入口，點擊進入「虛無精銳」挑戰頁（下方紫色「合戰」不是這個）"
+  },
+  {
+    "itemName": "check_battle_1",
+    "imageName": "as_check_battle_1.png",
+    "roiFront": "152,20,130,38",
+    "roiBack": "130,5,190,70",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "【虛無精銳頁檢查】左上標題「虛無精銳」，用來確認已進入 battle_1 之後的挑戰頁"
+  },
+  {
+    "itemName": "lock",
+    "imageName": "as_lock.png",
+    "roiFront": "872,652,22,30",
+    "roiBack": "790,635,130,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "【虛無精銳頁】右下「陣容」按鈕為「已鎖定」的鎖頭圖示（與 unlock 互斥）"
+  },
+  {
+    "itemName": "unlock",
+    "imageName": "as_unlock.png",
+    "roiFront": "792,648,38,37",
+    "roiBack": "758,635,242,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "【虛無精銳頁】右下「陣容」按鈕為「未鎖定」的打開鎖頭圖示（與 lock 互斥）；有「五倍」按鈕時位置會往左移"
+  },
+  {
+    "itemName": "fire",
+    "imageName": "as_fire.png",
+    "roiFront": "1136,605,80,42",
+    "roiBack": "1105,580,150,110",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "【虛無精銳頁】右下大按鈕「挑戰」的文字，點擊開始戰鬥"
+  },
+  {
+    "itemName": "ap",
+    "imageName": "as_ap.png",
+    "roiFront": "1089,543,25,27",
+    "roiBack": "1075,532,103,44",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "【虛無精銳頁】費用列的壽司（體力）圖示，出現代表目前顯示壽司體力"
+  },
+  {
+    "itemName": "ap_activity",
+    "imageName": "as_ap_activity.png",
+    "roiFront": "1141,543,20,27",
+    "roiBack": "1108,536,84,44",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "【虛無精銳頁】費用列的深色票券（活動體力）圖示，出現代表目前顯示活動票券；與 ap 互斥"
+  },
+  {
+    "itemName": "switch",
+    "imageName": "as_switch.png",
+    "roiFront": "1232,549,28,24",
+    "roiBack": "1204,538,68,40",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "【虛無精銳頁】費用列右側的雙箭頭，點擊切換壽司 / 票券顯示"
+  },
+  {
+    "itemName": "blank_close",
+    "imageName": "as_blank_close.png",
+    "roiFront": "560,675,160,26",
+    "roiBack": "500,655,280,60",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "【合戰結束結算畫面】下方「點擊空白處關閉」文字，看到就點空白處關閉，擋在 battle 之後"
   },
   {
     "itemName": "back_green",
@@ -18,24 +126,6 @@
     "description": "左上角返回"
   },
   {
-    "itemName": "battle",
-    "imageName": "as_battle.png",
-    "roiFront": "475,194,35,135",
-    "roiBack": "454,107,154,315",
-    "method": "Template matching",
-    "threshold": 0.7,
-    "description": "霜火寂境"
-  },
-  {
-    "itemName": "battle_1",
-    "imageName": "as_battle_1.png",
-    "roiFront": "541,197,149,26",
-    "roiBack": "506,622,273,96",
-    "method": "Template matching",
-    "threshold": 0.7,
-    "description": "进入爬塔1"
-  },
-  {
     "itemName": "drum",
     "imageName": "as_drum.png",
     "roiFront": "327,627,145,28",
@@ -43,60 +133,6 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "归鹿之途"
-  },
-  {
-    "itemName": "lock",
-    "imageName": "as_lock.png",
-    "roiFront": "884,648,28,25",
-    "roiBack": "761,613,255,76",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "上锁图标"
-  },
-  {
-    "itemName": "unlock",
-    "imageName": "as_unlock.png",
-    "roiFront": "884,648,28,25",
-    "roiBack": "758,607,242,85",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "还未上锁图片"
-  },
-  {
-    "itemName": "fire",
-    "imageName": "as_fire.png",
-    "roiFront": "1131,598,103,54",
-    "roiBack": "1123,589,124,88",
-    "method": "Template matching",
-    "threshold": 0.7,
-    "description": "点击战斗"
-  },
-  {
-    "itemName": "ap",
-    "imageName": "as_ap.png",
-    "roiFront": "1091,550,23,24",
-    "roiBack": "1081,532,103,71",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "寿司体力"
-  },
-  {
-    "itemName": "ap_activity",
-    "imageName": "as_ap_activity.png",
-    "roiFront": "1140,550,21,25",
-    "roiBack": "1108,542,84,54",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "活动体力"
-  },
-  {
-    "itemName": "switch",
-    "imageName": "as_switch.png",
-    "roiFront": "1215,551,23,23",
-    "roiBack": "1204,538,54,49",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "切换按键"
   },
   {
     "itemName": "buy_jade",
@@ -137,8 +173,8 @@
   {
     "itemName": "toggle_button",
     "imageName": "as_toggle_button.png",
-    "roiFront": "1193,463,27,25",
-    "roiBack": "1169,146,73,403",
+    "roiFront": "1193,528,30,25",
+    "roiBack": "1169,146,73,447",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -160,15 +196,6 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "爬塔boss战页面检查图像"
-  },
-  {
-    "itemName": "check_battle_2",
-    "imageName": "as_check_battle_2.png",
-    "roiFront": "93,12,128,46",
-    "roiBack": "82,0,148,86",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "爬塔活动副页检查标志"
   },
   {
     "itemName": "red_exit_2",

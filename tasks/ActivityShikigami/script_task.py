@@ -7,7 +7,8 @@ from time import sleep
 import cv2
 import numpy as np
 import random
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta
+# from datetime import datetime, timedelta, time  # 未使用: time
 from module.atom.click import RuleClick
 from module.atom.ocr import RuleOcr
 from module.base.protect import random_sleep
@@ -19,11 +20,14 @@ from tasks.ActivityShikigami.config import SwitchSoulConfig, GeneralBattleConfig
 from tasks.Component.BaseActivity.base_activity import BaseActivity
 from tasks.Component.BaseActivity.config_activity import GeneralClimb
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
-from tasks.Component.BaseActivity.base_activity import BaseActivity
-from tasks.Component.BaseActivity.config_activity import ApMode
-from tasks.ActivityShikigami.assets import ActivityShikigamiAssets
-from tasks.GameUi.page import page_main, page_shikigami_records
+# 未使用: 重複 import BaseActivity / 未使用 ApMode / 重複 import ActivityShikigamiAssets
+# from tasks.Component.BaseActivity.base_activity import BaseActivity
+# from tasks.Component.BaseActivity.config_activity import ApMode
+# from tasks.ActivityShikigami.assets import ActivityShikigamiAssets
+# 未使用: 頁面統一透過下方 game.page_xxx 存取
+# from tasks.GameUi.page import page_main, page_shikigami_records
 from tasks.GameUi.game_ui import GameUi
+import tasks.Component.GeneralBattle.config_general_battle
 import tasks.ActivityShikigami.page as game
 from typing import Any
 
@@ -92,8 +96,9 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
     page_map: dict[str, game.Page] = {
         'pass': game.page_climb_act_pass,
         'ap': game.page_climb_act_ap,
-        'boss': game.page_climb_act_boss,
-        'ap100': game.page_climb_act_ap100,
+        # 亞服活動尚未支援 boss / ap100, 先註解 (run_sequence 裡寫了也會自動略過)
+        # 'boss': game.page_climb_act_boss,
+        # 'ap100': game.page_climb_act_ap100,
     }
     run_idx: int = 0
     conf: ActivityShikigami = None
@@ -101,6 +106,10 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
     def run(self) -> None:
         self.conf = self.config.activity_shikigami
         self.limit_time: timedelta = self.conf.general_climb.limit_time_v
+        if not self.run_sequence:
+            logger.warning('No supported climb type in run_sequence, task end')
+            self.set_next_run(task="ActivityShikigami", success=True)
+            raise TaskEnd
         while True:
             self.put_status()
             # 超时或全部完成则退出
@@ -128,7 +137,8 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                     self.switch_buff(self.conf.general_climb)
                     self.goto_act()
                 # 最终爬塔界面
-                case game.page_climb_act_pass | game.page_climb_act_ap | game.page_climb_act_ap100 | game.page_climb_act_boss:
+                # case game.page_climb_act_pass | game.page_climb_act_ap | game.page_climb_act_ap100 | game.page_climb_act_boss:
+                case game.page_climb_act_pass | game.page_climb_act_ap:
                     self.switch_soul(self.conf.switch_soul_config)
                     self.lock_team(self.conf.general_battle)
                     self.check_tickets_enough()
@@ -152,7 +162,8 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
 
     def start_battle(self):
         # 先识别是否在挑战界面, 不在则交给上层处理
-        if not self.wait_until_appear(self.O_FIRE, wait_time=3):
+        # if not self.wait_until_appear(self.O_FIRE, wait_time=3):  # 原本用 OCR 认「挑戰」, 改用图片 I_FIRE
+        if not self.wait_until_appear(self.I_FIRE, wait_time=3):
             logger.warning(f'Detect fire fail, try reidentify')
             return
         # 点击战斗前随机休息
@@ -181,7 +192,8 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 self.put_check(Status.ENTER_BATTLE_FAILED, True)
                 return
             # 点击挑战
-            if self.ocr_appear_click(self.O_FIRE, interval=2):
+            # if self.ocr_appear_click(self.O_FIRE, interval=2):  # 原本用 OCR
+            if self.appear_then_click(self.I_FIRE, interval=2):
                 click_times += 1
                 logger.info(f'Try click fire, remain times[{max_times - click_times}]')
                 continue
@@ -210,7 +222,8 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
             if ok_cnt > max_retry:
                 break
             # 识别到挑战说明已经退出战斗
-            if ok_cnt > 0 and self.ocr_appear(self.O_FIRE):
+            # if ok_cnt > 0 and self.ocr_appear(self.O_FIRE):  # 原本用 OCR
+            if ok_cnt > 0 and self.appear(self.I_FIRE):
                 return True
             # 失败
             if self.appear(self.I_FALSE):
@@ -368,7 +381,8 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         :return: True 可以运行 or False
         """
         logger.hr(f'Check {self.climb_type} tickets')
-        if not self.wait_until_appear(self.O_FIRE, wait_time=3):
+        # if not self.wait_until_appear(self.O_FIRE, wait_time=3):  # 原本用 OCR
+        if not self.wait_until_appear(self.I_FIRE, wait_time=3):
             logger.warning(f'Detect fire fail, try reidentify')
             return
         self.screenshot()
@@ -379,11 +393,12 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         if self.climb_type == 'ap':
             remain_times = self.O_REMAIN_AP.ocr_digit(
                 _prepare_image_for_ocr(self.device.image, asset=self.O_REMAIN_AP))
-        if self.climb_type == 'boss':
-            _, remain_times, _ = self.O_REMAIN_BOSS.ocr_digit_counter(self.device.image)
-        if self.climb_type == 'ap100':
-            remain_times = self.O_REMAIN_AP100.ocr_digit(
-                _prepare_image_for_ocr(self.device.image, asset=self.O_REMAIN_AP100))
+        # 亞服活動尚未支援 boss / ap100, 先註解
+        # if self.climb_type == 'boss':
+        #     _, remain_times, _ = self.O_REMAIN_BOSS.ocr_digit_counter(self.device.image)
+        # if self.climb_type == 'ap100':
+        #     remain_times = self.O_REMAIN_AP100.ocr_digit(
+        #         _prepare_image_for_ocr(self.device.image, asset=self.O_REMAIN_AP100))
         self.put_check(Status.NO_TICKETS, remain_times <= 0)
 
     def get_limit(self) -> int:
@@ -400,7 +415,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         :return: True 切换成功 or False
         """
         self.run_idx += 1
-        if self.run_idx >= len(self.conf.general_climb.run_sequence_v):
+        if self.run_idx >= len(self.run_sequence):
             logger.info('All climbing activities have been completed')
             self.put_check(Status.ALL_DOWN, True)
             return
@@ -434,6 +449,24 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         """
 
         logger.hr("Enter Shikigami", 2)
+        # run() 在庭院时会先 switch_soul, 它可能已经进到爬塔页了, 此时不需要再从庭院进入
+        current_page = self.ui_get_current_page(False)
+        if current_page != game.page_main:
+            logger.info(f'Already in {current_page}, skip enter')
+            return
+        # 庭院右侧入口会轮播, 先自行按 I_TOGGLE_BUTTON(最多 7 次)直到出现 I_SHI, 再交给 ui_goto 进入活动
+        max_toggle, toggle_times = 7, 0
+        timeout = Timer(30).start()
+        while not timeout.reached():
+            self.screenshot()
+            if self.appear(self.I_SHI):
+                break
+            if toggle_times >= max_toggle:
+                logger.warning(f'Toggle {max_toggle} times, but I_SHI not found')
+                break
+            if self.appear_then_click(self.I_TOGGLE_BUTTON, interval=2):
+                toggle_times += 1
+                logger.info(f'Toggle right icons [{toggle_times}/{max_toggle}]')
         self.ui_goto(game.page_climb_act)
 
     def main_home(self) -> bool:
@@ -446,7 +479,44 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         self.ui_goto(game.page_main)
 
     def goto_act(self, timeout: int = 45):
+        # 不在活动页面时(例如刚换完御魂在式神录), 去活动的路径会经过庭院, 此时 page_main 的链接只会点 I_SHI,
+        # 右侧图示轮播到别组就点不到, 所以先自行回到庭院并展开入口, 不依赖 page_main 的跳转链接
+        activity_pages = (game.page_climb_act, game.page_climb_act_2, game.page_climb_act_pass,
+                          game.page_climb_act_ap, game.page_climb_act_buff, game.page_act_list_climb_act)
+        current_page = self.ui_get_current_page(False)
+        if current_page not in activity_pages:
+            if current_page != game.page_main:
+                self.ui_goto(game.page_main, timeout=timeout)
+            self.home_main()
+        if self.climb_type in ('pass', 'ap'):
+            self.enter_challenge_page(timeout=timeout)
         self.ui_goto(self.page_map[self.climb_type], timeout=timeout)
+
+    def enter_challenge_page(self, timeout: int = 45):
+        """
+        亞服票券/壽司是同一个挑战页, 进入后停在哪个状态不一定, 所以不能进去就直接当成某一页
+        点 I_BATTLE_1 进入后, 先确认 I_CHECK_BATTLE_1(挑战页标题), 再依 I_AP_ACTIVITY / I_AP 判断当前是票券还是壽司
+        之后由 ui_goto 通过 I_SWITCH 切到目标状态
+        """
+        challenge_pages = (game.page_climb_act_pass, game.page_climb_act_ap)
+        if self.ui_get_current_page(False) in challenge_pages:
+            return
+        self.ui_goto(game.page_climb_act_2, timeout=timeout)
+        timer = Timer(20).start()
+        while not timer.reached():
+            self.screenshot()
+            if self.appear(self.I_CHECK_BATTLE_1):
+                # 已在挑战页, 费用列载入较慢, 没判断到时继续等
+                # 同步当前页面, 否则 ui_goto 会误以为还在 page_climb_act_2
+                if self.appear(self.I_AP_ACTIVITY):
+                    self.ui_current = game.page_climb_act_pass
+                    return
+                if self.appear(self.I_AP):
+                    self.ui_current = game.page_climb_act_ap
+                    return
+                continue
+            self.appear_then_click(self.I_BATTLE_1, interval=2)
+        logger.warning('Enter challenge page timeout')
 
     def random_reward_click(self, exclude_click: list = None, click_now: bool = True) -> RuleClick:
         """
@@ -464,10 +534,23 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         return target
 
     @property
+    def run_sequence(self) -> list[str]:
+        """
+        实际执行的爬塔类型. 亞服活動尚未支援 boss / ap100, 配置里即使写了也自动略过
+        """
+        sequence = self.conf.general_climb.run_sequence_v
+        supported = [climb_type for climb_type in sequence if climb_type in self.page_map]
+        if len(supported) != len(sequence) and not getattr(self, '_warned_unsupported', False):
+            self._warned_unsupported = True
+            skipped = [climb_type for climb_type in sequence if climb_type not in self.page_map]
+            logger.warning(f'Climb type {skipped} is not supported yet, skip')
+        return supported
+
+    @property
     def climb_type(self) -> str:
-        if self.run_idx >= len(self.conf.general_climb.run_sequence_v):
-            return self.conf.general_climb.run_sequence_v[-1]
-        return self.conf.general_climb.run_sequence_v[self.run_idx]
+        if self.run_idx >= len(self.run_sequence):
+            return self.run_sequence[-1]
+        return self.run_sequence[self.run_idx]
 
     @property
     def count_map(self) -> dict[str, int]:
@@ -475,7 +558,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         :return: key: climb type, value: run count
         """
         if not getattr(self, "_count_map", None):
-            self._count_map = {climb_type: 0 for climb_type in self.conf.general_climb.run_sequence_v}
+            self._count_map = {climb_type: 0 for climb_type in self.run_sequence}
         return self._count_map
 
     @property
@@ -483,7 +566,7 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         if not getattr(self, "_check_map", None):
             self._check_map = {
                 climb_type: {status: None for status in list(Status)}
-                for climb_type in self.conf.general_climb.run_sequence_v
+                for climb_type in self.run_sequence
             }
         return self._check_map
 
