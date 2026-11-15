@@ -45,7 +45,7 @@ class ActivityShikigamiAssets:
 
 	# Image Rule Assets
 	# 【城鎮主畫面】右側「拾光永恆」活動入口圖示，點擊進入活動主頁 
-	I_SHI = RuleImage(roi_front=(1183,222,47,38), roi_back=(1164,134,83,318), threshold=0.7, method="Template matching", file="./tasks/ActivityShikigami/as/as_shi.png")
+	I_SHI = RuleImage(roi_front=(1183,222,47,38), roi_back=(1164,134,83,393), threshold=0.7, method="Template matching", file="./tasks/ActivityShikigami/as/as_shi.png")
 	# 【活動主頁檢查】左上標題「拾光永恆」，用來確認目前在活動主頁 
 	I_CHECK_SHI = RuleImage(roi_front=(152,20,130,38), roi_back=(130,5,190,70), threshold=0.8, method="Template matching", file="./tasks/ActivityShikigami/as/as_check_shi.png")
 	# 【活動主頁】左側「戰鬥 迴響 瓦地」入口，點擊進入「互地迴響」頁面 

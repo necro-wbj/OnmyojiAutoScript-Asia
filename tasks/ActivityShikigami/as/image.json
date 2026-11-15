@@ -3,7 +3,7 @@
     "itemName": "shi",
     "imageName": "as_shi.png",
     "roiFront": "1183,222,47,38",
-    "roiBack": "1164,134,83,318",
+    "roiBack": "1164,134,83,393",
     "method": "Template matching",
     "threshold": 0.7,
     "description": "【城鎮主畫面】右側「拾光永恆」活動入口圖示，點擊進入活動主頁"
