@@ -152,12 +152,17 @@ class ScriptTask(GameUi, WeeklyTriflesAssets, RestartAssets):
             if self.appear(self.I_WT_NO_DAY):
                 obtained = True
                 break
-            if self.click(self.C_WT_AB_CLICK, interval=1):
-                continue
-            if self.appear_then_click(self.I_WT_DAY_BATTLE, interval=2):
-                continue
             if self.appear_then_click(self.I_WT_SHARE_AB, interval=1):
                 continue
+            # 只有在地鬼列表（看得到今日挑战）才点选，避免在其他画面盲点
+            if self.appear(self.I_WT_DAY_BATTLE):
+                # 今日挑战是开关：收合时才点它展开，展开后才选第一个地鬼
+                if self.appear(self.I_WT_LIST_CLOSE):
+                    if self.click(self.I_WT_DAY_BATTLE, interval=2):
+                        continue
+                elif self.appear(self.I_WT_LIST_OPEN):
+                    if self.click(self.C_WT_AB_CLICK, interval=1):
+                        continue
         # 再次检查一次这周有没有领取
         time.sleep(1)
         self.screenshot()

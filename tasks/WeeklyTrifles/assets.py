@@ -21,11 +21,15 @@ class WeeklyTriflesAssets:
 	# 今天一个都没有打 
 	I_WT_NO_DAY = RuleImage(roi_front=(167,360,72,69), roi_back=(167,360,72,69), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_no_day.png")
 	# 地鬼分享 
-	I_WT_SHARE_AB = RuleImage(roi_front=(1183,308,45,39), roi_back=(1183,308,45,39), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_share_ab.png")
+	I_WT_SHARE_AB = RuleImage(roi_front=(1170,262,80,80), roi_back=(1170,262,80,80), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_share_ab.png")
 	# 分享勾玉 
 	I_WT_AB_JADE = RuleImage(roi_front=(977,552,44,47), roi_back=(977,552,44,47), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_ab_jade.png")
 	# 微信分享 
 	I_WT_AB_WECHAT = RuleImage(roi_front=(980,642,50,41), roi_back=(815,623,454,83), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_ab_wechat.png")
+	# 今日挑战列表已展开（深色底条） 
+	I_WT_LIST_OPEN = RuleImage(roi_front=(130,355,28,90), roi_back=(130,355,28,90), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_list_open.png")
+	# 今日挑战列表已收合（地图底色） 
+	I_WT_LIST_CLOSE = RuleImage(roi_front=(130,355,28,90), roi_back=(130,355,28,90), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_list_close.png")
 
 
 	# Image Rule Assets

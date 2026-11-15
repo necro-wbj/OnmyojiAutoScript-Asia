@@ -20,8 +20,8 @@
   {
     "itemName": "wt_share_ab",
     "imageName": "area_boss_wt_share_ab.png",
-    "roiFront": "1183,308,45,39",
-    "roiBack": "1183,308,45,39",
+    "roiFront": "1170,262,80,80",
+    "roiBack": "1170,262,80,80",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "地鬼分享"
@@ -43,5 +43,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "微信分享"
+  },
+  {
+    "itemName": "wt_list_open",
+    "imageName": "area_boss_wt_list_open.png",
+    "roiFront": "130,355,28,90",
+    "roiBack": "130,355,28,90",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "今日挑战列表已展开（深色底条）"
+  },
+  {
+    "itemName": "wt_list_close",
+    "imageName": "area_boss_wt_list_close.png",
+    "roiFront": "130,355,28,90",
+    "roiBack": "130,355,28,90",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "今日挑战列表已收合（地图底色）"
   }
 ]
