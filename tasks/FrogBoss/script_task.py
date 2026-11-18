@@ -23,7 +23,7 @@ from tasks.FrogBoss.config import Strategy
 
 class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
     def run(self):
-        self.enter(self.I_FROG_BOSS_ENTER)
+        self.home_main()
         # 进入主界面
         while 1:
             self.screenshot()
@@ -66,6 +66,28 @@ class ScriptTask(RightActivity, FrogBossAssets, GeneralBattleAssets):
                 continue
 
         logger.info('FrogBoss end')
+        self.next_run()
+        raise TaskEnd('FrogBoss')
+
+    def home_main(self):
+        """
+        庭院右侧入口会轮播, 先自行按 I_FROG_TOGGLE_BUTTON(最多 7 次)直到出现 I_FROG_BOSS_ENTER, 再点进活动
+        """
+        self.ui_get_current_page()
+        self.ui_goto(page_main)
+        max_toggle, toggle_times = 7, 0
+        timeout = Timer(30).start()
+        while not timeout.reached():
+            self.screenshot()
+            if self.appear(self.I_FROG_BOSS_ENTER):
+                self.ui_click_until_disappear(self.I_FROG_BOSS_ENTER, interval=3)
+                return
+            if toggle_times >= max_toggle:
+                break
+            if self.appear_then_click(self.I_FROG_TOGGLE_BUTTON, interval=2):
+                toggle_times += 1
+                logger.info(f'Toggle right icons [{toggle_times}/{max_toggle}]')
+        logger.warning(f'Toggle {toggle_times} times, but I_FROG_BOSS_ENTER not found')
         self.next_run()
         raise TaskEnd('FrogBoss')
 

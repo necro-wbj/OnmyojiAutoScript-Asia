@@ -2,8 +2,8 @@
   {
     "itemName": "frog_boss_in",
     "imageName": "fb_frog_boss_in.png",
-    "roiFront": "552,1,141,42",
-    "roiBack": "552,1,141,42",
+    "roiFront": "670,36,140,54",
+    "roiBack": "640,25,230,70",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "in frog boss page"
@@ -11,11 +11,20 @@
   {
     "itemName": "frog_boss_enter",
     "imageName": "fb_frog_boss_enter.png",
-    "roiFront": "1181,153,59,54",
+    "roiFront": "1188,462,44,42",
     "roiBack": "1155,123,97,449",
     "method": "Template matching",
     "threshold": 0.6,
     "description": "frog_boss_enter"
+  },
+  {
+    "itemName": "frog_toggle_button",
+    "imageName": "fb_frog_toggle_button.png",
+    "roiFront": "1193,528,30,25",
+    "roiBack": "1169,146,73,447",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "庭院右側入口輪播按鈕"
   },
   {
     "itemName": "frog_boss_town_enter",
